@@ -1,0 +1,116 @@
+# 🔐 Credenciais e Secretos - NUNCA COMMITAR
+.env
+.env.local
+.env.*.local
+.env.production
+credentials.json
+secrets.json
+*.key
+*.pem
+token*.txt
+api_key*.txt
+
+# n8n specific
+node_modules/
+dist/
+.n8n/
+*.backup
+*.backup.json
+.n8n-credentials
+executions/
+workflows/staging/*
+workflows/development/*
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Arquivos de Sistema
+.DS_Store
+Thumbs.db
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+*.swp
+*.swo
+*~
+.tmp
+
+# IDE / Editors
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+*.code-workspace
+.eclipse
+.project
+.classpath
+
+# macOS
+.AppleDouble
+.LSOverride
+.TemporaryItems
+
+# Node
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Backup files
+*.bak
+*.backup
+*.old
+*.tmp
+*.swp
+
+# Staging / Temporary
+/staging
+/tmp
+/temp
+
+# Build outputs
+/build
+/out
+/dist
+
+# OS temporary files
+Thumbs.db
+.DS_Store
+$RECYCLE.BIN/
+
+# Keep environment example but not actual env files
+!.env.example
+
+# Ignore local test files
+test-*.json
+debug-*.json
+
+# Ignore downloaded workflows before they're committed
+*.downloaded.json
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Virtual environments
+venv/
+ENV/
+env/
+.venv
+
+# Ignore large files
+*.zip
+*.tar.gz
+*.7z
+*.rar
+
+# Temporary editor files
+.editorconfig.local

@@ -1,0 +1,9 @@
+# Seletor de templates de issue — Adventure Labs Monorepo
+blank_issues_enabled: true
+contact_links:
+  - name: Base de conhecimento
+    url: ./knowledge/00_GESTAO_CORPORATIVA
+    about: Documentação, roadmap e processos
+  - name: Manual de taxonomia
+    url: ./knowledge/00_GESTAO_CORPORATIVA/MANUAL_TAXONOMIA_REPOSITORIO.md
+    about: Organização de pastas e nomenclatura

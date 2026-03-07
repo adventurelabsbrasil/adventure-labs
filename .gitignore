@@ -1,0 +1,25 @@
+# Apps e clientes são submodules (não versionar conteúdo local)
+apps/
+clients/
+
+# Secrets e credenciais
+.env
+.env.*
+!.env.example
+*credenciais*.md
+**/extratos/
+**/sicredi/
+**/respostas-sigilosas*.md
+**/respostas-questionario*.md
+
+# Temp e archive (clones pesados, sub-repos)
+_internal/temp/
+_internal/archive/*
+!_internal/archive/README.md
+
+# Build e cache
+node_modules/
+.next/
+dist/
+build/
+.npm-cache/

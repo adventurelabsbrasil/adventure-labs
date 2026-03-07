@@ -1,0 +1,115 @@
+{
+  "updatedAt": "2026-03-05T18:42:09.141Z",
+  "createdAt": "2026-03-05T17:35:44.466Z",
+  "id": "qxumZEovB6nWu5Mv",
+  "name": "Board Meet",
+  "description": null,
+  "active": false,
+  "isArchived": true,
+  "nodes": [
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "8c77325b-1e37-4b5a-b309-ade5a46a6dc4",
+              "name": "compiledReport_firstItem",
+              "value": "={{ $('Compile C-Level Reports').first().json.compiledReport }}",
+              "type": "string"
+            },
+            {
+              "id": "48279ac6-0bc7-4cbe-bc4b-9e450210e360",
+              "name": "compiledReport",
+              "value": "={{ $json.compiledReport }}",
+              "type": "string"
+            },
+            {
+              "id": "c528190b-1cdd-43a3-a152-ed2807301c4a",
+              "name": "context",
+              "value": "={{ $json.context }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -480,
+        48
+      ],
+      "id": "6184417f-c7b2-4084-877c-b911706e679f",
+      "name": "Return"
+    },
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "context_firstItem",
+              "type": "any"
+            },
+            {
+              "name": "runTimestamp_firstItem",
+              "type": "any"
+            }
+          ]
+        }
+      },
+      "id": "3e4ab653-a71b-4178-81c3-88f1937b1c24",
+      "typeVersion": 1.1,
+      "name": "Start",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "position": [
+        -2048,
+        48
+      ]
+    }
+  ],
+  "connections": {
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Return",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "staticData": null,
+  "meta": null,
+  "pinData": {},
+  "versionId": "a20daa3a-a212-4112-a870-cc6482225549",
+  "activeVersionId": null,
+  "versionCounter": 7,
+  "triggerCount": 0,
+  "shared": [
+    {
+      "updatedAt": "2026-03-05T17:35:44.466Z",
+      "createdAt": "2026-03-05T17:35:44.466Z",
+      "role": "workflow:owner",
+      "workflowId": "qxumZEovB6nWu5Mv",
+      "projectId": "9lG4asFvV530pfQY",
+      "project": {
+        "updatedAt": "2026-03-03T22:12:35.905Z",
+        "createdAt": "2026-03-03T22:03:39.320Z",
+        "id": "9lG4asFvV530pfQY",
+        "name": "Adventure Labs <contato@adventurelabs.com.br>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "creatorId": "53f37873-e667-4445-b4a1-2084f04d892f"
+      }
+    }
+  ],
+  "tags": [],
+  "activeVersion": null
+}

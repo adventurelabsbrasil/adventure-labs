@@ -1,0 +1,110 @@
+{
+  "updatedAt": "2026-03-05T18:42:07.048Z",
+  "createdAt": "2026-03-05T17:36:31.370Z",
+  "id": "2xHgQkQejqjmpTe0",
+  "name": "Fetch Context",
+  "description": null,
+  "active": false,
+  "isArchived": true,
+  "nodes": [
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a4b0a076-f478-4181-8169-d57eefc19802",
+              "name": "text_firstItem",
+              "value": "={{ $('Fetch Context Docs').first().json.text }}",
+              "type": "string"
+            },
+            {
+              "id": "8a686637-fc3f-4e0a-80e9-e7712c931fa0",
+              "name": "Fetch_Vector_Memory_allItems",
+              "value": "={{ $('Fetch Vector Memory').all() }}",
+              "type": "string"
+            },
+            {
+              "id": "51d37b90-eea9-4d1b-bf37-e75ce5e4b72f",
+              "name": "Fetch_Ideias_allItems",
+              "value": "={{ $('Fetch Ideias').all() }}",
+              "type": "string"
+            },
+            {
+              "id": "83f76c28-955e-42a2-bcaa-ef431caa70e7",
+              "name": "Fetch_Tasks_allItems",
+              "value": "={{ $('Fetch Tasks').all() }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -2080,
+        48
+      ],
+      "id": "6830c6c9-58a1-4b98-918c-cef1c27f6709",
+      "name": "Return"
+    },
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "id": "f35dc39a-6713-46ad-a037-9f9a911e0af8",
+      "typeVersion": 1.1,
+      "name": "Start",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "position": [
+        -3168,
+        48
+      ]
+    }
+  ],
+  "connections": {
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Return",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "staticData": null,
+  "meta": null,
+  "pinData": {},
+  "versionId": "e141783f-e114-4fc2-bee6-40191e918cc6",
+  "activeVersionId": null,
+  "versionCounter": 6,
+  "triggerCount": 0,
+  "shared": [
+    {
+      "updatedAt": "2026-03-05T17:36:31.370Z",
+      "createdAt": "2026-03-05T17:36:31.370Z",
+      "role": "workflow:owner",
+      "workflowId": "2xHgQkQejqjmpTe0",
+      "projectId": "9lG4asFvV530pfQY",
+      "project": {
+        "updatedAt": "2026-03-03T22:12:35.905Z",
+        "createdAt": "2026-03-03T22:03:39.320Z",
+        "id": "9lG4asFvV530pfQY",
+        "name": "Adventure Labs <contato@adventurelabs.com.br>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "creatorId": "53f37873-e667-4445-b4a1-2084f04d892f"
+      }
+    }
+  ],
+  "tags": [],
+  "activeVersion": null
+}

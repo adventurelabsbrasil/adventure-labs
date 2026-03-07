@@ -1,0 +1,15 @@
+---
+description: Convenções do monorepo Adventure Labs
+globs: "**/*.{ts,tsx,js,jsx,json,yaml,yml}"
+alwaysApply: false
+---
+
+# Convenções do Monorepo
+
+- **apps/** — Aplicações principais (admin, adventure, elite, finfeed)
+- **clients/** — Projetos por cliente (01_lidera, 02_rose, etc.)
+- **knowledge/** — Base de conhecimento (taxonomia 00–99)
+- **tools/** — Ferramentas internas (xtractor, dbgr, etc.)
+- **packages/** — Pacotes compartilhados
+
+Respeitar taxonomia em `knowledge/` conforme `knowledge/00_GESTAO_CORPORATIVA/MANUAL_TAXONOMIA_REPOSITORIO.md`.

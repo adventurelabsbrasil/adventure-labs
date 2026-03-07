@@ -1,0 +1,30 @@
+{
+  "name": "dbgr",
+  "version": "1.0.0",
+  "description": "CLI para debug e configuração Wix / Vercel (domínio, email, Gmail)",
+  "main": "dist/index.js",
+  "bin": {
+    "dbgr": "dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "ts-node src/index.ts",
+    "debug": "ts-node src/index.ts debug",
+    "lint": "eslint src --ext .ts"
+  },
+  "keywords": ["wix", "vercel", "dns", "email", "gmail", "cli"],
+  "author": "",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "commander": "^12.1.0",
+    "dotenv": "^16.4.5"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "typescript": "^5.3.3"
+  }
+}
