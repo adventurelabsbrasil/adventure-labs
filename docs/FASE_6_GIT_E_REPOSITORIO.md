@@ -18,8 +18,7 @@
 | clients/02_rose/roseportaladvocacia | https://github.com/adventurelabsbrasil/roseportaladvocacia.git |
 | clients/04_young/young-emp | https://github.com/adventurelabsbrasil/young-emp.git |
 | clients/04_young/ranking-vendas | https://github.com/rodrigoribasyoung/ranking-vendas.git |
-
-**Nota:** `young-talents` pode ser adicionado com `git submodule add https://github.com/adventurelabsbrasil/young-talents.git clients/04_young/young-talents` se necessário.
+| clients/04_young/young-talents | https://github.com/adventurelabsbrasil/young-talents.git |
 
 ### Setup após clone
 
