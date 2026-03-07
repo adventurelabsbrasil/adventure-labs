@@ -1,7 +1,3 @@
-# Apps e clientes são submodules (não versionar conteúdo local)
-apps/
-clients/
-
 # Secrets e credenciais
 .env
 .env.*

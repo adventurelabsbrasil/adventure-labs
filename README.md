@@ -1,29 +1,45 @@
-# Adventure Labs — Monorepo
+# Adventure Labs — Estrutura + Submodules
 
-Repositório privado da Adventure Labs. Contém aplicações, projetos de clientes, base de conhecimento e ferramentas internas.
+Repositório que versiona a estrutura (knowledge, docs, .cursor) e referencia apps/clientes como **submodules**.
+
+## Clone e setup
+
+```bash
+git clone --recurse-submodules <url-adventure-labs> 01_ADVENTURE_LABS
+cd 01_ADVENTURE_LABS
+./scripts/setup.sh
+```
+
+Ou, se já clonou sem `--recurse-submodules`:
+
+```bash
+./scripts/setup.sh
+```
+
+O script inicializa os submodules e cria o symlink `apps/admin/context -> ../../knowledge` (evita duplicação).
 
 ## Estrutura
 
 ```
 01_ADVENTURE_LABS/
 ├── _internal/      # Vault (refs), archive (clones temp)
-├── apps/           # Apps internos — cada um = repo separado
-├── clients/        # Apps de clientes — cada um = repo separado
+├── apps/           # Submodules: admin, adventure, elite, finfeed
+├── clients/        # Submodules: lidera-space, roseportaladvocacia, young-emp, etc.
 ├── knowledge/      # Base de conhecimento (taxonomia 00–99)
 ├── packages/       # Pacotes compartilhados
-├── tools/          # Ferramentas internas (xtractor, dbgr, etc.)
-├── workflows/      # Definições n8n, automações
+├── tools/          # Ferramentas internas
+├── workflows/      # Definições n8n
 └── AGENTS.md       # Diretrizes para multi-agentes
 ```
 
-**Versionamento:** Cada app (admin, adventure, lidera-space, etc.) mantém seu próprio repositório Git — funções específicas, deploy e histórico independentes.
+**Submodules:** Cada app mantém seu próprio repo — funções específicas, deploy e histórico independentes.
 
 ## Início rápido
 
-- **Admin (Adventure Labs OS):** `cd apps/admin && pnpm dev`
-- **Taxonomia:** Ver `knowledge/00_GESTAO_CORPORATIVA/MANUAL_TAXONOMIA_REPOSITORIO.md`
-- **Agentes:** Ver `AGENTS.md`
+- **Admin:** `cd apps/admin && pnpm dev` (após `./scripts/setup.sh`)
+- **Taxonomia:** `knowledge/00_GESTAO_CORPORATIVA/MANUAL_TAXONOMIA_REPOSITORIO.md`
+- **Agentes:** `AGENTS.md`
 
 ## Segurança
 
-Credenciais e dados sensíveis **nunca** no repositório. Ver `_internal/vault/README.md`. Clones temporários arquivados em `_internal/archive/`.
+Credenciais e dados sensíveis **nunca** no repositório. Ver `_internal/vault/README.md`.

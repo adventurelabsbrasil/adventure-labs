@@ -1,27 +1,31 @@
 # Fase 6 — Git e Versionamento
 
-## Decisão: Repos por App
+## Estrutura adotada: Repo + Submodules
 
-**Apps internos e de clientes permanecem como repositórios separados.** Cada app tem funções específicas e precisa de versionamento independente (deploy, histórico, releases).
+- **Repo "adventure-labs"** versiona: knowledge/, docs/, .cursor/, .github/, AGENTS.md, workflows/, etc.
+- **Apps e clientes** são **submodules** (cada um = repo separado no GitHub)
+- **Symlink:** `apps/admin/context -> ../../knowledge` (sem duplicação)
 
-### Estrutura adotada
+### Submodules atuais
 
-| Tipo | Exemplo | Repo |
-|------|---------|------|
-| **App interno** | admin, adventure, elite, finfeed | Cada um = 1 repo |
-| **App de cliente** | lidera-space, roseportaladvocacia, young-talents | Cada um = 1 repo |
-| **Base de conhecimento** | knowledge/, docs/, .cursor/ | Sem repo na raiz (ou repo separado) |
-| **Tools** | xtractor, dbgr | Cada um = 1 repo (se aplicável) |
+| Path | URL |
+|------|-----|
+| apps/admin | https://github.com/adventurelabsbrasil/admin.git |
+| apps/adventure | https://github.com/adventurelabsbrasil/adventure.git |
+| apps/elite | https://github.com/adventurelabsbrasil/elite.git |
+| apps/finfeed | https://github.com/adventurelabsbrasil/finfeed.git |
+| clients/01_lidera/lidera-space | https://github.com/adventurelabsbrasil/lidera-space.git |
+| clients/02_rose/roseportaladvocacia | https://github.com/adventurelabsbrasil/roseportaladvocacia.git |
+| clients/04_young/young-emp | https://github.com/adventurelabsbrasil/young-emp.git |
+| clients/04_young/ranking-vendas | https://github.com/rodrigoribasyoung/ranking-vendas.git |
 
-A pasta `01_ADVENTURE_LABS` é **estrutura de organização**, não um repo único. Cada app mantém seu `.git`.
+### Setup após clone
 
-### Opções alternativas (não adotadas)
+```bash
+./scripts/setup.sh
+```
 
-**Opção A — Monorepo único:** Remove sub-repos, perde histórico. Não recomendado.
-
-**Opção B — Git submodules:** Repo raiz referencia apps como submodules. Possível se quiser um "índice" versionado.
-
-**Opção C — Repos separados (adotado):** Sem git na raiz. Cada app = repo. Organização via pastas.
+Cria o symlink `admin/context -> ../../knowledge`.
 
 ## Checklist de secrets
 

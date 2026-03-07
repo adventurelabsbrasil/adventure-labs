@@ -1,0 +1,24 @@
+[submodule "apps/admin"]
+	path = apps/admin
+	url = https://github.com/adventurelabsbrasil/admin.git
+[submodule "apps/finfeed"]
+	path = apps/finfeed
+	url = https://github.com/adventurelabsbrasil/finfeed.git
+[submodule "apps/elite"]
+	path = apps/elite
+	url = https://github.com/adventurelabsbrasil/elite.git
+[submodule "apps/adventure"]
+	path = apps/adventure
+	url = https://github.com/adventurelabsbrasil/adventure.git
+[submodule "clients/01_lidera/lidera-space"]
+	path = clients/01_lidera/lidera-space
+	url = https://github.com/adventurelabsbrasil/lidera-space.git
+[submodule "clients/02_rose/roseportaladvocacia"]
+	path = clients/02_rose/roseportaladvocacia
+	url = https://github.com/adventurelabsbrasil/roseportaladvocacia.git
+[submodule "clients/04_young/young-emp"]
+	path = clients/04_young/young-emp
+	url = https://github.com/adventurelabsbrasil/young-emp.git
+[submodule "clients/04_young/ranking-vendas"]
+	path = clients/04_young/ranking-vendas
+	url = https://github.com/rodrigoribasyoung/ranking-vendas.git
