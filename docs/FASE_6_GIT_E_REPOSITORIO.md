@@ -19,6 +19,7 @@
 | clients/04_young/young-emp | https://github.com/adventurelabsbrasil/young-emp.git |
 | clients/04_young/ranking-vendas | https://github.com/rodrigoribasyoung/ranking-vendas.git |
 | clients/04_young/young-talents | https://github.com/adventurelabsbrasil/young-talents.git |
+| clients/01_lidera/lidera-skills | https://github.com/adventurelabsbrasil/lidera-skills.git |
 
 ### Setup após clone
 
@@ -32,6 +33,26 @@ Cria o symlink `admin/context -> ../../knowledge`.
 
 Antes do primeiro commit:
 
-- [ ] `git log --all -p` em cada sub-repo para verificar se há credenciais no histórico
-- [ ] Usar `git filter-repo` ou `BFG` para remover secrets do histórico, se necessário
+- [ ] Executar `./scripts/audit-secrets.sh --report` para auditoria automática
+- [ ] Revisar `_internal/audit-secrets-report.md` (não versionado, pode conter dados sensíveis)
+- [ ] O resumo `_internal/audit-secrets-summary.md` é commitável (sem conteúdo sensível)
+- [ ] Se secrets forem encontrados: usar `git filter-repo` ou BFG para remover do histórico
 - [ ] `.env.example` existe onde há `.env` em uso
+
+### Remoção de secrets do histórico (git filter-repo / BFG)
+
+Se a auditoria encontrar credenciais no histórico:
+
+1. **git filter-repo** (recomendado):
+   ```bash
+   pip install git-filter-repo
+   cd <submodule-path>
+   git filter-repo --replace-text <(echo 'API_KEY=***REMOVED***')
+   ```
+
+2. **BFG Repo-Cleaner**:
+   ```bash
+   java -jar bfg.jar --replace-text passwords.txt <repo>
+   ```
+
+3. Após limpeza: `git push --force` (coordenar com equipe).

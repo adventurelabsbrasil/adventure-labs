@@ -1,3 +1,10 @@
+---
+title: Manual de Armazenamento e Taxonomia — Adventure Labs
+domain: gestao_corporativa
+tags: [drive, taxonomia, processos, armazenamento]
+updated: 2026-03-07
+---
+
 # Manual de Armazenamento e Taxonomia — Adventure Labs
 
 Versão: 1.0  

@@ -25,3 +25,6 @@
 [submodule "clients/04_young/young-talents"]
 	path = clients/04_young/young-talents
 	url = https://github.com/adventurelabsbrasil/young-talents.git
+[submodule "clients/01_lidera/lidera-skills"]
+	path = clients/01_lidera/lidera-skills
+	url = https://github.com/adventurelabsbrasil/lidera-skills.git

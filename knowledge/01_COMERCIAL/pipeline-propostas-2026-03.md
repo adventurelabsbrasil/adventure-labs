@@ -1,3 +1,10 @@
+---
+title: Pipeline de propostas — Março 2026
+domain: comercial
+tags: [pipeline, propostas, crm]
+updated: 2026-03-07
+---
+
 # Pipeline de propostas — Março 2026
 
 Resumo comercial extraído do Brain Dump (03/03/2026). Detalhes de campanhas e entregas em [02_MARKETING](../02_MARKETING/) e [04_PROJETOS_DE_CLIENTES](../04_PROJETOS_DE_CLIENTES/).

@@ -1,0 +1,9 @@
+{
+  "name": "@adventure-labs/config",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Configurações compartilhadas (ESLint, TypeScript, etc.)",
+  "main": "index.js",
+  "exports": {},
+  "scripts": {}
+}

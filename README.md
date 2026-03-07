@@ -24,7 +24,7 @@ O script inicializa os submodules e cria o symlink `apps/admin/context -> ../../
 01_ADVENTURE_LABS/
 ├── _internal/      # Vault (refs), archive (clones temp)
 ├── apps/           # Submodules: admin, adventure, elite, finfeed
-├── clients/        # Submodules: lidera-space, roseportaladvocacia, young-emp, etc.
+├── clients/        # Submodules: lidera-space, lidera-skills, roseportaladvocacia, young-emp, etc.
 ├── knowledge/      # Base de conhecimento (taxonomia 00–99)
 ├── packages/       # Pacotes compartilhados
 ├── tools/          # Ferramentas internas
@@ -43,3 +43,5 @@ O script inicializa os submodules e cria o symlink `apps/admin/context -> ../../
 ## Segurança
 
 Credenciais e dados sensíveis **nunca** no repositório. Ver `_internal/vault/README.md`.
+
+- **Auditoria de secrets:** `./scripts/audit-secrets.sh --report` (relatório em `_internal/`)
