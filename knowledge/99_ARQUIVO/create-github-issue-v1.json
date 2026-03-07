@@ -1,0 +1,91 @@
+{
+  "name": "create-github-issue-v1",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "admin-criar-issue-github",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [0, 0],
+      "id": "a1b2c3d4-1111-4000-8000-000000000001",
+      "name": "Webhook",
+      "notes": "Payload: task_id, title, description, callback_url, callback_secret"
+    },
+    {
+      "parameters": {
+        "jsCode": "const item = $input.first();\nconst J = item.json || {};\nlet raw = J.body ?? J.data ?? J.json ?? J;\nif (typeof raw === 'string') {\n  try { raw = JSON.parse(raw); } catch (e) { raw = {}; }\n}\nif (!raw || typeof raw !== 'object') raw = {};\nconst callback_url = (raw.callback_url || '').toString().trim();\nconst callback_secret = (raw.callback_secret || '').toString().trim();\nif (!callback_url.startsWith('http')) {\n  const keys = Object.keys(J).join(', ') || '(vazio)';\n  throw new Error('callback_url vazio. Dispare pelo Admin (botão \"Criar issue no GitHub\"), não pelo Test do n8n. Chaves recebidas do Webhook: ' + keys);\n}\nreturn [{\n  json: {\n    task_id: raw.task_id,\n    title: (raw.title ?? '').toString(),\n    description: (raw.description ?? '').toString(),\n    callback_url,\n    callback_secret,\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [220, 0],
+      "id": "a1b2c3d4-2222-4000-8000-000000000002",
+      "name": "code.js"
+    },
+    {
+      "parameters": {
+        "owner": { "__rl": true, "value": "adventurelabsbrasil", "mode": "name" },
+        "repository": { "__rl": true, "mode": "name", "value": "admin" },
+        "title": "{{ $json.title }}",
+        "body": "={{ $json.description }}",
+        "labels": [],
+        "assignees": []
+      },
+      "type": "n8n-nodes-base.github",
+      "typeVersion": 1.1,
+      "position": [440, 0],
+      "id": "a1b2c3d4-3333-4000-8000-000000000003",
+      "name": "GitHub Create Issue"
+    },
+    {
+      "parameters": {
+        "method": "PATCH",
+        "url": "={{ $('code.js').first().json.callback_url }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "Authorization", "value": "=Bearer {{ $('code.js').first().json.callback_secret }}" },
+            { "name": "Content-Type", "value": "application/json" }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"issue_number\": {{ $('GitHub Create Issue').first().json.number }},\n  \"repo_owner\": \"adventurelabsbrasil\",\n  \"repo_name\": \"admin\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [660, 0],
+      "id": "a1b2c3d4-4444-4000-8000-000000000004",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"ok\": true,\n  \"issue_number\": {{ $node[\"GitHub Create Issue\"].json.number }}\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [880, 0],
+      "id": "a1b2c3d4-5555-4000-8000-000000000005",
+      "name": "Respond to Webhook"
+    }
+  ],
+  "connections": {
+    "Webhook": { "main": [[{ "node": "code.js", "type": "main", "index": 0 }]] },
+    "code.js": { "main": [[{ "node": "GitHub Create Issue", "type": "main", "index": 0 }]] },
+    "GitHub Create Issue": { "main": [[{ "node": "HTTP Request", "type": "main", "index": 0 }]] },
+    "HTTP Request": { "main": [[{ "node": "Respond to Webhook", "type": "main", "index": 0 }]] }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "meta": { "templateCredsSetupCompleted": false },
+  "tags": []
+}

@@ -1,0 +1,122 @@
+{
+  "updatedAt": "2026-03-04T04:17:50.740Z",
+  "createdAt": "2026-03-04T04:16:10.008Z",
+  "id": "k2VSJd4x6knWU3c7",
+  "name": "Admin: tarefa concluída → email",
+  "description": null,
+  "active": false,
+  "isArchived": true,
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "admin-tarefa-concluida",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "b634b3b5-4f2b-4af3-a3ad-caca94555a7b",
+      "name": "Webhook",
+      "webhookId": "admin-tarefa-concluida-001",
+      "notes": "Payload esperado: task_id, title, description (opcional). Admin chama ao marcar tarefa como concluída (status done)."
+    },
+    {
+      "parameters": {
+        "jsCode": "const item = $input.first();\nconst J = item.json || {};\nlet raw = J.body ?? J.data ?? J.json ?? J;\nif (typeof raw === 'string') {\n  try { raw = JSON.parse(raw); } catch (e) { raw = {}; }\n}\nif (!raw || typeof raw !== 'object') raw = {};\nreturn [{\n  json: {\n    task_id: (raw.task_id ?? '').toString(),\n    title: (raw.title ?? 'Sem título').toString(),\n    description: (raw.description ?? '').toString()\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        224,
+        0
+      ],
+      "id": "e59960ae-8182-4bca-a8e4-602e8b5621e8",
+      "name": "Normalize"
+    },
+    {
+      "parameters": {
+        "fromEmail": "noreply@adventurelabs.com.br",
+        "toEmail": "contato@adventurelabs.com.br",
+        "subject": "=Tarefa concluída no Admin: {{ $json.title }}",
+        "emailType": "text",
+        "message": "=Uma tarefa foi marcada como concluída no Admin.\n\nTítulo: {{ $json.title }}\nID: {{ $json.task_id }}\n\n{{ $json.description ? 'Descrição: ' + $json.description : '' }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.sendEmail",
+      "typeVersion": 2.1,
+      "position": [
+        448,
+        0
+      ],
+      "id": "83bce58f-c539-4ba2-9bee-7fed255c73af",
+      "name": "Send Email",
+      "notes": "Configure a credencial SMTP no n8n (Settings → Credentials). From: ajuste para um email válido do seu domínio."
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"ok\": true,\n  \"message\": \"Notificação de tarefa concluída enviada\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        672,
+        0
+      ],
+      "id": "78089ca8-da75-42e5-945d-bd32c3740b7b",
+      "name": "Respond to Webhook"
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Normalize",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "staticData": null,
+  "meta": null,
+  "pinData": {},
+  "versionId": "e92a4c9d-91d1-47b8-a42a-cbee18eba019",
+  "activeVersionId": null,
+  "versionCounter": 2,
+  "triggerCount": 0,
+  "shared": [
+    {
+      "updatedAt": "2026-03-04T04:16:10.008Z",
+      "createdAt": "2026-03-04T04:16:10.008Z",
+      "role": "workflow:owner",
+      "workflowId": "k2VSJd4x6knWU3c7",
+      "projectId": "9lG4asFvV530pfQY",
+      "project": {
+        "updatedAt": "2026-03-03T22:12:35.905Z",
+        "createdAt": "2026-03-03T22:03:39.320Z",
+        "id": "9lG4asFvV530pfQY",
+        "name": "Adventure Labs <contato@adventurelabs.com.br>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "creatorId": "53f37873-e667-4445-b4a1-2084f04d892f"
+      }
+    }
+  ],
+  "tags": [],
+  "activeVersion": null
+}

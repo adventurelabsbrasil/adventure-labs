@@ -1,0 +1,31 @@
+name: Issue genérico
+description: Tarefa, doc, decisão ou acompanhamento
+title: "[Issue] "
+labels: ["task"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use para itens que entram no board e não se encaixam em Bug ou Feature.
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Área
+      options:
+        - apps/admin
+        - apps/adventure
+        - clients
+        - knowledge
+        - tools
+        - Outro
+    validations:
+      required: true
+
+  - type: textarea
+    id: descricao
+    attributes:
+      label: Descrição
+      placeholder: Descreva de forma objetiva...
+    validations:
+      required: true

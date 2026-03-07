@@ -1,0 +1,11 @@
+---
+description: Previne exposição de dados sensíveis e credenciais
+alwaysApply: true
+---
+
+# Segurança e Dados Sensíveis
+
+- Nunca sugerir ou escrever credenciais, senhas, API keys ou tokens em código versionado.
+- Arquivos como credenciais-adventure.md, .env, token.json devem permanecer em .gitignore.
+- Ao criar exemplos, use placeholders: `process.env.API_KEY`, `[REDACTED]`.
+- Dados de clientes (CPF, extratos, respostas sigilosas) nunca no repositório.

@@ -1,0 +1,36 @@
+# Environment
+venv/
+.venv/
+env/
+.env
+.env.local
+*.local
+
+# Credentials - nunca versionar
+credentials.json
+token.json
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Logs
+*.log
+xtractor.log
+
+# OS
+.DS_Store
+Thumbs.db

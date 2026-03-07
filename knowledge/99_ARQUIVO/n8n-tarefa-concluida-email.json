@@ -1,0 +1,111 @@
+{
+  "name": "Admin: tarefa concluída → email",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "admin-tarefa-concluida",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [0, 0],
+      "id": "a1b2c3d4-e001-4000-8000-000000000001",
+      "name": "Webhook",
+      "webhookId": "admin-tarefa-concluida-001",
+      "notes": "Payload: task_id, title, description. Admin chama ao marcar tarefa como concluída (status done)."
+    },
+    {
+      "parameters": {
+        "jsCode": "const item = $input.first();\nconst J = item.json || {};\nlet raw = J.body ?? J.data ?? J.json ?? J;\nif (typeof raw === 'string') {\n  try { raw = JSON.parse(raw); } catch (e) { raw = {}; }\n}\nif (!raw || typeof raw !== 'object') raw = {};\nif (!raw.task_id && J.task_id != null) raw = J;\nconst task_id = (raw.task_id ?? '').toString();\nconst title = (raw.title ?? 'Sem título').toString();\nconst description = (raw.description ?? '').toString();\nreturn [{ json: { task_id, title, description } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [240, 0],
+      "id": "a1b2c3d4-e002-4000-8000-000000000002",
+      "name": "Normalize"
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "send",
+        "sendTo": "contato@adventurelabs.com.br",
+        "subject": "=Tarefa concluída no Admin: {{ $json.title }}",
+        "emailType": "text",
+        "message": "=Uma tarefa foi marcada como concluída no Admin.\n\nTítulo: {{ $json.title }}\nID: {{ $json.task_id }}\n\n{{ $json.description ? 'Descrição: ' + $json.description : '' }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [460, 0],
+      "id": "a1b2c3d4-e003-4000-8000-000000000003",
+      "name": "Gmail",
+      "credentials": {
+        "googleApi": {
+          "name": "Gmail account"
+        }
+      },
+      "notes": "Após importar: em Credentials selecione sua conta Gmail (Google OAuth2). O email será enviado de sua conta para contato@adventurelabs.com.br."
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"ok\": true,\n  \"message\": \"Notificação de tarefa concluída enviada\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [680, 0],
+      "id": "a1b2c3d4-e004-4000-8000-000000000004",
+      "name": "Respond to Webhook"
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Normalize",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize": {
+      "main": [
+        [
+          {
+            "node": "Gmail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Respond to Webhook": {
+      "main": []
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "meta": {
+    "templateCredsSetupCompleted": false
+  },
+  "tags": []
+}
