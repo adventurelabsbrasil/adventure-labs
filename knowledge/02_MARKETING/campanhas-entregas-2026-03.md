@@ -1,3 +1,10 @@
+---
+title: Campanhas e entregas — Março 2026
+domain: marketing
+tags: [campanhas, entregas, kpis]
+updated: 2026-03-07
+---
+
 # Campanhas e entregas — Março 2026
 
 Resumo de campanhas, criativos e entregas de marketing extraído do Brain Dump (03/03/2026) e relatório Founder (04/03/2026).

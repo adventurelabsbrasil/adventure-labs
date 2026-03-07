@@ -1,3 +1,10 @@
+---
+title: Inventário — Apps e repositórios Martech (Adventure Labs)
+domain: laboratorio
+tags: [inventario, apps, martech, repos]
+updated: 2026-03-07
+---
+
 # Inventário — Apps e repositórios Martech (Adventure Labs)
 
 Documento de referência para o Grove e para a equipe: quais aplicativos (SaaS/PWAs) e repositórios fazem parte do portfólio martech da Adventure Labs. A fonte única de verdade no sistema é a tabela **adv_apps** no Admin (Dashboard → Apps / Repositórios). Este inventário pode ser mantido à mão em paralelo ou, em fase 2, gerado a partir dos dados do Admin.

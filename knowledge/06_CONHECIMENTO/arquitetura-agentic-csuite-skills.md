@@ -1,3 +1,10 @@
+---
+title: Arquitetura Agêntica — C-Suite + Skills
+domain: conhecimento
+tags: [arquitetura, agentes, skills, c-suite, grove]
+updated: 2026-03-07
+---
+
 # Arquitetura Agêntica: C-Suite + Skills
 
 Documento de referência para a separação entre orquestradores (C-Suite) e executores (Skills). Atualizado conforme o plano de implementação.

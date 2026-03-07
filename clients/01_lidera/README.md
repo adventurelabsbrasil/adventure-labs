@@ -1,6 +1,7 @@
 # Cliente: Lidera
 
 **Projetos (submodules):**
-- `lidera-space` — App principal
+- `lidera-space` — App principal (área de membros / ponto)
+- `lidera-skills` — Sistema de gestão de avaliações de desempenho
 
-**Outros projetos** (lidera-, lideraspace, lidera-skills, Lidera/*) podem ser adicionados como submodules conforme necessário.
+**Futuros:** capclear-site (quando existir como repo).

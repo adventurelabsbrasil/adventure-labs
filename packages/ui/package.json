@@ -1,0 +1,9 @@
+{
+  "name": "@adventure-labs/ui",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Componentes UI compartilhados entre apps Adventure Labs",
+  "main": "index.js",
+  "exports": {},
+  "scripts": {}
+}

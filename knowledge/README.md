@@ -14,3 +14,18 @@ Taxonomia 00–99, espelho do Google Drive da agência.
 - `05_LABORATORIO` — Inventário, experimentos
 - `06_CONHECIMENTO` — Arquitetura, manuais
 - `99_ARQUIVO` — Histórico, avulsos
+
+## Frontmatter para ML/RAG
+
+Para facilitar indexação e embeddings, novos documentos devem incluir frontmatter YAML no início:
+
+```yaml
+---
+title: Nome do documento
+domain: gestao_corporativa | comercial | marketing | laboratorio | conhecimento | projetos_clientes
+tags: [tag1, tag2, tag3]
+updated: YYYY-MM-DD
+---
+```
+
+**Domínios sugeridos:** `gestao_corporativa`, `comercial`, `marketing`, `laboratorio`, `conhecimento`, `projetos_clientes`.

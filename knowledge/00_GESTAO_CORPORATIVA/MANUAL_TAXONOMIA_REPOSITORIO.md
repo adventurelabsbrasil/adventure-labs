@@ -1,3 +1,10 @@
+---
+title: Manual de Taxonomia do Repositório — Adventure Labs
+domain: gestao_corporativa
+tags: [taxonomia, repositorio, skills, organizacao]
+updated: 2026-03-07
+---
+
 # Manual de Taxonomia do Repositório — Adventure Labs
 
 **Versão:** 1.0  

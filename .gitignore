@@ -11,6 +11,7 @@
 # Temp e archive (clones pesados, sub-repos)
 _internal/temp/
 _internal/archive/*
+_internal/audit-secrets-report.md
 !_internal/archive/README.md
 
 # Build e cache

@@ -1,0 +1,9 @@
+{
+  "name": "@adventure-labs/db",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Schemas, migrations e utilitários de banco compartilhados",
+  "main": "index.js",
+  "exports": {},
+  "scripts": {}
+}

@@ -1,3 +1,10 @@
+---
+title: Resumo Executivo — Adventure Labs (Março 2026)
+domain: gestao_corporativa
+tags: [resumo, c-suite, grove, estrategia]
+updated: 2026-03-07
+---
+
 # Resumo Executivo — Adventure Labs (Março 2026)
 
 Documento síntese da empresa, elaborado pelo Grove com contribuições do C-Suite (Ohno, Torvalds, Ogilvy, Buffett, Cagan). Objetivo: visão única do estado atual, direção e **lacunas de informação** para fechar o sumário executivo e orientar o semestre.
