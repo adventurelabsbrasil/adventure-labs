@@ -22,3 +22,6 @@
 [submodule "clients/04_young/ranking-vendas"]
 	path = clients/04_young/ranking-vendas
 	url = https://github.com/rodrigoribasyoung/ranking-vendas.git
+[submodule "clients/04_young/young-talents"]
+	path = clients/04_young/young-talents
+	url = https://github.com/adventurelabsbrasil/young-talents.git
