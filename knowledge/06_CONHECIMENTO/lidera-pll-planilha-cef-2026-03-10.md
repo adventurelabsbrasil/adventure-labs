@@ -24,6 +24,7 @@ updated: 2026-03-10
 |---------|-----|
 | **Planilha (Google Sheets)** | [Abrir planilha](https://docs.google.com/spreadsheets/d/1wjBKqA33x69f6aMHItrXLIYFPfbA092fOhTr6FwzK98/edit?gid=902744795#gid=902744795) |
 | **Apps Script (código)** | [Abrir projeto Apps Script](https://script.google.com/u/0/home/projects/1uiZ3d4LVTNFbNRKnyJhQCND28eVs8_MGYGydQZwJ9hLoZrlhgRDPk70T/edit) |
+| **Gemini (apoio ao desenvolvimento)** | [Conversa Gemini que apoiou a construção da planilha](https://gemini.google.com/gem/fbf5b37a6584/6948a45bd4dbc6b1) |
 
 Esses links estão registrados como **acessos do cliente Lidera** no app Admin (`/dashboard/clientes/[id]`), na seção *Acessos e credenciais*, para acesso rápido pela equipe.
 
