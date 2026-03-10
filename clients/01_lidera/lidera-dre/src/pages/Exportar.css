@@ -1,0 +1,82 @@
+.exportar-page {
+  max-width: 600px;
+}
+
+.exportar-controls h3,
+.exportar-actions h3 {
+  margin: 0 0 0.75rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.exportar-periodo {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.exportar-periodo label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  color: var(--text-primary);
+}
+
+.exportar-dates {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.exportar-dates label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.exportar-dates label span {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.exportar-dates select {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  min-width: 120px;
+}
+
+.exportar-periodo-label {
+  margin: 0.5rem 0 0;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.exportar-actions {
+  margin-top: 1rem;
+}
+
+.exportar-actions .text-muted {
+  margin: 0 0 0.75rem;
+  font-size: 0.9rem;
+}
+
+.exportar-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.exportar-print-hint {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  background: var(--bg-secondary);
+  border-radius: var(--radius-sm);
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}

@@ -1,0 +1,213 @@
+.dre-page {
+  max-width: 900px;
+}
+
+.dre-empty {
+  padding: 2rem 0;
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.dre-controls {
+  margin-bottom: 1rem;
+  display: flex;
+  gap: 1rem;
+  align-items: flex-end;
+}
+
+.dre-controls label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.dre-controls label span {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.dre-controls select {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  min-width: 120px;
+}
+
+.dre-report {
+  padding: 1.5rem;
+}
+
+.dre-title {
+  margin: 0 0 1.5rem;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.dre-section {
+  margin-bottom: 1.5rem;
+}
+
+.dre-section-title {
+  margin: 0 0 0.75rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.dre-section-title.entrada {
+  color: var(--entrada);
+}
+
+.dre-section-title.saida {
+  color: var(--saida);
+}
+
+.dre-linhas {
+  list-style: none;
+  margin: 0 0 1rem;
+  padding: 0;
+}
+
+.dre-categoria {
+  margin-bottom: 0.5rem;
+}
+
+.dre-cat-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.4rem 0;
+  font-weight: 500;
+}
+
+.dre-cat-nome {
+  color: var(--text-primary);
+}
+
+.dre-cat-total.entrada {
+  color: var(--entrada);
+  font-variant-numeric: tabular-nums;
+}
+
+.dre-cat-total.saida {
+  color: var(--saida);
+  font-variant-numeric: tabular-nums;
+}
+
+.dre-sub {
+  list-style: none;
+  margin: 0 0 0 1rem;
+  padding: 0;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.dre-sub li {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.2rem 0;
+}
+
+.dre-total-line {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.6rem 0;
+  font-weight: 600;
+  border-top: 1px solid var(--border);
+}
+
+.dre-total-line.entrada {
+  color: var(--entrada);
+}
+
+.dre-total-line.saida {
+  color: var(--saida);
+}
+
+.dre-resultado {
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+  border-top: 2px solid var(--border);
+  margin-top: 0.5rem;
+}
+
+.dre-resultado.positivo {
+  color: var(--entrada);
+}
+
+.dre-resultado.negativo {
+  color: var(--saida);
+}
+
+.dre-por-mes {
+  margin-top: 2rem;
+}
+
+.dre-meses-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 0.75rem;
+}
+
+.dre-mes-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 0.75rem;
+  font-size: 0.85rem;
+}
+
+.dre-mes-nome {
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+}
+
+.dre-mes-entrada {
+  color: var(--entrada);
+  font-variant-numeric: tabular-nums;
+}
+
+.dre-mes-saida {
+  color: var(--saida);
+  font-variant-numeric: tabular-nums;
+}
+
+.dre-mes-resultado {
+  margin-top: 0.35rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.dre-mes-resultado.positivo {
+  color: var(--entrada);
+}
+
+.dre-mes-resultado.negativo {
+  color: var(--saida);
+}
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  .export-print-target .card.export-print {
+    background: #fff !important;
+    color: #111 !important;
+    border: 1px solid #ddd !important;
+  }
+  .export-print .dre-section-title.entrada { color: #0d6b0d; }
+  .export-print .dre-section-title.saida { color: #b91c1c; }
+  .export-print .dre-cat-total.entrada { color: #0d6b0d; }
+  .export-print .dre-cat-total.saida { color: #b91c1c; }
+  .export-print .dre-total-line.entrada { color: #0d6b0d; }
+  .export-print .dre-total-line.saida { color: #b91c1c; }
+  .export-print .dre-resultado.positivo { color: #0d6b0d; }
+  .export-print .dre-resultado.negativo { color: #b91c1c; }
+}

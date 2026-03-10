@@ -1,0 +1,102 @@
+.lancamentos-editar-page {
+  max-width: 100%;
+}
+
+.filters-card {
+  margin-bottom: 1.5rem;
+}
+
+.filters-card h3 {
+  margin: 0 0 1rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.filters-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: flex-end;
+}
+
+.filters-row label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.filters-row label span {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.filters-row input,
+.filters-row select {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+}
+
+.table-card {
+  overflow: hidden;
+  padding: 0;
+}
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+.lancamentos-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.lancamentos-table th,
+.lancamentos-table td {
+  padding: 0.6rem 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+
+.lancamentos-table th {
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.lancamentos-table td.valor-cell.tipo-entrada {
+  color: var(--entrada);
+  font-variant-numeric: tabular-nums;
+}
+
+.lancamentos-table td.valor-cell.tipo-saida {
+  color: var(--saida);
+  font-variant-numeric: tabular-nums;
+}
+
+.editing-row td input,
+.editing-row td select {
+  padding: 0.35rem 0.5rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  font-size: 0.85rem;
+}
+
+.btn-sm {
+  padding: 0.35rem 0.6rem;
+  font-size: 0.85rem;
+  margin-right: 0.25rem;
+}
+
+.table-empty {
+  padding: 2rem;
+  text-align: center;
+  margin: 0;
+}
