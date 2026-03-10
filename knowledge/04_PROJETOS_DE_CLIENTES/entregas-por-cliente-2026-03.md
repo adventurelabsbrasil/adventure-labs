@@ -45,13 +45,14 @@ Dados fechamento fev: Bolsa família 2, CLT 94, Pessoal 5, Energia 149.
 
 ---
 
-## Lidera (Lidera-space)
+## Lidera (Lidera-space + PLL)
 
 - **Contato:** Guilherme (do Lidera).
 
 | Entregável | Status | Observação |
 |------------|--------|------------|
 | **Lidera-space** (área de membros) | Em andamento | App em desenvolvimento no Cursor; ainda não pronto para entrega. Guilherme cobra retorno há dias. Ação: priorizar entrega ou comunicar novo prazo. |
+| **PLL — Planilha CEF** (gestão estoque + lista compras restaurantes) | ✅ Entregue (10/03/2026) | Projeto pontual (upscale) R$ 90. Planilha 1 de 5 do pacote. Detalhes em [lidera-pll-planilha-cef-2026-03-10.md](lidera-pll-planilha-cef-2026-03-10.md). |
 
 ---
 
