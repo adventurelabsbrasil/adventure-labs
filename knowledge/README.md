@@ -49,4 +49,5 @@ Relatórios diários ou pontuais do que foi feito em termos de tecnologia. Consu
 | Documento | Descrição |
 |-----------|-----------|
 | [06_CONHECIMENTO/relatorio-tech-2026-03-09.md](06_CONHECIMENTO/relatorio-tech-2026-03-09.md) | **Relatório Tech — 09/03/2026** — CRM, Space, C-Suite V11, Time Bank; Admin (Google Ads, Meta BM, allowlist, /dashboard/ads, CLI); credenciais e env por cliente (subdomínio, template, clients/XX/admin). |
+| [06_CONHECIMENTO/lidera-pll-planilha-cef-2026-03-10.md](06_CONHECIMENTO/lidera-pll-planilha-cef-2026-03-10.md) | **Lidera PLL — Planilha CEF (10/03/2026)** — Gestão de estoque e lista de compras para restaurantes (Programa Lucro e Liberdade); Google Sheets + Apps Script; links da planilha e do script; 1 de 5 do pacote. |
 | [06_CONHECIMENTO/young-talents-export-candidatos-2025-03-10.md](06_CONHECIMENTO/young-talents-export-candidatos-2025-03-10.md) | **Young Talents — Exportação de candidatos (10/03/2025)** — Nova feature: exportar lista filtrada em CSV, XLS (Excel) e PDF com seleção de colunas; Banco de Talentos e Relatórios. |
