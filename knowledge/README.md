@@ -42,12 +42,19 @@ Documentos em `docs/` que fazem parte da base de conhecimento para operação e 
 | [docs/ADMIN_POR_CLIENTE_SUBDOMINIO.md](../docs/ADMIN_POR_CLIENTE_SUBDOMINIO.md) | **Admin por cliente** — Subdomínio + Vercel por cliente; env em `clients/XX_nome/admin/.env.example`. |
 | [docs/VERCEL_GITHUB_DEPLOY.md](../docs/VERCEL_GITHUB_DEPLOY.md) | **Deploy Vercel + GitHub** — Projetos conectados e Admin por cliente. |
 
+## Processos internos (comunicação e operação)
+
+| Documento | Descrição |
+|-----------|-----------|
+| [00_GESTAO_CORPORATIVA/processos/email-html-cliente-adventure-labs.md](00_GESTAO_CORPORATIVA/processos/email-html-cliente-adventure-labs.md) | **Email em HTML para cliente (padrão Adventure Labs)** — Processo para criar, editar e enviar emails em HTML (novas features, entregas) via Google Apps Script; padrão visual; link do projeto Apps Script; uso interno (futuro: automação por feature). |
+
 ## Relatórios Tech (C-Suite)
 
 Relatórios diários ou pontuais do que foi feito em termos de tecnologia. Consumidos pela API `/api/csuite/context-docs` e pelo workflow n8n (Build Context) para que o C-Suite tenha visibilidade.
 
 | Documento | Descrição |
 |-----------|-----------|
+| [06_CONHECIMENTO/relatorio-tech-2026-03-10.md](06_CONHECIMENTO/relatorio-tech-2026-03-10.md) | **Relatório Tech — 10/03/2026** — Admin (catálogo apps/ativos, filtros, tabela, estrutura Next.js); Lidera DRE (app multi-tenant, auth, export); PLL Planilha CEF + docs C-Suite; Young Talents export CSV/XLS/PDF; Lara (API analyze, n8n); Sueli (sueli-config); base de conhecimento atualizada. |
 | [06_CONHECIMENTO/relatorio-tech-2026-03-09.md](06_CONHECIMENTO/relatorio-tech-2026-03-09.md) | **Relatório Tech — 09/03/2026** — CRM, Space, C-Suite V11, Time Bank; Admin (Google Ads, Meta BM, allowlist, /dashboard/ads, CLI); credenciais e env por cliente (subdomínio, template, clients/XX/admin). |
 | [06_CONHECIMENTO/lidera-pll-planilha-cef-2026-03-10.md](06_CONHECIMENTO/lidera-pll-planilha-cef-2026-03-10.md) | **Lidera PLL — Planilha CEF (10/03/2026)** — Gestão de estoque e lista de compras para restaurantes (Programa Lucro e Liberdade); Google Sheets + Apps Script; links da planilha e do script; 1 de 5 do pacote. |
 | [06_CONHECIMENTO/young-talents-export-candidatos-2025-03-10.md](06_CONHECIMENTO/young-talents-export-candidatos-2025-03-10.md) | **Young Talents — Exportação de candidatos (10/03/2025)** — Nova feature: exportar lista filtrada em CSV, XLS (Excel) e PDF com seleção de colunas; Banco de Talentos e Relatórios. |
