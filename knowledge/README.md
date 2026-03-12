@@ -58,3 +58,11 @@ Relatórios diários ou pontuais do que foi feito em termos de tecnologia. Consu
 | [06_CONHECIMENTO/relatorio-tech-2026-03-09.md](06_CONHECIMENTO/relatorio-tech-2026-03-09.md) | **Relatório Tech — 09/03/2026** — CRM, Space, C-Suite V11, Time Bank; Admin (Google Ads, Meta BM, allowlist, /dashboard/ads, CLI); credenciais e env por cliente (subdomínio, template, clients/XX/admin). |
 | [06_CONHECIMENTO/lidera-pll-planilha-cef-2026-03-10.md](06_CONHECIMENTO/lidera-pll-planilha-cef-2026-03-10.md) | **Lidera PLL — Planilha CEF (10/03/2026)** — Gestão de estoque e lista de compras para restaurantes (Programa Lucro e Liberdade); Google Sheets + Apps Script; links da planilha e do script; 1 de 5 do pacote. |
 | [06_CONHECIMENTO/young-talents-export-candidatos-2025-03-10.md](06_CONHECIMENTO/young-talents-export-candidatos-2025-03-10.md) | **Young Talents — Exportação de candidatos (10/03/2025)** — Nova feature: exportar lista filtrada em CSV, XLS (Excel) e PDF com seleção de colunas; Banco de Talentos e Relatórios. |
+
+## Documentos de referência para o C-Suite
+
+Consumidos pela API `/api/csuite/context-docs` e pelo workflow n8n (Build Context). O C-Suite deve conhecer estes artefatos ao contribuir com o squad:
+
+| Documento | Descrição |
+|-----------|-----------|
+| [06_CONHECIMENTO/referencia-coleção-docs-para-ia.md](06_CONHECIMENTO/referencia-coleção-docs-para-ia.md) | **Coleção de documentação para IA** — Referência ao compilado `docs/COLEÇÃO_DOCS_PARA_IA.md`: reúne README e PLANO/roadmap de apps, sites, workflows, tools, skills e agentes (implementado + pendente/futuro). O C-Suite deve saber que existe este arquivo exportável que mostra em que ponto estamos e onde queremos chegar. |
