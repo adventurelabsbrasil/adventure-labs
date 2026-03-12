@@ -1,0 +1,19 @@
+{
+  "name": "adventure-labs-whatsapp-worker",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Worker WhatsApp Web para leitura diária de grupos (apoio ao Cagan/CPO). Expõe GET /daily-messages para n8n.",
+  "main": "src/index.js",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js"
+  },
+  "dependencies": {
+    "express": "^4.21.0",
+    "qrcode-terminal": "^0.12.0",
+    "whatsapp-web.js": "^1.26.0"
+  }
+}
