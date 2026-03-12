@@ -1,0 +1,20 @@
+[
+  {
+    "parameters": {
+      "method": "POST",
+      "url": "https://chat.googleapis.com/v1/spaces/AAQAL_y4dRg/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=zGFfQsOQ9zbbFQzJZTZx0s-1FW6_zW3h-t36LcVhVRM",
+      "sendBody": true,
+      "specifyBody": "json",
+      "jsonBody": "={{ JSON.stringify({ text: $('Parse CEO Decision').first().json.chatMessage + '\\n\\n*Issue criada:* ' + ($json.html_url || 'URL indisponivel') + '\\n_Run: ' + $('Parse CEO Decision').first().json.runTimestamp.substring(0,16).replace('T',' ') + ' UTC_' }) }}",
+      "options": {}
+    },
+    "id": "b756aae9-a197-404c-abc8-87b0b2836b96",
+    "name": "Notify Google Chat",
+    "type": "n8n-nodes-base.httpRequest",
+    "typeVersion": 4.2,
+    "position": [
+      1472,
+      1616
+    ]
+  }
+]
