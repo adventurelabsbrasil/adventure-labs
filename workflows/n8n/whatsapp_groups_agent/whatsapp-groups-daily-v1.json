@@ -1,0 +1,113 @@
+{
+  "name": "Zazu — WhatsApp Grupos resumo diário (Cagan/CPO)",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 21 * * *"
+            }
+          ]
+        }
+      },
+      "id": "wa-schedule-001",
+      "name": "Schedule 18h BRT",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [240, 300],
+      "notes": "Zazu: dispara diariamente às 18:00 BRT (21:00 UTC). Resumo dos grupos WhatsApp para o CPO."
+    },
+    {
+      "parameters": {
+        "jsCode": "const d = new Date();\nd.setUTCDate(d.getUTCDate() - 1);\nconst date = d.toISOString().slice(0, 10);\nreturn [{ json: { date } }];"
+      },
+      "id": "wa-code-date-001",
+      "name": "Set Date Yesterday",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [460, 300],
+      "notes": "Calcula data de ontem (YYYY-MM-DD) para buscar mensagens do dia."
+    },
+    {
+      "parameters": {
+        "url": "={{ $env.WHATSAPP_WORKER_URL || 'http://localhost:3333' }}/daily-messages?date={{ $json.date }}",
+        "authentication": "none",
+        "options": {
+          "response": {
+            "response": {
+              "neverError": false
+            }
+          }
+        }
+      },
+      "id": "wa-http-get-001",
+      "name": "GET Daily Messages",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [680, 300],
+      "notes": "Zazu: chama o worker WhatsApp. Variável WHATSAPP_WORKER_URL no n8n (ex.: https://whatsapp-worker.railway.app)."
+    },
+    {
+      "parameters": {
+        "jsCode": "const item = $input.first().json;\nconst date = item.date || '';\nconst groups = item.groups || [];\nconst err = item.error;\n\nif (err) {\n  return [{ json: { title: 'WhatsApp Grupos — resumo ' + date, content: '[Erro ao buscar mensagens] ' + err, _skipPost: false } }];\n}\n\nfunction fmtBR(ymd) {\n  if (!ymd || ymd.length < 10) return ymd;\n  return ymd.slice(8, 10) + '/' + ymd.slice(5, 7) + '/' + ymd.slice(0, 4);\n}\n\nconst parts = [];\nparts.push('Resumo dos grupos de WhatsApp em ' + fmtBR(date) + '.');\nparts.push('');\n\nif (groups.length === 0) {\n  parts.push('Nenhuma mensagem no período ou grupos não configurados.');\n} else {\n  for (const g of groups) {\n    parts.push('--- ' + (g.name || g.id) + ' ---');\n    const msgs = g.messages || [];\n    if (msgs.length === 0) {\n      parts.push('(nenhuma mensagem do dia)');\n    } else {\n      for (const m of msgs) {\n        const from = (m.from || '').replace(/@.*/, '');\n        parts.push('[' + from + '] ' + (m.body || '').replace(/\\n/g, ' '));\n      }\n    }\n    parts.push('');\n  }\n}\n\nconst title = 'WhatsApp Grupos — resumo ' + fmtBR(date);\nconst content = parts.join('\\n').slice(0, 50000);\n\nreturn [{ json: { title, content } }];"
+      },
+      "id": "wa-format-001",
+      "name": "Format Founder Report",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [900, 300],
+      "notes": "Zazu: monta título e conteúdo para adv_founder_reports. C-Suite e Cagan leem nos últimos 7 dias."
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://admin.adventurelabs.com.br/api/csuite/founder-report",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ title: $json.title, content: $json.content }) }}",
+        "options": {}
+      },
+      "id": "wa-post-founder-001",
+      "name": "POST Founder Report",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1120, 300],
+      "credentials": {},
+      "notes": "Grava em adv_founder_reports. Usar credencial HTTP Header Auth com x-admin-key = CRON_SECRET do Admin."
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule 18h BRT": {
+      "main": [[{ "node": "Set Date Yesterday", "type": "main", "index": 0 }]]
+    },
+    "Set Date Yesterday": {
+      "main": [[{ "node": "GET Daily Messages", "type": "main", "index": 0 }]]
+    },
+    "GET Daily Messages": {
+      "main": [[{ "node": "Format Founder Report", "type": "main", "index": 0 }]]
+    },
+    "Format Founder Report": {
+      "main": [[{ "node": "POST Founder Report", "type": "main", "index": 0 }]]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "versionId": "1",
+  "meta": {
+    "templateCredsSetupCompleted": false
+  }
+}

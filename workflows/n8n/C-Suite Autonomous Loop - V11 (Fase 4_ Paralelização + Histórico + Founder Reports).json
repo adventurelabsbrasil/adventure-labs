@@ -1,0 +1,1179 @@
+{
+  "name": "C-Suite Autonomous Loop - V11 (Fase 4: Paralelização + Histórico + Founder Reports)",
+  "nodes": [
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT id, title, description, status, task_kind, priority, created_at, updated_at\nFROM adv_tasks\nWHERE updated_at > NOW() - INTERVAL '7 days'\nORDER BY updated_at DESC\nLIMIT 50;",
+        "options": {}
+      },
+      "id": "0e82b152-e2b3-4caa-b888-b9af0a228198",
+      "name": "Fetch Tasks1",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        -800,
+        1520
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "DSS8yTHRiCKbyy1V",
+          "name": "Postgres supabase pooler"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT id, titulo, descricao, status, created_at FROM adv_ideias WHERE created_at > NOW() - INTERVAL '30 days' ORDER BY created_at DESC LIMIT 20;",
+        "options": {}
+      },
+      "id": "b02d5faf-e40f-41a9-a77d-f5d24ce58ccb",
+      "name": "Fetch Ideias1",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        -576,
+        1520
+      ],
+      "executeOnce": true,
+      "credentials": {
+        "postgres": {
+          "id": "DSS8yTHRiCKbyy1V",
+          "name": "Postgres supabase pooler"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const tasks = $('Fetch Tasks1').all().map(i => i.json);\nconst ideias = $('Fetch Ideias1').all().map(i => i.json);\nconst taskTitles = tasks.slice(0, 5).map(t => (t.title || t.titulo || '').substring(0, 80)).filter(Boolean).join('; ');\nconst ideiaTitles = ideias.slice(0, 3).map(i => (i.titulo || i.descricao || '').substring(0, 80)).filter(Boolean).join('; ');\nconst queryText = ('Contexto C-Suite: tarefas ' + taskTitles + ' | ideias ' + ideiaTitles).substring(0, 500) || 'Reuniao C-Suite analise operacional';\nreturn [{ json: { queryText } }];"
+      },
+      "id": "prepare-memory-query-001",
+      "name": "Prepare Memory Query1",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -352,
+        1520
+      ],
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://generativelanguage.googleapis.com/v1beta/models/gemini-embedding-001:embedContent",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ model: 'models/text-embedding-001', content: { parts: [{ text: $json.queryText }] }, taskType: 'RETRIEVAL_DOCUMENT' }) }}",
+        "options": {}
+      },
+      "id": "embed-memory-query-001",
+      "name": "Embed for Memory Query1",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -128,
+        1520
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000,
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "UliHZNvWivRleRny",
+          "name": "x-goog-api-key"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const res = $json;\nconst values = res?.embedding?.values || [];\nconst fallbackQuery = \"SELECT content, metadata::text AS metadata, created_at FROM adv_csuite_memory ORDER BY created_at DESC LIMIT 5\";\nif (values.length === 0) {\n  return [{ json: { memoryQuery: fallbackQuery } }];\n}\nconst embeddingStr = '[' + values.join(',') + ']';\nconst memoryQuery = \"SELECT content, metadata::text AS metadata, created_at FROM adv_csuite_memory WHERE embedding IS NOT NULL ORDER BY embedding <-> '\" + embeddingStr.replace(/'/g, \"''\") + \"'::vector LIMIT 5\";\nreturn [{ json: { memoryQuery } }];"
+      },
+      "id": "prepare-memory-embedding-001",
+      "name": "Prepare Memory Embedding1",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        96,
+        1520
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "{{ $json.memoryQuery }}",
+        "options": {}
+      },
+      "id": "166efc8e-258f-4f9f-b2ca-c2a7c1c61f47",
+      "name": "Fetch Vector Memory1",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        320,
+        1520
+      ],
+      "executeOnce": true,
+      "alwaysOutputData": true,
+      "notesInFlow": false,
+      "credentials": {
+        "postgres": {
+          "id": "DSS8yTHRiCKbyy1V",
+          "name": "Postgres supabase pooler"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT id, title, content, created_at FROM adv_founder_reports WHERE tenant_id = '00000000-0000-0000-0000-000000000000' AND created_at > NOW() - INTERVAL '7 days' ORDER BY created_at DESC LIMIT 15;",
+        "options": {}
+      },
+      "id": "v11-fetch-founder-reports-001",
+      "name": "Fetch Founder Reports1",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        432,
+        1520
+      ],
+      "executeOnce": true,
+      "alwaysOutputData": true,
+      "credentials": {
+        "postgres": {
+          "id": "DSS8yTHRiCKbyy1V",
+          "name": "Postgres supabase pooler"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const tasks = $('Fetch Tasks1').all().map(i => i.json);\nconst ideias = $('Fetch Ideias1').all().map(i => i.json);\nconst memories = $('Fetch Vector Memory1').all().map(i => i.json);\nlet reports = [];\ntry { reports = $('Fetch Founder Reports1').all().map(i => i.json); } catch (e) { reports = []; }\nconst currentDate = new Date().toISOString();\n\nlet contextDocs = '';\ntry {\n  const docData = $('Fetch Context Docs1').all();\n  if (Array.isArray(docData) && docData.length > 0) {\n    const first = docData[0]?.json;\n    if (first?.text) {\n      contextDocs = first.text.substring(0, 8000);\n    } else {\n      contextDocs = docData.map(d => `- ${d.json?.title || 'Doc'}: ${(d.json?.content || d.json?.text || '').substring(0, 200)}`).join('\\n');\n    }\n  }\n} catch (e) {\n  console.error('Erro ao processar docs:', e.message);\n  contextDocs = '[Docs indisponíveis nesta execução]';\n}\n\nconst docsSection = contextDocs ? `\\n=== DOCUMENTOS CONTEXTUAIS ===\\n${contextDocs}\\n\\n` : '';\n\nconst reportsText = reports.length > 0 ? reports.map(r => `- [${(r.created_at || '').substring(0, 10)}] ${r.title || 'Sem titulo'}: ${(r.content || '').substring(0, 500)}`).join('\\n') : 'Nenhum relatorio do founder nos ultimos 7 dias.';\nconst founderSection = `\\n=== RELATORIOS DO FOUNDER (ultimos 7 dias) ===\\n${reportsText}\\n\\n`;\n\nconst isTech = (t) => /(bug|dev|api|banco|sql|deploy|tech|codigo|app|web)/i.test((t.title || '') + (t.description || ''));\nconst tasksTech = tasks.filter(isTech);\n\nconst formatTasks = (list) => list.length > 0 ? list.map(t => `- [${t.status || 'N/A'}] ${t.title || t.titulo || 'N/A'}`).join('\\n') : 'Nenhuma.';\nconst memText = memories.length > 0 ? memories.map(m => `- ${m.content}`).join('\\n') : 'Nenhuma.';\n\nconst baseContext = `DATA: ${currentDate}${docsSection}${founderSection}=== MEMORIA C-SUITE ===\\n${memText}\\n`;\nconst contextCTO = baseContext + '\\n=== TAREFAS TECH ===\\n' + formatTasks(tasksTech);\nconst context = baseContext + '\\n=== RESUMO GERAL ===\\n' + formatTasks(tasks);\n\nreturn [{ json: { context, contextCTO, runTimestamp: currentDate, tasksCount: tasks.length, ideasCount: ideias.length } }];"
+      },
+      "id": "eb7821f9-c9ba-4158-b649-54e8ea4e9cab",
+      "name": "Build Context1",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        544,
+        1520
+      ],
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('Build Context1').first().json.context }}",
+        "options": {
+          "systemMessage": "Você é Taiichi Ohno (Ohno), COO da Adventure Labs. Analise os dados com foco em: gargalos operacionais, tarefas bloqueadas ou em risco de atraso, aderência ao ciclo de vida (Briefing -> Implementação -> Execução -> Relatório), SLA e eficiência de fluxo. Elimine desperdício. SE precisar de contexto sobre issues do GitHub (open, closed, all), USE a ferramenta GitHub API. Formate sua resposta em texto legível com: Análise Operacional, Gargalos, Tarefas em Risco e Recomendações Operacionais."
+        }
+      },
+      "id": "baf42078-bffe-4388-811a-fd5a95643f36",
+      "name": "COO Ohno1",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.6,
+      "position": [
+        768,
+        1920
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('Build Context1').first().json.context }}",
+        "options": {
+          "systemMessage": "Você é David Ogilvy (Ogilvy), CMO da Adventure Labs. Analise os dados com foco em: performance de campanhas dos clientes, KPIs de marketing (ROAS, CPA, CPL, CVR), oportunidades de crescimento em marketing, iniciativas em curso e sugestões de copy/posicionamento. SE precisar de contexto sobre issues do GitHub (open, closed, all), USE a ferramenta GitHub API. Formate sua resposta em texto legível com: Análise de Marketing, KPIs em Risco, Oportunidades e Recomendações de Marketing."
+        }
+      },
+      "id": "c534d0f1-964b-4e09-86fe-95db4ea44dc3",
+      "name": "CMO Ogilvy1",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.6,
+      "position": [
+        1120,
+        1920
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('Build Context1').first().json.context }}",
+        "options": {
+          "systemMessage": "Você é Marty Cagan (Cagan), CPO da Adventure Labs. Analise os dados com foco em: experiência do cliente, escopo dos projetos em curso, backlog de produto, ideias com maior impacto no usuário final e critérios de aceite. Priorize outcome sobre output. SE precisar de contexto sobre issues do GitHub (open, closed, all), USE a ferramenta GitHub API. Formate sua resposta em texto legível com: Análise de Produto, Experiência do Cliente, Ideias Prioritárias e Recomendações de Produto."
+        }
+      },
+      "id": "ed11c026-9553-4512-ae8c-ccd29abf5666",
+      "name": "CPO Cagan1",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.6,
+      "position": [
+        1472,
+        1920
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Fase 2: Validação e auditoria dos outputs dos C-Levels\nfunction getRaw(nodeName, type) {\n  try {\n    const d = $(nodeName).first().json;\n    if (type === 'agent') return d?.output || d?.text || d?.body || null;\n    return d?.candidates?.[0]?.content?.parts?.[0]?.text || d?.text || d?.body || null;\n  } catch (e) { return null; }\n}\nfunction validateContent(raw) {\n  if (!raw || String(raw).trim() === '') return { valid: false, reason: 'vazio' };\n  try {\n    const s = String(raw).trim();\n    if (s.startsWith('{') || s.startsWith('[')) JSON.parse(s);\n    return { valid: true };\n  } catch (e) { return { valid: true }; }\n}\nconst runTs = $('Build Context1').first().json.runTimestamp;\nconst audit = {\n  cfo: validateContent(getRaw('CFO Agent Buffett1', 'agent')),\n  cto: validateContent(getRaw('CTO Agent Torvalds1', 'agent')),\n  coo: validateContent(getRaw('COO Ohno1', 'agent')),\n  cmo: validateContent(getRaw('CMO Ogilvy1', 'agent')),\n  cpo: validateContent(getRaw('CPO Cagan1', 'agent'))\n};\nconst allValid = Object.values(audit).every(a => a.valid);\nconst invalid = Object.entries(audit).filter(([,a]) => !a.valid).map(([k]) => k);\nif (invalid.length > 0) {\n  console.warn('[Validate Outputs] C-Levels com output inválido:', invalid.join(', '), '| Run:', runTs);\n}\nreturn [{ json: { validationAudit: audit, allValid, invalid, auditTimestamp: new Date().toISOString(), runTimestamp: runTs } }];"
+      },
+      "id": "a1b2c3d4-validate-outputs-001",
+      "name": "Validate Outputs1",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1824,
+        1920
+      ],
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "jsCode": "function getSafeOutput(nodeName) {\n  try {\n    const data = $(nodeName).first().json;\n    return data?.output || data?.text || data?.body || JSON.stringify(data);\n  } catch (e) {\n    return `[Erro] ${nodeName}: ${e.message}`;\n  }\n}\n\nconst context = $('Build Context1').first().json.context;\nconst runTimestamp = $('Build Context1').first().json.runTimestamp;\nconst validationAudit = $('Validate Outputs1').first().json?.validationAudit || {};\n\nconst cfoReport = getSafeOutput('CFO Agent Buffett1');\nconst ctoReport = getSafeOutput('CTO Agent Torvalds1');\nconst cooReport = getSafeOutput('COO Ohno1');\nconst cmoReport = getSafeOutput('CMO Ogilvy1');\nconst cpoReport = getSafeOutput('CPO Cagan1');\n\nconst compiledReport = [\n  '=== RELATORIO CFO — Warren Buffett ===', cfoReport, '',\n  '=== RELATORIO CTO — Linus Torvalds ===', ctoReport, '',\n  '=== RELATORIO COO — Taiichi Ohno ===', cooReport, '',\n  '=== RELATORIO CMO — David Ogilvy ===', cmoReport, '',\n  '=== RELATORIO CPO — Marty Cagan ===', cpoReport\n].join('\\n');\n\nif (!compiledReport || compiledReport.trim().length === 0) {\n  throw new Error('Relatório compilado vazio! Verifique os agentes.');\n}\n\nreturn [{ \n  json: { \n    compiledReport, \n    context, \n    runTimestamp, \n    cfoReport, \n    ctoReport, \n    cooReport, \n    cmoReport, \n    cpoReport,\n    validationAudit,\n    reportGenerated: true\n  } \n}];"
+      },
+      "id": "bc6176c4-1fee-43b6-b890-acb4ee507274",
+      "name": "Compile C-Level Reports1",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2048,
+        1920
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $json.ceoRequestBody }}",
+        "options": {}
+      },
+      "id": "9098f382-65b8-4433-9a29-7813d79c87d6",
+      "name": "CEO Grove Synthesis1",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2496,
+        1920
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000,
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "UliHZNvWivRleRny",
+          "name": "x-goog-api-key"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "function extractGeminiText(nodeName) {\n  try {\n    const r = $(nodeName).first().json;\n    return r.candidates[0].content.parts[0].text;\n  } catch(e) {\n    return null;\n  }\n}\n\nconst ceoRaw = $json.candidates?.[0]?.content?.parts?.[0]?.text || \"\";\nconst runTimestamp = $('Build Context1').first().json.runTimestamp;\nconst compiledReport = $('Compile C-Level Reports1').first().json.compiledReport;\n\n// Remove markdown code block se existir (```json ... ``` ou ``` ... ```)\nlet jsonStr = ceoRaw.trim();\nconst jsonMatch = jsonStr.match(/```(?:json)?\\s*([\\s\\S]*?)```/);\nif (jsonMatch) jsonStr = jsonMatch[1].trim();\n\nlet ceoDecision = {};\ntry {\n  ceoDecision = JSON.parse(jsonStr || '{}');\n} catch(e) {\n  ceoDecision = {\n    resumo_executivo: ceoRaw || 'Análise automática do C-Suite concluída.',\n    decisoes: [],\n    titulo_issue_github: 'C-Suite Review — ' + runTimestamp.substring(0, 10),\n    descricao_issue_github: '## Revisão Automática do C-Suite\\n\\n' + (ceoRaw || 'Sem detalhes disponíveis.'),\n    mensagem_google_chat: 'C-Suite concluiu análise autónoma. Verifique o GitHub para detalhes.'\n  };\n}\n\n// Normalizar chaves em inglês para português\nif (!ceoDecision.resumo_executivo && ceoDecision.executive_summary) ceoDecision.resumo_executivo = ceoDecision.executive_summary;\nif ((!ceoDecision.decisoes || !ceoDecision.decisoes.length) && ceoDecision.decisions?.length) ceoDecision.decisoes = ceoDecision.decisions;\nif (!ceoDecision.titulo_issue_github && ceoDecision.issue_title) ceoDecision.titulo_issue_github = ceoDecision.issue_title;\nif (!ceoDecision.descricao_issue_github && ceoDecision.issue_description) ceoDecision.descricao_issue_github = ceoDecision.issue_description;\nif (!ceoDecision.mensagem_google_chat && ceoDecision.chat_message) ceoDecision.mensagem_google_chat = ceoDecision.chat_message;\n\n// Validação crítica\nif (!ceoDecision.descricao_issue_github || ceoDecision.descricao_issue_github.trim().length === 0) {\n  throw new Error('CEODecision vazia! Verifique a resposta do CEO Grove.');\n}\n\nconst issueTitle = (ceoDecision.titulo_issue_github || ('C-Suite Review — ' + runTimestamp.substring(0, 10))).substring(0, 256);\n\nconst issueBody = ceoDecision.descricao_issue_github ||\n  '## Resumo Executivo\\n\\n' + (ceoDecision.resumo_executivo || 'Sem resumo.') +\n  '\\n\\n## Decisões\\n\\n' + (JSON.stringify(ceoDecision.decisoes || [], null, 2)) +\n  '\\n\\n---\\n*Gerado automaticamente pelo C-Suite Loop — Adventure Labs OS*\\n*Run: ' + runTimestamp + '*';\n\nconst chatMessage = ceoDecision.mensagem_google_chat || 'C-Suite Loop concluído. Verifique o GitHub.';\nconst summaryText = ceoDecision.resumo_executivo || issueTitle;\n\nreturn [{ json: {\n  ...ceoDecision,\n  issueTitle,\n  issueBody,\n  chatMessage,\n  summaryText,\n  runTimestamp,\n  compiledReport,\n  readyForGitHub: true\n} }];"
+      },
+      "id": "5046a32c-d6a0-4bf5-baf3-6a5d343e6135",
+      "name": "Parse CEO Decision1",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2720,
+        1920
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://generativelanguage.googleapis.com/v1beta/models/gemini-embedding-001:embedContent",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ model: 'models/text-embedding-001', content: { parts: [{ text: ('C-Suite Meeting — ' + $('Parse CEO Decision1').first().json.runTimestamp + '\\n\\nResumo: ' + $('Parse CEO Decision1').first().json.summaryText + '\\n\\nDecisoes: ' + JSON.stringify($('Parse CEO Decision1').first().json.decisoes || [])).substring(0, 8000) }] }, taskType: 'RETRIEVAL_DOCUMENT' }) }}",
+        "options": {}
+      },
+      "id": "bdc7982d-85cf-4579-9e95-31618bffb153",
+      "name": "Generate Embeddings1",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2944,
+        1920
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000,
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "UliHZNvWivRleRny",
+          "name": "x-goog-api-key"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const embeddingResponse = $json;\nconst parseDecision = $('Parse CEO Decision1').first().json;\n\nconst embeddingValues = embeddingResponse?.embedding?.values || [];\n\nif (embeddingValues.length === 0) {\n  throw new Error('Embedding vazio. Resposta da API: ' + JSON.stringify(embeddingResponse).substring(0, 300));\n}\n\nconst embeddingStr = '[' + embeddingValues.join(',') + ']';\n\nconst content = 'C-Suite Meeting — ' + parseDecision.runTimestamp + '\\n\\nResumo Executivo: ' + parseDecision.summaryText + '\\n\\nDecisoes: ' + JSON.stringify(parseDecision.decisoes || []);\n\nconst metadata = {\n  runTimestamp: parseDecision.runTimestamp,\n  issueTitle: parseDecision.issueTitle,\n  type: 'csuite_meeting',\n  embeddingDimensions: embeddingValues.length\n};\n\nreturn [{ json: { content, metadata: JSON.stringify(metadata), embeddingStr } }];"
+      },
+      "id": "179aec3f-d1f9-4532-a567-ca20f4e900b4",
+      "name": "Prepare pgvector Insert1",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3168,
+        1920
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "INSERT INTO adv_csuite_memory (content, metadata, embedding, created_at)\nVALUES (\n  '{{ String($json.content || \"\").replace(/'/g, \"''\") }}',\n  '{{ String($json.metadata || \"{}\").replace(/'/g, \"''\") }}'::jsonb,\n  '{{ $json.embeddingStr }}'::vector,\n  NOW()\n);",
+        "options": {}
+      },
+      "id": "d832ac64-a325-4fc2-8d7c-c6edc178b17f",
+      "name": "Store Memory pgvector1",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        3392,
+        1920
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "DSS8yTHRiCKbyy1V",
+          "name": "Postgres supabase pooler"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const p = $('Parse CEO Decision1').first().json;\nconst c = $('Compile C-Level Reports1').first().json;\nconst esc = (s) => String(s || '').replace(/'/g, \"''\");\nreturn [{ json: {\n  run_timestamp: esc(p.runTimestamp),\n  ceo_summary: esc(p.summaryText),\n  ceo_decisions: esc(JSON.stringify(p.decisoes || [])),\n  cfo_summary: esc(c.cfoReport || ''),\n  cto_summary: esc(c.ctoReport || ''),\n  coo_summary: esc(c.cooReport || ''),\n  cmo_summary: esc(c.cmoReport || ''),\n  cpo_summary: esc(c.cpoReport || ''),\n  compiled_report: esc(c.compiledReport || ''),\n  issue_title: esc(p.issueTitle || '')\n} }];"
+      },
+      "id": "f4-prepare-report-history-001",
+      "name": "Prepare Report History1",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2944,
+        2112
+      ],
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "INSERT INTO adv_csuite_reports (run_timestamp, ceo_summary, ceo_decisions, cfo_summary, cto_summary, coo_summary, cmo_summary, cpo_summary, compiled_report, issue_title)\nVALUES (\n  '{{ $json.run_timestamp || '' }}',\n  '{{ $json.ceo_summary || '' }}',\n  '{{ $json.ceo_decisions || '[]' }}'::jsonb,\n  '{{ $json.cfo_summary || '' }}',\n  '{{ $json.cto_summary || '' }}',\n  '{{ $json.coo_summary || '' }}',\n  '{{ $json.cmo_summary || '' }}',\n  '{{ $json.cpo_summary || '' }}',\n  '{{ $json.compiled_report || '' }}',\n  '{{ $json.issue_title || '' }}'\n);",
+        "options": {}
+      },
+      "id": "f4-store-report-history-001",
+      "name": "Store Report History1",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        3168,
+        2112
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "DSS8yTHRiCKbyy1V",
+          "name": "Postgres supabase pooler"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "NA MULTIDÃO DE CONSELHEIROS ESTÁ A SABEDORIA",
+        "height": 144,
+        "width": 720,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        96,
+        880
+      ],
+      "id": "d42114af-b3cd-4f64-b4a6-35c2584d516b",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "owner": {
+          "__rl": true,
+          "value": "=https://github.com/adventurelabsbrasil",
+          "mode": "url"
+        },
+        "repository": {
+          "__rl": true,
+          "value": "=https://github.com/adventurelabsbrasil/admin",
+          "mode": "url"
+        },
+        "title": "={{ $json.issueTitle }}",
+        "body": "={{ $json.issueBody }}",
+        "labels": [
+          {
+            "label": "c-suite-ai"
+          }
+        ],
+        "assignees": []
+      },
+      "type": "n8n-nodes-base.github",
+      "typeVersion": 1.1,
+      "position": [
+        2944,
+        1728
+      ],
+      "id": "804731dd-c6a9-44ac-b784-c76d6b83382a",
+      "name": "Create an issue1",
+      "webhookId": "4190e1d2-3bc9-4dd9-b61b-b9f8931cc9a0",
+      "credentials": {
+        "githubApi": {
+          "id": "mnuRMGbA3asOq1yg",
+          "name": "GitHub adventurelabsbrasil/admin"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "https://admin.adventurelabs.com.br/api/csuite/context-docs",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        -1024,
+        1808
+      ],
+      "id": "426edc0a-1b76-412b-ab8f-25ed561cf7be",
+      "name": "Fetch Context Docs1"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT issue_title, ceo_summary, report_date FROM adv_csuite_reports ORDER BY report_date DESC LIMIT 3;",
+        "options": {}
+      },
+      "id": "fetch-reports-history-001",
+      "name": "Fetch Reports History1",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        -800,
+        1904
+      ],
+      "executeOnce": true,
+      "alwaysOutputData": true,
+      "credentials": {
+        "postgres": {
+          "id": "DSS8yTHRiCKbyy1V",
+          "name": "Postgres supabase pooler"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const compiledReport = $input.first().json.compiledReport || '';\nconst context = $input.first().json.context || '';\nconst maxContext = 6000;\nconst contextTruncated = context.length > maxContext\n  ? context.substring(0, maxContext) + '\\n[... contexto truncado]'\n  : context;\n\nlet reportsSection = '';\ntry {\n  const reports = $('Fetch Reports History1').all().map(i => i.json);\n  if (reports.length > 0) {\n    reportsSection = '\\n\\n=== ULTIMAS DECISOES (referencia) ===\\n' + reports.map(r => `- [${(r.report_date || '').substring(0, 10)}] ${r.issue_title || 'N/A'}: ${(r.ceo_summary || '').substring(0, 200)}...`).join('\\n');\n  }\n} catch (e) {\n  reportsSection = '';\n}\n\nconst ceoRequestBody = {\n  contents: [{\n    role: 'user',\n    parts: [{\n      text: 'Voce acaba de receber os relatorios de todo o C-Suite. Sintetize as analises e tome as decisoes estrategicas.' + reportsSection + '\\n\\n' + compiledReport + '\\n\\n---\\nCONTEXTO (resumido):\\n' + contextTruncated\n    }]\n  }],\n  systemInstruction: {\n    parts: [{\n      text: 'Voce e Andy Grove (Grove), CEO da Adventure Labs, uma Assessoria Martech brasileira. Seu time e: Rodrigo Ribas (Founder/DG), Igor Ribas (Designer), Mateus Scopel (Gestor de Trafego Jr). Voce acabou de receber os relatorios do CFO (Buffett), CTO (Torvalds), COO (Ohno), CMO (Ogilvy) e CPO (Cagan). Sintetize tudo e decida as 1 a 3 acoes mais impactantes para as proximas 48-96 horas. Seja objetivo, estrategico e orientado a execucao. Inclua cultura bottom-up: identifique oportunidades de melhoria que os C-levels possam ter perdido. Responda OBRIGATORIAMENTE em JSON valido com as chaves: resumo_executivo (string de 3-5 frases), decisoes (array de objetos com acao, responsavel, prazo e motivo), titulo_issue_github (string concisa para o titulo da issue principal no GitHub — max 80 chars), descricao_issue_github (string em Markdown com contexto da decisao, acoes e criterios de aceite — use ## para subsecoes), mensagem_google_chat (string para notificacao no Google Chat — max 300 chars, inclua emoji e seja direto).'\n    }]\n  },\n  generationConfig: {\n    temperature: 0.5,\n    maxOutputTokens: 8192,\n    responseMimeType: 'application/json'\n  }\n};\n\nreturn [{ json: { ...$input.first().json, ceoRequestBody } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2272,
+        1920
+      ],
+      "id": "004d1d57-d5d5-4fbb-ba50-4c23b89e7a3d",
+      "name": "Fields1"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('Build Context1').first().json.contextCTO }}",
+        "options": {}
+      },
+      "id": "e2367461-fcf7-45c5-bcd0-4252dc40be71",
+      "name": "CTO Agent Torvalds1",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.6,
+      "position": [
+        768,
+        1408
+      ]
+    },
+    {
+      "parameters": {
+        "options": {
+          "temperature": 0.3
+        }
+      },
+      "id": "35ab9e91-6002-4777-8833-b5e553a406b8",
+      "name": "Gemini Model (CTO)1",
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        784,
+        1632
+      ],
+      "credentials": {
+        "googlePalmApi": {
+          "id": "OqRZeuPBdpM4nnzI",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "https://api.github.com/search/issues?q=org:adventurelabsbrasil+is:issue+state:{{ $fromAI('state', 'Estado das issues: open ou closed (digite open ou closed)', 'string') }}&per_page=100",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "githubApi"
+      },
+      "id": "61255310-f40b-4017-9ea7-f1c29f9cdde3",
+      "name": "GitHub API Tool2",
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        912,
+        1632
+      ],
+      "credentials": {
+        "githubApi": {
+          "id": "mnuRMGbA3asOq1yg",
+          "name": "GitHub adventurelabsbrasil/admin"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('Build Context1').first().json.context }}",
+        "options": {
+          "systemMessage": "Você é Warren Buffett, CFO da Adventure Labs. Analise o contexto financeiro e as tarefas. SE precisar de dados históricos ou detalhes sobre tarefas/projetos que não estão no contexto, USE a ferramenta do Banco de Dados Postgres (tabelas: adv_tasks, adv_projetos, adv_clientes) para buscar as informações. SEJA CÉTICO com gastos. Formate sua resposta listando: Análise Financeira, Riscos de Desperdício e Prioridade por ROI."
+        }
+      },
+      "id": "964f7c8b-b2eb-4dfc-a227-1bc82d34e493",
+      "name": "CFO Agent Buffett1",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.6,
+      "position": [
+        768,
+        1008
+      ]
+    },
+    {
+      "parameters": {
+        "options": {
+          "temperature": 0.2
+        }
+      },
+      "id": "8276f79f-614d-4f31-9c94-9c5ba6f148a6",
+      "name": "Gemini Model (CFO)1",
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        784,
+        1232
+      ],
+      "credentials": {
+        "googlePalmApi": {
+          "id": "OqRZeuPBdpM4nnzI",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "https://api.github.com/search/issues?q=org:adventurelabsbrasil+is:issue+state:{{ $fromAI('state', 'Estado das issues: open ou closed (digite open ou closed)', 'string') }}&per_page=100",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "githubApi"
+      },
+      "id": "7ee1809e-1288-4b08-8dd2-1f804edf9447",
+      "name": "GitHub API Tool3",
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        912,
+        1232
+      ],
+      "credentials": {
+        "githubApi": {
+          "id": "mnuRMGbA3asOq1yg",
+          "name": "GitHub adventurelabsbrasil/admin"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {
+          "temperature": 0.3
+        }
+      },
+      "id": "coo-gemini-model-001",
+      "name": "Gemini Model (COO)1",
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        784,
+        2144
+      ],
+      "credentials": {
+        "googlePalmApi": {
+          "id": "OqRZeuPBdpM4nnzI",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {
+          "temperature": 0.4
+        }
+      },
+      "id": "cmo-gemini-model-001",
+      "name": "Gemini Model (CMO)1",
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        1136,
+        2144
+      ],
+      "credentials": {
+        "googlePalmApi": {
+          "id": "OqRZeuPBdpM4nnzI",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {
+          "temperature": 0.4
+        }
+      },
+      "id": "cpo-gemini-model-001",
+      "name": "Gemini Model (CPO)1",
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        1488,
+        2144
+      ],
+      "credentials": {
+        "googlePalmApi": {
+          "id": "OqRZeuPBdpM4nnzI",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "https://api.github.com/search/issues?q=org:adventurelabsbrasil+is:issue+state:{{ $fromAI('state', 'Estado das issues: open ou closed (digite open ou closed)', 'string') }}&per_page=100",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "githubApi"
+      },
+      "id": "github-tool-coo-001",
+      "name": "GitHub API Tool (COO)1",
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        912,
+        2144
+      ],
+      "credentials": {
+        "githubApi": {
+          "id": "mnuRMGbA3asOq1yg",
+          "name": "GitHub adventurelabsbrasil/admin"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "https://api.github.com/search/issues?q=org:adventurelabsbrasil+is:issue+state:{{ $fromAI('state', 'Estado das issues: open ou closed (digite open ou closed)', 'string') }}&per_page=100",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "githubApi"
+      },
+      "id": "github-tool-cmo-001",
+      "name": "GitHub API Tool (CMO)1",
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        1264,
+        2144
+      ],
+      "credentials": {
+        "githubApi": {
+          "id": "mnuRMGbA3asOq1yg",
+          "name": "GitHub adventurelabsbrasil/admin"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "https://api.github.com/search/issues?q=org:adventurelabsbrasil+is:issue+state:{{ $fromAI('state', 'Estado das issues: open ou closed (digite open ou closed)', 'string') }}&per_page=100",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "githubApi"
+      },
+      "id": "github-tool-cpo-001",
+      "name": "GitHub API Tool (CPO)1",
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        1616,
+        2144
+      ],
+      "credentials": {
+        "githubApi": {
+          "id": "mnuRMGbA3asOq1yg",
+          "name": "GitHub adventurelabsbrasil/admin"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "00 00 16 * * *"
+            }
+          ]
+        }
+      },
+      "id": "b05cb6b8-c0cf-4f58-91b8-c39187f6a203",
+      "name": "Schedule 18:00 [00 00 16]",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -1248,
+        1904
+      ],
+      "notes": "diariamente às 12:30"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "00 00 06 * * *"
+            }
+          ]
+        }
+      },
+      "id": "48887f26-b0d3-4584-ac83-8a2f85a8736d",
+      "name": "Schedule 08:00 [00 00 06]",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -1248,
+        1712
+      ],
+      "notes": "diariamente às 00:30"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Fetch Tasks1": {
+      "main": [
+        [
+          {
+            "node": "Fetch Ideias1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Ideias1": {
+      "main": [
+        [
+          {
+            "node": "Prepare Memory Query1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Memory Query1": {
+      "main": [
+        [
+          {
+            "node": "Embed for Memory Query1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embed for Memory Query1": {
+      "main": [
+        [
+          {
+            "node": "Prepare Memory Embedding1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Memory Embedding1": {
+      "main": [
+        [
+          {
+            "node": "Fetch Vector Memory1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Vector Memory1": {
+      "main": [
+        [
+          {
+            "node": "Fetch Founder Reports1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Founder Reports1": {
+      "main": [
+        [
+          {
+            "node": "Build Context1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Context1": {
+      "main": [
+        [
+          {
+            "node": "CFO Agent Buffett1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "CTO Agent Torvalds1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "COO Ohno1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "COO Ohno1": {
+      "main": [
+        [
+          {
+            "node": "CMO Ogilvy1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CMO Ogilvy1": {
+      "main": [
+        [
+          {
+            "node": "CPO Cagan1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CPO Cagan1": {
+      "main": [
+        [
+          {
+            "node": "Validate Outputs1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate Outputs1": {
+      "main": [
+        [
+          {
+            "node": "Compile C-Level Reports1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Compile C-Level Reports1": {
+      "main": [
+        [
+          {
+            "node": "Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CEO Grove Synthesis1": {
+      "main": [
+        [
+          {
+            "node": "Parse CEO Decision1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse CEO Decision1": {
+      "main": [
+        [
+          {
+            "node": "Generate Embeddings1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Create an issue1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Prepare Report History1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Report History1": {
+      "main": [
+        [
+          {
+            "node": "Store Report History1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Embeddings1": {
+      "main": [
+        [
+          {
+            "node": "Prepare pgvector Insert1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare pgvector Insert1": {
+      "main": [
+        [
+          {
+            "node": "Store Memory pgvector1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create an issue1": {
+      "main": [
+        []
+      ]
+    },
+    "Fetch Context Docs1": {
+      "main": [
+        [
+          {
+            "node": "Fetch Tasks1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Fetch Reports History1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fields1": {
+      "main": [
+        [
+          {
+            "node": "CEO Grove Synthesis1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CTO Agent Torvalds1": {
+      "main": [
+        []
+      ]
+    },
+    "CFO Agent Buffett1": {
+      "main": [
+        []
+      ]
+    },
+    "Gemini Model (CFO)1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "CFO Agent Buffett1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GitHub API Tool2": {
+      "ai_tool": [
+        [
+          {
+            "node": "CTO Agent Torvalds1",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gemini Model (CTO)1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "CTO Agent Torvalds1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GitHub API Tool3": {
+      "ai_tool": [
+        [
+          {
+            "node": "CFO Agent Buffett1",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gemini Model (COO)1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "COO Ohno1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gemini Model (CMO)1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "CMO Ogilvy1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gemini Model (CPO)1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "CPO Cagan1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GitHub API Tool (COO)1": {
+      "ai_tool": [
+        [
+          {
+            "node": "COO Ohno1",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GitHub API Tool (CMO)1": {
+      "ai_tool": [
+        [
+          {
+            "node": "CMO Ogilvy1",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GitHub API Tool (CPO)1": {
+      "ai_tool": [
+        [
+          {
+            "node": "CPO Cagan1",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule 18:00 [00 00 16]": {
+      "main": [
+        [
+          {
+            "node": "Fetch Context Docs1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule 08:00 [00 00 06]": {
+      "main": [
+        [
+          {
+            "node": "Fetch Context Docs1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
+  },
+  "versionId": "7d36ac4d-06c0-4156-9cb3-992d57959179",
+  "meta": {
+    "instanceId": "47566ef55f192469d89f8e432246f379385f36d33e75f4a631657c49db2160de"
+  },
+  "id": "96aeV1arPN19hdmK",
+  "tags": []
+}

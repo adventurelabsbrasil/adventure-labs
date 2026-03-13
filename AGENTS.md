@@ -11,7 +11,7 @@
 | Recurso | Path |
 |---------|------|
 | Base de conhecimento | `knowledge/` (00_GESTAO_CORPORATIVA … 99_ARQUIVO) |
-| Admin (contexto interno) | `apps/admin/context/` |
+| Admin (contexto interno) | `apps/admin/context/` (symlink → `knowledge/`) |
 | Clientes | `clients/01_lidera/`, `clients/02_rose/`, etc. |
 | Skills dos agentes | `apps/admin/agents/skills/` |
 | Manual de taxonomia | `knowledge/00_GESTAO_CORPORATIVA/MANUAL_TAXONOMIA_REPOSITORIO.md` |
