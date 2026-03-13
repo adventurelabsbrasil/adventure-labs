@@ -43,8 +43,9 @@ Documento de referência para o C-Suite e para a implementação do painel inter
 - **Omie:** fase 2.
 - **Meta/Google Ads:** fase 2.
 
-### 7. CRM “Adventure Sales”
+### 7. CRM (integrado ao Admin)
 
-- A definir se no mesmo app ou outro repositório; não bloqueia o MVP do admin.
-- **Repositório:** em GitHub privado; Founder pode conceder acesso local se necessário para integração ou consulta.
+- **Implementado em 18/03/2026:** CRM mínimo viável dentro do Admin, em **Gestão e Tática → CRM** (`/dashboard/crm`). Schema no Supabase da Adventure com prefixo `adv_crm_*`; auth igual ao restante do Admin (sem `crm_users`).
+- **Acesso:** C-Suite e equipe com acesso ao Admin (allowlist) acessam o CRM pelo mesmo login. Rotas: hub, leads/funil, contatos, empresas, projetos/produtos, importar do WhatsApp (Zazu).
+- **Detalhes e produto futuro:** [01_COMERCIAL/crm-admin-integrado-whatsapp.md](../../01_COMERCIAL/crm-admin-integrado-whatsapp.md).
 - **Backlog (roadmap):** transcrição de áudios (ex.: WhatsApp) para registro no CRM — ver [06_CONHECIMENTO/backlog-crm-transcricao.md](../../06_CONHECIMENTO/backlog-crm-transcricao.md).
