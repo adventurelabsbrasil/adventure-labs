@@ -1,0 +1,31 @@
+---
+description: Como e quando usar MCP (Supabase, GitHub, browser) no monorepo Adventure Labs.
+alwaysApply: false
+globs: "**/*"
+---
+
+# Uso recomendado de MCP no Adventure Labs
+
+## Supabase / Postgres
+
+- Para qualquer tarefa que envolva **schema** ou tabelas `adv_*` (Admin / ecossistema):
+  - Antes de criar ou alterar migrations, consultar o schema atual via **Supabase MCP** (`plugin-supabase-supabase`), usando ferramentas como `list_tables` com:
+    - `project_id`: ID do projeto Supabase relevante.
+    - `schemas`: em geral `["public"]`.
+    - `verbose: true` para detalhes de colunas, chaves e FKs.
+- Objetivo: evitar inventar colunas/tabelas; alinhar migrations ao estado real do banco.
+
+## GitHub (issues e PRs)
+
+- Antes de propor novas issues ou decisões de backlog:
+  - Consultar issues abertas do repositório (via MCP GitHub ou `gh` CLI) para evitar duplicidade.
+  - Ler PRs relevantes quando estiver revisando ou evoluindo uma feature já em andamento.
+- Objetivo: decisões com base em dados reais (issues/PRs), não em suposições.
+
+## Navegação e UI (cursor-ide-browser)
+
+- Para validar fluxos críticos (login, rotas públicas, redirecionamentos):
+  - Usar o MCP `cursor-ide-browser` para navegar no ambiente deployado (Vercel, etc.).
+  - Preferir pequenos ciclos de snapshot e espera (2–3s) ao aguardar carregamentos.
+- Objetivo: confirmar comportamento real da aplicação antes de propor mudanças de UX ou rota.
+

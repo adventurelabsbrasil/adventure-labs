@@ -22,6 +22,14 @@
 - Vault: `_internal/vault/` (apenas referências)
 - Ver regra `security-sensitives` em `.cursor/rules/`
 
+## Comandos de validação para agentes
+
+- Para validar rapidamente o estado técnico do monorepo, priorize:
+  - `./tools/scripts/typecheck-workspaces.sh` — roda type-check onde houver script configurado nos workspaces.
+  - `./tools/scripts/lint-workspaces.sh` — executa lint em apps/packages/tools que expõem script `lint`.
+  - `./tools/scripts/test-workspaces.sh` — roda `test` apenas onde o script existir.
+- Use esses scripts antes de propor merges maiores ou refactors que afetem múltiplos apps.
+
 ## Mapeamento skills ↔ pastas
 
 | Domínio | Pasta |

@@ -1,0 +1,36 @@
+---
+description: Contratos de contextos e tipos críticos do app Adventure (CRM) para evitar propriedades inventadas.
+globs: apps/adventure/src/**/*.{ts,tsx}
+alwaysApply: false
+---
+
+# Contextos e tipos do Adventure (CRM)
+
+## ProjectContext
+
+- Propriedades disponíveis:
+  - `currentProject`
+  - `setCurrentProject`
+  - `loading`
+  - `isMaster`
+- **Não existem**:
+  - `loadingProjects`
+  - `projects` diretamente no contexto (usar hooks específicos, ex.: `useProjects()`).
+
+Ao usar o contexto em hooks ou componentes:
+
+- Sempre verificar `currentProject` antes de acessar seus campos.
+- Usar `loading` para estados de carregamento, nunca inventar outras flags com nomes próximos.
+
+## Tipos importantes
+
+- Campos `assignedTo` em entidades como `Deal` e `Task` representam **`projectMemberId`**, não `userId`.
+- Tabelas por projeto usam `project_id` obrigatório (`contacts`, `deals`, `companies`, etc.).
+- Exceções globais (sem `project_id`) precisam ser confirmadas na documentação ou no schema antes de assumir comportamento.
+
+## Boas práticas ao usar tipos
+
+- Conferir sempre os tipos em `src/types/**` antes de adicionar novas propriedades.
+- Evitar `any` em código novo; preferir tipos explícitos ou inferidos a partir de schemas existentes.
+- Ao modificar tipos centrais (ex.: deals, tasks, funnels), atualizar também os usos em hooks e componentes relacionados.
+
