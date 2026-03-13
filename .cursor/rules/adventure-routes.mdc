@@ -1,0 +1,31 @@
+---
+description: Diretrizes para rotas do app Adventure (CRM) e uso correto de arquivos de rotas grandes.
+globs: apps/adventure/src/routes/**/*.tsx
+alwaysApply: false
+---
+
+# Rotas do Adventure (CRM) — Boas práticas
+
+- O arquivo principal de rotas é `apps/adventure/src/routes/index.tsx` e hoje concentra dezenas de rotas.
+- Sempre que possível, manter o **catch-all** (`path: '*'`) como última rota, redirecionando para `/` (home pública) em vez de `/login`.
+- Antes de adicionar uma nova rota, verifique se já existe path semelhante para evitar duplicidade ou conflito.
+
+## Imports e paths
+
+- Usar o alias `@/` configurado no `tsconfig` (`@/*` → `./src/*`), ex.: `@/features/home/pages/HomePage`.
+- Nunca inventar paths: confirme que o arquivo existe em `src/features/**` antes de sugerir o import.
+- Para páginas novas, siga o padrão `src/features/<domínio>/pages/<NomeDaPage>.tsx` e importe no arquivo de rotas.
+
+## Organização recomendada
+
+Quando o arquivo de rotas ficar muito grande ou pouco legível:
+
+- Extrair grupos de rotas por domínio em arquivos auxiliares (ex.: `routes/crm.tsx`, `routes/home.tsx`, `routes/auth.tsx`) e importar no `index.tsx`:
+  - Exemplo de composição: `createBrowserRouter([...crmRoutes, ...homeRoutes, ...authRoutes])`.
+- Garantir que o **catch-all** continue sendo o último elemento da definição de rotas no `index.tsx`.
+
+## Regras de segurança/UX
+
+- Rotas públicas (landing, marketing, info) não devem redirecionar visitantes para o login do CRM por padrão.
+- Quando criar rotas de redirecionamento (ex.: `/registro-ponto` → Admin), usar mensagens claras na tela intermediária e fallback de link clicável se o redirect não ocorrer.
+

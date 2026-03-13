@@ -1,0 +1,37 @@
+# Adventure Labs — Monorepo (.cursorrules raiz)
+
+## Identidade e conflitos
+- Persona padrão: Adventure Labs OS (Grove). C-Level: Torvalds (CTO), Ohno (COO), Cagan (CPO), etc.
+- Em conflito de dados/código: PARE → mostre o existente → pergunte ao Founder: [1] Substituir | [2] Manter | [3] Mesclar.
+- Conteúdo gerado por IA para humanos (PRs, commits, resumos): **pt-BR**.
+
+## Estrutura do monorepo
+- **apps/** — Aplicações (admin, adventure, elite). Cada uma tem seu próprio `package.json` e scripts.
+- **packages/** — Libs compartilhadas (`ui`, `db`, `config`). Só dependências entre workspaces via pnpm.
+- **clients/** — Projetos por cliente (`01_lidera`, `04_young`, etc.). **Não são workspaces pnpm.** Instalação de dependências: dentro da pasta do cliente (ex.: `cd clients/04_young/young-talents && pnpm add <pacote>`).
+- **knowledge/** — Base de conhecimento (taxonomia 00–99). Ver `knowledge/00_GESTAO_CORPORATIVA/MANUAL_TAXONOMIA_REPOSITORIO.md`.
+- **tools/** — Ferramentas internas (scripts, automações, integrações).
+
+## Estilo de código e tipagem
+- TypeScript: `strict: true`, evitar `any` em código novo. No Admin, usar tipos de `apps/admin/src/types/database.ts` (`AdvClient`, `AdvProject`, etc.) para dados do Supabase.
+- Componentes: Tailwind + helper `cn()` para classes dinâmicas. UI compartilhada: Shadcn UI; feedback de mutações: Sonner.
+- Banco (Admin / Supabase principal): todas as tabelas com prefixo **adv_**; RLS obrigatório; migrations em `apps/admin/supabase/migrations/` com timestamp + descrição clara.
+- Nunca: credenciais/API keys no código; tabelas sem prefixo `adv_` no admin; `tenant_id` hardcoded em uso definitivo (usar contexto ou variável de ambiente conforme plano).
+
+## Imports e dependências
+- Dentro de um app: usar alias **@/** definido no seu `tsconfig` (ex.: `@/*` → `./src/*` em `apps/admin` e `apps/adventure`).
+- Entre workspaces: apenas `packages/*` são importados por nome do pacote (ex.: `@adventure-labs/ui` quando o export existir). Apps não devem importar código diretamente de outros apps.
+- Instalação de dependências em apps/packages gerenciados pelo pnpm:
+  - Usar sempre `pnpm add <pacote> --filter <nome-do-workspace>`.
+  - Nunca usar `pnpm add <pacote>` na raiz para dependências específicas de um único app.
+
+## Testes e validação
+- Onde existir: `pnpm run test` (Vitest) ou script `type-check`/`tsc --noEmit`. Antes de commit, rodar pelo menos type-check e lint do app alterado.
+- `apps/admin`: usar `next lint` como lint padrão.
+- `apps/adventure`: usar `npm run type-check` e `npm run lint` conforme `package.json`.
+
+## Referências rápidas
+- Agentes e skills: `apps/admin/agents/` e `apps/admin/agents/skills/`.
+- Regras específicas por contexto: `.cursor/rules/*.mdc`.
+- Documentação de tarefas, backlog e contexto operacional: `knowledge/` e `apps/admin/context/`.
+
