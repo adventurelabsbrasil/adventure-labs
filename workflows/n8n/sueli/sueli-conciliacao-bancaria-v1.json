@@ -1,0 +1,295 @@
+{
+  "name": "Sueli — Conciliação Bancária (v1)",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "sueli-conciliacao",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "id": "sueli-webhook-001",
+      "name": "Webhook Sueli",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [0, 300],
+      "webhookId": "sueli-conciliacao-v1"
+    },
+    {
+      "parameters": {
+        "jsCode": "const body = $input.first().json.body || $input.first().json || {};\nconst message = body.message || body.text || '';\nconst ofx = body.ofx || '';\nconst sessionId = body.sessionId || 'sueli-default-session';\nconst prompt = ofx\n  ? `Input do usuário: ${message}\\n\\nDados OFX (extrato bancário):\\n${ofx}`\n  : `Input do usuário: ${message}`;\nreturn [{ json: { prompt, sessionId, message, ofx } }];"
+      },
+      "id": "sueli-prep-input-001",
+      "name": "Preparar Input",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [220, 300]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "https://admin.adventurelabs.com.br/api/n8n/sueli-config",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "httpHeaderAuth",
+        "options": {}
+      },
+      "id": "sueli-get-config-001",
+      "name": "Get Config",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [340, 300],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "PLACEHOLDER_ADMIN_HEADER_CREDENTIAL_ID",
+          "name": "Admin API (x-admin-key)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const config = $input.first().json;\nconst prep = $('Preparar Input').first().json;\nreturn [{ json: { ...prep, ...config } }];"
+      },
+      "id": "sueli-merge-config-001",
+      "name": "Merge Config",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [560, 300]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.prompt }}",
+        "options": {
+          "systemMessage": "Você é a Sueli, assistente financeira brasileira, rigorosa, detalhista e focada em compliance. Você nunca assume um dado incerto; usa suas ferramentas para confirmar. Sua missão é garantir que 100% da conciliação no Omie esteja correta. Se os dados do comprovante não baterem com o OFX ou com a base no Sheets, você deve interromper o processo e solicitar intervenção humana (use a ferramenta Google Chat). Regras: (1) Valide sempre o valor líquido, descontos e taxas bancárias antes de fechar qualquer conciliação. (2) Ordem de raciocínio: leia e interprete o input; consulte o Google Sheets para categorias e regras; confira no Omie lançamentos e boletos; em caso de ambiguidade, pergunte ao humano via Google Chat; só então execute a conciliação no Omie."
+        }
+      },
+      "id": "sueli-agent-001",
+      "name": "Sueli",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.6,
+      "position": [780, 300]
+    },
+    {
+      "parameters": {
+        "model": "gemini-1.5-pro",
+        "options": {
+          "temperature": 0.2
+        }
+      },
+      "id": "sueli-llm-gemini-001",
+      "name": "Gemini 1.5 Pro",
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [440, 520],
+      "credentials": {
+        "googlePalmApi": {
+          "id": "PLACEHOLDER_GEMINI_CREDENTIAL_ID",
+          "name": "Google Gemini API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.sessionId }}",
+        "contextWindowLength": 15
+      },
+      "id": "sueli-memory-001",
+      "name": "Window Buffer Memory",
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.2,
+      "position": [240, 520]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://app.omie.com.br/api/v1/financas/contapagar/",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ app_key: $('Merge Config').first().json.OMIE_APP_KEY, app_secret: $('Merge Config').first().json.OMIE_APP_SECRET, call: $fromAI('call', 'Nome da chamada Omie: ListarContasPagar, ConsultarContaPagar, IncluirContaPagar, etc.', 'string'), ...($fromAI('payload', 'Objeto com parâmetros da chamada conforme documentação Omie', 'object') || {}) }) }}",
+        "options": {},
+        "description": "Use para consultar lançamentos de contas a pagar no Omie, verificar status de boletos e realizar a conciliação final. Parâmetros: call (ListarContasPagar, ConsultarContaPagar, IncluirContaPagar, etc.) e payload conforme API Omie."
+      },
+      "id": "sueli-tool-omie-001",
+      "name": "Omie_API_Tool",
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [640, 480]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('Merge Config').first().json.GOOGLE_CHAT_WEBHOOK_URL }}",
+        "sendBody": true,
+        "contentType": "json",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "text",
+              "value": "={{ $fromAI('text', 'Mensagem a enviar ao canal Google Chat (pergunta ou alerta para o humano)', 'string') }}"
+            }
+          ]
+        },
+        "options": {},
+        "description": "Use quando houver ambiguidade ou necessidade de aprovação humana. Envia mensagem ao canal configurado com o texto da pergunta ou alerta; aguarde resposta antes de prosseguir com a conciliação."
+      },
+      "id": "sueli-tool-chat-001",
+      "name": "Google_Chat_Tool",
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [640, 620]
+    },
+    {
+      "parameters": {
+        "language": "javaScript",
+        "jsCode": "let ofxText = '';\nif (typeof query === 'string') {\n  try { const p = JSON.parse(query); ofxText = p.ofx || p.text || query; } catch (e) { ofxText = query; }\n} else if (query && typeof query === 'object') { ofxText = query.ofx || query.text || ''; }\nif (!ofxText || !ofxText.trim()) return { transacoes: [], erro: 'Nenhum texto OFX fornecido' };\nconst transacoes = [];\nconst regex = /<STMTTRN>([\\s\\S]*?)<\\/STMTTRN>/gi;\nlet m;\nwhile ((m = regex.exec(ofxText)) !== null) {\n  const block = m[1];\n  const get = (tag) => { const r = new RegExp('<' + tag + '>([^<]*)'); const t = block.match(r); return t ? t[1].trim() : ''; };\n  const tipo = get('TRNTYPE');\n  const data = get('DTPOSTED');\n  const valor = get('TRNAMT');\n  const memo = get('MEMO') || get('NAME');\n  transacoes.push({ tipo, data, valor: parseFloat(valor) || 0, descricao: memo });\n}\nreturn { transacoes };",
+        "description": "Use para ler e interpretar dados de extrato bancário em formato OFX. Entrada: string com trecho OFX. Saída: transações com data, valor, descrição e tipo (débito/crédito)."
+      },
+      "id": "sueli-tool-ofx-001",
+      "name": "OFX_Parser_Tool",
+      "type": "@n8n/n8n-nodes-langchain.toolCode",
+      "typeVersion": 1,
+      "position": [640, 760]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "=https://sheets.googleapis.com/v4/spreadsheets/{{ $('Merge Config').first().json.GOOGLE_SHEETS_SPREADSHEET_ID }}/values/Regras!A1:Z100",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "googleSheetsOAuth2Api",
+        "options": {},
+        "description": "Use para buscar categorias de gastos e regras de negócio definidas pelo Founder na planilha. Consulte antes de categorizar ou conciliar."
+      },
+      "id": "sueli-tool-sheets-001",
+      "name": "Google_Sheets_Tool",
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [640, 340],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "PLACEHOLDER_GOOGLE_SHEETS_CREDENTIAL_ID",
+          "name": "Google Sheets account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Webhook Sueli": {
+      "main": [
+        [
+          {
+            "node": "Preparar Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Preparar Input": {
+      "main": [
+        [
+          {
+            "node": "Get Config",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Config": {
+      "main": [
+        [
+          {
+            "node": "Merge Config",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge Config": {
+      "main": [
+        [
+          {
+            "node": "Sueli",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gemini 1.5 Pro": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Sueli",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Window Buffer Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "Sueli",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Omie_API_Tool": {
+      "ai_tool": [
+        [
+          {
+            "node": "Sueli",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google_Chat_Tool": {
+      "ai_tool": [
+        [
+          {
+            "node": "Sueli",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OFX_Parser_Tool": {
+      "ai_tool": [
+        [
+          {
+            "node": "Sueli",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google_Sheets_Tool": {
+      "ai_tool": [
+        [
+          {
+            "node": "Sueli",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "meta": {
+    "templateCredsSetupCompleted": false
+  },
+  "tags": []
+}

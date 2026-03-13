@@ -320,9 +320,9 @@ Arquivo que orienta o multi-agente sobre:
 
 Antes de considerar o monorepo pronto:
 
-- [ ] Executar `./scripts/audit-secrets.sh --report` e revisar; nenhum secret no histórico
+- [x] Executar `./scripts/audit-secrets.sh --report` e revisar; nenhum secret no histórico
 - [x] `.env.example` existe onde há `.env` em uso (admin, adventure, elite, rose, young-talents, dbgr, xtractor)
-- [x] `knowledge/` é fonte canônica; `apps/admin/context/` mantém cópia (ver knowledge/README.md)
+- [x] `knowledge/` é fonte canônica; `apps/admin/context` é symlink para `../../knowledge` (ver knowledge/README.md)
 - [x] Clientes seguem padrão `clients/NN_nome/projeto`
 - [x] Skills mapeiam para pastas de conhecimento (`.cursor/skills/` + `apps/admin/agents/skills/`)
 - [x] AGENTS.md e .cursor/rules estão configurados
@@ -342,7 +342,7 @@ Antes de considerar o monorepo pronto:
 ## 9. Referências
 
 - Estrutura atual: `01_ADVENTURE_LABS/`, `GEMINI_CLI/`
-- Taxonomia existente: `admin/context/` (00–99)
+- Taxonomia existente: `knowledge/` (00–99); `apps/admin/context` → symlink para `../../knowledge`
 - Skills Cursor: `~/.cursor/skills-cursor/`
 - Regras Cursor: `.cursor/rules/` (formato .mdc)
 

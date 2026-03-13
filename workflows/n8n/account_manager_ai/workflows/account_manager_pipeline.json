@@ -1,0 +1,200 @@
+{
+  "name": "Account Manager AI - Pipeline de Entrada",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "account-manager-inbox",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "id": "webhook-inbox-trigger",
+      "name": "Webhook (Gatilho do Frontend)",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        0,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT * FROM adv_client_inbox WHERE id = '{{ $json.body.inbox_id }}' AND processed_status = 'pending';",
+        "options": {}
+      },
+      "id": "postgres-fetch-inbox",
+      "name": "Buscar Dados Brutos",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        200,
+        200
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "DSS8yTHRiCKbyy1V",
+          "name": "Postgres supabase pooler"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ contents: [{ role: 'user', parts: [{ text: 'Você é o Account Manager (Gestor de Contas) da Adventure Labs.\\n\\nLeia esta transcrição bruta de conversas/arquivos do cliente:\\n\\n' + $json.raw_content + '\\n\\nSua tarefa é extrair e categorizar as informações. Responda OBRIGATORIAMENTE em JSON válido com as seguintes chaves:\\n1. \"resumo_executivo\" (string com o sentimento geral do cliente)\\n2. \"bugs_reportados\" (array de strings detalhando falhas em software)\\n3. \"reclamacoes_prazos\" (array de strings detalhando ansiedade ou queixas de entrega)\\n4. \"ideias_elogios\" (array de strings com oportunidades de melhoria ou feedbacks positivos).' }] }], generationConfig: { temperature: 0.2, responseMimeType: 'application/json' } }) }}",
+        "options": {}
+      },
+      "id": "gemini-extract-data",
+      "name": "IA: Processar WhatsApp/Docs",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        400,
+        200
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "UliHZNvWivRleRny",
+          "name": "x-goog-api-key"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "let aiData = {};\ntry {\n  const r = $input.first().json.candidates[0].content.parts[0].text;\n  aiData = JSON.parse(r);\n} catch(e) {\n  aiData = { erro: 'Falha ao fazer parse do JSON do Gemini' };\n}\n\n// Prepara dados booleanos para facilitar o roteamento\nconst temBugs = aiData.bugs_reportados && aiData.bugs_reportados.length > 0;\nconst temReclamacao = aiData.reclamacoes_prazos && aiData.reclamacoes_prazos.length > 0;\n\nreturn [{ json: { ...$input.first().json, ai_extracted: aiData, routing: { temBugs, temReclamacao } } }];"
+      },
+      "id": "code-parse-ai",
+      "name": "Interpretar Resposta IA",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        600,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "UPDATE adv_client_inbox SET processed_status = 'completed', ai_summary = '{{ JSON.stringify($json.ai_extracted).replace(/'/g, \"''\") }}' WHERE id = '{{ $('Buscar Dados Brutos').first().json.id }}';",
+        "options": {}
+      },
+      "id": "postgres-update-inbox",
+      "name": "Salvar Resumo no Banco",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        800,
+        200
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "DSS8yTHRiCKbyy1V",
+          "name": "Postgres supabase pooler"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "dataType": "boolean",
+        "value1": "={{ $json.routing.temBugs }}",
+        "rules": {
+          "rules": [
+            {
+              "value2": true,
+              "outputKey": "Tem Bugs"
+            }
+          ]
+        }
+      },
+      "id": "switch-routing",
+      "name": "Roteamento (Switch)",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 1,
+      "position": [
+        1000,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "content": "A PARTIR DAQUI: Conectar a API do GitHub para criar Issues automaticamente com as descrições dos bugs.",
+        "height": 100,
+        "width": 250,
+        "color": 3
+      },
+      "id": "sticky-github",
+      "name": "Criar Issue no GitHub",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1250,
+        100
+      ]
+    }
+  ],
+  "connections": {
+    "Webhook (Gatilho do Frontend)": {
+      "main": [
+        [
+          {
+            "node": "Buscar Dados Brutos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Buscar Dados Brutos": {
+      "main": [
+        [
+          {
+            "node": "IA: Processar WhatsApp/Docs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IA: Processar WhatsApp/Docs": {
+      "main": [
+        [
+          {
+            "node": "Interpretar Resposta IA",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Interpretar Resposta IA": {
+      "main": [
+        [
+          {
+            "node": "Salvar Resumo no Banco",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Salvar Resumo no Banco": {
+      "main": [
+        [
+          {
+            "node": "Roteamento (Switch)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

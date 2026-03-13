@@ -1,0 +1,596 @@
+{
+  "name": "Lara — Meta Ads Sync (v1)",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 9 * * *"
+            }
+          ]
+        }
+      },
+      "id": "trigger-schedule",
+      "name": "Schedule 09:00",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        208
+      ],
+      "webhookId": "",
+      "notes": "Dispara o fluxo diariamente às 09:00. Entrada: — Saída: GET Accounts, GET Mapping"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "lara-meta-ads-sync",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "trigger-webhook",
+      "name": "Webhook manual",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        496
+      ],
+      "webhookId": "lara-meta-ads-sync",
+      "notes": "Dispara sob demanda via POST. Entrada: — Saída: GET Accounts, GET Mapping"
+    },
+    {
+      "parameters": {
+        "url": "https://admin.adventurelabs.com.br/api/meta/accounts",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {}
+      },
+      "id": "http-accounts",
+      "name": "GET Accounts",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        224,
+        256
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "dV9rkEVQ9m866mFi",
+          "name": "Admin API"
+        }
+      },
+      "notes": "GET /api/meta/accounts. Lista contas de anúncio do BM. Entrada: trigger Saída: Merge Accounts+Mapping"
+    },
+    {
+      "parameters": {
+        "url": "https://admin.adventurelabs.com.br/api/meta/mapping",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {}
+      },
+      "id": "http-mapping",
+      "name": "GET Mapping",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        224,
+        448
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "dV9rkEVQ9m866mFi",
+          "name": "Admin API"
+        }
+      },
+      "notes": "GET /api/meta/mapping. Mapeamento conta → cliente/owner_type. Entrada: trigger Saída: Merge Accounts+Mapping"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "id": "merge-accounts-mapping",
+      "name": "Merge Accounts+Mapping",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3,
+      "position": [
+        448,
+        352
+      ],
+      "notes": "Combina por posição: contas + mapping. Entrada: GET Accounts (1), GET Mapping (2) Saída: Code Merge"
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\nlet accounts = [], mapping = [];\n\nif (items.length >= 2) {\n  const accountsRes = items.find(i => i.json?.accounts) || items[0];\n  const mappingRes = items.find(i => i.json?.mapping) || items[1];\n  accounts = accountsRes.json?.accounts || [];\n  mapping = mappingRes.json?.mapping || [];\n} else if (items.length === 1) {\n  const single = items[0].json || {};\n  accounts = single.accounts || [];\n  mapping = single.mapping || [];\n}\n\nif (accounts.length === 0) return [];\n\nconst byId = {};\nmapping.forEach(m => { byId[m.meta_account_id] = m; byId['act_' + m.meta_account_id] = m; });\nconst yesterday = new Date();\nyesterday.setDate(yesterday.getDate() - 1);\nconst dateStr = yesterday.toISOString().split('T')[0];\nreturn accounts.map(a => {\n  const id = a.id || ('act_' + (a.account_id || ''));\n  const m = byId[id] || {};\n  return { json: { account_id: id, account_name: a.name || a.id, client_id: m.client_id || null, owner_type: m.owner_type || 'adventure', _date: dateStr } };\n});"
+      },
+      "id": "code-merge",
+      "name": "Code Merge",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        672,
+        352
+      ],
+      "notes": "Junta accounts + mapping; gera um item por conta com account_id, _date, owner_type. Entrada: Merge Saída: GET Insights, Merge Account+Insights"
+    },
+    {
+      "parameters": {
+        "url": "=https://admin.adventurelabs.com.br/api/meta/accounts/{{ $json.account_id }}/insights?date_preset=yesterday",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {}
+      },
+      "id": "http-insights",
+      "name": "GET Insights",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        896,
+        432
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "dV9rkEVQ9m866mFi",
+          "name": "Admin API"
+        }
+      },
+      "notes": "GET /api/meta/accounts/{id}/insights?date_preset=yesterday. Métricas por conta. Entrada: Code Merge Saída: Merge Account+Insights"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "id": "merge-account-insights",
+      "name": "Merge Account+Insights",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3,
+      "position": [
+        1120,
+        352
+      ],
+      "notes": "Combina por posição: conta + insights. Entrada: Code Merge (1), GET Insights (2) Saída: Code Format Row"
+    },
+    {
+      "parameters": {
+        "jsCode": "const item = $input.item?.json || $input.first()?.json || {};\nconst account = item.account_id != null ? item : {};\nconst insights = item.insights || [];\nconst ins = Array.isArray(insights) ? insights[0] : insights || {};\nconst date = account._date || new Date().toISOString().split('T')[0];\nconst spend = ins?.spend != null ? parseFloat(ins.spend) : null;\nconst impressions = ins?.impressions != null ? parseInt(ins.impressions, 10) : null;\nconst clicks = ins?.clicks != null ? parseInt(ins.clicks, 10) : null;\nconst teveVeiculacao = (impressions && impressions > 0) || (spend && spend > 0) || (clicks && clicks > 0);\nif (!teveVeiculacao) return [];\nconst row = { date, account_id: account.account_id, account_name: account.account_name || null, client_id: account.client_id || null, owner_type: account.owner_type || 'adventure', spend, impressions, clicks, conversions: null };\nreturn [{ json: { rows: [row] } }];"
+      },
+      "id": "code-format",
+      "name": "Code Format Row",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1344,
+        352
+      ],
+      "notes": "Só envia para a tabela o que teve veiculação (impressões/spend/cliques > 0). Entrada: Merge Account+Insights Saída: POST Daily"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://admin.adventurelabs.com.br/api/meta/daily",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json) }}",
+        "options": {}
+      },
+      "id": "http-post-daily",
+      "name": "POST Daily",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1568,
+        352
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "dV9rkEVQ9m866mFi",
+          "name": "Admin API"
+        }
+      },
+      "notes": "POST /api/meta/daily. Upsert em adv_meta_ads_daily. Entrada: Code Format Row Saída: Limit 1"
+    },
+    {
+      "parameters": {},
+      "id": "limit-one",
+      "name": "Limit 1",
+      "type": "n8n-nodes-base.limit",
+      "typeVersion": 1,
+      "position": [
+        1792,
+        352
+      ],
+      "notes": "Mantém 1 item para seguir ao GET Stats. Entrada: POST Daily Saída: GET Stats"
+    },
+    {
+      "parameters": {
+        "url": "https://admin.adventurelabs.com.br/api/meta/daily",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {}
+      },
+      "id": "http-stats",
+      "name": "GET Stats",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2016,
+        352
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "dV9rkEVQ9m866mFi",
+          "name": "Admin API"
+        }
+      },
+      "notes": "GET /api/meta/daily. distinct_dates, min_date, max_date. Entrada: Limit 1 Saída: Build Report (N dias)"
+    },
+    {
+      "parameters": {
+        "jsCode": "const s = $input.first()?.json || {};\nconst n = s.distinct_dates || 0;\nconst minDays = 1;\nif (n < minDays) return [];\nconst title = 'Lara (Meta Ads) — resumo ' + (s.max_date || '');\nreturn [{ json: { title, min_date: s.min_date, max_date: s.max_date, distinct_dates: n } }];"
+      },
+      "id": "code-report",
+      "name": "Build Report (N dias)",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2240,
+        352
+      ],
+      "notes": "Se distinct_dates >= minDays, monta payload { title, min_date, max_date, distinct_dates }. Entrada: GET Stats Saída: Prepare Lara Prompt (ou [])"
+    },
+    {
+      "parameters": {
+        "jsCode": "const s = $input.first()?.json || {};\nconst min = s.min_date || '';\nconst max = s.max_date || '';\nconst n = s.distinct_dates || 0;\nconst title = s.title || ('Lara (Meta Ads) — resumo ' + max);\nconst prompt = `Período de análise Meta Ads: ${min} a ${max} (${n} dias distintos).\\n\\nUse suas ferramentas: (1) get_context_docs para obter o conhecimento da empresa/C-Suite; (2) get_lara_memory para sua memória recente; (3) get_daily_data com from=${min} e to=${max} para os dados de veiculação.\\n\\nProduza um relatório em markdown com: (1) Métricas e resumo do que rodou (tabela por conta, totais); (2) Análise Lara: resumo executivo, insights e 3-5 recomendações. Separe contas cliente (owner_type=cliente) e Adventure (owner_type=adventure).`;\nreturn [{ json: { prompt, title, sessionId: 'lara-meta-' + max } }];"
+      },
+      "id": "code-prepare-prompt",
+      "name": "Prepare Lara Prompt",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [2210, 352],
+      "notes": "Monta prompt e sessionId para o agente Lara. Entrada: Build Report Saída: Lara"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.prompt }}",
+        "options": {
+          "systemMessage": "Você é a Lara, analista de marketing da Adventure Labs, focada em Meta Ads. Seu papel é produzir relatórios de performance para o C-Suite e Founder. Use sempre suas ferramentas para obter contexto da empresa, sua memória e os dados do período. Skills: relatório de KPIs (ROAS, CPA, CPL, CVR), análise de performance por canal; insights acionáveis e recomendações. Separe contas de clientes (owner_type=cliente) e contas próprias da Adventure (owner_type=adventure). Responda em markdown, português brasileiro."
+        }
+      },
+      "id": "lara-agent-001",
+      "name": "Lara",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.6,
+      "position": [2350, 352],
+      "notes": "Agente Lara: memória + tools (context-docs, lara memory, daily data). Entrada: Prepare Lara Prompt Saída: Format Founder Report"
+    },
+    {
+      "parameters": {
+        "model": "gemini-1.5-pro",
+        "options": { "temperature": 0.3 }
+      },
+      "id": "lara-llm-gemini-001",
+      "name": "Gemini 1.5 Pro",
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [2180, 472],
+      "credentials": {}
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.sessionId }}",
+        "contextWindowLength": 10
+      },
+      "id": "lara-memory-001",
+      "name": "Window Buffer Memory",
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.2,
+      "position": [1980, 472]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "https://admin.adventurelabs.com.br/api/csuite/context-docs",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {},
+        "description": "Obtém o conhecimento da empresa e C-Suite (context-docs e agents-docs). Use para enriquecer a análise com diretrizes e skills."
+      },
+      "id": "lara-tool-context-001",
+      "name": "Tool_Context_Docs",
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [2180, 572],
+      "credentials": { "httpHeaderAuth": { "id": "dV9rkEVQ9m866mFi", "name": "Admin API" } }
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "https://admin.adventurelabs.com.br/api/lara/memory?limit=10",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {},
+        "description": "Obtém a memória recente da Lara (adv_lara_memory). Use para contexto de campanhas e relatórios anteriores."
+      },
+      "id": "lara-tool-memory-001",
+      "name": "Tool_Lara_Memory",
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [2180, 672],
+      "credentials": { "httpHeaderAuth": { "id": "dV9rkEVQ9m866mFi", "name": "Admin API" } }
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "=https://admin.adventurelabs.com.br/api/meta/daily?from={{ $fromAI('from', 'Data início YYYY-MM-DD', 'string') }}&to={{ $fromAI('to', 'Data fim YYYY-MM-DD', 'string') }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {},
+        "description": "Obtém os dados de veiculação (adv_meta_ads_daily) no período. Parâmetros: from (data início), to (data fim)."
+      },
+      "id": "lara-tool-daily-001",
+      "name": "Tool_Daily_Data",
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [2180, 772],
+      "credentials": { "httpHeaderAuth": { "id": "dV9rkEVQ9m866mFi", "name": "Admin API" } }
+    },
+    {
+      "parameters": {
+        "jsCode": "const agentOutput = $input.first()?.json?.output ?? $input.first()?.json?.text ?? '';\nconst title = $('Prepare Lara Prompt').first()?.json?.title ?? 'Lara (Meta Ads) — resumo';\nreturn [{ json: { title, content: agentOutput } }];"
+      },
+      "id": "code-format-founder",
+      "name": "Format Founder Report",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [2490, 352],
+      "notes": "Monta { title, content } a partir do output do agente. Entrada: Lara Saída: POST Founder Report"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://admin.adventurelabs.com.br/api/csuite/founder-report",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json) }}",
+        "options": {}
+      },
+      "id": "http-founder-report",
+      "name": "POST Founder Report",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2464,
+        352
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "dV9rkEVQ9m866mFi",
+          "name": "Admin API"
+        }
+      },
+      "notes": "POST /api/csuite/founder-report. Grava relatório em adv_founder_reports. Entrada: Format Founder Report Saída: —"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule 09:00": {
+      "main": [
+        [
+          {
+            "node": "GET Accounts",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "GET Mapping",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook manual": {
+      "main": [
+        [
+          {
+            "node": "GET Accounts",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "GET Mapping",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GET Accounts": {
+      "main": [
+        [
+          {
+            "node": "Merge Accounts+Mapping",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GET Mapping": {
+      "main": [
+        [
+          {
+            "node": "Merge Accounts+Mapping",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge Accounts+Mapping": {
+      "main": [
+        [
+          {
+            "node": "Code Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code Merge": {
+      "main": [
+        [
+          {
+            "node": "GET Insights",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge Account+Insights",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GET Insights": {
+      "main": [
+        [
+          {
+            "node": "Merge Account+Insights",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge Account+Insights": {
+      "main": [
+        [
+          {
+            "node": "Code Format Row",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code Format Row": {
+      "main": [
+        [
+          {
+            "node": "POST Daily",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "POST Daily": {
+      "main": [
+        [
+          {
+            "node": "Limit 1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Limit 1": {
+      "main": [
+        [
+          {
+            "node": "GET Stats",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GET Stats": {
+      "main": [
+        [
+          {
+            "node": "Build Report (N dias)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Report (N dias)": {
+      "main": [[{ "node": "Prepare Lara Prompt", "type": "main", "index": 0 }]]
+    },
+    "Prepare Lara Prompt": {
+      "main": [[{ "node": "Lara", "type": "main", "index": 0 }]]
+    },
+    "Lara": {
+      "main": [[{ "node": "Format Founder Report", "type": "main", "index": 0 }]]
+    },
+    "Format Founder Report": {
+      "main": [[{ "node": "POST Founder Report", "type": "main", "index": 0 }]]
+    },
+    "POST Founder Report": {
+      "main": [[]]
+    },
+    "Gemini 1.5 Pro": {
+      "ai_languageModel": [[{ "node": "Lara", "type": "ai_languageModel", "index": 0 }]]
+    },
+    "Window Buffer Memory": {
+      "ai_memory": [[{ "node": "Lara", "type": "ai_memory", "index": 0 }]]
+    },
+    "Tool_Context_Docs": {
+      "ai_tool": [[{ "node": "Lara", "type": "ai_tool", "index": 0 }]]
+    },
+    "Tool_Lara_Memory": {
+      "ai_tool": [[{ "node": "Lara", "type": "ai_tool", "index": 0 }]]
+    },
+    "Tool_Daily_Data": {
+      "ai_tool": [[{ "node": "Lara", "type": "ai_tool", "index": 0 }]]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
+  },
+  "versionId": "41bdf7d4-6e44-4ee1-b2b8-18a622a82b38",
+  "meta": {
+    "instanceId": "47566ef55f192469d89f8e432246f379385f36d33e75f4a631657c49db2160de"
+  },
+  "id": "8bjMsxd1obbRnxa4",
+  "tags": []
+}
