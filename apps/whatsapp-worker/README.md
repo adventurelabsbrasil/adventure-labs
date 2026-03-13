@@ -24,15 +24,25 @@ Na primeira vez, o worker exibe um **QR code** no terminal. Escaneie com o Whats
 
 ## API
 
+### GET /
+
+- Resposta rápida para health check (ex.: Railway). **Resposta:** `{ service: "zazu", ok: true }`.
+
 ### GET /health
 
 - **Resposta:** `{ ok: true, ready: boolean, hasGroupFilter: boolean }`
 - `ready`: `true` quando o cliente WhatsApp está conectado.
 
+### GET /qr e GET /qr.json
+
+- **GET /qr:** página HTML com a imagem do QR para escanear no celular (útil no Railway, onde o QR nos logs pode vir fragmentado).
+- **GET /qr.json:** JSON para o Admin: `{ connected: boolean, qr?: string }` (data URL da imagem). Usado pela página **Dashboard → Zazu (WhatsApp)**.
+
 ### GET /groups
 
 - Lista todos os grupos (id e name) para você escolher quais filtrar. Use depois em `WHATSAPP_GROUP_NAMES` ou `WHATSAPP_GROUP_IDS`.
 - **Resposta:** `{ groups: [ { id, name } ] }`. Retorna `503` se o cliente ainda não estiver conectado.
+- **Script local:** com o worker rodando, execute `npm run groups` (ou `node scripts/list-groups.js`) na pasta do worker para listar os nomes no terminal.
 
 ### GET /daily-messages?date=YYYY-MM-DD
 
@@ -72,9 +82,13 @@ Na primeira vez, o worker exibe um **QR code** no terminal. Escaneie com o Whats
 
 ## Deploy no Railway
 
-1. **Novo serviço:** Railway → New Project → Deploy from GitHub repo → selecione o repositório do `01_ADVENTURE_LABS`.
-2. **Root Directory:** em Settings do serviço, defina **Root Directory** = `apps/whatsapp-worker` (para o build usar só essa pasta).
-3. **Build & Start:** Railway detecta `package.json`; comando de start: `npm start`. Build: `npm install`.
+O **Admin** (Next.js) e as variáveis do Admin ficam na **Vercel**. O worker Zazu **não** pode rodar na Vercel (processo long-running + sessão WhatsApp; Vercel é serverless). Por isso o worker é deployado no **Railway** (pode ser um segundo serviço no mesmo projeto onde está o n8n).
+
+O worker fica no monorepo **01_ADVENTURE_LABS** em `apps/whatsapp-worker` (funcionalidade interna do Admin). Não há repositório separado.
+
+1. **Novo serviço:** No projeto Railway (onde está o n8n) → New → Deploy from GitHub repo → selecione o repositório **01_ADVENTURE_LABS** (monorepo).
+2. **Root Directory:** em Settings do serviço, defina **Root Directory** = `apps/whatsapp-worker`.
+3. **Build:** Railway pode usar o **Dockerfile** (recomendado para Chromium) ou Nixpacks; se usar Dockerfile, o build instala dependências do sistema para o Puppeteer. Comando de start: `npm start`.
 4. **Variáveis de ambiente:** em Variables, adicione:
    - `WHATSAPP_GROUP_NAMES` = nomes parciais dos grupos (ex.: `Clientes,Suporte`) ou deixe vazio para todos.
    - Opcional: `SESSION_PATH=/data` (se for usar volume; veja passo 5).
