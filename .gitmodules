@@ -28,3 +28,6 @@
 [submodule "clients/01_lidera/lidera-skills"]
 	path = clients/01_lidera/lidera-skills
 	url = https://github.com/adventurelabsbrasil/lidera-skills.git
+[submodule "apps/whatsapp-worker"]
+	path = apps/whatsapp-worker
+	url = https://github.com/adventurelabsbrasil/adv-zazu-whatsapp-worker.git
