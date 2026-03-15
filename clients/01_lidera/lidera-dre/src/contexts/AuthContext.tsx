@@ -4,6 +4,7 @@ import {
   useEffect,
   useState,
   useCallback,
+  useRef,
   type ReactNode,
 } from 'react';
 import { supabase } from '../lib/supabase';
@@ -14,6 +15,7 @@ interface AuthContextValue {
   user: User | null;
   profile: DrePerfil | null;
   loading: boolean;
+  sessionVersion: number;
   signOut: () => Promise<void>;
   refetchProfile: () => Promise<void>;
 }
@@ -24,6 +26,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<DrePerfil | null>(null);
   const [loading, setLoading] = useState(true);
+  const [sessionVersion, setSessionVersion] = useState(0);
+  const initialLoadDone = useRef(false);
 
   const fetchProfile = useCallback(async (userId: string) => {
     const { data } = await supabase
@@ -43,10 +47,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const { data: { session } } = await supabase.auth.getSession();
       setUser(session?.user ?? null);
       if (session?.user?.id) {
+        await supabase.auth.getUser();
         await fetchProfile(session.user.id);
       } else {
         setProfile(null);
       }
+      initialLoadDone.current = true;
       setLoading(false);
     };
     init();
@@ -59,11 +65,28 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         } else {
           setProfile(null);
         }
-        setLoading(false);
+        if (initialLoadDone.current) {
+          setSessionVersion((v) => v + 1);
+        }
       }
     );
 
     return () => subscription.unsubscribe();
+  }, [fetchProfile]);
+
+  useEffect(() => {
+    const onPageShow = (e: PageTransitionEvent) => {
+      if (e.persisted) {
+        supabase.auth.getSession().then(({ data: { session } }) => {
+          setUser(session?.user ?? null);
+          if (session?.user?.id) {
+            fetchProfile(session.user.id).then(() => setSessionVersion((v) => v + 1));
+          }
+        });
+      }
+    };
+    window.addEventListener('pageshow', onPageShow);
+    return () => window.removeEventListener('pageshow', onPageShow);
   }, [fetchProfile]);
 
   const signOut = useCallback(async () => {
@@ -76,6 +99,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     user,
     profile,
     loading,
+    sessionVersion,
     signOut,
     refetchProfile,
   };

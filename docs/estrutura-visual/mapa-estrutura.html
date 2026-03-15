@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Estrutura GitHub e monorepos — Adventure Labs</title>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>
+    mermaid.initialize({ startOnLoad: false, flowchart: { useMaxWidth: true } });
+    document.addEventListener('DOMContentLoaded', function () {
+      document.querySelectorAll('.mermaid').forEach(function (el, i) {
+        var id = 'mermaid-' + i;
+        el.id = id;
+        var code = el.textContent.trim();
+        mermaid.render(id, code).then(function (_a) {
+          var svg = _a.svg;
+          el.innerHTML = svg;
+        });
+      });
+    });
+  </script>
+  <style>
+    :root { --bg: #0f172a; --card: #1e293b; --text: #e2e8f0; --muted: #94a3b8; --border: #334155; }
+    body { font-family: system-ui, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 1.5rem; line-height: 1.6; }
+    h1 { font-size: 1.5rem; margin-bottom: 0.5rem; }
+    .subtitle { color: var(--muted); font-size: 0.9rem; margin-bottom: 2rem; }
+    section { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 1.25rem; margin-bottom: 1.5rem; }
+    section h2 { font-size: 1.1rem; margin: 0 0 1rem 0; color: var(--text); }
+    .mermaid { background: #fff; border-radius: 6px; padding: 1rem; margin: 0; display: flex; justify-content: center; }
+    .mermaid svg { max-width: 100%; }
+  </style>
+</head>
+<body>
+  <h1>Documentação visual — Estrutura GitHub e monorepos</h1>
+  <p class="subtitle">01_ADVENTURE_LABS · apps, clientes, funções e conexões</p>
+
+  <section>
+    <h2>Visão completa (cores e anotações)</h2>
+    <p class="subtitle" style="margin-bottom: 1rem;">Um único mapa: raiz → monorepo → apps → clientes → conexões. Cores por seção; formas distintas; anotações nas setas.</p>
+    <div class="mermaid">flowchart TB
+  subgraph raiz ["1. RAIZ /GITHUB — Onde tudo comeca"]
+    A["01_ADVENTURE_LABS\nmonorepo principal"]
+    B["GEMINI_CLI\nworkspace ref"]
+    C(("Outros\ngh, artefatos"))
+  end
+  subgraph monorepo ["2. MONOREPO — Estrutura de pastas"]
+    apps[["apps/"]]
+    clients[["clients/"]]
+    knowledge[["knowledge/"]]
+    packages[["packages/"]]
+    tools[["tools/"]]
+    workflows[["workflows/n8n"]]
+    internal[["_internal/"]]
+    docs[["docs/"]]
+  end
+  subgraph aplicacoes ["3. APPS — Aplicacoes e submodules"]
+    admin([admin\nAdventure Labs OS])
+    adventure([adventure])
+    elite([elite])
+    finfeed([finfeed])
+  end
+  subgraph clientes ["4. CLIENTES — Por cliente e projeto"]
+    L{01_lidera}
+    R{02_rose}
+    Y{04_young}
+    AdminDB["Admin / Supabase\nadv_* tables"]
+  end
+  subgraph fluxos ["5. CONEXOES — Quem fala com quem"]
+    Admin["Admin :3001"]
+    Knowledge["knowledge/"]
+    Context["context\nsymlink"]
+    N8N["n8n C-Suite"]
+    Supabase["Supabase"]
+  end
+  A -->|"versiona"| monorepo
+  admin --> Admin
+  clients --> L
+  clients --> R
+  clients --> Y
+  L -->|"dados"| AdminDB
+  R -->|"dados"| AdminDB
+  Y -->|"dados"| AdminDB
+  Knowledge -->|"fonte unica"| Context
+  Context -->|"le documentacao"| Admin
+  Admin -->|"persiste"| Supabase
+  N8N -->|"le founder reports"| Supabase
+  N8N -->|"contexto"| Knowledge
+  classDef raizStyle fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
+  classDef monoStyle fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px
+  classDef appStyle fill:#fff3e0,stroke:#ef6c00,stroke-width:2px
+  classDef clienteStyle fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+  classDef fluxoStyle fill:#ffebee,stroke:#c62828,stroke-width:2px
+  class A,B,C raizStyle
+  class apps,clients,knowledge,packages,tools,workflows,internal,docs monoStyle
+  class admin,adventure,elite,finfeed appStyle
+  class L,R,Y,AdminDB clienteStyle
+  class Admin,Knowledge,Context,N8N,Supabase fluxoStyle</div>
+  </section>
+
+  <section>
+    <h2>1. Visão geral /GitHub</h2>
+    <div class="mermaid">flowchart LR
+  subgraph raiz ["Raiz /GitHub"]
+    A["01_ADVENTURE_LABS\n(monorepo principal)"]
+    B["GEMINI_CLI\n(workspace ref)"]
+    C["Outros\n(gh binary, etc)"]
+  end
+  A -->|"versiona"| D["knowledge, docs,\napps, clients"]
+  B -->|"documentado em"| E["01_ADVENTURE_LABS/docs"]</div>
+  </section>
+
+  <section>
+    <h2>2. Mapa do monorepo 01_ADVENTURE_LABS</h2>
+    <div class="mermaid">flowchart TB
+  subgraph monorepo ["01_ADVENTURE_LABS"]
+    apps["apps/\n(admin, adventure, elite, finfeed)"]
+    clients["clients/\n(01_lidera, 02_rose, 04_young, ...)"]
+    knowledge["knowledge/\n(taxonomia 00-99)"]
+    packages["packages/\n(ui, db, config)"]
+    tools["tools/\n(xtractor, dbgr, n8n-scripts, ...)"]
+    workflows["workflows/n8n"]
+    internal["_internal/\n(vault, archive)"]
+    docs["docs/"]
+    cursor[".cursor/"]
+  end
+  monorepo --> apps
+  monorepo --> clients
+  monorepo --> knowledge
+  monorepo --> packages
+  monorepo --> tools
+  monorepo --> workflows
+  monorepo --> internal
+  monorepo --> docs
+  monorepo --> cursor</div>
+  </section>
+
+  <section>
+    <h2>3. Apps e funções</h2>
+    <div class="mermaid">flowchart LR
+  subgraph apps ["apps/"]
+    admin["admin\n(Adventure Labs OS)\nNext.js, Supabase, :3001"]
+    adventure["adventure\n(produto principal)\nVite, Supabase"]
+    elite["elite"]
+    finfeed["finfeed"]
+  end
+  admin -->|"submodule"| repo1["admin.git"]
+  adventure -->|"submodule"| repo2["adventure.git"]
+  elite -->|"submodule"| repo3["elite.git"]
+  finfeed -->|"submodule"| repo4["finfeed.git"]</div>
+  </section>
+
+  <section>
+    <h2>4. Clientes e projetos</h2>
+    <div class="mermaid">flowchart TB
+  subgraph clients ["clients/"]
+    L["01_lidera\n(lidera-space, lidera-skills,\nlidera-dre, ...)"]
+    R["02_rose\n(roseportaladvocacia)"]
+    S["03_speed"]
+    Y["04_young\n(young-emp, young-talents,\nranking-vendas)"]
+    B["05_benditta"]
+    C["06_capclear"]
+  end
+  L --> Admin
+  R --> Admin
+  Y --> Admin
+  Admin["Admin / Supabase\n(adv_* tables)"]</div>
+  </section>
+
+  <section>
+    <h2>5. Conexões e fluxos</h2>
+    <div class="mermaid">flowchart LR
+  Admin["Admin\n(Next.js :3001)"]
+  Knowledge["knowledge/"]
+  Context["admin/context\n(symlink)"]
+  N8N["n8n C-Suite\n(Railway)"]
+  Supabase["Supabase\n(adv_* tables)"]
+  Knowledge --> Context
+  Context --> Admin
+  Admin --> Supabase
+  N8N -->|"lê founder reports"| Supabase
+  N8N -->|"contexto"| Knowledge
+  Admin -->|"docs-context"| Knowledge</div>
+  </section>
+</body>
+</html>

@@ -19,16 +19,26 @@
 
 ## Arquivos
 
+**Caminho canônico (monorepo):** `workflows/n8n/whatsapp_groups_agent/` — o JSON do workflow fica versionado aqui.
+
 | Arquivo | Descrição |
 |---------|-----------|
 | `whatsapp-groups-daily-v1.json` | Zazu: Schedule → Set Date → GET Daily Messages → Format → POST Founder Report. |
 
 ## Importar no n8n (CLI)
 
-A partir da raiz do repositório:
+O script roda a partir de `apps/admin`. Caminho canônico do JSON: `workflows/n8n/whatsapp_groups_agent/whatsapp-groups-daily-v1.json`.
+
+**A partir da raiz do monorepo (01_ADVENTURE_LABS):**
 
 ```bash
-./apps/admin/scripts/n8n/import-to-railway.sh "apps/admin/n8n_workflows/whatsapp_groups_agent/whatsapp-groups-daily-v1.json"
+cd apps/admin && ./scripts/n8n/import-to-railway.sh "../../workflows/n8n/whatsapp_groups_agent/whatsapp-groups-daily-v1.json"
+```
+
+**Ou, a partir de `apps/admin`,** se existir symlink `n8n_workflows` → `../../workflows/n8n`:
+
+```bash
+./scripts/n8n/import-to-railway.sh "n8n_workflows/whatsapp_groups_agent/whatsapp-groups-daily-v1.json"
 ```
 
 Credenciais: `N8N_API_URL` e `N8N_API_TOKEN` em `apps/admin/.env.local`.

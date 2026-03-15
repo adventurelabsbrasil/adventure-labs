@@ -59,6 +59,23 @@ Pasta dedicada ao **projeto de Roles e RLS** (Admin + Adventure CRM) no Supabase
    - No projeto do **Admin:** aplique `20260308100001_adv_rls_by_role.sql`.
 4. Confirme que não houve erro de execução (ex.: coluna inexistente, política já existente com outro nome).
 
+**Se aparecer erro `column "project_id" does not exist`** ao rodar `20260308100000_crm_rls_policies.sql`:
+- No SQL Editor, execute a query de diagnóstico (está no comentário no topo da própria migration) para listar tabelas que não têm a coluna `project_id`:
+  ```sql
+  SELECT t.table_name
+  FROM information_schema.tables t
+  WHERE t.table_schema = 'public'
+    AND t.table_name IN ('project_users','deals','contacts','companies','tasks','services','proposals','funnels')
+    AND NOT EXISTS (
+      SELECT 1 FROM information_schema.columns c
+      WHERE c.table_schema = t.table_schema AND c.table_name = t.table_name AND c.column_name = 'project_id'
+    );
+  ```
+- Para cada tabela listada, adicione a coluna (ajuste se a tabela já tiver referência a `projects` com outro nome):  
+  `ALTER TABLE nome_da_tabela ADD COLUMN project_id TEXT REFERENCES projects(id);`  
+  Se a tabela já tiver linhas, use `ADD COLUMN project_id TEXT REFERENCES projects(id)` (nullable) e preencha os valores depois; em seguida, se quiser, altere para NOT NULL.
+- Depois rode de novo a migration do CRM.
+
 ### Passo 2 — Verificar funções e políticas no banco
 
 1. Siga o runbook: `docs/SUPABASE_ROLES_VERIFICACAO.md`.
@@ -118,7 +135,8 @@ Pasta dedicada ao **projeto de Roles e RLS** (Admin + Adventure CRM) no Supabase
 | Migration RLS CRM (Adventure) | `apps/adventure/supabase/migrations/20260308100000_crm_rls_policies.sql` |
 | Migration RLS Admin por role | `apps/admin/supabase/migrations/20260308100001_adv_rls_by_role.sql` |
 | Diagnóstico RLS/CRM | `apps/admin/supabase/scripts/diagnostico_rls_e_colunas_crm.sql` |
-| Perfil e roles no Admin (código) | `apps/admin/apps/admin/src/lib/auth-profile.ts` |
+| Perfil e roles no Admin (código) | `apps/admin/src/lib/auth-profile.ts` |
+| Tabela `tasks` (public) = CRM, não Lidera | [SUPABASE_APPS_ALINHAMENTO.md](../SUPABASE_APPS_ALINHAMENTO.md) § 2.1 |
 
 ---
 

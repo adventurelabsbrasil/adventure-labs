@@ -1,8 +1,10 @@
 import { useState, useEffect, useCallback } from 'react';
 import { supabase, hasSupabaseConfig } from '../lib/supabase';
+import { useAuth } from '../contexts/AuthContext';
 import type { Categoria, Subcategoria } from '../types';
 
 export function useCategorias() {
+  const { sessionVersion } = useAuth();
   const [categorias, setCategorias] = useState<Categoria[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -31,7 +33,7 @@ export function useCategorias() {
 
   useEffect(() => {
     fetchCategorias();
-  }, [fetchCategorias]);
+  }, [fetchCategorias, sessionVersion]);
 
   const insertCategoria = useCallback(
     async (payload: { nome: string; tipo: 'entrada' | 'saida'; ordem?: number | null }) => {

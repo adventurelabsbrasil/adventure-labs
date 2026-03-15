@@ -16,10 +16,12 @@ As tabelas do app usam o prefixo `dre_` para organizar os dados. Siga os passos 
 1. No SQL Editor, clique em **New query**.
 2. Abra o arquivo: `supabase/migrations/001_schema_dre.sql`, copie todo o conteúdo, cole no editor e clique em **Run**.
 3. Abra outra **New query**, abra o arquivo: `supabase/migrations/002_dre_auth_roles.sql`, copie todo o conteúdo, cole e clique em **Run**.
+4. Abra outra **New query**, abra o arquivo: `supabase/migrations/003_dre_rls_no_recursion.sql`, copie todo o conteúdo, cole e clique em **Run**.
 
 **O que isso faz:**  
 - **001:** Cria `dre_categorias`, `dre_subcategorias`, `dre_lancamentos`.  
-- **002:** Cria `dre_organizacoes`, `dre_perfis`, trigger de auth, adiciona `organizacao_id` e `created_by` em lançamentos e define RLS (roles e multi-tenant).
+- **002:** Cria `dre_organizacoes`, `dre_perfis`, trigger de auth, adiciona `organizacao_id` e `created_by` em lançamentos e define RLS (roles e multi-tenant).  
+- **003:** Corrige recursão infinita nas políticas de `dre_perfis` (funções `dre_is_admin`, `dre_get_my_organizacao_id`).
 
 Se aparecer erro dizendo que a tabela já existe, esse passo já foi feito. Siga em frente.
 

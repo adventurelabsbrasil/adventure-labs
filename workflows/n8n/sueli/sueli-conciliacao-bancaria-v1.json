@@ -37,13 +37,7 @@
       "name": "Get Config",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [340, 300],
-      "credentials": {
-        "httpHeaderAuth": {
-          "id": "PLACEHOLDER_ADMIN_HEADER_CREDENTIAL_ID",
-          "name": "Admin API (x-admin-key)"
-        }
-      }
+      "position": [340, 300]
     },
     {
       "parameters": {
@@ -71,22 +65,16 @@
     },
     {
       "parameters": {
-        "model": "gemini-1.5-pro",
+        "model": "gemini-1.5-flash",
         "options": {
           "temperature": 0.2
         }
       },
       "id": "sueli-llm-gemini-001",
-      "name": "Gemini 1.5 Pro",
+      "name": "Gemini 1.5 Flash",
       "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
       "typeVersion": 1,
-      "position": [440, 520],
-      "credentials": {
-        "googlePalmApi": {
-          "id": "PLACEHOLDER_GEMINI_CREDENTIAL_ID",
-          "name": "Google Gemini API"
-        }
-      }
+      "position": [440, 520]
     },
     {
       "parameters": {
@@ -106,12 +94,12 @@
         "url": "https://app.omie.com.br/api/v1/financas/contapagar/",
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={{ JSON.stringify({ app_key: $('Merge Config').first().json.OMIE_APP_KEY, app_secret: $('Merge Config').first().json.OMIE_APP_SECRET, call: $fromAI('call', 'Nome da chamada Omie: ListarContasPagar, ConsultarContaPagar, IncluirContaPagar, etc.', 'string'), ...($fromAI('payload', 'Objeto com parâmetros da chamada conforme documentação Omie', 'object') || {}) }) }}",
+        "jsonBody": "={{ (() => { const c = $('Merge Config').first().json; const call = $fromAI('call', 'Chamada Omie: ListarContasPagar, ConsultarContaPagar ou IncluirContaPagar', 'string'); let param = []; try { const p = $fromAI('paramJson', 'JSON array com parametros da chamada. Ex: [{\"nPagina\":1,\"nRegPorPagina\":50}]', 'string'); param = p ? JSON.parse(p) : []; } catch (e) {} return JSON.stringify({ app_key: c.OMIE_APP_KEY, app_secret: c.OMIE_APP_SECRET, call, param }); })() }}",
         "options": {},
         "description": "Use para consultar lançamentos de contas a pagar no Omie, verificar status de boletos e realizar a conciliação final. Parâmetros: call (ListarContasPagar, ConsultarContaPagar, IncluirContaPagar, etc.) e payload conforme API Omie."
       },
       "id": "sueli-tool-omie-001",
-      "name": "Omie_API_Tool",
+      "name": "tool_omie",
       "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
       "typeVersion": 1.1,
       "position": [640, 480]
@@ -121,20 +109,13 @@
         "method": "POST",
         "url": "={{ $('Merge Config').first().json.GOOGLE_CHAT_WEBHOOK_URL }}",
         "sendBody": true,
-        "contentType": "json",
-        "bodyParameters": {
-          "parameters": [
-            {
-              "name": "text",
-              "value": "={{ $fromAI('text', 'Mensagem a enviar ao canal Google Chat (pergunta ou alerta para o humano)', 'string') }}"
-            }
-          ]
-        },
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ text: $fromAI('msg', 'Mensagem a enviar ao canal Google Chat', 'string') }) }}",
         "options": {},
-        "description": "Use quando houver ambiguidade ou necessidade de aprovação humana. Envia mensagem ao canal configurado com o texto da pergunta ou alerta; aguarde resposta antes de prosseguir com a conciliação."
+        "description": "Use quando houver ambiguidade ou necessidade de aprovação humana. Envia mensagem ao canal configurado; aguarde resposta antes de prosseguir."
       },
       "id": "sueli-tool-chat-001",
-      "name": "Google_Chat_Tool",
+      "name": "tool_chat",
       "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
       "typeVersion": 1.1,
       "position": [640, 620]
@@ -142,11 +123,11 @@
     {
       "parameters": {
         "language": "javaScript",
-        "jsCode": "let ofxText = '';\nif (typeof query === 'string') {\n  try { const p = JSON.parse(query); ofxText = p.ofx || p.text || query; } catch (e) { ofxText = query; }\n} else if (query && typeof query === 'object') { ofxText = query.ofx || query.text || ''; }\nif (!ofxText || !ofxText.trim()) return { transacoes: [], erro: 'Nenhum texto OFX fornecido' };\nconst transacoes = [];\nconst regex = /<STMTTRN>([\\s\\S]*?)<\\/STMTTRN>/gi;\nlet m;\nwhile ((m = regex.exec(ofxText)) !== null) {\n  const block = m[1];\n  const get = (tag) => { const r = new RegExp('<' + tag + '>([^<]*)'); const t = block.match(r); return t ? t[1].trim() : ''; };\n  const tipo = get('TRNTYPE');\n  const data = get('DTPOSTED');\n  const valor = get('TRNAMT');\n  const memo = get('MEMO') || get('NAME');\n  transacoes.push({ tipo, data, valor: parseFloat(valor) || 0, descricao: memo });\n}\nreturn { transacoes };",
+        "jsCode": "const q = (typeof query !== 'undefined' && query !== null) ? query : '';\nlet ofxText = '';\nif (typeof q === 'string') { try { const p = JSON.parse(q); ofxText = p.ofx || p.text || q; } catch (e) { ofxText = q; } } else if (q && typeof q === 'object') { ofxText = q.ofx || q.text || ''; }\nif (!ofxText || !String(ofxText).trim()) return JSON.stringify({ transacoes: [], erro: 'Nenhum texto OFX fornecido' });\nconst transacoes = [];\nconst regex = /<STMTTRN>([\\s\\S]*?)<\\/STMTTRN>/gi;\nlet m;\nwhile ((m = regex.exec(ofxText)) !== null) {\n  const block = m[1];\n  const get = (tag) => { const r = new RegExp('<' + tag + '>([^<]*)'); const t = block.match(r); return t ? t[1].trim() : ''; };\n  const tipo = get('TRNTYPE');\n  const data = get('DTPOSTED');\n  const valor = get('TRNAMT');\n  const memo = get('MEMO') || get('NAME');\n  transacoes.push({ tipo, data, valor: parseFloat(valor) || 0, descricao: memo });\n}\nreturn JSON.stringify({ transacoes });",
         "description": "Use para ler e interpretar dados de extrato bancário em formato OFX. Entrada: string com trecho OFX. Saída: transações com data, valor, descrição e tipo (débito/crédito)."
       },
       "id": "sueli-tool-ofx-001",
-      "name": "OFX_Parser_Tool",
+      "name": "tool_ofx",
       "type": "@n8n/n8n-nodes-langchain.toolCode",
       "typeVersion": 1,
       "position": [640, 760]
@@ -161,16 +142,10 @@
         "description": "Use para buscar categorias de gastos e regras de negócio definidas pelo Founder na planilha. Consulte antes de categorizar ou conciliar."
       },
       "id": "sueli-tool-sheets-001",
-      "name": "Google_Sheets_Tool",
+      "name": "tool_sheets",
       "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
       "typeVersion": 1.1,
-      "position": [640, 340],
-      "credentials": {
-        "googleSheetsOAuth2Api": {
-          "id": "PLACEHOLDER_GOOGLE_SHEETS_CREDENTIAL_ID",
-          "name": "Google Sheets account"
-        }
-      }
+      "position": [640, 340]
     }
   ],
   "connections": {
@@ -218,7 +193,7 @@
         ]
       ]
     },
-    "Gemini 1.5 Pro": {
+    "Gemini 1.5 Flash": {
       "ai_languageModel": [
         [
           {
@@ -240,7 +215,7 @@
         ]
       ]
     },
-    "Omie_API_Tool": {
+    "tool_omie": {
       "ai_tool": [
         [
           {
@@ -251,7 +226,7 @@
         ]
       ]
     },
-    "Google_Chat_Tool": {
+    "tool_chat": {
       "ai_tool": [
         [
           {
@@ -262,7 +237,7 @@
         ]
       ]
     },
-    "OFX_Parser_Tool": {
+    "tool_ofx": {
       "ai_tool": [
         [
           {
@@ -273,7 +248,7 @@
         ]
       ]
     },
-    "Google_Sheets_Tool": {
+    "tool_sheets": {
       "ai_tool": [
         [
           {

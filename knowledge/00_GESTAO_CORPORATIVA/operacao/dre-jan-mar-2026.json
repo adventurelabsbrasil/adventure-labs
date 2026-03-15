@@ -1,0 +1,63 @@
+{
+  "titulo": "DRE — Jan a Mar 2026",
+  "empresa": "Adventure Labs",
+  "periodo": { "inicio": "2026-01", "fim": "2026-03" },
+  "moeda": "BRL",
+  "meses": [
+    {
+      "id": "jan",
+      "nome": "Janeiro 2026",
+      "receitas": [
+        { "conta": "Receitas diretas - Clientes - Serviços Pontuais", "valor": 940 },
+        { "conta": "Devoluções de Compra de Serviços", "valor": 64.90 },
+        { "conta": "Outras Entradas", "valor": 50500 }
+      ],
+      "despesas": [
+        { "conta": "Despesas Administrativas", "valor": 880.20 },
+        { "conta": "Despesas Financeiras", "valor": 64.90 },
+        { "conta": "Despesas com Vendas e Marketing", "valor": 275 },
+        { "conta": "Outras Despesas", "valor": 501 }
+      ],
+      "totais": { "receitas": 51504.90, "despesas": 1721.10, "resultado": 49783.80 }
+    },
+    {
+      "id": "fev",
+      "nome": "Fevereiro 2026",
+      "receitas": [
+        { "conta": "Receitas diretas - Clientes - Serviços Pontuais", "valor": 550 },
+        { "conta": "Receitas diretas - Clientes - Variáveis", "valor": 4508.33 },
+        { "conta": "Receitas diretas - Clientes - Serviços Recorrentes", "valor": 1300 },
+        { "conta": "Outras Entradas", "valor": 40000 }
+      ],
+      "despesas": [
+        { "conta": "Investimento", "valor": 40000 },
+        { "conta": "Despesas Administrativas", "valor": 3450.22 },
+        { "conta": "Despesas com Vendas e Marketing", "valor": 1662.50 },
+        { "conta": "Despesas com Pessoal", "valor": 6000 },
+        { "conta": "Impostos e Taxas", "valor": 197.50 },
+        { "conta": "Despesas Financeiras", "valor": 8 },
+        { "conta": "Outras Despesas", "valor": 40000 }
+      ],
+      "totais": { "receitas": 46358.33, "despesas": 91310.22, "resultado": -44951.89 }
+    },
+    {
+      "id": "mar",
+      "nome": "Março 2026",
+      "receitas": [
+        { "conta": "Receitas diretas - Clientes - Serviços Pontuais", "valor": 1250 },
+        { "conta": "Receitas diretas - Clientes - Serviços Recorrentes", "valor": 5500 }
+      ],
+      "despesas": [
+        { "conta": "Despesas Administrativas", "valor": 269.16 },
+        { "conta": "Despesas com Vendas e Marketing", "valor": 1062.50 },
+        { "conta": "Despesas com Pessoal", "valor": 3000 }
+      ],
+      "totais": { "receitas": 6750, "despesas": 4331.66, "resultado": 2418.34 }
+    }
+  ],
+  "consolidado": {
+    "receitas": 104613.23,
+    "despesas": 97362.98,
+    "resultado": 7250.25
+  }
+}

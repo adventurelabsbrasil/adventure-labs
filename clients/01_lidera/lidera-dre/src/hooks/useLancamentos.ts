@@ -1,8 +1,10 @@
 import { useState, useEffect, useCallback } from 'react';
 import { supabase, hasSupabaseConfig } from '../lib/supabase';
+import { useAuth } from '../contexts/AuthContext';
 import type { Lancamento, LancamentoInsert, LancamentoWithRelations } from '../types';
 
 export function useLancamentos(filters?: { from?: string; to?: string; tipo?: 'entrada' | 'saida' }) {
+  const { sessionVersion } = useAuth();
   const [lancamentos, setLancamentos] = useState<LancamentoWithRelations[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -46,7 +48,7 @@ export function useLancamentos(filters?: { from?: string; to?: string; tipo?: 'e
 
   useEffect(() => {
     fetchLancamentos();
-  }, [fetchLancamentos]);
+  }, [fetchLancamentos, sessionVersion]);
 
   const insertLancamento = useCallback(
     async (payload: LancamentoInsert) => {
@@ -90,6 +92,7 @@ export function useLancamentos(filters?: { from?: string; to?: string; tipo?: 'e
 }
 
 export function useLancamentosAggregate(from: string, to: string) {
+  const { sessionVersion } = useAuth();
   const [lancamentos, setLancamentos] = useState<Lancamento[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -111,7 +114,7 @@ export function useLancamentosAggregate(from: string, to: string) {
         else setLancamentos([]);
         setLoading(false);
       });
-  }, [from, to]);
+  }, [from, to, sessionVersion]);
 
   return { lancamentos, loading };
 }

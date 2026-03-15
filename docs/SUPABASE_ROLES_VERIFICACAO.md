@@ -70,6 +70,7 @@ WHERE routine_schema = 'public'
 
 ## Referências
 
+- **Manual do projeto Roles (passo a passo):** [docs/roles/PASSO_A_PASSO.md](roles/PASSO_A_PASSO.md) — guia único: o que foi feito, o que fazer e resultados esperados.
 - Plano: Roles do Admin e Adventure (CRM) no Supabase.
 - Script de diagnóstico: `apps/admin/supabase/scripts/diagnostico_schema.sql`
 - Script RLS e colunas CRM: `apps/admin/supabase/scripts/diagnostico_rls_e_colunas_crm.sql`
