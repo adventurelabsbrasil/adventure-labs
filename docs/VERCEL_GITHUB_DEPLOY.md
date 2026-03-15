@@ -6,7 +6,7 @@ Status da conexão dos projetos Vercel (team **adventurelabsbrasil**) com os rep
 
 | Projeto Vercel | Repositório GitHub | Root Directory | Deploy no push |
 |----------------|--------------------|----------------|----------------|
-| **admin** | adventurelabsbrasil/adventure-labs | `apps/admin` | Sim |
+| **admin** | adventurelabsbrasil/**admin** | `apps/admin` | Sim |
 | **lideraspace** | adventurelabsbrasil/lidera-space | (raiz do repo) | Sim |
 | **young-talents** | adventurelabsbrasil/young-talents | (raiz do repo) | Sim |
 | **roseportaladvocacia** | adventurelabsbrasil/roseportaladvocacia | (raiz do repo) | Sim |
@@ -34,14 +34,17 @@ npx vercel git connect https://github.com/adventurelabsbrasil/<repo>
 npx vercel project inspect <nome-projeto> --scope team_O8xJl9VAjaBleUkQsyzp30Xo
 ```
 
-## Admin (monorepo adventure-labs)
+## Admin (repositório admin)
 
-O projeto **admin** usa a pasta `apps/admin` do monorepo, que é um **submódulo Git** (repositório adventurelabsbrasil/admin). Para o build na Vercel funcionar:
+A Vercel **não** oferece opção na interface para clonar submódulos Git. Por isso o projeto **admin** na Vercel deve estar conectado **diretamente ao repositório** [adventurelabsbrasil/admin](https://github.com/adventurelabsbrasil/admin), e não ao monorepo adventure-labs.
 
-1. **Incluir submódulos**: Em **Project Settings → Git** (projeto admin na Vercel), ative **Include Git Submodules**. Assim o clone do adventure-labs baixa o conteúdo do submódulo `apps/admin`.
-2. **pnpm**: O admin usa pnpm (não npm). O `vercel.json` na raiz de `apps/admin` define `installCommand: "pnpm install --frozen-lockfile"` e `buildCommand: "pnpm run build"`. Não é necessário alterar o Install Command nas configurações do projeto na Vercel.
+**Configuração recomendada no projeto admin (Vercel):**
 
-Se o build falhar com "Failed to fetch one or more git submodules", verifique o item 1. Se falhar com "npm ci" ou "package-lock.json", o `vercel.json` do admin deve estar sendo aplicado; confira que o Root Directory do projeto é `apps/admin`.
+1. **Settings → Git → Connected Git Repository**: conectar ao repositório **adventurelabsbrasil/admin** (não adventure-labs).
+2. **Root Directory**: `apps/admin` (pasta do app Next.js dentro do repo admin).
+3. O repo admin usa **pnpm** na raiz; o `vercel.json` na raiz do repo define `installCommand: "pnpm install --frozen-lockfile"` e `buildCommand: "pnpm run build"`. Com Root Directory `apps/admin`, a Vercel usa o conteúdo dessa pasta; se o build reclamar de lockfile, confira em **Settings → General** que não há Install Command sobrescrevendo (ou defina `pnpm install --frozen-lockfile`).
+
+**Se o projeto já estiver conectado ao adventure-labs:** desconecte e conecte de novo ao repo **admin**, com Root Directory `apps/admin`. Assim o clone é do repo admin (sem submódulos) e o build passa a funcionar.
 
 ## Admin por cliente (subdomínio)
 

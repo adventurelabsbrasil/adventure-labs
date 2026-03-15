@@ -12,13 +12,13 @@ Atualize este documento quando alterar roles ou políticas; use a [verificação
 
 | Tabela | Uso no frontend | Observação |
 |--------|------------------|-------------|
-| `adv_profiles` | `apps/admin/apps/admin/src/lib/auth-profile.ts` (perfil: role + allowedProjectIds); `apps/admin/apps/admin/src/app/dashboard/equipe/page.tsx` (lista de perfis) | Fonte da role do usuário (admin / tarefas) |
+| `adv_profiles` | `apps/admin/src/lib/auth-profile.ts` (perfil: role + allowedProjectIds); `apps/admin/src/app/dashboard/equipe/page.tsx` (lista de perfis) | Fonte da role do usuário (admin / tarefas) |
 | `adv_project_members` | `auth-profile.ts` (projetos permitidos para role tarefas); `equipe/page.tsx` (membros por projeto) | Define quais projetos o usuário com role `tarefas` pode acessar |
 | `adv_clients`, `adv_projects` | CRUD no dashboard (clientes e projetos) | |
 | `adv_tasks`, `adv_task_time_entries` | Tarefas e apontamento de tempo; filtro por `allowedProjectIds` quando role = tarefas | Filtro aplicado no frontend |
 | `adv_founder_reports` | `/dashboard/relatorio`: escrita no formulário; leitura no histórico. **n8n C-Suite** lê (SELECT) últimos 7 dias para contexto do Grove | Relatórios do founder; consumidos pelo workflow C-Suite |
 | `adv_daily_summaries` | `/dashboard/relatorio` e dashboard: resumos diários; cron/API gera via `daily-summary.ts` | Resumos consolidados por dia |
-| `adv_time_bank_locations`, `adv_time_bank_entries`, `adv_time_bank_usages` | Ponto (registro e seção admin); `apps/admin/apps/admin/src/app/dashboard/ponto/page.tsx` usa `profile?.role !== "tarefas"` para exibir seção admin | **Time Bank do Admin** (identificação por `user_email`) |
+| `adv_time_bank_locations`, `adv_time_bank_entries`, `adv_time_bank_usages` | Ponto (registro e seção admin); `apps/admin/src/app/dashboard/ponto/page.tsx` usa `profile?.role !== "tarefas"` para exibir seção admin | **Time Bank do Admin** (identificação por `user_email`) |
 
 ### 1.2 App Adventure — CRM (React, Supabase Auth)
 
@@ -99,7 +99,7 @@ Atualize este documento quando alterar roles ou políticas; use a [verificação
 - **Projeto Roles (passo a passo e organização):** [docs/roles/PASSO_A_PASSO.md](roles/PASSO_A_PASSO.md) — o que foi feito, o que fazer e resultados esperados.
 - Verificação (como rodar diagnóstico e o que checar): [SUPABASE_ROLES_VERIFICACAO.md](SUPABASE_ROLES_VERIFICACAO.md)
 - Alinhamento tabelas e RLS com os apps Admin e Adventure (checklist): [SUPABASE_APPS_ALINHAMENTO.md](SUPABASE_APPS_ALINHAMENTO.md)
-- Perfil e roles no Admin: `apps/admin/apps/admin/src/lib/auth-profile.ts`
+- Perfil e roles no Admin: `apps/admin/src/lib/auth-profile.ts`
 - Permissões no Adventure: `apps/adventure/src/hooks/usePermissions.ts`
 - Definição de perfis e membros (Admin): `apps/admin/supabase/migrations/20250312100001_adv_profiles_and_project_members.sql`
 - **RLS CRM (Adventure):** migration oficial `apps/adventure/supabase/migrations/20260308100000_crm_rls_policies.sql` (idempotente). Script legado: `apps/adventure/scripts/migration/supabase-rls-policies.sql`.

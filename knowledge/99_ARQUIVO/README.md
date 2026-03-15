@@ -17,3 +17,30 @@ Pasta para arquivos avulsos, seeds e imports pontuais.
 3. Revise e execute o `import-projects.sql` gerado no Supabase SQL Editor.
 
 CSV e `import-projects-config.json` estão no `.gitignore`; o SQL gerado também.
+
+## Conciliação financeira (Sueli / Buffett)
+
+Para conciliação bancária e categorização (ex.: 01/01/2026 até agora), use a estrutura abaixo. A pasta `financeiro/` e `conciliacao_2026/` estão no `.gitignore` (dados sensíveis).
+
+- **financeiro/** — NFs, boletos e recibos (facilitam cruzar transações do OFX/CSV com comprovantes):
+  - `nfs_entrada/` — Notas fiscais de entrada (receitas / compras a contabilizar)
+  - `nfs_saida/` — Notas fiscais de saída (despesas)
+  - `boletos/` — Boletos pagos/recebidos
+  - `recibos/` — Recibos e comprovantes
+- **conciliacao_2026/** — Opcional: `nubank/`, `cartao/` para extratos de outras contas.
+
+CSV de controle e OFX Sicredi podem estar em `knowledge/99_ARQUIVO/` (ex.: `202601_POP_Controle_Financeiro - Contas.csv`, `sicredi/*.ofx`). Ver skill [sueli-conciliacao-bancaria](../../agents/skills/sueli-conciliacao-bancaria/SKILL.md), seção "Conciliação em lote".
+
+### Checklist — Primeira conciliação completa (01/01/2026 até agora)
+
+Antes de acionar o Buffett (ou Grove) para a conciliação em lote, confira:
+
+| Item | Onde verificar | Status |
+|------|----------------|--------|
+| Plano de contas | `context/00_GESTAO_CORPORATIVA/checklists_config/plano-de-contas-categorias.md` | OK se o arquivo existir |
+| CSV de controle | `knowledge/99_ARQUIVO/202601_POP_Controle_Financeiro - Contas.csv` (ou outro CSV em knowledge/99_ARQUIVO ou context/99_ARQUIVO) | Colar/confirmar |
+| OFX Sicredi | `knowledge/99_ARQUIVO/sicredi/*.ofx` (ex.: jan, fev, mar 2026) | Colar/confirmar |
+| NFs, boletos, recibos | `context/99_ARQUIVO/financeiro/` (raiz ou subpastas nfs_entrada, nfs_saida, boletos, recibos) | Colar/confirmar |
+| Outras contas (opcional) | `context/99_ARQUIVO/conciliacao_2026/nubank/`, `cartao/` | Só se for usar |
+
+**Como iniciar:** No Cursor, peça ao **Buffett** (ou Grove): *"Faça a conciliação em lote de 01/01/2026 até agora: analise o plano de contas, o CSV de controle, os OFX do Sicredi e os documentos em financeiro/; categorize, liste dúvidas e me pergunte o que não souber."* O agente segue os passos 1–7 da skill sueli-conciliacao-bancaria.

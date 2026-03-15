@@ -11,7 +11,7 @@ interface PerfilComOrg extends DrePerfil {
 }
 
 export default function Admin() {
-  const { profile } = useAuth();
+  const { profile, sessionVersion } = useAuth();
   const navigate = useNavigate();
   const { organizacoes, loading: orgLoading, insertOrganizacao, updateOrganizacao } = useOrganizacoes();
   const [perfis, setPerfis] = useState<PerfilComOrg[]>([]);
@@ -49,7 +49,7 @@ export default function Admin() {
 
   useEffect(() => {
     if (profile?.role === 'admin') fetchPerfis();
-  }, [profile?.role, fetchPerfis]);
+  }, [profile?.role, fetchPerfis, sessionVersion]);
 
   if (profile?.role !== 'admin') return null;
 

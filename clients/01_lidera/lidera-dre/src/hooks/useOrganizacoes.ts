@@ -1,8 +1,10 @@
 import { useState, useEffect, useCallback } from 'react';
 import { supabase, hasSupabaseConfig } from '../lib/supabase';
+import { useAuth } from '../contexts/AuthContext';
 import type { DreOrganizacao } from '../types';
 
 export function useOrganizacoes() {
+  const { sessionVersion } = useAuth();
   const [organizacoes, setOrganizacoes] = useState<DreOrganizacao[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -30,7 +32,7 @@ export function useOrganizacoes() {
 
   useEffect(() => {
     fetchOrganizacoes();
-  }, [fetchOrganizacoes]);
+  }, [fetchOrganizacoes, sessionVersion]);
 
   const insertOrganizacao = useCallback(
     async (nome: string) => {

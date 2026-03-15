@@ -2,7 +2,7 @@
 
 Checklist para conferir se os **nomes de tabelas** e as **políticas RLS** no Supabase estão de acordo com o que os apps **Admin** e **Adventure** usam. Preencha "Existe no banco?", "RLS permite o que o app faz?" e "Ação" após rodar o diagnóstico (ex.: `diagnostico_rls_e_colunas_crm.sql`) e cruzar com as queries 2, 4 e 5.
 
-Referências: [SUPABASE_ROLES_VERIFICACAO.md](SUPABASE_ROLES_VERIFICACAO.md), [SUPABASE_ROLES_MATRIZ_ACESSOS.md](SUPABASE_ROLES_MATRIZ_ACESSOS.md).
+Referências: [SUPABASE_ROLES_VERIFICACAO.md](SUPABASE_ROLES_VERIFICACAO.md), [SUPABASE_ROLES_MATRIZ_ACESSOS.md](SUPABASE_ROLES_MATRIZ_ACESSOS.md). **Manual do projeto Roles (passo a passo):** [docs/roles/PASSO_A_PASSO.md](roles/PASSO_A_PASSO.md).
 
 ---
 
@@ -60,6 +60,15 @@ O Adventure usa `getDocuments(collectionName)` (camelCase); o mapeamento para ta
 | whatsappConversations | whatsapp_conversations | | | | |
 
 **Expectativa do Adventure:** `users` com `user_type` (e possivelmente `role`); `project_users` com `project_id`, `user_id`, `role`; acesso a deals/contacts/companies/tasks/etc. conforme `has_project_access(project_id)` e roles em project_users. O `db.ts` converte camelCase → snake_case (ex.: projectId → project_id); as colunas no banco devem bater com esse mapeamento.
+
+---
+
+## 2.1 Esclarecimento: tabela `tasks` (sem schema = public)
+
+A tabela **`tasks`** (schema `public`) é do **Adventure CRM**, não do Lidera. Definição: `apps/adventure/scripts/migration/supabase-schema.sql` (project_id, deal_id, title, type, status, due_date, etc.) — tarefas de negócio (ligar para cliente, follow-up, reunião).
+
+- **Lidera (lidera-space)** usa **outro** projeto Supabase e **não** tem tabela `tasks`; tem `programs`, `modules`, `lessons`, `notes`, `progress`.
+- Se no projeto compartilhado (ftctmseyrqhckutpfdeq) você vir dados em `tasks` que parecem de “liderança” ou genéricos, podem ser mocks/demo do CRM (ex.: demoSeed do Adventure) ou seed aplicado por engano. A **estrutura** da tabela é a do CRM; o **conteúdo** pode ter sido populado por outro seed. Para limpar ou alinhar: identificar a origem dos dados e, se for seed equivocado, remover ou migrar para o app correto.
 
 ---
 

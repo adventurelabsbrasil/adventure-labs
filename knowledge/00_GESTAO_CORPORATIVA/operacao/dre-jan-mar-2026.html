@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>DRE Jan–Mar 2026 — Adventure Labs</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,600;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0f1419;
+      --surface: #1a2332;
+      --border: #2d3a4f;
+      --text: #e6edf3;
+      --muted: #8b9cb3;
+      --receita: #3fb950;
+      --despesa: #f85149;
+      --resultado-pos: #3fb950;
+      --resultado-neg: #f85149;
+      --accent: #58a6ff;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 1.5rem;
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+    .container { max-width: 960px; margin: 0 auto; }
+    h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin: 0 0 0.25rem 0;
+    }
+    .subtitle { color: var(--muted); font-size: 0.9rem; margin-bottom: 1.5rem; }
+    .tabs {
+      display: flex;
+      gap: 0.25rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .tabs button {
+      font-family: inherit;
+      font-size: 0.9rem;
+      font-weight: 600;
+      padding: 0.5rem 1rem;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .tabs button:hover { background: #243044; }
+    .tabs button.active { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+    .panel { display: none; }
+    .panel.active { display: block; }
+    .chart-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    @media (max-width: 640px) { .chart-row { grid-template-columns: 1fr; } }
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.25rem;
+    }
+    .card h3 { margin: 0 0 1rem 0; font-size: 1rem; color: var(--muted); }
+    .chart-wrap { position: relative; height: 240px; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+    }
+    th, td { text-align: left; padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--border); }
+    th { color: var(--muted); font-weight: 600; }
+    td.num { text-align: right; font-family: 'JetBrains Mono', monospace; }
+    .receita-num { color: var(--receita); }
+    .despesa-num { color: var(--despesa); }
+    .total-row { font-weight: 700; background: rgba(255,255,255,0.03); }
+    .resultado-pos { color: var(--resultado-pos); }
+    .resultado-neg { color: var(--resultado-neg); }
+    .resumo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .resumo-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1rem;
+      text-align: center;
+    }
+    .resumo-item .label { font-size: 0.8rem; color: var(--muted); margin-bottom: 0.25rem; }
+    .resumo-item .value { font-family: 'JetBrains Mono', monospace; font-size: 1.1rem; font-weight: 600; }
+    /* Analítico: rodapé totalizador e acordeão */
+    tfoot td { font-weight: 700; background: rgba(255,255,255,0.06); border-top: 2px solid var(--border); padding: 0.6rem 0.75rem; }
+    .row-parent { cursor: pointer; }
+    .row-parent:hover { background: rgba(255,255,255,0.03); }
+    .toggle { display: inline-block; width: 1.2rem; text-align: center; margin-right: 0.35rem; font-size: 0.85rem; color: var(--muted); }
+    .row-child td:nth-child(2) { padding-left: 2rem; }
+    .row-child .toggle { visibility: hidden; }
+    /* Impressão DRE: tema claro, A4 paisagem */
+    @media print {
+      body { background: #fff; }
+      body * { visibility: hidden; }
+      .print-dre, .print-dre * { visibility: visible; }
+      .print-dre { position: absolute; left: 0; top: 0; width: 100%; display: block !important; font-family: 'DM Sans', sans-serif; background: #fff; color: #1a1a1a; padding: 0; }
+      .print-dre .sheet { width: 297mm; min-height: 210mm; padding: 12mm; box-sizing: border-box; }
+      .print-dre table { font-size: 9pt; }
+      .print-dre th, .print-dre td { padding: 4pt 8pt; border: 1px solid #333; }
+      .print-dre th { background: #f0f0f0; }
+      .print-dre .receita-num { color: #0a6b0a; }
+      .print-dre .despesa-num { color: #b00; }
+      .print-dre tfoot td { font-weight: 700; background: #e8e8e8; border-top: 2px solid #333; }
+      @page { size: 297mm 210mm landscape; margin: 12mm; }
+    }
+    @media screen {
+      .print-dre { max-width: 297mm; margin: 1rem auto; padding: 12mm; background: #fafafa; color: #1a1a1a; border: 1px solid #ddd; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+      .print-dre .sheet { min-height: auto; }
+      .print-dre table { font-size: 10pt; }
+      .print-dre th, .print-dre td { padding: 6px 10px; border: 1px solid #333; }
+      .print-dre th { background: #eee; }
+      .print-dre tfoot td { background: #e0e0e0; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>DRE — Jan a Mar 2026</h1>
+    <p class="subtitle">Adventure Labs · Demonstração do Resultado (3 primeiros meses)</p>
+
+    <div class="tabs" role="tablist">
+      <button type="button" role="tab" data-tab="jan" aria-selected="false">Janeiro</button>
+      <button type="button" role="tab" data-tab="fev" aria-selected="false">Fevereiro</button>
+      <button type="button" role="tab" data-tab="mar" aria-selected="false">Março</button>
+      <button type="button" role="tab" data-tab="consolidado" aria-selected="true">Consolidado</button>
+      <button type="button" role="tab" data-tab="analitico" aria-selected="false">Analítico anual</button>
+      <button type="button" role="tab" data-tab="saude" aria-selected="false">Saúde</button>
+      <button type="button" role="tab" data-tab="imprimir" aria-selected="false">Imprimir DRE</button>
+    </div>
+
+    <div id="panel-consolidado" class="panel active">
+      <div class="resumo-grid">
+        <div class="resumo-item">
+          <div class="label">Receitas (jan–mar)</div>
+          <div class="value receita-num" id="cons-receitas">R$ 0</div>
+        </div>
+        <div class="resumo-item">
+          <div class="label">Despesas (jan–mar)</div>
+          <div class="value despesa-num" id="cons-despesas">R$ 0</div>
+        </div>
+        <div class="resumo-item">
+          <div class="label">Resultado</div>
+          <div class="value" id="cons-resultado">R$ 0</div>
+        </div>
+      </div>
+      <div class="card">
+        <h3>Receitas x Despesas por mês</h3>
+        <div class="chart-wrap"><canvas id="chart-mensal"></canvas></div>
+      </div>
+      <div class="card">
+        <h3>Resumo por mês</h3>
+        <table>
+          <thead>
+            <tr><th>Mês</th><th class="num">Receitas</th><th class="num">Despesas</th><th class="num">Resultado</th></tr>
+          </thead>
+          <tbody id="tbody-consolidado"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div id="panel-jan" class="panel">
+      <div class="resumo-grid" id="resumo-jan"></div>
+      <div class="card">
+        <h3>Receitas</h3>
+        <table><tbody id="receitas-jan"></tbody></table>
+      </div>
+      <div class="card">
+        <h3>Despesas</h3>
+        <table><tbody id="despesas-jan"></tbody></table>
+      </div>
+    </div>
+
+    <div id="panel-fev" class="panel">
+      <div class="resumo-grid" id="resumo-fev"></div>
+      <div class="card">
+        <h3>Receitas</h3>
+        <table><tbody id="receitas-fev"></tbody></table>
+      </div>
+      <div class="card">
+        <h3>Despesas</h3>
+        <table><tbody id="despesas-fev"></tbody></table>
+      </div>
+    </div>
+
+    <div id="panel-mar" class="panel">
+      <div class="resumo-grid" id="resumo-mar"></div>
+      <div class="card">
+        <h3>Receitas</h3>
+        <table><tbody id="receitas-mar"></tbody></table>
+      </div>
+      <div class="card">
+        <h3>Despesas</h3>
+        <table><tbody id="despesas-mar"></tbody></table>
+      </div>
+    </div>
+
+    <div id="panel-analitico" class="panel">
+      <p class="subtitle" style="margin-bottom: 1rem;">Por categoria do plano de contas · Jan–Mar 2026 (total por coluna no pé de cada tabela)</p>
+      <div class="card">
+        <h3>Receitas por categoria</h3>
+        <div class="table-wrap" style="overflow-x: auto;">
+          <table id="table-analitico-receitas">
+            <thead>
+              <tr>
+                <th style="width: 2rem;"></th>
+                <th>Categoria (plano de contas)</th>
+                <th class="num">Jan</th>
+                <th class="num">Fev</th>
+                <th class="num">Mar</th>
+                <th class="num">Total</th>
+              </tr>
+            </thead>
+            <tbody id="analitico-receitas"></tbody>
+            <tfoot id="analitico-receitas-foot"><tr><td colspan="6"></td></tr></tfoot>
+          </table>
+        </div>
+      </div>
+      <div class="card">
+        <h3>Despesas por categoria</h3>
+        <div class="table-wrap" style="overflow-x: auto;">
+          <table id="table-analitico-despesas">
+            <thead>
+              <tr>
+                <th style="width: 2rem;"></th>
+                <th>Categoria (plano de contas)</th>
+                <th class="num">Jan</th>
+                <th class="num">Fev</th>
+                <th class="num">Mar</th>
+                <th class="num">Total</th>
+              </tr>
+            </thead>
+            <tbody id="analitico-despesas"></tbody>
+            <tfoot id="analitico-despesas-foot"><tr><td colspan="6"></td></tr></tfoot>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div id="panel-saude" class="panel">
+      <p class="subtitle" style="margin-bottom: 1rem;">Visão de saúde financeira · escala logarítmica</p>
+      <div class="resumo-grid" style="margin-bottom: 1.5rem;">
+        <div class="resumo-item">
+          <div class="label">Receitas (período)</div>
+          <div class="value receita-num" id="saude-receitas">—</div>
+        </div>
+        <div class="resumo-item">
+          <div class="label">Despesas (período)</div>
+          <div class="value despesa-num" id="saude-despesas">—</div>
+        </div>
+        <div class="resumo-item">
+          <div class="label">Resultado</div>
+          <div class="value" id="saude-resultado">—</div>
+        </div>
+        <div class="resumo-item">
+          <div class="label">Margem (resultado/receita)</div>
+          <div class="value" id="saude-margem">—</div>
+        </div>
+      </div>
+      <div class="card">
+        <h3>Receitas x Despesas por mês (escala logarítmica)</h3>
+        <div class="chart-wrap" style="height: 280px;"><canvas id="chart-saude"></canvas></div>
+      </div>
+    </div>
+
+    <div id="panel-imprimir" class="panel">
+      <p class="subtitle" style="margin-bottom: 1rem;">Formato para impressão · A4 paisagem · tema claro</p>
+      <button type="button" onclick="window.print()" style="padding: 0.5rem 1rem; font-weight: 600; cursor: pointer; margin-bottom: 1rem; border-radius: 8px; border: 1px solid var(--border); background: var(--surface); color: var(--text);">Imprimir / PDF</button>
+      <div class="print-dre" id="print-dre-container">
+        <div class="sheet">
+          <h2 style="margin: 0 0 0.5rem 0; font-size: 1.1rem;">DRE — Jan a Mar 2026 · Adventure Labs</h2>
+          <p style="margin: 0 0 1rem 0; font-size: 0.85rem; color: #555;">Demonstração do Resultado do Exercício (3 primeiros meses)</p>
+          <table id="print-dre-table" style="width: 100%; border-collapse: collapse;"></table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+    const DRE = {"titulo":"DRE — Jan a Mar 2026","empresa":"Adventure Labs","periodo":{"inicio":"2026-01","fim":"2026-03"},"moeda":"BRL","meses":[{"id":"jan","nome":"Janeiro 2026","receitas":[{"conta":"Receitas diretas - Clientes - Serviços Pontuais","valor":940},{"conta":"Devoluções de Compra de Serviços","valor":64.9},{"conta":"Outras Entradas","valor":50500}],"despesas":[{"conta":"Despesas Administrativas","valor":880.2},{"conta":"Despesas Financeiras","valor":64.9},{"conta":"Despesas com Vendas e Marketing","valor":275},{"conta":"Outras Despesas","valor":501}],"totais":{"receitas":51504.9,"despesas":1721.1,"resultado":49783.8}},{"id":"fev","nome":"Fevereiro 2026","receitas":[{"conta":"Receitas diretas - Clientes - Serviços Pontuais","valor":550},{"conta":"Receitas diretas - Clientes - Variáveis","valor":4508.33},{"conta":"Receitas diretas - Clientes - Serviços Recorrentes","valor":1300},{"conta":"Outras Entradas","valor":40000}],"despesas":[{"conta":"Investimento","valor":40000},{"conta":"Despesas Administrativas","valor":3450.22},{"conta":"Despesas com Vendas e Marketing","valor":1662.5},{"conta":"Despesas com Pessoal","valor":6000},{"conta":"Impostos e Taxas","valor":197.5},{"conta":"Despesas Financeiras","valor":8},{"conta":"Outras Despesas","valor":40000}],"totais":{"receitas":46358.33,"despesas":91310.22,"resultado":-44951.89}},{"id":"mar","nome":"Março 2026","receitas":[{"conta":"Receitas diretas - Clientes - Serviços Pontuais","valor":1250},{"conta":"Receitas diretas - Clientes - Serviços Recorrentes","valor":5500}],"despesas":[{"conta":"Despesas Administrativas","valor":269.16},{"conta":"Despesas com Vendas e Marketing","valor":1062.5},{"conta":"Despesas com Pessoal","valor":3000}],"totais":{"receitas":6750,"despesas":4331.66,"resultado":2418.34}}],"consolidado":{"receitas":104613.23,"despesas":97362.98,"resultado":7250.25}};
+
+    if (!DRE || !DRE.consolidado || !DRE.meses || DRE.meses.length === 0) {
+      document.body.insertAdjacentHTML('beforeend', '<p style="color:#f85149;padding:1rem;">Dados do DRE não disponíveis. Verifique o arquivo.</p>');
+      return;
+    }
+
+    function fmt(v) {
+      return 'R$ ' + (v < 0 ? '-' : '') + Math.abs(v).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+
+    function renderResumo(sel, t) {
+      const el = document.querySelector(sel);
+      if (!el) return;
+      el.innerHTML = `
+        <div class="resumo-item"><div class="label">Receitas</div><div class="value receita-num">${fmt(t.receitas)}</div></div>
+        <div class="resumo-item"><div class="label">Despesas</div><div class="value despesa-num">${fmt(t.despesas)}</div></div>
+        <div class="resumo-item"><div class="label">Resultado</div><div class="value ${t.resultado >= 0 ? 'resultado-pos' : 'resultado-neg'}">${fmt(t.resultado)}</div></div>
+      `;
+    }
+
+    function renderTable(sel, items, isReceita) {
+      const el = document.querySelector(sel);
+      if (!el) return;
+      const cls = isReceita ? 'receita-num' : 'despesa-num';
+      el.innerHTML = items.map(i => `<tr><td>${i.conta}</td><td class="num ${cls}">${fmt(isReceita ? i.valor : -Math.abs(i.valor))}</td></tr>`).join('');
+    }
+
+    // Consolidado
+    const c = DRE.consolidado;
+    const elConsReceitas = document.getElementById('cons-receitas');
+    const elConsDespesas = document.getElementById('cons-despesas');
+    const resEl = document.getElementById('cons-resultado');
+    if (elConsReceitas) elConsReceitas.textContent = fmt(c.receitas);
+    if (elConsDespesas) elConsDespesas.textContent = fmt(c.despesas);
+    if (resEl) {
+      resEl.textContent = fmt(c.resultado);
+      resEl.classList.add(c.resultado >= 0 ? 'resultado-pos' : 'resultado-neg');
+    }
+
+    const tbodyCons = document.getElementById('tbody-consolidado');
+    if (tbodyCons) tbodyCons.innerHTML = DRE.meses.map(m => {
+      const r = m.totais.resultado;
+      return `<tr class="total-row"><td>${m.nome}</td><td class="num receita-num">${fmt(m.totais.receitas)}</td><td class="num despesa-num">${fmt(m.totais.despesas)}</td><td class="num ${r >= 0 ? 'resultado-pos' : 'resultado-neg'}">${fmt(r)}</td></tr>`;
+    }).join('');
+
+    // Por mês
+    DRE.meses.forEach(m => {
+      renderResumo('#resumo-' + m.id, m.totais);
+      renderTable('#receitas-' + m.id, m.receitas, true);
+      renderTable('#despesas-' + m.id, m.despesas, false);
+    });
+
+    // Analítico anual: agregar por categoria (plano de contas) com colunas Jan, Fev, Mar, Total
+    const ids = ['jan', 'fev', 'mar'];
+    const byConta = (tipo) => {
+      const map = {};
+      DRE.meses.forEach((m, i) => {
+        const list = m[tipo];
+        list.forEach(item => {
+          if (!map[item.conta]) map[item.conta] = { conta: item.conta, jan: 0, fev: 0, mar: 0 };
+          map[item.conta][ids[i]] = item.valor;
+        });
+      });
+      return Object.values(map).map(row => ({
+        ...row,
+        total: row.jan + row.fev + row.mar
+      })).sort((a, b) => a.conta.localeCompare(b.conta));
+    };
+    const receitasAnalitico = byConta('receitas');
+    const despesasAnalitico = byConta('despesas');
+
+    function groupByParent(rows) {
+      const map = {};
+      rows.forEach(r => {
+        const parts = r.conta.split(' - ');
+        const parentKey = parts.length >= 2 ? parts.slice(0, -1).join(' - ') : r.conta;
+        const childLabel = parts.length >= 2 ? parts[parts.length - 1] : r.conta;
+        if (!map[parentKey]) map[parentKey] = { parent: parentKey, children: [], jan: 0, fev: 0, mar: 0, total: 0 };
+        map[parentKey].children.push({ label: childLabel, jan: r.jan, fev: r.fev, mar: r.mar, total: r.total });
+        map[parentKey].jan += r.jan;
+        map[parentKey].fev += r.fev;
+        map[parentKey].mar += r.mar;
+        map[parentKey].total += r.total;
+      });
+      return Object.values(map).sort((a, b) => a.parent.localeCompare(b.parent));
+    }
+    const receitasGrouped = groupByParent(receitasAnalitico);
+    const despesasGrouped = groupByParent(despesasAnalitico);
+
+    function renderAnaliticoAccordion(tbodyId, footId, groups, isReceita) {
+      const tbody = document.getElementById(tbodyId);
+      const foot = document.getElementById(footId);
+      if (!tbody || !foot) return;
+      const cls = isReceita ? 'receita-num' : 'despesa-num';
+      const fmtCell = v => v === 0 ? '—' : fmt(isReceita ? v : -Math.abs(v));
+      const F = isReceita ? v => fmt(v) : v => fmt(-v);
+      let sumJan = 0, sumFev = 0, sumMar = 0, sumTotal = 0;
+      tbody.innerHTML = groups.map((g, gi) => {
+        sumJan += g.jan; sumFev += g.fev; sumMar += g.mar; sumTotal += g.total;
+        const hasChildren = g.children.length > 0;
+        const id = tbodyId + '-g-' + gi;
+        const childRows = hasChildren ? g.children.map(c => `
+          <tr class="row-child" data-parent-id="${id}" style="display:none;">
+            <td class="toggle"></td>
+            <td>${c.label}</td>
+            <td class="num ${cls}">${fmtCell(c.jan)}</td>
+            <td class="num ${cls}">${fmtCell(c.fev)}</td>
+            <td class="num ${cls}">${fmtCell(c.mar)}</td>
+            <td class="num ${cls}">${fmtCell(c.total)}</td>
+          </tr>
+        `).join('') : '';
+        return `
+          <tr class="row-parent" data-id="${id}" data-open="0">
+            <td class="toggle">${hasChildren ? '+' : ''}</td>
+            <td>${g.parent}</td>
+            <td class="num ${cls}">${fmtCell(g.jan)}</td>
+            <td class="num ${cls}">${fmtCell(g.fev)}</td>
+            <td class="num ${cls}">${fmtCell(g.mar)}</td>
+            <td class="num ${cls}">${fmtCell(g.total)}</td>
+          </tr>${childRows}`;
+      }).join('');
+      foot.querySelector('tr').innerHTML = `
+        <td></td>
+        <td><strong>Total</strong></td>
+        <td class="num ${cls}">${F(sumJan)}</td>
+        <td class="num ${cls}">${F(sumFev)}</td>
+        <td class="num ${cls}">${F(sumMar)}</td>
+        <td class="num ${cls}">${F(sumTotal)}</td>`;
+      tbody.querySelectorAll('.row-parent[data-id]').forEach(tr => {
+        const id = tr.dataset.id;
+        const children = tbody.querySelectorAll('.row-child[data-parent-id="' + id + '"]');
+        if (children.length === 0) return;
+        tr.addEventListener('click', () => {
+          const open = tr.dataset.open === '1';
+          tr.dataset.open = open ? '0' : '1';
+          tr.querySelector('.toggle').textContent = open ? '+' : '−';
+          children.forEach(c => { c.style.display = open ? 'none' : ''; });
+        });
+      });
+    }
+    renderAnaliticoAccordion('analitico-receitas', 'analitico-receitas-foot', receitasGrouped, true);
+    renderAnaliticoAccordion('analitico-despesas', 'analitico-despesas-foot', despesasGrouped, false);
+
+    // Gráficos (try/catch para não quebrar o resto se Chart.js falhar)
+    try {
+      const canvasMensal = document.getElementById('chart-mensal');
+      if (canvasMensal) {
+        const dataReceitas = DRE.meses.map(m => Math.max(m.totais.receitas, 1));
+        const dataDespesas = DRE.meses.map(m => Math.max(m.totais.despesas, 1));
+        new Chart(canvasMensal.getContext('2d'), {
+          type: 'bar',
+          data: {
+            labels: DRE.meses.map(m => m.nome.replace(' 2026', '')),
+            datasets: [
+              { label: 'Receitas', data: dataReceitas, backgroundColor: 'rgba(63, 185, 80, 0.8)' },
+              { label: 'Despesas', data: dataDespesas, backgroundColor: 'rgba(248, 81, 73, 0.8)' }
+            ]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { labels: { color: '#e6edf3' } } },
+            scales: {
+              x: { ticks: { color: '#8b9cb3' }, grid: { color: '#2d3a4f' } },
+              y: { type: 'logarithmic', min: 1, ticks: { color: '#8b9cb3' }, grid: { color: '#2d3a4f' } }
+            }
+          }
+        });
+      }
+    } catch (e) { console.warn('Chart consolidado:', e); }
+
+    // Tabs
+    document.querySelectorAll('.tabs button').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const tab = btn.dataset.tab;
+        document.querySelectorAll('.tabs button').forEach(b => { b.classList.remove('active'); b.setAttribute('aria-selected', 'false'); });
+        btn.classList.add('active');
+        btn.setAttribute('aria-selected', 'true');
+        document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+        document.getElementById('panel-' + tab).classList.add('active');
+      });
+    });
+    document.querySelector('.tabs button[data-tab="consolidado"]').classList.add('active');
+    document.querySelector('.tabs button[data-tab="consolidado"]').setAttribute('aria-selected', 'true');
+
+    // Aba Saúde: KPIs + gráfico escala logarítmica
+    const elSaudeReceitas = document.getElementById('saude-receitas');
+    const elSaudeDespesas = document.getElementById('saude-despesas');
+    const elSaudeResultado = document.getElementById('saude-resultado');
+    const elSaudeMargem = document.getElementById('saude-margem');
+    if (elSaudeReceitas) elSaudeReceitas.textContent = fmt(DRE.consolidado.receitas);
+    if (elSaudeDespesas) elSaudeDespesas.textContent = fmt(DRE.consolidado.despesas);
+    const res = DRE.consolidado.resultado;
+    if (elSaudeResultado) {
+      elSaudeResultado.textContent = fmt(res);
+      elSaudeResultado.classList.add(res >= 0 ? 'resultado-pos' : 'resultado-neg');
+    }
+    const margem = DRE.consolidado.receitas ? (DRE.consolidado.resultado / DRE.consolidado.receitas * 100) : 0;
+    if (elSaudeMargem) elSaudeMargem.textContent = margem.toFixed(1) + '%';
+    try {
+      const canvasSaude = document.getElementById('chart-saude');
+      if (canvasSaude) {
+        const dataR = DRE.meses.map(m => Math.max(m.totais.receitas, 1));
+        const dataD = DRE.meses.map(m => Math.max(m.totais.despesas, 1));
+        new Chart(canvasSaude.getContext('2d'), {
+          type: 'bar',
+          data: {
+            labels: DRE.meses.map(m => m.nome.replace(' 2026', '')),
+            datasets: [
+              { label: 'Receitas', data: dataR, backgroundColor: 'rgba(63, 185, 80, 0.8)' },
+              { label: 'Despesas', data: dataD, backgroundColor: 'rgba(248, 81, 73, 0.8)' }
+            ]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { labels: { color: '#e6edf3' } } },
+            scales: {
+              x: { ticks: { color: '#8b9cb3' }, grid: { color: '#2d3a4f' } },
+              y: { type: 'logarithmic', min: 1, ticks: { color: '#8b9cb3' }, grid: { color: '#2d3a4f' } }
+            }
+          }
+        });
+      }
+    } catch (e) { console.warn('Chart saúde:', e); }
+
+    // Tabela impressão DRE (A4 paisagem, tema claro)
+    const printTable = document.getElementById('print-dre-table');
+    if (printTable) {
+      const P = DRE.consolidado;
+      const fmtP = v => (v < 0 ? '-' : '') + 'R$ ' + Math.abs(v).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      let html = '<thead><tr><th>Categoria / Mês</th><th class="num">Jan</th><th class="num">Fev</th><th class="num">Mar</th><th class="num">Total</th></tr></thead><tbody>';
+      receitasAnalitico.forEach(r => {
+        html += '<tr><td>' + r.conta + '</td><td class="num receita-num">' + (r.jan ? fmtP(r.jan) : '—') + '</td><td class="num receita-num">' + (r.fev ? fmtP(r.fev) : '—') + '</td><td class="num receita-num">' + (r.mar ? fmtP(r.mar) : '—') + '</td><td class="num receita-num">' + fmtP(r.total) + '</td></tr>';
+      });
+      const rJan = DRE.meses[0].totais.receitas, rFev = DRE.meses[1].totais.receitas, rMar = DRE.meses[2].totais.receitas;
+      html += '<tr style="font-weight:700; background:#e8e8e8;"><td>Total Receitas</td><td class="num receita-num">' + fmtP(rJan) + '</td><td class="num receita-num">' + fmtP(rFev) + '</td><td class="num receita-num">' + fmtP(rMar) + '</td><td class="num receita-num">' + fmtP(P.receitas) + '</td></tr>';
+      html += '<tr><td colspan="5" style="height:6px;"></td></tr>';
+      despesasAnalitico.forEach(r => {
+        html += '<tr><td>' + r.conta + '</td><td class="num despesa-num">' + (r.jan ? fmtP(-r.jan) : '—') + '</td><td class="num despesa-num">' + (r.fev ? fmtP(-r.fev) : '—') + '</td><td class="num despesa-num">' + (r.mar ? fmtP(-r.mar) : '—') + '</td><td class="num despesa-num">' + fmtP(-r.total) + '</td></tr>';
+      });
+      const dJan = DRE.meses[0].totais.despesas, dFev = DRE.meses[1].totais.despesas, dMar = DRE.meses[2].totais.despesas;
+      html += '<tr style="font-weight:700; background:#e8e8e8;"><td>Total Despesas</td><td class="num despesa-num">' + fmtP(-dJan) + '</td><td class="num despesa-num">' + fmtP(-dFev) + '</td><td class="num despesa-num">' + fmtP(-dMar) + '</td><td class="num despesa-num">' + fmtP(-P.despesas) + '</td></tr>';
+      html += '</tbody><tfoot><tr><td><strong>Resultado (jan–mar)</strong></td><td class="num">' + fmtP(DRE.meses[0].totais.resultado) + '</td><td class="num">' + fmtP(DRE.meses[1].totais.resultado) + '</td><td class="num">' + fmtP(DRE.meses[2].totais.resultado) + '</td><td class="num">' + fmtP(P.resultado) + '</td></tr></tfoot>';
+      printTable.innerHTML = html;
+    }
+    })();
+  </script>
+</body>
+</html>

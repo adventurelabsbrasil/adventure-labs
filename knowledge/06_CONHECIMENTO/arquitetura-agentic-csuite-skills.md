@@ -51,7 +51,13 @@ C-Suite e skills por diretor:
 - **COO (Ohno):** sla-prazos-entrega, fluxo-vida-projeto, kanban-board-checklist
 - **CMO (Ogilvy):** relatorio-kpis-campanhas, copy-brief-campanha, analise-performance-canal, referencias-ideias-editorial
 - **CFO (Buffett):** one-pager-financeiro, reconciliacao-custos, metricas-saas-agencia
-- **CPO (Cagan):** escopo-projeto-checklist, briefing-cliente-template, dashboard-kpis-especificacao
+- **CPO (Cagan):** escopo-projeto-checklist, briefing-cliente-template, dashboard-kpis-especificacao; **Zazu (agente de apoio):** zazu-whatsapp-resumo-diario
+
+---
+
+## 3.1 Agentes de apoio (executor agents)
+
+Além dos C-Levels que planejam e delegam, existem **agentes de apoio** que executam skills em schedule, usam tools externas e produzem founder reports; são implementados como workflows n8n. **Zazu** e **Lara** são exemplos: executam uma skill cada (Zazu: `zazu-whatsapp-resumo-diario`; Lara: sync e análise Meta Ads), usam tools externas (whatsapp-worker; APIs Meta/Admin) e gravam em `adv_founder_reports`. O Cagan (e o C-Suite) consomem o output desses agentes nos últimos 7 dias no contexto do Loop.
 
 ---
 

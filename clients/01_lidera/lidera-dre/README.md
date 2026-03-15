@@ -45,5 +45,4 @@ Sistema de lançamento de receitas e despesas para formação de DRE (Demonstra�
 - `src/components/` — Layout (sidebar, tema escuro)
 - `src/hooks/` — useCategorias, useSubcategorias, useLancamentos
 - `src/lib/` — supabase, dre (agregação), exportPdf, exportXls, exportCsv
-
-Auth e roles ficam para uma etapa posterior; o foco atual é visual e dados no Supabase.
+- `scripts/` — [remover-mocks.sql](scripts/remover-mocks.sql) para limpar lançamentos de exemplo no Supabase (ver [scripts/README.md](scripts/README.md)).
