@@ -61,6 +61,23 @@ Esta LP **não utiliza formulário**. Todos os contatos são direcionados ao Wha
 
 ---
 
+## Repositório separado (para Vercel sem Root Directory)
+
+Este projeto é um **repositório Git próprio** (raiz = pasta do site). Assim você importa no Vercel direto, sem configurar Root Directory.
+
+**Depois de criar o repositório no GitHub** (ex.: `adventurelabsbrasil/rose-auxilio-maternidade`), na pasta do site rode:
+
+```bash
+cd clients/02_rose/sites/auxilio-maternidade
+git remote add origin https://github.com/adventurelabsbrasil/rose-auxilio-maternidade.git
+git branch -M main
+git push -u origin main
+```
+
+(Substitua a URL pelo seu repositório.)
+
+---
+
 ## Deploy no Vercel — subdomínio
 
 **Subdomínio:** `auxiliomaternidade.roseportaladvocacia.com.br`
@@ -68,26 +85,28 @@ Esta LP **não utiliza formulário**. Todos os contatos são direcionados ao Wha
 ### 1. Criar projeto no Vercel
 
 1. Acesse [vercel.com](https://vercel.com) e faça login.
-2. **Add New** → **Project** e importe o repositório (GitHub/GitLab/Bitbucket) que contém este código.
+2. **Add New** → **Project** e importe o **repositório deste site** (ex.: `rose-auxilio-maternidade`).
 3. Em **Configure Project**:
-   - **Root Directory:** clique em **Edit** e defina:  
-     `01_ADVENTURE_LABS/clients/02_rose/sites/auxilio-maternidade`  
-     (ou o caminho equivalente até a pasta `auxilio-maternidade` no seu repo).
+   - **Root Directory:** deixe em branco (a raiz do repo já é o site).
    - **Framework Preset:** deixe **Other** (ou **None**).
    - **Build Command:** deixe em branco (site estático).
-   - **Output Directory:** deixe em branco (a raiz da pasta é o output).
+   - **Output Directory:** deixe em branco.
 4. Clique em **Deploy**. O site ficará em um URL tipo `*.vercel.app`.
 
-### 2. Configurar o domínio customizado
+### 2. Configurar o domínio customizado (DNS no Registro.br)
 
-1. No projeto, vá em **Settings** → **Domains**.
-2. Em **Add**, informe: `auxiliomaternidade.roseportaladvocacia.com.br`.
-3. O Vercel mostrará as instruções de DNS. Para subdomínio, normalmente:
-   - **Tipo:** CNAME  
-   - **Nome:** `auxiliomaternidade` (ou `auxiliomaternidade.roseportaladvocacia` conforme o painel DNS).
-   - **Valor / Aponta para:** `cname.vercel-dns.com` (ou o domínio que o Vercel indicar, ex.: `cname.vercel-dns.com`).
-4. No painel do provedor do domínio **roseportaladvocacia.com.br**, crie o registro CNAME conforme acima.
-5. Aguarde a propagação (minutos a algumas horas). O Vercel ativará o SSL automaticamente.
+1. No projeto Vercel, vá em **Settings** → **Domains** e adicione: `auxiliomaternidade.roseportaladvocacia.com.br`.
+2. No **Registro.br** (painel do domínio roseportaladvocacia.com.br), crie **apenas um registro CNAME** (não é necessário trocar os nameservers do domínio inteiro):
+
+   | Campo        | Valor |
+   |-------------|--------|
+   | **Tipo**    | CNAME |
+   | **Nome**    | `auxiliomaternidade` |
+   | **Destino / Aponta para** | `53d9de5c1367684b.vercel-dns-017.com` |
+
+3. Salve no Registro.br e aguarde a propagação (minutos a algumas horas). O Vercel ativará o SSL automaticamente.
+
+**Opção alternativa (não recomendada para só um subdomínio):** usar os nameservers do Vercel no domínio inteiro (`ns1.vercel-dns.com`, `ns2.vercel-dns.com`) — isso delegaria todo o DNS de roseportaladvocacia.com.br para o Vercel. Para apenas este site no subdomínio, o CNAME acima é suficiente.
 
 ### 3. Conferir
 
