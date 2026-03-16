@@ -1,6 +1,7 @@
 # Secrets e credenciais
 .env
 .env.*
+.clerk/
 !.env.example
 *credenciais*.md
 **/extratos/

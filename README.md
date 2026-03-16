@@ -34,9 +34,33 @@ O script inicializa os submodules e cria o symlink `apps/admin/context -> ../../
 
 **Submodules:** Cada app mantém seu próprio repo — funções específicas, deploy e histórico independentes.
 
+## Dependências
+
+O monorepo usa **pnpm** (workspaces em `apps/*`, `packages/*`, `tools/*`). Na raiz:
+
+```bash
+pnpm install
+```
+
+Se **pnpm** não estiver instalado: `npm install -g pnpm` ou [instalar o pnpm](https://pnpm.io/installation). Para instalar só o Admin sem pnpm, entre na pasta do app e use npm:
+
+```bash
+cd apps/admin && npm install
+```
+
+**Problemas comuns**
+
+- **nvm + .npmrc:** Se aparecer "globalconfig and/or prefix ... incompatible with nvm", rode uma vez: `nvm use --delete-prefix v22.19.0 --silent` (ou a versão do Node que você usa).
+- **npm error "reading 'matches'":** É um bug conhecido do npm. Use **pnpm**: ative com Node 22+ com `corepack enable`, depois `pnpm install` na raiz:
+  ```bash
+  corepack enable
+  pnpm install
+  ```
+  Ou instale o pnpm: `npm install -g pnpm` (após corrigir o nvm/npmrc) e rode `pnpm install` na raiz do monorepo.
+
 ## Início rápido
 
-- **Admin:** `cd apps/admin && pnpm dev` (após `./scripts/setup.sh`)
+- **Admin:** `cd apps/admin && pnpm dev` (ou `npm run dev` após `npm install` em `apps/admin`)
 - **Taxonomia:** `knowledge/00_GESTAO_CORPORATIVA/MANUAL_TAXONOMIA_REPOSITORIO.md`
 - **Agentes:** `AGENTS.md`
 
