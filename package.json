@@ -1,0 +1,16 @@
+{
+  "name": "adventure-labs-monorepo",
+  "private": true,
+  "description": "Raiz do monorepo — use pnpm install na raiz ou npm install em cada app (apps/admin, etc.)",
+  "scripts": {
+    "admin:dev": "pnpm --filter adventure-labs-admin dev",
+    "admin:install": "pnpm --filter adventure-labs-admin install",
+    "sync": "cd apps/admin && pnpm run sync:context",
+    "railway": "railway",
+    "railway:link": "railway link",
+    "railway:status": "railway status"
+  },
+  "devDependencies": {
+    "@railway/cli": "^4.31.0"
+  }
+}
