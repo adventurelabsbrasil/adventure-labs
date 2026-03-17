@@ -1,0 +1,385 @@
+{
+  "name": "Sueli — Conciliação Bancária (v2.1)",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "sueli-conciliacao",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "id": "sueli-webhook-001",
+      "name": "Webhook Sueli",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [0, 300],
+      "webhookId": "sueli-conciliacao-v2"
+    },
+    {
+      "parameters": {
+        "updates": ["message"],
+        "additionalFields": {}
+      },
+      "id": "sueli-telegram-trigger-001",
+      "name": "Telegram Trigger",
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [0, 520]
+    },
+    {
+      "parameters": {
+        "jsCode": "const body = $input.first().json.body || $input.first().json || {};\nconst message = body.message || body.text || '';\nconst ofx = body.ofx || '';\nconst sessionId = body.sessionId || 'sueli-default-session';\nconst prompt = ofx\n  ? `Input do usuário: ${message}\\n\\nDados OFX (extrato bancário):\\n${ofx}`\n  : `Input do usuário: ${message}`;\nreturn [{ json: { prompt, sessionId, message, ofx } }];"
+      },
+      "id": "sueli-prep-input-001",
+      "name": "Preparar Input",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [220, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "const item = $input.first().json;\nconst msg = item.message || item;\nconst text = (msg.text || msg.message?.text || '').trim();\nconst chatId = msg.chat?.id || msg.chat_id;\nconst sessionId = chatId ? `telegram-${chatId}` : 'telegram-session';\nconst prompt = `Input do usuário (Telegram): ${text}`;\nreturn [{ json: { prompt, sessionId, message: text, telegramChatId: chatId } }];"
+      },
+      "id": "sueli-prep-telegram-001",
+      "name": "Preparar Input Telegram",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [220, 520]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "https://admin.adventurelabs.com.br/api/n8n/sueli-config",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "httpHeaderAuth",
+        "options": {}
+      },
+      "id": "sueli-get-config-001",
+      "name": "Get Config",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [440, 400]
+    },
+    {
+      "parameters": {
+        "jsCode": "const config = $input.first().json;\nlet prep = {};\ntry { prep = $('Preparar Input Telegram').first().json; } catch (e) {}\nif (!prep || !prep.prompt) { try { prep = $('Preparar Input').first().json; } catch (e) {} }\nreturn [{ json: { ...prep, ...config } }];"
+      },
+      "id": "sueli-merge-config-001",
+      "name": "Merge Config",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [660, 400]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.prompt }}",
+        "options": {
+          "systemMessage": "Você é a Sueli, assistente financeira brasileira, rigorosa, detalhista e focada em compliance. Você nunca assume um dado incerto; usa suas ferramentas para confirmar. Sua missão é garantir que a conciliação no Omie esteja correta. Em caso de ambiguidade, solicite intervenção humana (use a ferramenta Google Chat). Regras: (1) Valide sempre o valor líquido, descontos e taxas bancárias antes de fechar qualquer conciliação. (2) Ordem de raciocínio: leia e interprete o input; confira no Omie lançamentos e boletos; em caso de dúvida, pergunte ao humano via Google Chat; só então execute a conciliação no Omie. (3) Para listar clientes, entradas (contas a receber) ou saídas (contas a pagar) no Omie, use as ferramentas tool_admin_omie_clientes, tool_admin_omie_entradas e tool_admin_omie_saidas (API do Admin). Para contas a pagar direto (ListarContasPagar, etc.) use tool_omie."
+        }
+      },
+      "id": "sueli-agent-001",
+      "name": "Sueli",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.6,
+      "position": [880, 400]
+    },
+    {
+      "parameters": {
+        "model": "gemini-1.5-flash",
+        "options": {
+          "temperature": 0.2
+        }
+      },
+      "id": "sueli-llm-gemini-001",
+      "name": "Gemini 1.5 Flash",
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [680, 680]
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.sessionId }}",
+        "contextWindowLength": 15
+      },
+      "id": "sueli-memory-001",
+      "name": "Window Buffer Memory",
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.2,
+      "position": [480, 680]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://app.omie.com.br/api/v1/financas/contapagar/",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ (() => { const c = $('Merge Config').first().json; const call = $fromAI('call', 'Chamada Omie: ListarContasPagar, ConsultarContaPagar ou IncluirContaPagar', 'string'); let param = []; try { const p = $fromAI('paramJson', 'JSON array com parametros da chamada. Ex: [{\"nPagina\":1,\"nRegPorPagina\":50}]', 'string'); param = p ? JSON.parse(p) : []; } catch (e) {} return JSON.stringify({ app_key: c.OMIE_APP_KEY, app_secret: c.OMIE_APP_SECRET, call, param }); })() }}",
+        "options": {},
+        "description": "Use para consultar lançamentos de contas a pagar no Omie, verificar status de boletos e realizar a conciliação final. Parâmetros: call (ListarContasPagar, ConsultarContaPagar, IncluirContaPagar, etc.) e payload conforme API Omie."
+      },
+      "id": "sueli-tool-omie-001",
+      "name": "tool_omie",
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [720, 560]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "={{ $('Merge Config').first().json.ADMIN_URL || 'https://admin.adventurelabs.com.br' }}/api/omie/clientes?pagina=1&por_pagina=50",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "httpHeaderAuth",
+        "options": {},
+        "description": "Lista clientes cadastrados no Omie (via API do Admin). Use quando o usuário pedir lista de clientes, cadastro Omie ou quiser consultar quem está no Omie."
+      },
+      "id": "sueli-tool-admin-omie-clientes-001",
+      "name": "tool_admin_omie_clientes",
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [720, 400]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "={{ $('Merge Config').first().json.ADMIN_URL || 'https://admin.adventurelabs.com.br' }}/api/omie/transacoes/entradas?pagina=1&por_pagina=50",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "httpHeaderAuth",
+        "options": {},
+        "description": "Lista entradas (contas a receber) no Omie. Use quando o usuário pedir entradas, recebimentos ou transações de entrada para conciliar com extrato."
+      },
+      "id": "sueli-tool-admin-omie-entradas-001",
+      "name": "tool_admin_omie_entradas",
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [720, 320]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "={{ $('Merge Config').first().json.ADMIN_URL || 'https://admin.adventurelabs.com.br' }}/api/omie/transacoes/saidas?pagina=1&por_pagina=50",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "httpHeaderAuth",
+        "options": {},
+        "description": "Lista saídas (contas a pagar) no Omie. Use quando o usuário pedir saídas, pagamentos ou transações de saída para conciliar com extrato."
+      },
+      "id": "sueli-tool-admin-omie-saidas-001",
+      "name": "tool_admin_omie_saidas",
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [720, 480]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('Merge Config').first().json.GOOGLE_CHAT_WEBHOOK_URL }}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ text: $fromAI('msg', 'Mensagem a enviar ao canal Google Chat', 'string') }) }}",
+        "options": {},
+        "description": "Use quando houver ambiguidade ou necessidade de aprovação humana. Envia mensagem ao canal configurado; aguarde resposta antes de prosseguir."
+      },
+      "id": "sueli-tool-chat-001",
+      "name": "tool_chat",
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [720, 640]
+    },
+    {
+      "parameters": {
+        "jsCode": "const agentOut = $input.first().json;\nconst replyText = agentOut.output ?? agentOut.text ?? agentOut.reply ?? (typeof agentOut === 'string' ? agentOut : JSON.stringify(agentOut));\nconst merged = $('Merge Config').first().json;\nreturn [{ json: { ...agentOut, replyText, telegramChatId: merged.telegramChatId } }];"
+      },
+      "id": "sueli-extract-reply-001",
+      "name": "Extrair Resposta",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1100, 400]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose"
+          },
+          "conditions": [
+            {
+              "id": "cond-telegram",
+              "leftValue": "={{ $json.telegramChatId != null && $json.telegramChatId !== '' }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "sueli-if-telegram-001",
+      "name": "É Telegram?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [1320, 400]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://api.telegram.org/bot{{ $('Merge Config').first().json.TELEGRAM_BOT_TOKEN }}/sendMessage",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ chat_id: $json.telegramChatId, text: $json.replyText }) }}",
+        "options": {}
+      },
+      "id": "sueli-send-telegram-001",
+      "name": "Enviar Telegram",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1540, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "const item = $input.first().json;\nreturn [{ json: { reply: item.replyText || item.output || item.text } }];"
+      },
+      "id": "sueli-output-001",
+      "name": "Resposta Webhook",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1540, 500]
+    }
+  ],
+  "connections": {
+    "Webhook Sueli": {
+      "main": [
+        [
+          { "node": "Preparar Input", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Telegram Trigger": {
+      "main": [
+        [
+          { "node": "Preparar Input Telegram", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Preparar Input": {
+      "main": [
+        [
+          { "node": "Get Config", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Preparar Input Telegram": {
+      "main": [
+        [
+          { "node": "Get Config", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Get Config": {
+      "main": [
+        [
+          { "node": "Merge Config", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Merge Config": {
+      "main": [
+        [
+          { "node": "Sueli", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Sueli": {
+      "main": [
+        [
+          { "node": "Extrair Resposta", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Extrair Resposta": {
+      "main": [
+        [
+          { "node": "É Telegram?", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "É Telegram?": {
+      "main": [
+        [
+          { "node": "Enviar Telegram", "type": "main", "index": 0 }
+        ],
+        [
+          { "node": "Resposta Webhook", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Enviar Telegram": {
+      "main": [
+        [
+          { "node": "Resposta Webhook", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Gemini 1.5 Flash": {
+      "ai_languageModel": [
+        [
+          { "node": "Sueli", "type": "ai_languageModel", "index": 0 }
+        ]
+      ]
+    },
+    "Window Buffer Memory": {
+      "ai_memory": [
+        [
+          { "node": "Sueli", "type": "ai_memory", "index": 0 }
+        ]
+      ]
+    },
+    "tool_omie": {
+      "ai_tool": [
+        [
+          { "node": "Sueli", "type": "ai_tool", "index": 0 }
+        ]
+      ]
+    },
+    "tool_admin_omie_clientes": {
+      "ai_tool": [
+        [
+          { "node": "Sueli", "type": "ai_tool", "index": 0 }
+        ]
+      ]
+    },
+    "tool_admin_omie_entradas": {
+      "ai_tool": [
+        [
+          { "node": "Sueli", "type": "ai_tool", "index": 0 }
+        ]
+      ]
+    },
+    "tool_admin_omie_saidas": {
+      "ai_tool": [
+        [
+          { "node": "Sueli", "type": "ai_tool", "index": 0 }
+        ]
+      ]
+    },
+    "tool_chat": {
+      "ai_tool": [
+        [
+          { "node": "Sueli", "type": "ai_tool", "index": 0 }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "meta": {
+    "templateCredsSetupCompleted": false
+  },
+  "tags": []
+}

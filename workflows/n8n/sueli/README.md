@@ -4,13 +4,13 @@ A **Sueli** é uma Agente de IA Financeira Sênior que roda no n8n. Ela realiza 
 
 ## Arquitetura
 
-- **Trigger**: Webhook POST (`/sueli-conciliacao` ou path configurado).
-- **Input**: `message` (texto), `ofx` (trecho OFX opcional), `sessionId` (opcional).
-- **Config via Admin**: o nó **Get Config** faz `GET /api/n8n/sueli-config` no Admin (header `x-admin-key` = CRON_SECRET) e obtém as variáveis (Omie, Google Chat, Sheets). O **Merge Config** junta esse retorno com o prompt/sessionId; a Sueli e as tools usam esses dados (nenhuma chave fica no n8n).
+- **Triggers (v2):** Webhook POST (`/sueli-conciliacao`) **e** Telegram Trigger (mensagens ao bot da Sueli). Qualquer um dispara o mesmo fluxo; a resposta vai para o webhook (HTTP) ou de volta ao Telegram conforme a origem.
+- **Input**: `message` (texto), `ofx` (trecho OFX opcional), `sessionId` (opcional). No Telegram: texto da mensagem e `chat_id` para enviar a resposta.
+- **Config via Admin**: o nó **Get Config** faz `GET /api/n8n/sueli-config` no Admin (header `x-admin-key` = CRON_SECRET) e obtém as variáveis (Omie, Google Chat, Sheets, **ADMIN_URL**, **TELEGRAM_BOT_TOKEN**). O token do Telegram vem de **TELEGRAM_BOT_TOKEN_SUELI** no Vercel (nome canônico para vários bots). O **Merge Config** junta esse retorno com o prompt/sessionId; a Sueli e as tools usam esses dados (nenhuma chave fica no n8n).
 - **Núcleo**: um nó **AI Agent** (Tools Agent) com:
   - **LLM**: Gemini 1.5 Flash (modelo `gemini-1.5-flash`), por compatibilidade com tools; pode trocar para `gemini-2.5-flash` no nó se preferir.
   - **Memória**: Window Buffer Memory (contexto da conversa/conciliação).
-  - **Tools**: Omie API, Google Sheets, Google Chat, OFX Parser.
+  - **Tools (v2.1):** Omie API (contas a pagar), **API Omie do Admin** (clientes, entradas, saídas), Google Chat. As tools **OFX** e **Google Sheets** foram removidas do JSON para evitar avisos de credencial não configurada; quando quiser usar, adicione no n8n os nós tool_ofx (Code) e tool_sheets (HTTP + Google Sheets OAuth2) e conecte ao Agent.
 
 ## Tools (ferramentas da Sueli)
 
@@ -23,11 +23,26 @@ A **Sueli** é uma Agente de IA Financeira Sênior que roda no n8n. Ela realiza 
 
 A ferramenta **Omie_API_Tool** envia `app_key`, `app_secret` e a chamada escolhida pelo Agent. A API Omie usa formato `call` + `param` (array) conforme [documentação](https://ajuda.omie.com.br/pt-BR/articles/8255313-cadastrando-uma-conta-a-pagar-via-api). Se necessário, ajuste o body do nó no editor do n8n para o formato exato da call (ex.: `ListarContasPagar` com `param` em array).
 
+### API Omie do Admin (clientes + transações) — acesso da Sueli à “CLI Omie”
+
+O **Admin** expõe rotas que replicam a CLI Omie (`tools/omie-cli`). A Sueli pode usá-las para listar/cadastrar clientes e listar entradas/saídas **sem** montar chamadas diretas à API Omie. O config retorna `ADMIN_URL`; use o mesmo header `x-admin-key` = `CRON_SECRET`.
+
+| Método | URL (base = `ADMIN_URL`) | Uso |
+|--------|---------------------------|-----|
+| GET | `/api/omie/clientes?pagina=1&por_pagina=50` | Listar clientes |
+| GET | `/api/omie/clientes/12345` ou `/api/omie/clientes/PONTUAL-X` | Consultar cliente (código Omie ou integração) |
+| POST | `/api/omie/clientes` | Cadastrar cliente (body: `razao_social`, `nome_fantasia`, `cnpj_cpf?`, `email?`, etc.) |
+| PATCH | `/api/omie/clientes/12345` | Alterar cliente (body: campos a atualizar) |
+| GET | `/api/omie/transacoes/entradas?pagina=1&por_pagina=50&de=01/01/2026&ate=31/03/2026` | Listar contas a receber |
+| GET | `/api/omie/transacoes/saidas?pagina=1&por_pagina=50&de=...&ate=...` | Listar contas a pagar |
+
+**Como adicionar no n8n:** crie um nó **HTTP Request** (ou Tool que chame HTTP): URL = `={{ $('Merge Config').first().json.ADMIN_URL }}/api/omie/clientes` (ou `/transacoes/entradas`, `/transacoes/saidas`), Method GET (ou POST/PATCH para clientes), Header `x-admin-key` = `={{ $('Merge Config').first().json.CRON_SECRET }}` (ou use a credencial “Admin API” já existente). Associe esse nó como nova Tool do Agent (ex.: nome `tool_admin_omie`) para a Sueli poder listar clientes, listar transações e cadastrar clientes quando o usuário pedir.
+
 ## Variáveis de ambiente
 
-**As chaves da Sueli ficam no Admin (Vercel).** O workflow chama `GET /api/n8n/sueli-config` no Admin (com header `x-admin-key` = `CRON_SECRET`) e recebe `OMIE_APP_KEY`, `OMIE_APP_SECRET`, `GOOGLE_CHAT_WEBHOOK_URL`, `GOOGLE_SHEETS_SPREADSHEET_ID`. Configure essas variáveis no **Vercel** (Environment Variables do projeto Admin). No n8n você só precisa:
+**As chaves da Sueli ficam no Admin (Vercel).** O workflow chama `GET /api/n8n/sueli-config` no Admin (com header `x-admin-key` = `CRON_SECRET`) e recebe `OMIE_APP_KEY`, `OMIE_APP_SECRET`, `GOOGLE_CHAT_WEBHOOK_URL`, `GOOGLE_SHEETS_SPREADSHEET_ID`, **`ADMIN_URL`** e **`TELEGRAM_BOT_TOKEN`** (valor de **`TELEGRAM_BOT_TOKEN_SUELI`** no Vercel — use esse nome para o bot da Sueli; outros bots podem ter `TELEGRAM_BOT_TOKEN_ZAZU`, etc.). Configure essas variáveis no **Vercel** (Environment Variables do projeto Admin). No n8n você só precisa:
 
-1. **Credencial "Admin API (x-admin-key)"** — HTTP Header Auth com nome `x-admin-key` e valor = mesmo `CRON_SECRET` do Admin (para o nó "Get Config").
+1. **Credencial "Admin API (x-admin-key)"** — HTTP Header Auth com **nome do header** = `x-admin-key` e **valor** = mesmo `CRON_SECRET` do Admin. Essa credencial deve ser usada no **Get Config** e em **todas** as tools que chamam o Admin: `tool_admin_omie_clientes`, `tool_admin_omie_entradas`, `tool_admin_omie_saidas`. Se alguma tool devolver **HTTP 401**, confira que ela está com a credencial "Admin API" selecionada e que o valor é idêntico ao `CRON_SECRET` do Vercel.
 2. **Credencial Gemini** — para o LLM (Google PaLM/Gemini); pode usar o mesmo valor de `GEMINI_API_KEY` que você tem no Vercel, configurado na credencial do n8n.
 3. **Credencial Google Sheets** (se usar a tool de planilha) — OAuth2 no n8n.
 
@@ -35,20 +50,29 @@ Se o Admin estiver em outro domínio, edite no nó "Get Config" a URL para `http
 
 ## Importar no n8n
 
+**Versão recomendada: v2** — inclui trigger Telegram (conversar com a Sueli pelo bot), tools da API Omie do Admin (clientes, entradas, saídas) e fluxo de resposta por canal.
+
 A partir da raiz do repositório `01_ADVENTURE_LABS`:
 
 ```bash
-cd apps/admin && ./scripts/n8n/import-to-railway.sh "../../workflows/n8n/sueli/sueli-conciliacao-bancaria-v1.json"
+# v2 (Telegram + API Omie Admin)
+cd apps/admin && ./scripts/n8n/import-to-railway.sh "../../workflows/n8n/sueli/sueli-conciliacao-bancaria-v2.json"
+
+# ou v1 (apenas webhook)
+./scripts/n8n/import-to-railway.sh "../../workflows/n8n/sueli/sueli-conciliacao-bancaria-v1.json"
 ```
 
 Requer `N8N_API_URL` e `N8N_API_TOKEN` (ou equivalentes do script). Após importar, criar/associar credenciais no n8n (ver abaixo).
 
 ## URLs do webhook (Railway)
 
+- **v2** usa path `sueli-conciliacao` (webhookId sueli-conciliacao-v2).
 - **Teste** (workflow em modo Test / Listening):  
   **https://n8n-production-619c.up.railway.app/webhook-test/sueli-conciliacao**
 - **Produção** (workflow ativado):  
   **https://n8n-production-619c.up.railway.app/webhook/sueli-conciliacao**
+
+**v2 — Telegram:** use o nome **TELEGRAM_BOT_TOKEN_SUELI** em ambos os lados: (1) **Vercel** — variável de ambiente = `TELEGRAM_BOT_TOKEN_SUELI` (token do bot da Sueli); (2) **n8n** — no nó **Telegram Trigger** associe a credencial **Telegram API** com o mesmo valor (token do bot da Sueli). O nó "Enviar Telegram" recebe o token via Get Config (sueli-config), que lê `TELEGRAM_BOT_TOKEN_SUELI` do Vercel. Ao ativar o workflow, mensagens ao bot disparam a Sueli e a resposta volta no Telegram.
 
 Use a URL de **teste** para rodar com "Execute workflow" / "Listening"; use a de **produção** quando o workflow estiver ativo (toggle Active).
 
@@ -99,6 +123,12 @@ A documentação canônica da Sueli para outros agentes (ex.: CFO) e para humano
 **[agents/skills/sueli-conciliacao-bancaria/SKILL.md](../../agents/skills/sueli-conciliacao-bancaria/SKILL.md)**
 
 Contém: objetivo, quando usar, input esperado, passos e output esperado. A execução da Sueli ocorre no n8n; o SKILL.md descreve o que ela faz e como acioná-la.
+
+## Conversar com a Sueli (Google Chat ou Telegram)
+
+Para você **enviar mensagens** para a Sueli e **receber respostas** (pedir listagem de clientes Omie, transações, conciliação, etc.), é preciso configurar um canal de conversa em mão dupla. Guia completo:
+
+**[SUELI_CHAT_TELEGRAM.md](SUELI_CHAT_TELEGRAM.md)** — opção **Telegram** (bot + n8n) ou **Google Chat** (app + webhook + API). O Telegram costuma ser mais rápido de configurar.
 
 ## Segurança
 
