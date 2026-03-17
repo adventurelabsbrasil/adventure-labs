@@ -1,5 +1,5 @@
 {
-  "name": "C-Suite Autonomous Loop - V9 (Fase 3: Retry + CEO Flash)",
+  "name": "C-Suite Autonomous Loop - V10 (Pauta CTO + Issues novas + nomes normalizados)",
   "nodes": [
     {
       "parameters": {
@@ -8,7 +8,7 @@
         "options": {}
       },
       "id": "0e82b152-e2b3-4caa-b888-b9af0a228198",
-      "name": "Fetch Tasks1",
+      "name": "Fetch Tasks",
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.5,
       "position": [
@@ -29,7 +29,7 @@
         "options": {}
       },
       "id": "b02d5faf-e40f-41a9-a77d-f5d24ce58ccb",
-      "name": "Fetch Ideias1",
+      "name": "Fetch Ideias",
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.5,
       "position": [
@@ -51,7 +51,7 @@
         "options": {}
       },
       "id": "166efc8e-258f-4f9f-b2ca-c2a7c1c61f47",
-      "name": "Fetch Vector Memory1",
+      "name": "Fetch Vector Memory",
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.5,
       "position": [
@@ -70,10 +70,10 @@
     },
     {
       "parameters": {
-        "jsCode": "const tasks = $('Fetch Tasks1').all().map(i => i.json);\nconst ideias = $('Fetch Ideias1').all().map(i => i.json);\nconst memories = $('Fetch Vector Memory1').all().map(i => i.json);\nconst currentDate = new Date().toISOString();\n\nlet contextDocs = '';\ntry {\n  const docData = $('Fetch Context Docs1').all();\n  if (Array.isArray(docData) && docData.length > 0) {\n    const first = docData[0]?.json;\n    if (first?.text) {\n      contextDocs = first.text.substring(0, 8000);\n    } else {\n      contextDocs = docData.map(d => `- ${d.json?.title || 'Doc'}: ${(d.json?.content || d.json?.text || '').substring(0, 200)}`).join('\\n');\n    }\n  }\n} catch (e) {\n  console.error('Erro ao processar docs:', e.message);\n  contextDocs = '[Docs indisponíveis nesta execução]';\n}\n\nconst docsSection = contextDocs ? `\\n=== DOCUMENTOS CONTEXTUAIS ===\\n${contextDocs}\\n\\n` : '';\n\nconst isTech = (t) => /(bug|dev|api|banco|sql|deploy|tech|codigo|app|web)/i.test((t.title || '') + (t.description || ''));\nconst tasksTech = tasks.filter(isTech);\n\nconst formatTasks = (list) => list.length > 0 ? list.map(t => `- [${t.status || 'N/A'}] ${t.title || t.titulo || 'N/A'}`).join('\\n') : 'Nenhuma.';\nconst memText = memories.length > 0 ? memories.map(m => `- ${m.content}`).join('\\n') : 'Nenhuma.';\n\nconst baseContext = `DATA: ${currentDate}${docsSection}=== MEMORIA C-SUITE ===\\n${memText}\\n`;\nconst contextCTO = baseContext + '\\n=== TAREFAS TECH ===\\n' + formatTasks(tasksTech);\nconst context = baseContext + '\\n=== RESUMO GERAL ===\\n' + formatTasks(tasks);\n\nreturn [{ json: { context, contextCTO, runTimestamp: currentDate, tasksCount: tasks.length, ideasCount: ideias.length } }];"
+        "jsCode": "const tasks = $('Fetch Tasks').all().map(i => i.json);\nconst ideias = $('Fetch Ideias').all().map(i => i.json);\nconst memories = $('Fetch Vector Memory').all().map(i => i.json);\nconst currentDate = new Date().toISOString();\n\nlet contextDocs = '';\ntry {\n  const docData = $('Fetch Context Docs').all();\n  if (Array.isArray(docData) && docData.length > 0) {\n    const first = docData[0]?.json;\n    if (first?.text) {\n      contextDocs = first.text.substring(0, 8000);\n    } else {\n      contextDocs = docData.map(d => `- ${d.json?.title || 'Doc'}: ${(d.json?.content || d.json?.text || '').substring(0, 200)}`).join('\\n');\n    }\n  }\n} catch (e) {\n  console.error('Erro ao processar docs:', e.message);\n  contextDocs = '[Docs indisponíveis nesta execução]';\n}\n\nlet issuesNovasSection = 'Nenhuma issue nova.';\ntry {\n  const gh = $('Fetch GitHub Issues New').first().json;\n  const items = gh.items || [];\n  if (items.length > 0) {\n    issuesNovasSection = items.map(i => {\n      const repo = (i.repository_url || '').split('/').pop() || 'repo';\n      return `- [${repo}] #${i.number} — ${(i.title || '').substring(0, 60)} | ${i.html_url || ''}`;\n    }).join('\\n');\n  }\n} catch (e) {}\n\nconst docsSection = contextDocs ? `\\n=== DOCUMENTOS CONTEXTUAIS ===\\n${contextDocs}\\n\\n` : '';\n\nconst isTech = (t) => /(bug|dev|api|banco|sql|deploy|tech|codigo|app|web)/i.test((t.title || '') + (t.description || ''));\nconst tasksTech = tasks.filter(isTech);\n\nconst formatTasks = (list) => list.length > 0 ? list.map(t => `- [${t.status || 'N/A'}] ${t.title || t.titulo || 'N/A'}`).join('\\n') : 'Nenhuma.';\nconst memText = memories.length > 0 ? memories.map(m => `- ${m.content}`).join('\\n') : 'Nenhuma.';\n\nconst baseContext = `DATA: ${currentDate}${docsSection}=== MEMORIA C-SUITE ===\\n${memText}\\n`;\nconst contextCTO = baseContext + '\\n=== ISSUES NOVAS (últimas 24h) org:adventurelabsbrasil ===\\n' + issuesNovasSection + '\\n\\n=== TAREFAS TECH ===\\n' + formatTasks(tasksTech);\nconst context = baseContext + '\\n=== RESUMO GERAL ===\\n' + formatTasks(tasks);\n\nreturn [{ json: { context, contextCTO, runTimestamp: currentDate, tasksCount: tasks.length, ideasCount: ideias.length } }];"
       },
       "id": "eb7821f9-c9ba-4158-b649-54e8ea4e9cab",
-      "name": "Build Context1",
+      "name": "Build Context",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
@@ -90,11 +90,11 @@
         "genericAuthType": "httpHeaderAuth",
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={{ JSON.stringify({ contents: [{ role: 'user', parts: [{ text: 'CONTEXTO EMPRESARIAL PARA ANALISE COO:\\n\\n' + $('Build Context1').first().json.context + '\\n\\nAnalise este contexto como COO e responda em formato JSON conforme instruido.' }] }], systemInstruction: { parts: [{ text: 'Voce e Taiichi Ohno (Ohno), COO da Adventure Labs. Analise os dados com foco em: gargalos operacionais, tarefas bloqueadas ou em risco de atraso, aderencia ao ciclo de vida (Briefing -> Implementacao -> Execucao -> Relatorio), SLA e eficiencia de fluxo. Elimine desperdicio. Responda OBRIGATORIAMENTE em JSON valido com as chaves: analise (string com resumo operacional), gargalos (array de strings), tarefas_em_risco (array de strings), recomendacoes_operacionais (array de strings).' }] }, generationConfig: { temperature: 0.3, maxOutputTokens: 1200, responseMimeType: 'application/json' } }) }}",
+        "jsonBody": "={{ JSON.stringify({ contents: [{ role: 'user', parts: [{ text: 'CONTEXTO EMPRESARIAL PARA ANALISE COO:\\n\\n' + $('Build Context').first().json.context + '\\n\\nAnalise este contexto como COO e responda em formato JSON conforme instruido.' }] }], systemInstruction: { parts: [{ text: 'Voce e Taiichi Ohno (Ohno), COO da Adventure Labs. Analise os dados com foco em: gargalos operacionais, tarefas bloqueadas ou em risco de atraso, aderencia ao ciclo de vida (Briefing -> Implementacao -> Execucao -> Relatorio), SLA e eficiencia de fluxo. Elimine desperdicio. Responda OBRIGATORIAMENTE em JSON valido com as chaves: analise (string com resumo operacional), gargalos (array de strings), tarefas_em_risco (array de strings), recomendacoes_operacionais (array de strings).' }] }, generationConfig: { temperature: 0.3, maxOutputTokens: 1200, responseMimeType: 'application/json' } }) }}",
         "options": {}
       },
       "id": "baf42078-bffe-4388-811a-fd5a95643f36",
-      "name": "COO Ohno1",
+      "name": "COO Ohno",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
@@ -119,11 +119,11 @@
         "genericAuthType": "httpHeaderAuth",
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={{ JSON.stringify({ contents: [{ role: 'user', parts: [{ text: 'CONTEXTO EMPRESARIAL PARA ANALISE CMO:\\n\\n' + $('Build Context1').first().json.context + '\\n\\nAnalise este contexto como CMO e responda em formato JSON conforme instruido.' }] }], systemInstruction: { parts: [{ text: 'Voce e David Ogilvy (Ogilvy), CMO da Adventure Labs. Analise os dados com foco em: performance de campanhas dos clientes, KPIs de marketing (ROAS, CPA, CPL, CVR), oportunidades de crescimento em marketing, iniciativas em curso e sugestoes de copy/posicionamento. Responda OBRIGATORIAMENTE em JSON valido com as chaves: analise (string com resumo de marketing), kpis_em_risco (array de strings), oportunidades (array de strings), recomendacoes_marketing (array de strings).' }] }, generationConfig: { temperature: 0.4, maxOutputTokens: 1200, responseMimeType: 'application/json' } }) }}",
+        "jsonBody": "={{ JSON.stringify({ contents: [{ role: 'user', parts: [{ text: 'CONTEXTO EMPRESARIAL PARA ANALISE CMO:\\n\\n' + $('Build Context').first().json.context + '\\n\\nAnalise este contexto como CMO e responda em formato JSON conforme instruido.' }] }], systemInstruction: { parts: [{ text: 'Voce e David Ogilvy (Ogilvy), CMO da Adventure Labs. Analise os dados com foco em: performance de campanhas dos clientes, KPIs de marketing (ROAS, CPA, CPL, CVR), oportunidades de crescimento em marketing, iniciativas em curso e sugestoes de copy/posicionamento. Responda OBRIGATORIAMENTE em JSON valido com as chaves: analise (string com resumo de marketing), kpis_em_risco (array de strings), oportunidades (array de strings), recomendacoes_marketing (array de strings).' }] }, generationConfig: { temperature: 0.4, maxOutputTokens: 1200, responseMimeType: 'application/json' } }) }}",
         "options": {}
       },
       "id": "c534d0f1-964b-4e09-86fe-95db4ea44dc3",
-      "name": "CMO Ogilvy1",
+      "name": "CMO Ogilvy",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
@@ -148,11 +148,11 @@
         "genericAuthType": "httpHeaderAuth",
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={{ JSON.stringify({ contents: [{ role: 'user', parts: [{ text: 'CONTEXTO EMPRESARIAL PARA ANALISE CPO:\\n\\n' + $('Build Context1').first().json.context + '\\n\\nAnalise este contexto como CPO e responda em formato JSON conforme instruido.' }] }], systemInstruction: { parts: [{ text: 'Voce e Marty Cagan (Cagan), CPO da Adventure Labs. Analise os dados com foco em: experiencia do cliente, escopo dos projetos em curso, backlog de produto, ideias com maior impacto no usuario final e criterios de aceite. Priorize outcome sobre output. Responda OBRIGATORIAMENTE em JSON valido com as chaves: analise (string com resumo de produto), experiencia_cliente (string com avaliacao), ideias_prioritarias (array de objetos com ideia e impacto), recomendacoes_produto (array de strings).' }] }, generationConfig: { temperature: 0.4, maxOutputTokens: 1200, responseMimeType: 'application/json' } }) }}",
+        "jsonBody": "={{ JSON.stringify({ contents: [{ role: 'user', parts: [{ text: 'CONTEXTO EMPRESARIAL PARA ANALISE CPO:\\n\\n' + $('Build Context').first().json.context + '\\n\\nAnalise este contexto como CPO e responda em formato JSON conforme instruido.' }] }], systemInstruction: { parts: [{ text: 'Voce e Marty Cagan (Cagan), CPO da Adventure Labs. Analise os dados com foco em: experiencia do cliente, escopo dos projetos em curso, backlog de produto, ideias com maior impacto no usuario final e criterios de aceite. Priorize outcome sobre output. Responda OBRIGATORIAMENTE em JSON valido com as chaves: analise (string com resumo de produto), experiencia_cliente (string com avaliacao), ideias_prioritarias (array de objetos com ideia e impacto), recomendacoes_produto (array de strings).' }] }, generationConfig: { temperature: 0.4, maxOutputTokens: 1200, responseMimeType: 'application/json' } }) }}",
         "options": {}
       },
       "id": "ed11c026-9553-4512-ae8c-ccd29abf5666",
-      "name": "CPO Cagan1",
+      "name": "CPO Cagan",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
@@ -171,10 +171,10 @@
     },
     {
       "parameters": {
-        "jsCode": "// Fase 2: Validação e auditoria dos outputs dos C-Levels\nfunction getRaw(nodeName, type) {\n  try {\n    const d = $(nodeName).first().json;\n    if (type === 'agent') return d?.output || d?.text || d?.body || null;\n    return d?.candidates?.[0]?.content?.parts?.[0]?.text || d?.text || d?.body || null;\n  } catch (e) { return null; }\n}\nfunction validateContent(raw) {\n  if (!raw || String(raw).trim() === '') return { valid: false, reason: 'vazio' };\n  try {\n    const s = String(raw).trim();\n    if (s.startsWith('{') || s.startsWith('[')) JSON.parse(s);\n    return { valid: true };\n  } catch (e) { return { valid: true }; }\n}\nconst runTs = $('Build Context1').first().json.runTimestamp;\nconst audit = {\n  cfo: validateContent(getRaw('CFO Agent Buffett1', 'agent')),\n  cto: validateContent(getRaw('CTO Agent Torvalds1', 'agent')),\n  coo: validateContent(getRaw('COO Ohno1', 'http')),\n  cmo: validateContent(getRaw('CMO Ogilvy1', 'http')),\n  cpo: validateContent(getRaw('CPO Cagan1', 'http'))\n};\nconst allValid = Object.values(audit).every(a => a.valid);\nconst invalid = Object.entries(audit).filter(([,a]) => !a.valid).map(([k]) => k);\nif (invalid.length > 0) {\n  console.warn('[Validate Outputs] C-Levels com output inválido:', invalid.join(', '), '| Run:', runTs);\n}\nreturn [{ json: { validationAudit: audit, allValid, invalid, auditTimestamp: new Date().toISOString(), runTimestamp: runTs } }];"
+        "jsCode": "// Fase 2: Validação e auditoria dos outputs dos C-Levels\nfunction getRaw(nodeName, type) {\n  try {\n    const d = $(nodeName).first().json;\n    if (type === 'agent') return d?.output || d?.text || d?.body || null;\n    return d?.candidates?.[0]?.content?.parts?.[0]?.text || d?.text || d?.body || null;\n  } catch (e) { return null; }\n}\nfunction validateContent(raw) {\n  if (!raw || String(raw).trim() === '') return { valid: false, reason: 'vazio' };\n  try {\n    const s = String(raw).trim();\n    if (s.startsWith('{') || s.startsWith('[')) JSON.parse(s);\n    return { valid: true };\n  } catch (e) { return { valid: true }; }\n}\nconst runTs = $('Build Context').first().json.runTimestamp;\nconst audit = {\n  cfo: validateContent(getRaw('CFO Agent Buffett', 'agent')),\n  cto: validateContent(getRaw('CTO Agent Torvalds', 'agent')),\n  coo: validateContent(getRaw('COO Ohno', 'http')),\n  cmo: validateContent(getRaw('CMO Ogilvy', 'http')),\n  cpo: validateContent(getRaw('CPO Cagan', 'http'))\n};\nconst allValid = Object.values(audit).every(a => a.valid);\nconst invalid = Object.entries(audit).filter(([,a]) => !a.valid).map(([k]) => k);\nif (invalid.length > 0) {\n  console.warn('[Validate Outputs] C-Levels com output inválido:', invalid.join(', '), '| Run:', runTs);\n}\nreturn [{ json: { validationAudit: audit, allValid, invalid, auditTimestamp: new Date().toISOString(), runTimestamp: runTs } }];"
       },
       "id": "a1b2c3d4-validate-outputs-001",
-      "name": "Validate Outputs1",
+      "name": "Validate Outputs",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
@@ -185,10 +185,10 @@
     },
     {
       "parameters": {
-        "jsCode": "function getGeminiText(nodeName) {\n  try {\n    const nodeData = $(nodeName).first().json;\n    \n    // Tenta múltiplos caminhos possíveis\n    if (nodeData?.candidates?.[0]?.content?.parts?.[0]?.text) {\n      return nodeData.candidates[0].content.parts[0].text;\n    }\n    if (nodeData?.text) return nodeData.text;\n    if (nodeData?.output) return nodeData.output;\n    if (nodeData?.body) return nodeData.body;\n    if (typeof nodeData === 'string') return nodeData;\n    \n    return `[Aviso] Resposta de ${nodeName} indisponível.`;\n  } catch (e) {\n    return `[Erro em ${nodeName}] ${e.message}`;\n  }\n}\n\nfunction getSafeOutput(nodeName) {\n  try {\n    const data = $(nodeName).first().json;\n    return data?.output || data?.text || data?.body || JSON.stringify(data);\n  } catch (e) {\n    return `[Erro] ${nodeName}: ${e.message}`;\n  }\n}\n\nconst context = $('Build Context1').first().json.context;\nconst runTimestamp = $('Build Context1').first().json.runTimestamp;\nconst validationAudit = $('Validate Outputs1').first().json?.validationAudit || {};\n\nconst cfoReport = getSafeOutput('CFO Agent Buffett1');\nconst ctoReport = getSafeOutput('CTO Agent Torvalds1');\nconst cooReport = getGeminiText('COO Ohno1');\nconst cmoReport = getGeminiText('CMO Ogilvy1');\nconst cpoReport = getGeminiText('CPO Cagan1');\n\nconst compiledReport = [\n  '=== RELATORIO CFO — Warren Buffett ===', cfoReport, '',\n  '=== RELATORIO CTO — Linus Torvalds ===', ctoReport, '',\n  '=== RELATORIO COO — Taiichi Ohno ===', cooReport, '',\n  '=== RELATORIO CMO — David Ogilvy ===', cmoReport, '',\n  '=== RELATORIO CPO — Marty Cagan ===', cpoReport\n].join('\\n');\n\nif (!compiledReport || compiledReport.trim().length === 0) {\n  throw new Error('Relatório compilado vazio! Verifique os agentes.');\n}\n\nreturn [{ \n  json: { \n    compiledReport, \n    context, \n    runTimestamp, \n    cfoReport, \n    ctoReport, \n    cooReport, \n    cmoReport, \n    cpoReport,\n    validationAudit,\n    reportGenerated: true\n  } \n}];"
+        "jsCode": "function getGeminiText(nodeName) {\n  try {\n    const nodeData = $(nodeName).first().json;\n    \n    // Tenta múltiplos caminhos possíveis\n    if (nodeData?.candidates?.[0]?.content?.parts?.[0]?.text) {\n      return nodeData.candidates[0].content.parts[0].text;\n    }\n    if (nodeData?.text) return nodeData.text;\n    if (nodeData?.output) return nodeData.output;\n    if (nodeData?.body) return nodeData.body;\n    if (typeof nodeData === 'string') return nodeData;\n    \n    return `[Aviso] Resposta de ${nodeName} indisponível.`;\n  } catch (e) {\n    return `[Erro em ${nodeName}] ${e.message}`;\n  }\n}\n\nfunction getSafeOutput(nodeName) {\n  try {\n    const data = $(nodeName).first().json;\n    return data?.output || data?.text || data?.body || JSON.stringify(data);\n  } catch (e) {\n    return `[Erro] ${nodeName}: ${e.message}`;\n  }\n}\n\nconst context = $('Build Context').first().json.context;\nconst runTimestamp = $('Build Context').first().json.runTimestamp;\nconst validationAudit = $('Validate Outputs').first().json?.validationAudit || {};\n\nconst cfoReport = getSafeOutput('CFO Agent Buffett');\nconst ctoReport = getSafeOutput('CTO Agent Torvalds');\nconst cooReport = getGeminiText('COO Ohno');\nconst cmoReport = getGeminiText('CMO Ogilvy');\nconst cpoReport = getGeminiText('CPO Cagan');\n\nconst compiledReport = [\n  '=== RELATORIO CFO — Warren Buffett ===', cfoReport, '',\n  '=== RELATORIO CTO — Linus Torvalds ===', ctoReport, '',\n  '=== RELATORIO COO — Taiichi Ohno ===', cooReport, '',\n  '=== RELATORIO CMO — David Ogilvy ===', cmoReport, '',\n  '=== RELATORIO CPO — Marty Cagan ===', cpoReport\n].join('\\n');\n\nif (!compiledReport || compiledReport.trim().length === 0) {\n  throw new Error('Relatório compilado vazio! Verifique os agentes.');\n}\n\nreturn [{ \n  json: { \n    compiledReport, \n    context, \n    runTimestamp, \n    cfoReport, \n    ctoReport, \n    cooReport, \n    cmoReport, \n    cpoReport,\n    validationAudit,\n    reportGenerated: true\n  } \n}];"
       },
       "id": "bc6176c4-1fee-43b6-b890-acb4ee507274",
-      "name": "Compile C-Level Reports1",
+      "name": "Compile C-Level Reports",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
@@ -208,7 +208,7 @@
         "options": {}
       },
       "id": "9098f382-65b8-4433-9a29-7813d79c87d6",
-      "name": "CEO Grove Synthesis1",
+      "name": "CEO Grove Synthesis",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
@@ -227,10 +227,10 @@
     },
     {
       "parameters": {
-        "jsCode": "function extractGeminiText(nodeName) {\n  try {\n    const r = $(nodeName).first().json;\n    return r.candidates[0].content.parts[0].text;\n  } catch(e) {\n    return null;\n  }\n}\n\nconst ceoRaw = $json.candidates?.[0]?.content?.parts?.[0]?.text || \"\";\nconst runTimestamp = $('Build Context1').first().json.runTimestamp;\nconst compiledReport = $('Compile C-Level Reports1').first().json.compiledReport;\n\n// Remove markdown code block se existir (```json ... ``` ou ``` ... ```)\nlet jsonStr = ceoRaw.trim();\nconst jsonMatch = jsonStr.match(/```(?:json)?\\s*([\\s\\S]*?)```/);\nif (jsonMatch) jsonStr = jsonMatch[1].trim();\n\nlet ceoDecision = {};\ntry {\n  ceoDecision = JSON.parse(jsonStr || '{}');\n} catch(e) {\n  ceoDecision = {\n    resumo_executivo: ceoRaw || 'Análise automática do C-Suite concluída.',\n    decisoes: [],\n    titulo_issue_github: 'C-Suite Review — ' + runTimestamp.substring(0, 10),\n    descricao_issue_github: '## Revisão Automática do C-Suite\\n\\n' + (ceoRaw || 'Sem detalhes disponíveis.'),\n    mensagem_google_chat: 'C-Suite concluiu análise autónoma. Verifique o GitHub para detalhes.'\n  };\n}\n\n// Normalizar chaves em inglês para português\nif (!ceoDecision.resumo_executivo && ceoDecision.executive_summary) ceoDecision.resumo_executivo = ceoDecision.executive_summary;\nif ((!ceoDecision.decisoes || !ceoDecision.decisoes.length) && ceoDecision.decisions?.length) ceoDecision.decisoes = ceoDecision.decisions;\nif (!ceoDecision.titulo_issue_github && ceoDecision.issue_title) ceoDecision.titulo_issue_github = ceoDecision.issue_title;\nif (!ceoDecision.descricao_issue_github && ceoDecision.issue_description) ceoDecision.descricao_issue_github = ceoDecision.issue_description;\nif (!ceoDecision.mensagem_google_chat && ceoDecision.chat_message) ceoDecision.mensagem_google_chat = ceoDecision.chat_message;\n\n// Validação crítica\nif (!ceoDecision.descricao_issue_github || ceoDecision.descricao_issue_github.trim().length === 0) {\n  throw new Error('CEODecision vazia! Verifique a resposta do CEO Grove.');\n}\n\nconst issueTitle = (ceoDecision.titulo_issue_github || ('C-Suite Review — ' + runTimestamp.substring(0, 10))).substring(0, 256);\n\nconst issueBody = ceoDecision.descricao_issue_github ||\n  '## Resumo Executivo\\n\\n' + (ceoDecision.resumo_executivo || 'Sem resumo.') +\n  '\\n\\n## Decisões\\n\\n' + (JSON.stringify(ceoDecision.decisoes || [], null, 2)) +\n  '\\n\\n---\\n*Gerado automaticamente pelo C-Suite Loop — Adventure Labs OS*\\n*Run: ' + runTimestamp + '*';\n\nconst chatMessage = ceoDecision.mensagem_google_chat || 'C-Suite Loop concluído. Verifique o GitHub.';\nconst summaryText = ceoDecision.resumo_executivo || issueTitle;\n\nreturn [{ json: {\n  ...ceoDecision,\n  issueTitle,\n  issueBody,\n  chatMessage,\n  summaryText,\n  runTimestamp,\n  compiledReport,\n  readyForGitHub: true\n} }];"
+        "jsCode": "function extractGeminiText(nodeName) {\n  try {\n    const r = $(nodeName).first().json;\n    return r.candidates[0].content.parts[0].text;\n  } catch(e) {\n    return null;\n  }\n}\n\nconst ceoRaw = $json.candidates?.[0]?.content?.parts?.[0]?.text || \"\";\nconst runTimestamp = $('Build Context').first().json.runTimestamp;\nconst compiledReport = $('Compile C-Level Reports').first().json.compiledReport;\n\n// Remove markdown code block se existir (```json ... ``` ou ``` ... ```)\nlet jsonStr = ceoRaw.trim();\nconst jsonMatch = jsonStr.match(/```(?:json)?\\s*([\\s\\S]*?)```/);\nif (jsonMatch) jsonStr = jsonMatch[1].trim();\n\nlet ceoDecision = {};\ntry {\n  ceoDecision = JSON.parse(jsonStr || '{}');\n} catch(e) {\n  ceoDecision = {\n    resumo_executivo: ceoRaw || 'Análise automática do C-Suite concluída.',\n    decisoes: [],\n    titulo_issue_github: 'C-Suite Review — ' + runTimestamp.substring(0, 10),\n    descricao_issue_github: '## Revisão Automática do C-Suite\\n\\n' + (ceoRaw || 'Sem detalhes disponíveis.'),\n    mensagem_google_chat: 'C-Suite concluiu análise autónoma. Verifique o GitHub para detalhes.'\n  };\n}\n\n// Normalizar chaves em inglês para português\nif (!ceoDecision.resumo_executivo && ceoDecision.executive_summary) ceoDecision.resumo_executivo = ceoDecision.executive_summary;\nif ((!ceoDecision.decisoes || !ceoDecision.decisoes.length) && ceoDecision.decisions?.length) ceoDecision.decisoes = ceoDecision.decisions;\nif (!ceoDecision.titulo_issue_github && ceoDecision.issue_title) ceoDecision.titulo_issue_github = ceoDecision.issue_title;\nif (!ceoDecision.descricao_issue_github && ceoDecision.issue_description) ceoDecision.descricao_issue_github = ceoDecision.issue_description;\nif (!ceoDecision.mensagem_google_chat && ceoDecision.chat_message) ceoDecision.mensagem_google_chat = ceoDecision.chat_message;\n\n// Validação crítica\nif (!ceoDecision.descricao_issue_github || ceoDecision.descricao_issue_github.trim().length === 0) {\n  throw new Error('CEODecision vazia! Verifique a resposta do CEO Grove.');\n}\n\nconst issueTitle = (ceoDecision.titulo_issue_github || ('C-Suite Review — ' + runTimestamp.substring(0, 10))).substring(0, 256);\n\nconst issueBody = ceoDecision.descricao_issue_github ||\n  '## Resumo Executivo\\n\\n' + (ceoDecision.resumo_executivo || 'Sem resumo.') +\n  '\\n\\n## Decisões\\n\\n' + (JSON.stringify(ceoDecision.decisoes || [], null, 2)) +\n  '\\n\\n---\\n*Gerado automaticamente pelo C-Suite Loop — Adventure Labs OS*\\n*Run: ' + runTimestamp + '*';\n\nconst chatMessage = ceoDecision.mensagem_google_chat || 'C-Suite Loop concluído. Verifique o GitHub.';\nconst summaryText = ceoDecision.resumo_executivo || issueTitle;\n\nreturn [{ json: {\n  ...ceoDecision,\n  issueTitle,\n  issueBody,\n  chatMessage,\n  summaryText,\n  runTimestamp,\n  compiledReport,\n  readyForGitHub: true\n} }];"
       },
       "id": "5046a32c-d6a0-4bf5-baf3-6a5d343e6135",
-      "name": "Parse CEO Decision1",
+      "name": "Parse CEO Decision",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
@@ -246,11 +246,11 @@
         "genericAuthType": "httpHeaderAuth",
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={{ JSON.stringify({ model: 'models/text-embedding-001', content: { parts: [{ text: ('C-Suite Meeting — ' + $('Parse CEO Decision1').first().json.runTimestamp + '\\n\\nResumo: ' + $('Parse CEO Decision1').first().json.summaryText + '\\n\\nDecisoes: ' + JSON.stringify($('Parse CEO Decision1').first().json.decisoes || [])).substring(0, 8000) }] }, taskType: 'RETRIEVAL_DOCUMENT' }) }}",
+        "jsonBody": "={{ JSON.stringify({ model: 'models/text-embedding-001', content: { parts: [{ text: ('C-Suite Meeting — ' + $('Parse CEO Decision').first().json.runTimestamp + '\\n\\nResumo: ' + $('Parse CEO Decision').first().json.summaryText + '\\n\\nDecisoes: ' + JSON.stringify($('Parse CEO Decision').first().json.decisoes || [])).substring(0, 8000) }] }, taskType: 'RETRIEVAL_DOCUMENT' }) }}",
         "options": {}
       },
       "id": "bdc7982d-85cf-4579-9e95-31618bffb153",
-      "name": "Generate Embeddings1",
+      "name": "Generate Embeddings",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
@@ -269,10 +269,10 @@
     },
     {
       "parameters": {
-        "jsCode": "const embeddingResponse = $json;\nconst parseDecision = $('Parse CEO Decision1').first().json;\n\nconst embeddingValues = embeddingResponse?.embedding?.values || [];\n\nif (embeddingValues.length === 0) {\n  throw new Error('Embedding vazio. Resposta da API: ' + JSON.stringify(embeddingResponse).substring(0, 300));\n}\n\nconst embeddingStr = '[' + embeddingValues.join(',') + ']';\n\nconst content = 'C-Suite Meeting — ' + parseDecision.runTimestamp + '\\n\\nResumo Executivo: ' + parseDecision.summaryText + '\\n\\nDecisoes: ' + JSON.stringify(parseDecision.decisoes || []);\n\nconst metadata = {\n  runTimestamp: parseDecision.runTimestamp,\n  issueTitle: parseDecision.issueTitle,\n  type: 'csuite_meeting',\n  embeddingDimensions: embeddingValues.length\n};\n\nreturn [{ json: { content, metadata: JSON.stringify(metadata), embeddingStr } }];"
+        "jsCode": "const embeddingResponse = $json;\nconst parseDecision = $('Parse CEO Decision').first().json;\n\nconst embeddingValues = embeddingResponse?.embedding?.values || [];\n\nif (embeddingValues.length === 0) {\n  throw new Error('Embedding vazio. Resposta da API: ' + JSON.stringify(embeddingResponse).substring(0, 300));\n}\n\nconst embeddingStr = '[' + embeddingValues.join(',') + ']';\n\nconst content = 'C-Suite Meeting — ' + parseDecision.runTimestamp + '\\n\\nResumo Executivo: ' + parseDecision.summaryText + '\\n\\nDecisoes: ' + JSON.stringify(parseDecision.decisoes || []);\n\nconst metadata = {\n  runTimestamp: parseDecision.runTimestamp,\n  issueTitle: parseDecision.issueTitle,\n  type: 'csuite_meeting',\n  embeddingDimensions: embeddingValues.length\n};\n\nreturn [{ json: { content, metadata: JSON.stringify(metadata), embeddingStr } }];"
       },
       "id": "179aec3f-d1f9-4532-a567-ca20f4e900b4",
-      "name": "Prepare pgvector Insert1",
+      "name": "Prepare pgvector Insert",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
@@ -287,7 +287,7 @@
         "options": {}
       },
       "id": "d832ac64-a325-4fc2-8d7c-c6edc178b17f",
-      "name": "Store Memory pgvector1",
+      "name": "Store Memory pgvector",
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.5,
       "position": [
@@ -315,7 +315,7 @@
         880
       ],
       "id": "d42114af-b3cd-4f64-b4a6-35c2584d516b",
-      "name": "Sticky Note1"
+      "name": "Sticky Note"
     },
     {
       "parameters": {
@@ -345,7 +345,7 @@
         1008
       ],
       "id": "804731dd-c6a9-44ac-b784-c76d6b83382a",
-      "name": "Create an issue1",
+      "name": "Create an issue",
       "webhookId": "4190e1d2-3bc9-4dd9-b61b-b9f8931cc9a0",
       "credentials": {
         "githubApi": {
@@ -353,6 +353,29 @@
           "name": "GitHub adventurelabsbrasil/admin"
         }
       }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://admin.adventurelabs.com.br/api/csuite/founder-report",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "x-admin-key", "value": "={{ $env.CRON_SECRET }}" },
+            { "name": "Content-Type", "value": "application/json" }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"title\": \"CTO Pauta — \" + ($('Compile C-Level Reports').first().json.runTimestamp || '').substring(0, 10),\n  \"content\": $('Compile C-Level Reports').first().json.ctoReport || 'Sem relatório CTO.'\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1472, 1000],
+      "id": "a1b2c3d4-post-cto-pauta",
+      "name": "Post CTO Pauta",
+      "notes": "Persiste a pauta do CTO em adv_founder_reports. Requer CRON_SECRET no n8n e ADMIN_URL se diferente."
     },
     {
       "parameters": {
@@ -366,7 +389,51 @@
         1104
       ],
       "id": "426edc0a-1b76-412b-ab8f-25ed561cf7be",
-      "name": "Fetch Context Docs1"
+      "name": "Fetch Context Docs"
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "=https://api.github.com/search/issues?q=org:adventurelabsbrasil+is:issue+state:open+created:>={{ new Date(Date.now()-86400000).toISOString().split('T')[0] }}&sort=created&order=desc&per_page=100",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "githubApi",
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": false
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [-1024, 1000],
+      "id": "a1b2c3d4-fetch-github-issues-new",
+      "name": "Fetch GitHub Issues New",
+      "notes": "Issues abertas criadas nas últimas 24h (org:adventurelabsbrasil). Requer credencial GitHub com scope repo ou public."
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combinationMode": "mergeByPosition",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3,
+      "position": [-256, 1104],
+      "id": "a1b2c3d4-merge-for-build",
+      "name": "Merge for Build"
+    },
+    {
+      "parameters": {
+        "maxItems": 1,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.limit",
+      "typeVersion": 1,
+      "position": [-304, 1104],
+      "id": "a1b2c3d4-limit-memory-one",
+      "name": "Limit Memory One"
     },
     {
       "parameters": {
@@ -379,18 +446,18 @@
         1104
       ],
       "id": "004d1d57-d5d5-4fbb-ba50-4c23b89e7a3d",
-      "name": "Fields1"
+      "name": "Fields"
     },
     {
       "parameters": {
         "promptType": "define",
-        "text": "={{ $('Build Context1').first().json.contextCTO }}",
+        "text": "={{ $('Build Context').first().json.contextCTO }}",
         "options": {
-          "systemMessage": "Você é Linus Torvalds, CTO da Adventure Labs. Analise o contexto de tarefas Tech. SE houver menção a bugs, pull requests ou necessidades de checar o código, USE a ferramenta do GitHub para buscar as issues recentes do repositório 'adventurelabsbrasil/admin' antes de responder. Formate sua resposta final listando: Análise Técnica, Débito Técnico e Prioridades de Engenharia. IMPORTANT: Sempre escreva uma breve mensagem de texto (content) antes de invocar uma ferramenta. Nunca retorne apenas a chamada de ferramenta sem nenhum texto."
+          "systemMessage": "Você é Linus Torvalds (Torvalds), CTO da Adventure Labs. Use a seção ISSUES NOVAS e as TAREFAS TECH para montar a PAUTA DO DIA: lista de bugs e melhorias prioritárias. Inclua na sua resposta uma seção explícita 'Pauta do dia' com os itens a executar (repo, #issue, título/resumo). Você não executa código: para cada item da pauta, a execução (correção/melhoria) deve ser delegada à skill cto-executar-item-pauta no Cursor; cada item deve resultar em pull request para o Founder aprovar antes do merge. Formate também: Análise Técnica, Débito Técnico e Prioridades de Engenharia."
         }
       },
       "id": "e2367461-fcf7-45c5-bcd0-4252dc40be71",
-      "name": "CTO Agent Torvalds1",
+      "name": "CTO Agent Torvalds",
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 1.6,
       "position": [
@@ -405,7 +472,7 @@
         }
       },
       "id": "35ab9e91-6002-4777-8833-b5e553a406b8",
-      "name": "Gemini Model (CTO)1",
+      "name": "Gemini Model (CTO)",
       "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
       "typeVersion": 1,
       "position": [
@@ -443,13 +510,13 @@
     {
       "parameters": {
         "promptType": "define",
-        "text": "={{ $('Build Context1').first().json.context }}",
+        "text": "={{ $('Build Context').first().json.context }}",
         "options": {
           "systemMessage": "Você é Warren Buffett, CFO da Adventure Labs. Analise o contexto financeiro e as tarefas. SE precisar de dados históricos ou detalhes sobre tarefas/projetos que não estão no contexto, USE a ferramenta do Banco de Dados Postgres (tabelas: adv_tasks, adv_projetos, adv_clientes) para buscar as informações. SEJA CÉTICO com gastos. Formate sua resposta listando: Análise Financeira, Riscos de Desperdício e Prioridade por ROI."
         }
       },
       "id": "964f7c8b-b2eb-4dfc-a227-1bc82d34e493",
-      "name": "CFO Agent Buffett1",
+      "name": "CFO Agent Buffett",
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 1.6,
       "position": [
@@ -464,7 +531,7 @@
         }
       },
       "id": "8276f79f-614d-4f31-9c94-9c5ba6f148a6",
-      "name": "Gemini Model (CFO)1",
+      "name": "Gemini Model (CFO)",
       "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
       "typeVersion": 1,
       "position": [
@@ -543,208 +610,253 @@
     }
   ],
   "connections": {
-    "Fetch Tasks1": {
+    "Fetch Tasks": {
       "main": [
         [
           {
-            "node": "Fetch Ideias1",
+            "node": "Fetch Ideias",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Fetch Ideias1": {
+    "Fetch Ideias": {
       "main": [
         [
           {
-            "node": "Fetch Vector Memory1",
+            "node": "Fetch Vector Memory",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Fetch Vector Memory1": {
+    "Fetch Vector Memory": {
       "main": [
         [
           {
-            "node": "Build Context1",
+            "node": "Limit Memory One",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Build Context1": {
+    "Limit Memory One": {
       "main": [
         [
           {
-            "node": "CFO Agent Buffett1",
+            "node": "Merge for Build",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "COO Ohno1": {
+    "Fetch GitHub Issues New": {
       "main": [
         [
           {
-            "node": "CMO Ogilvy1",
+            "node": "Merge for Build",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge for Build": {
+      "main": [
+        [
+          {
+            "node": "Build Context",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "CMO Ogilvy1": {
+    "Build Context": {
       "main": [
         [
           {
-            "node": "CPO Cagan1",
+            "node": "CFO Agent Buffett",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "CPO Cagan1": {
+    "COO Ohno": {
       "main": [
         [
           {
-            "node": "Validate Outputs1",
+            "node": "CMO Ogilvy",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Validate Outputs1": {
+    "CMO Ogilvy": {
       "main": [
         [
           {
-            "node": "Compile C-Level Reports1",
+            "node": "CPO Cagan",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Compile C-Level Reports1": {
+    "CPO Cagan": {
       "main": [
         [
           {
-            "node": "Fields1",
+            "node": "Validate Outputs",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "CEO Grove Synthesis1": {
+    "Validate Outputs": {
       "main": [
         [
           {
-            "node": "Parse CEO Decision1",
+            "node": "Compile C-Level Reports",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Parse CEO Decision1": {
+    "Compile C-Level Reports": {
       "main": [
         [
           {
-            "node": "Generate Embeddings1",
+            "node": "Fields",
             "type": "main",
             "index": 0
-          },
+          }
+        ],
+        [
           {
-            "node": "Create an issue1",
+            "node": "Post CTO Pauta",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Generate Embeddings1": {
-      "main": [
-        [
-          {
-            "node": "Prepare pgvector Insert1",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Prepare pgvector Insert1": {
-      "main": [
-        [
-          {
-            "node": "Store Memory pgvector1",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Create an issue1": {
+    "Post CTO Pauta": {
       "main": [
         []
       ]
     },
-    "Fetch Context Docs1": {
+    "CEO Grove Synthesis": {
       "main": [
         [
           {
-            "node": "Fetch Tasks1",
+            "node": "Parse CEO Decision",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Fields1": {
+    "Parse CEO Decision": {
       "main": [
         [
           {
-            "node": "CEO Grove Synthesis1",
+            "node": "Generate Embeddings",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Create an issue",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "CTO Agent Torvalds1": {
+    "Generate Embeddings": {
       "main": [
         [
           {
-            "node": "COO Ohno1",
+            "node": "Prepare pgvector Insert",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "CFO Agent Buffett1": {
+    "Prepare pgvector Insert": {
       "main": [
         [
           {
-            "node": "CTO Agent Torvalds1",
+            "node": "Store Memory pgvector",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Gemini Model (CFO)1": {
+    "Create an issue": {
+      "main": [
+        []
+      ]
+    },
+    "Fetch Context Docs": {
+      "main": [
+        [
+          {
+            "node": "Fetch Tasks",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fields": {
+      "main": [
+        [
+          {
+            "node": "CEO Grove Synthesis",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CTO Agent Torvalds": {
+      "main": [
+        [
+          {
+            "node": "COO Ohno",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CFO Agent Buffett": {
+      "main": [
+        [
+          {
+            "node": "CTO Agent Torvalds",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gemini Model (CFO)": {
       "ai_languageModel": [
         [
           {
-            "node": "CFO Agent Buffett1",
+            "node": "CFO Agent Buffett",
             "type": "ai_languageModel",
             "index": 0
           }
@@ -755,18 +867,18 @@
       "ai_tool": [
         [
           {
-            "node": "CTO Agent Torvalds1",
+            "node": "CTO Agent Torvalds",
             "type": "ai_tool",
             "index": 0
           }
         ]
       ]
     },
-    "Gemini Model (CTO)1": {
+    "Gemini Model (CTO)": {
       "ai_languageModel": [
         [
           {
-            "node": "CTO Agent Torvalds1",
+            "node": "CTO Agent Torvalds",
             "type": "ai_languageModel",
             "index": 0
           }
@@ -777,7 +889,7 @@
       "ai_tool": [
         [
           {
-            "node": "CFO Agent Buffett1",
+            "node": "CFO Agent Buffett",
             "type": "ai_tool",
             "index": 0
           }
@@ -788,7 +900,14 @@
       "main": [
         [
           {
-            "node": "Fetch Context Docs1",
+            "node": "Fetch Context Docs",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Fetch GitHub Issues New",
             "type": "main",
             "index": 0
           }
@@ -799,7 +918,14 @@
       "main": [
         [
           {
-            "node": "Fetch Context Docs1",
+            "node": "Fetch Context Docs",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Fetch GitHub Issues New",
             "type": "main",
             "index": 0
           }

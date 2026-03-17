@@ -24,6 +24,7 @@ Documento único de priorização para o App Admin e o CRM Adventure. Atualizar 
 
 | Prioridade | Item | Trimestre / Observação |
 |------------|------|-------------------------|
+| 1 | Escuta e Insights de Comunidade via WhatsApp (Zazu + Evolution API) | Pauta Torvalds/C-Suite: Container Evolution API no Railway, webhook para n8n, Supabase e resumo diário via Gemini para captura de dores e ideias. |
 | Backlog | Transcrição de áudios (WhatsApp) para histórico searchable | Médio prazo; ver [06_CONHECIMENTO/backlog-crm-transcricao.md](../06_CONHECIMENTO/backlog-crm-transcricao.md) |
 | — | Definir se CRM fica no mesmo app ou outro repo | Não bloqueia Admin |
 
