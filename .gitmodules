@@ -31,6 +31,3 @@
 [submodule "apps/whatsapp-worker"]
 	path = apps/whatsapp-worker
 	url = https://github.com/adventurelabsbrasil/adv-zazu-whatsapp-worker.git
-[submodule "tools/openclaw"]
-	path = tools/openclaw
-	url = https://github.com/adventurelabsbrasil/openclaw.git
