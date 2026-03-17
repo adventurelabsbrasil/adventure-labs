@@ -15,9 +15,20 @@ _internal/archive/*
 _internal/audit-secrets-report.md
 !_internal/archive/README.md
 
+# Railway CLI (link local; não versionar)
+.railway/
+
 # Build e cache
 node_modules/
 .next/
 dist/
 build/
 .npm-cache/
+openclaw_workspace_backup_1/
+.openclaw/
+
+# OpenClaw runtime and backups
+.openclaw/
+openclaw/.openclaw/
+openclaw_workspace_backup_1/
+.DS_Store

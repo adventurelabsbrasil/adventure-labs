@@ -1,0 +1,1 @@
+../tools/openclaw/OBSIDIAN-SEGUNDO-CEREBRO.md

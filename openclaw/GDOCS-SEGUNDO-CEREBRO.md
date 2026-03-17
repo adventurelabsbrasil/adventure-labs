@@ -1,0 +1,1 @@
+../tools/openclaw/GDOCS-SEGUNDO-CEREBRO.md

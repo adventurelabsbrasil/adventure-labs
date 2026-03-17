@@ -15,6 +15,7 @@
 | Clientes | `clients/01_lidera/`, `clients/02_rose/`, etc. |
 | Skills dos agentes | `apps/admin/agents/skills/` |
 | Manual de taxonomia | `knowledge/00_GESTAO_CORPORATIVA/MANUAL_TAXONOMIA_REPOSITORIO.md` |
+| OpenClaw (local + Railway) | `knowledge/00_GESTAO_CORPORATIVA/processos/openclaw-local-e-railway.md` → manual completo: `tools/openclaw/OPENCLAW-MANUAL-LOCAL-E-RAILWAY.md`. WhatsApp: `tools/openclaw/whatsapp/`. **Workspace** = pasta `openclaw/` na raiz do monorepo; `~/.openclaw/workspace` e `OPENCLAW_HOME` devem apontar para `.../01_ADVENTURE_LABS/openclaw`. |
 
 ## Regras de sigilo
 
