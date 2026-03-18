@@ -4,6 +4,8 @@ Pipeline **Grove · Zazu · Ogilvy** → **@adventurelabsbr**.
 
 ## Vercel
 
+- **Projeto:** `adventure-xpostr` → dashboard: `vercel.com/.../adventure-xpostr`
+- **URL (padrão):** https://adventure-xpostr.vercel.app
 - **Project ID:** `prj_KVuZQTMytWNFVLXgiyJsJ2PabVVN`
 - **Root Directory:** `apps/xpostr`
 
