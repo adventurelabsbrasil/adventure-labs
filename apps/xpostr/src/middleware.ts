@@ -45,6 +45,13 @@ export default authMiddleware({
   },
 });
 
+// /api/xpostr/* precisa passar pelo middleware: senão auth() nas Route Handlers quebra (Clerk).
 export const config = {
-  matcher: ["/", "/dashboard/:path*", "/sign-in/:path*", "/api/cron"],
+  matcher: [
+    "/",
+    "/dashboard/:path*",
+    "/sign-in/:path*",
+    "/api/cron",
+    "/api/xpostr/:path*",
+  ],
 };
