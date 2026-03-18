@@ -9,9 +9,9 @@
 
 O Xpostr faz **2 chamadas LLM por ciclo** (Zazu + Ogilvy). Cada “Rodar ciclo agora” consome as duas.
 
-## Fallback automático
+## Fallback automático (3 provedores)
 
-Se **OpenAI** retornar **429** e existir **`ANTHROPIC_API_KEY`** válida com crédito, o app tenta **Anthropic** na mesma etapa. Se as duas falharem, o ciclo encerra com erro claro.
+Ordem: **OpenAI → Anthropic → Gemini** (só entram os que têm chave no `.env`). Se um falhar por **cota/crédito**, o próximo é tentado na mesma chamada (Zazu ou Ogilvy).
 
 ## Recomendações
 

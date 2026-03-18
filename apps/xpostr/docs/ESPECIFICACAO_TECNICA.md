@@ -5,7 +5,7 @@
 - Next.js 14 (App Router), TypeScript, Tailwind
 - Clerk (auth + allowlist opcional `XPOSTR_ALLOWED_EMAILS`)
 - Supabase PostgreSQL — tabelas `adv_xpostr_*`, acesso apenas **service role** no servidor
-- LLM: **OpenAI** (`OPENAI_API_KEY`, opcional `OPENAI_MODEL`, padrão `gpt-4o-mini`) tem prioridade; senão **Anthropic** (`ANTHROPIC_API_KEY`)
+- LLM (ordem de tentativa): **OpenAI** → **Anthropic** → **Gemini** — configure uma ou mais chaves; em cota, passa para a próxima. `GEMINI_API_KEY` (ou `GOOGLE_GENERATIVE_AI_API_KEY`), opcional `GEMINI_MODEL` (padrão `gemini-2.0-flash`). Chave: [Google AI Studio](https://aistudio.google.com/apikey).
 - X API v2 — `twitter-api-v2` (OAuth 1.0a user context)
 
 ## Variáveis de ambiente
