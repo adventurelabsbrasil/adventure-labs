@@ -1,0 +1,31 @@
+{
+  "name": "omie-cli",
+  "version": "1.0.0",
+  "private": true,
+  "description": "CLI para cadastrar, listar e alterar clientes no Omie (API v1)",
+  "main": "dist/index.js",
+  "bin": {
+    "omie": "dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "ts-node src/index.ts",
+    "clientes": "node dist/index.js clientes",
+    "lint": "eslint src --ext .ts"
+  },
+  "keywords": ["omie", "erp", "clientes", "cli"],
+  "author": "",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "commander": "^12.1.0",
+    "dotenv": "^16.4.5"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "typescript": "^5.3.3"
+  }
+}

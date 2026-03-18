@@ -1,8 +1,10 @@
 # C-Suite e relatórios do Founder — integração n8n e Admin
 
-**Atualizado:** 2026-03-09
+**Atualizado:** 2026-03-17
 
 Este documento descreve a integração entre os **relatórios do founder** (tela Diário da Equipe no Admin) e o **workflow C-Suite** no n8n: o que foi alterado e como os dados fluem.
+
+**Zazu (WhatsApp):** o POST `/api/csuite/founder-report` pode incluir `csuite_memory: { type: "founder_csuite_daily", date, source: ["zazu_whatsapp"] }` (CRON_SECRET). Nesse caso há **dual-write** para `adv_csuite_memory` — listagem em `/dashboard/csuite-diario`. Ver [ADV_CSUITE_MEMORY_METADATA.md](ADV_CSUITE_MEMORY_METADATA.md).
 
 **Versão em produção:** o C-Suite publicado no n8n (Railway) é o **V11** — *C-Suite Autonomous Loop - V11 (Fase 4: Paralelização + Histórico + Founder Reports)*. Para manutenções futuras, ver [apps/admin/n8n_workflows/README.md](../apps/admin/n8n_workflows/README.md).
 

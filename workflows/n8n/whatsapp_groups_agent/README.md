@@ -5,14 +5,16 @@
 ## Objetivo
 
 - **Trigger:** Schedule 18:00 BRT (21:00 UTC).
-- **Fluxo:** Calcular data (ontem) → GET worker `/daily-messages?date=...` → Formatar título e conteúdo → POST `/api/csuite/founder-report`.
-- **Saída:** Relatório com título `WhatsApp Grupos — resumo DD/MM/YYYY` em `adv_founder_reports`. O C-Suite V11 já inclui founder reports (últimos 7 dias) no contexto; o Cagan passa a ter esse resumo para escopo, briefing e priorização.
+- **Fluxo:** Data (ontem) + **URL base do worker** no Code → GET `/daily-messages?date=...` → Formatar → POST founder-report.
+- **Saída:** Mesmo relatório em `adv_founder_reports` **e** espelho em `adv_csuite_memory` (`metadata.type = founder_csuite_daily`) via body `csuite_memory` no POST. UI: `/dashboard/csuite-diario`. C-Suite continua lendo founder reports (7 dias).
 
 ## Pré-requisitos
 
 1. **Worker WhatsApp** em execução e acessível (deploy em Railway ou outro host). Ver [apps/whatsapp-worker/README.md](../../whatsapp-worker/README.md).
-2. **Variável no n8n:** `WHATSAPP_WORKER_URL` = URL base do worker (ex.: `https://whatsapp-worker-xxx.up.railway.app`). Sem protocolo na variável use `https://` na URL do nó se necessário.
-3. **Credencial HTTP Header Auth** no n8n para chamar o Admin:
+2. **URL do worker:** editar `WORKER_BASE_URL` no nó **Set Date + Worker URL** (Code). O n8n 2.12+ costuma bloquear `$env` (`N8N_BLOCK_ENV_ACCESS_IN_NODE`); por isso a URL fica no workflow, não em variável de ambiente.
+   - *Opcional (admin):* no Railway do n8n, remover/definir `N8N_BLOCK_ENV_ACCESS_IN_NODE=false` para voltar a usar `$env.WHATSAPP_WORKER_URL` no GET (menos seguro em instâncias multiusuário).
+3. **Timeout:** o GET ao worker usa **300000 ms** (5 min). No worker, `PUPPETEER_PROTOCOL_TIMEOUT_MS` default 10 min — ver [apps/whatsapp-worker/README.md](../../whatsapp-worker/README.md) se aparecer `Runtime.callFunctionOn timed out`.
+4. **Credencial HTTP Header Auth** no n8n para chamar o Admin:
    - Nome do header: `x-admin-key`
    - Valor: `CRON_SECRET` do Admin (mesmo usado pela Lara e outros fluxos).
    - Atribuir ao nó **POST Founder Report**.

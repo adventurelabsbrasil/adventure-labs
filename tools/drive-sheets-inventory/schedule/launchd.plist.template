@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.adventurelabs.drive-sheets-inventory</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>/bin/bash</string>
+    <string>__TOOL_ROOT__/schedule/run-monthly.sh</string>
+  </array>
+  <key>WorkingDirectory</key>
+  <string>__TOOL_ROOT__</string>
+  <key>StartCalendarInterval</key>
+  <dict>
+    <key>Day</key>
+    <integer>1</integer>
+    <key>Hour</key>
+    <integer>8</integer>
+    <key>Minute</key>
+    <integer>30</integer>
+  </dict>
+  <key>StandardOutPath</key>
+  <string>__TOOL_ROOT__/schedule/logs/monthly.out.log</string>
+  <key>StandardErrorPath</key>
+  <string>__TOOL_ROOT__/schedule/logs/monthly.err.log</string>
+</dict>
+</plist>

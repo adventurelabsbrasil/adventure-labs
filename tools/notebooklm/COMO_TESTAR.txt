@@ -1,0 +1,102 @@
+═══════════════════════════════════════════════════════════════
+GUIA RÁPIDO - COMO TESTAR O APLICATIVO
+═══════════════════════════════════════════════════════════════
+
+📋 PASSO 1: INSTALAR DEPENDÊNCIAS
+────────────────────────────────────────────────────────────────
+Abra o Terminal e execute:
+
+    cd /Users/ribasrodrigo91/Documents/GitHub/notebooklm
+    pip3 install -r requirements.txt
+
+Se tiver erro de permissão, tente:
+
+    pip3 install --user -r requirements.txt
+
+
+📋 PASSO 2: TESTE BÁSICO
+────────────────────────────────────────────────────────────────
+Execute para verificar se o código está funcionando:
+
+    python3 test_basico.py
+
+
+📋 PASSO 3: TESTE O APLICATIVO PRINCIPAL
+────────────────────────────────────────────────────────────────
+Execute o aplicativo:
+
+    python3 main.py
+
+Ou faça uma pergunta específica:
+
+    python3 main.py "Qual é o conteúdo deste notebook?"
+
+
+📋 PASSO 3.5: ANÁLISE PROFUNDA (Para notebooks públicos)
+────────────────────────────────────────────────────────────────
+Para notebooks públicos, use o script de análise detalhada:
+
+    python3 analisar_publico.py
+
+Este script vai:
+  ✓ Extrair todos os dados disponíveis na página pública
+  ✓ Procurar dados JSON embutidos no HTML/JavaScript
+  ✓ Identificar endpoints de API
+  ✓ Salvar os dados em arquivo JSON para análise
+
+
+📋 PASSO 4: TESTE COM EXEMPLOS
+────────────────────────────────────────────────────────────────
+Execute o arquivo de exemplos:
+
+    python3 example.py
+
+Escolha:
+    - Opção 1: Teste básico (sem autenticação)
+    - Opção 2: Teste com autenticação (requer configuração)
+
+
+═══════════════════════════════════════════════════════════════
+O QUE ESPERAR
+═══════════════════════════════════════════════════════════════
+
+⚠️  IMPORTANTE: O NotebookLM não tem API oficial pública!
+
+Então é NORMAL ver erros como:
+   - "401 Unauthorized"
+   - "Connection refused"
+   - "Endpoint não encontrado"
+
+Isso acontece porque:
+   ✓ O código está correto
+   ✓ Mas o acesso real pode requerer autenticação manual
+   ✓ Ou usar métodos alternativos da comunidade
+
+
+═══════════════════════════════════════════════════════════════
+TESTE RÁPIDO (SEM INSTALAR DEPENDÊNCIAS)
+═══════════════════════════════════════════════════════════════
+
+Se você só quer verificar se o código Python está correto:
+
+    python3 -c "import ast; ast.parse(open('notebooklm_client.py').read()); print('✅ Código válido!')"
+    python3 -c "import ast; ast.parse(open('main.py').read()); print('✅ Código válido!')"
+
+
+═══════════════════════════════════════════════════════════════
+PRÓXIMOS PASSOS
+═══════════════════════════════════════════════════════════════
+
+Se quiser realmente acessar os dados do notebook, você pode:
+
+1. Explorar bibliotecas da comunidade:
+   - https://github.com/PleasePrompto/notebooklm-mcp
+   - https://github.com/K-dash/nblm-rs
+
+2. Configurar autenticação OAuth (veja README.md)
+
+3. Usar o código como base e adaptar conforme necessário
+
+
+═══════════════════════════════════════════════════════════════
+

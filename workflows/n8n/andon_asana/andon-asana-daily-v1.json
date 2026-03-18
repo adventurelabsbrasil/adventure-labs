@@ -1,0 +1,61 @@
+{
+  "name": "Andon — Asana snapshot diário (C-Suite + Founder)",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 10 * * *"
+            }
+          ]
+        }
+      },
+      "id": "andon-schedule-001",
+      "name": "Schedule 07h BRT",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [240, 300],
+      "notes": "07:00 America/Sao_Paulo = 10:00 UTC (ajuste se o servidor n8n usar outro TZ). Token Asana fica no Vercel — este fluxo só chama o Admin."
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://admin.adventurelabs.com.br/api/csuite/andon-asana-run",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{}",
+        "options": {}
+      },
+      "id": "andon-post-001",
+      "name": "POST Andon Asana Run",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [460, 300],
+      "credentials": {},
+      "notes": "Credencial: Header Auth — nome x-admin-key, valor = CRON_SECRET do Admin (igual Zazu). ASANA_* no Vercel do Admin."
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule 07h BRT": {
+      "main": [[{ "node": "POST Andon Asana Run", "type": "main", "index": 0 }]]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "versionId": "1",
+  "meta": { "templateCredsSetupCompleted": false }
+}

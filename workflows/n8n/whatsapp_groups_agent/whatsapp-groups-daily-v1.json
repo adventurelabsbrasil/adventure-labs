@@ -21,20 +21,21 @@
     },
     {
       "parameters": {
-        "jsCode": "const d = new Date();\nd.setUTCDate(d.getUTCDate() - 1);\nconst date = d.toISOString().slice(0, 10);\nreturn [{ json: { date } }];"
+        "jsCode": "// URL pública do WhatsApp worker (Railway), SEM barra no final.\n// Necessário porque n8n 2.x pode bloquear $env (N8N_BLOCK_ENV_ACCESS_IN_NODE).\nconst WORKER_BASE_URL = 'https://adv-zazu-whatsapp-worker-production.up.railway.app';\nconst d = new Date();\nd.setUTCDate(d.getUTCDate() - 1);\nconst date = d.toISOString().slice(0, 10);\nconst workerBaseUrl = WORKER_BASE_URL.replace(/\\/$/, '');\nreturn [{ json: { date, workerBaseUrl } }];"
       },
       "id": "wa-code-date-001",
-      "name": "Set Date Yesterday",
+      "name": "Set Date + Worker URL",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [460, 300],
-      "notes": "Calcula data de ontem (YYYY-MM-DD) para buscar mensagens do dia."
+      "notes": "Data (ontem) + workerBaseUrl. Edite WORKER_BASE_URL se o deploy mudar. Alternativa admin: N8N_BLOCK_ENV_ACCESS_IN_NODE=false e $env no GET."
     },
     {
       "parameters": {
-        "url": "={{ $env.WHATSAPP_WORKER_URL || 'http://localhost:3333' }}/daily-messages?date={{ $json.date }}",
+        "url": "={{ $json.workerBaseUrl }}/daily-messages?date={{ $json.date }}",
         "authentication": "none",
         "options": {
+          "timeout": 300000,
           "response": {
             "response": {
               "neverError": false
@@ -47,11 +48,11 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [680, 300],
-      "notes": "Zazu: chama o worker WhatsApp. Variável WHATSAPP_WORKER_URL no n8n (ex.: https://whatsapp-worker.railway.app)."
+      "notes": "Timeout 300s: worker WA pode levar minutos (getChats + fetchMessages). URL = workerBaseUrl do nó anterior."
     },
     {
       "parameters": {
-        "jsCode": "const item = $input.first().json;\nconst date = item.date || '';\nconst groups = item.groups || [];\nconst err = item.error;\n\nif (err) {\n  return [{ json: { title: 'WhatsApp Grupos — resumo ' + date, content: '[Erro ao buscar mensagens] ' + err, _skipPost: false } }];\n}\n\nfunction fmtBR(ymd) {\n  if (!ymd || ymd.length < 10) return ymd;\n  return ymd.slice(8, 10) + '/' + ymd.slice(5, 7) + '/' + ymd.slice(0, 4);\n}\n\nconst parts = [];\nparts.push('Resumo dos grupos de WhatsApp em ' + fmtBR(date) + '.');\nparts.push('');\n\nif (groups.length === 0) {\n  parts.push('Nenhuma mensagem no período ou grupos não configurados.');\n} else {\n  for (const g of groups) {\n    parts.push('--- ' + (g.name || g.id) + ' ---');\n    const msgs = g.messages || [];\n    if (msgs.length === 0) {\n      parts.push('(nenhuma mensagem do dia)');\n    } else {\n      for (const m of msgs) {\n        const from = (m.from || '').replace(/@.*/, '');\n        parts.push('[' + from + '] ' + (m.body || '').replace(/\\n/g, ' '));\n      }\n    }\n    parts.push('');\n  }\n}\n\nconst title = 'WhatsApp Grupos — resumo ' + fmtBR(date);\nconst content = parts.join('\\n').slice(0, 50000);\n\nreturn [{ json: { title, content } }];"
+        "jsCode": "const reportDate = $('Set Date + Worker URL').first().json.date || '';\nconst item = $input.first().json;\nconst date = item.date || reportDate;\nconst groups = item.groups || [];\nconst err = item.error;\n\nif (err) {\n  return [{ json: { title: 'WhatsApp Grupos — resumo ' + date, content: '[Erro ao buscar mensagens] ' + err, _skipPost: false } }];\n}\n\nfunction fmtBR(ymd) {\n  if (!ymd || ymd.length < 10) return ymd;\n  return ymd.slice(8, 10) + '/' + ymd.slice(5, 7) + '/' + ymd.slice(0, 4);\n}\n\nconst parts = [];\nparts.push('Resumo dos grupos de WhatsApp em ' + fmtBR(date) + '.');\nparts.push('');\n\nif (groups.length === 0) {\n  parts.push('Nenhuma mensagem no período ou grupos não configurados.');\n} else {\n  for (const g of groups) {\n    parts.push('--- ' + (g.name || g.id) + ' ---');\n    const msgs = g.messages || [];\n    if (msgs.length === 0) {\n      parts.push('(nenhuma mensagem do dia)');\n    } else {\n      for (const m of msgs) {\n        const from = (m.from || '').replace(/@.*/, '');\n        parts.push('[' + from + '] ' + (m.body || '').replace(/\\n/g, ' '));\n      }\n    }\n    parts.push('');\n  }\n}\n\nconst title = 'WhatsApp Grupos — resumo ' + fmtBR(date);\nconst content = parts.join('\\n').slice(0, 50000);\n\nreturn [{ json: { title, content, reportDate } }];"
       },
       "id": "wa-format-001",
       "name": "Format Founder Report",
@@ -77,7 +78,7 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={{ JSON.stringify({ title: $json.title, content: $json.content }) }}",
+        "jsonBody": "={{ JSON.stringify({ title: $json.title, content: $json.content, csuite_memory: { type: 'founder_csuite_daily', date: $json.reportDate, source: ['zazu_whatsapp'] } }) }}",
         "options": {}
       },
       "id": "wa-post-founder-001",
@@ -86,15 +87,15 @@
       "typeVersion": 4.2,
       "position": [1120, 300],
       "credentials": {},
-      "notes": "Grava em adv_founder_reports. Usar credencial HTTP Header Auth com x-admin-key = CRON_SECRET do Admin."
+      "notes": "Grava em adv_founder_reports + espelho adv_csuite_memory (founder_csuite_daily). x-admin-key = CRON_SECRET."
     }
   ],
   "pinData": {},
   "connections": {
     "Schedule 18h BRT": {
-      "main": [[{ "node": "Set Date Yesterday", "type": "main", "index": 0 }]]
+      "main": [[{ "node": "Set Date + Worker URL", "type": "main", "index": 0 }]]
     },
-    "Set Date Yesterday": {
+    "Set Date + Worker URL": {
       "main": [[{ "node": "GET Daily Messages", "type": "main", "index": 0 }]]
     },
     "GET Daily Messages": {

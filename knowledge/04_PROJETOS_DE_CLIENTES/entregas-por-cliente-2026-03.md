@@ -35,6 +35,7 @@ Dados fechamento fev: Bolsa família 2, CLT 94, Pessoal 5, Energia 149.
 |------------|--------|------------|
 | Plano de mídia | A apresentar | — |
 | Cobrança R$ 800 (Young Talents Módulo I) | Enviada | Uma das notas Procor já encaminhada com cobrança |
+| **Feedback Carla (Young Talents ATS)** | Backlog | 12 issues registradas (Mar/2026). Ver [young-talents-feedback-carla-mar2026.md](./young-talents-feedback-carla-mar2026.md) — C-Suite e priorização. |
 
 ---
 

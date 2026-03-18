@@ -1,10 +1,15 @@
 ---
-description: Como e quando usar MCP (Supabase, GitHub, browser) no monorepo Adventure Labs.
+description: Como e quando usar MCP (Supabase, GitHub, Railway, browser) no monorepo Adventure Labs.
 alwaysApply: false
 globs: "**/*"
 ---
 
 # Uso recomendado de MCP no Adventure Labs
+
+## Railway (n8n, Zazu worker)
+
+- Para operar serviços no Railway (status, logs, variáveis, deploy): usar o **Railway MCP** (configurado em `.cursor/mcp.json`).
+- Pré-requisito: CLI autenticada (`pnpm run railway login` na raiz). Ver `docs/RAILWAY_CLI_E_MCP.md`.
 
 ## Supabase / Postgres
 

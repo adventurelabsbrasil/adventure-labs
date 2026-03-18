@@ -17,6 +17,7 @@ Atualize este documento quando alterar roles ou políticas; use a [verificação
 | `adv_clients`, `adv_projects` | CRUD no dashboard (clientes e projetos) | |
 | `adv_tasks`, `adv_task_time_entries` | Tarefas e apontamento de tempo; filtro por `allowedProjectIds` quando role = tarefas | Filtro aplicado no frontend |
 | `adv_founder_reports` | `/dashboard/relatorio`: escrita no formulário; leitura no histórico. **n8n C-Suite** lê (SELECT) últimos 7 dias para contexto do Grove | Relatórios do founder; consumidos pelo workflow C-Suite |
+| `adv_csuite_memory` | `/dashboard/csuite-diario`; **POST** `/api/csuite/founder-report` com `csuite_memory` (n8n Zazu). Loop C-Suite (n8n) lê/escreve | Memória C-Suite; ver [ADV_CSUITE_MEMORY_METADATA](ADV_CSUITE_MEMORY_METADATA.md) |
 | `adv_daily_summaries` | `/dashboard/relatorio` e dashboard: resumos diários; cron/API gera via `daily-summary.ts` | Resumos consolidados por dia |
 | `adv_time_bank_locations`, `adv_time_bank_entries`, `adv_time_bank_usages` | Ponto (registro e seção admin); `apps/admin/src/app/dashboard/ponto/page.tsx` usa `profile?.role !== "tarefas"` para exibir seção admin | **Time Bank do Admin** (identificação por `user_email`) |
 
@@ -46,11 +47,20 @@ Atualize este documento quando alterar roles ou políticas; use a [verificação
 | `adv_projects` | admin \| tarefas (adv_can_access_project) | admin ou tarefas nos projetos permitidos | admin only | idem SELECT | admin only | **Migration 20260308100001:** RLS por role |
 | `adv_tasks`, `adv_task_time_entries` | admin \| tarefas por project_id | admin ou tarefas (projetos em adv_project_members) | idem | idem | idem | **Migration 20260308100001:** RLS por role; tarefas só em projetos permitidos |
 | `adv_founder_reports` | — | authenticated + **n8n C-Suite** (SELECT) | authenticated | authenticated | authenticated | n8n lê últimos 7 dias para contexto do Grove; ver [CSuite_relatorios_founder](CSuite_relatorios_founder.md) |
+| `adv_csuite_memory` | — | service/cron (n8n, APIs Admin com service role) | INSERT via n8n + POST founder-report (Zazu) | — | n8n (cleanup) | UI `/dashboard/csuite-diario` via API server; ver [ADV_CSUITE_MEMORY_METADATA](ADV_CSUITE_MEMORY_METADATA.md) |
 | `adv_daily_summaries` | — | authenticated | authenticated (cron/API + UI) | authenticated | authenticated | Resumos diários; gerados por `daily-summary.ts` |
 | `adv_time_bank_locations` | — | todos (SELECT público) | — | — | — | Policy "Admins podem tudo" para ALL (USING true) |
 | `adv_time_bank_entries`, `adv_time_bank_usages` | — | authenticated | authenticated | authenticated (entries: policy "Admins podem atualizar") | — | RLS atual não restringe por role; policy USING true |
 
 **Resumo Admin:** Após a migration `20260308100001_adv_rls_by_role.sql`, o RLS diferencia role em `adv_projects`, `adv_tasks`, `adv_task_time_entries` e `adv_project_members` (INSERT/DELETE de membros só admin). Role `tarefas` só acessa projetos em que consta em `adv_project_members`. Demais tabelas `adv_*` continuam com RLS por autenticação apenas.
+
+### 2.1.1 OpenClaw cloud (Railway) e Supabase
+
+| Recomendação | Detalhe |
+|--------------|---------|
+| **Evitar** colocar `SUPABASE_SERVICE_ROLE_KEY` nas tools do agente OpenClaw sem allowlist explícita de tabelas. | Service role ignora RLS; risco de vazamento multitenant se o prompt injetar SQL livre. |
+| **Preferir** chamadas HTTP ao Admin (`/api/csuite/*`, cron com `CRON_SECRET`) para escritas controladas. | Mesmo padrão do Zazu/n8n. |
+| Se Supabase direto for inevitável | Restringir a leitura/escrita apenas a tabelas documentadas em [SUPABASE_ADV_CSUITE_AUDIT](SUPABASE_ADV_CSUITE_AUDIT.md); sempre filtrar por `tenant_id` Adventure no código da tool. |
 
 ### 2.2 Adventure — CRM (users, projects, project_users, deals, …)
 

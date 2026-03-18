@@ -2,6 +2,8 @@
 
 Documento de referência para o C-Suite e a operação: onde está o manual e os passos essenciais para rodar o **OpenClaw** (assistente @adv_openclaw_bot no Telegram e WhatsApp) **localmente** ou **no Railway**.
 
+Arquitetura híbrida (oficial): [docs/ARQUITETURA_OPENCLAW_HIBRIDO.md](../../../docs/ARQUITETURA_OPENCLAW_HIBRIDO.md) (raiz do monorepo).
+
 ---
 
 ## Manual completo
