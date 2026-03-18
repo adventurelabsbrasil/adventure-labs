@@ -1,5 +1,22 @@
 import { TwitterApi } from "twitter-api-v2";
 
+function formatXError(e: unknown): string {
+  const base = e instanceof Error ? e.message : String(e);
+  if (base.includes("403") || base.toLowerCase().includes("forbidden")) {
+    return `${base} — 403: o X recusou postar. Veja checklist em apps/xpostr/docs/X_PUBLICACAO.md (permissão Read+Write + token novo + plano API).`;
+  }
+  if (typeof e === "object" && e !== null && "data" in e) {
+    try {
+      const d = (e as { data: unknown }).data;
+      const extra = typeof d === "object" && d !== null ? JSON.stringify(d) : String(d);
+      if (extra.length < 400) return `${base} | ${extra}`;
+    } catch {
+      /* ignore */
+    }
+  }
+  return base;
+}
+
 export async function publishTweet(text: string): Promise<{
   ok: boolean;
   tweetId?: string;
@@ -27,7 +44,6 @@ export async function publishTweet(text: string): Promise<{
     const tweet = await rw.v2.tweet(trimmed);
     return { ok: true, tweetId: tweet.data.id };
   } catch (e) {
-    const msg = e instanceof Error ? e.message : String(e);
-    return { ok: false, error: msg };
+    return { ok: false, error: formatXError(e) };
   }
 }
