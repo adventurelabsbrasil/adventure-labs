@@ -16,6 +16,10 @@ Pipeline **Grove · Zazu · Ogilvy** → **@adventurelabsbr**.
 3. Na raiz do monorepo: `pnpm install --filter adventure-labs-xpostr`
 4. `pnpm --filter adventure-labs-xpostr dev` → http://localhost:3005
 
+**Testar 1 post (local):** com `.env.local` apontando para o **mesmo** Supabase da migration e tokens X atualizados:
+
+`pnpm run cycle:once` — opcional `--unlock` se ficou preso em `cycle_in_progress`.
+
 ## Docs
 
 - [PLANO_VOZ_PUBLICA.md](../../knowledge/03_PROJETOS_INTERNOS/xpostr/PLANO_VOZ_PUBLICA.md)
