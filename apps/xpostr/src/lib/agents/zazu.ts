@@ -1,6 +1,6 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { ADVENTURE_BRAND_BRIEF } from "@/lib/adventure-brand";
-import { completeAssistant } from "@/lib/anthropic";
+import { completeAssistant } from "@/lib/llm";
 
 export async function zazuResearch(
   supabase: SupabaseClient,

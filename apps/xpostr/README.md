@@ -5,7 +5,7 @@ Pipeline **Grove · Zazu · Ogilvy** → **@adventurelabsbr**.
 ## Setup
 
 1. Aplicar [`supabase/migrations/20260317120000_adv_xpostr.sql`](./supabase/migrations/20260317120000_adv_xpostr.sql) no Supabase.
-2. Copiar [`.env.example`](./.env.example) para `.env.local` e preencher.
+2. Copiar [`.env.example`](./.env.example) para `.env.local`. LLM: **`OPENAI_API_KEY`** (recomendado) ou `ANTHROPIC_API_KEY`.
 3. Na raiz do monorepo: `pnpm install --filter adventure-labs-xpostr`
 4. `pnpm --filter adventure-labs-xpostr dev` → http://localhost:3005
 
