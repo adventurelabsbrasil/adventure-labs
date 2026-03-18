@@ -23,6 +23,9 @@ Ver [`.env.example`](../.env.example).
 
 ## Deploy (Vercel)
 
+**ID do projeto (referência CLI / API):** `prj_KVuZQTMytWNFVLXgiyJsJ2PabVVN`  
+URL típica no dashboard: `vercel.com/<team>/…` → projeto **adventure-xpostr** (ou nome configurado). **Root Directory:** `apps/xpostr`.
+
 1. Definir todas as env vars.
 2. **`CRON_SECRET`** — obrigatório; na Vercel o cron nativo envia `Authorization: Bearer <CRON_SECRET>` automaticamente.
 3. **Cron:** `vercel.json` → **1×/dia** (13:00 UTC, ~10h BRT). Detalhes em [AGENDAMENTO_CRON.md](./AGENDAMENTO_CRON.md).
