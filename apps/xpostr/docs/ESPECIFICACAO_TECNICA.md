@@ -5,7 +5,7 @@
 - Next.js 14 (App Router), TypeScript, Tailwind
 - Clerk (auth + allowlist opcional `XPOSTR_ALLOWED_EMAILS`)
 - Supabase PostgreSQL — tabelas `adv_xpostr_*`, acesso apenas **service role** no servidor
-- Anthropic (Claude) — `ANTHROPIC_API_KEY`; modelo `ANTHROPIC_MODEL` opcional
+- LLM: **OpenAI** (`OPENAI_API_KEY`, opcional `OPENAI_MODEL`, padrão `gpt-4o-mini`) tem prioridade; senão **Anthropic** (`ANTHROPIC_API_KEY`)
 - X API v2 — `twitter-api-v2` (OAuth 1.0a user context)
 
 ## Variáveis de ambiente

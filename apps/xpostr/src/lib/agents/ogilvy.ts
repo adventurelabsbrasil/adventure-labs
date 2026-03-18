@@ -1,6 +1,6 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { ADVENTURE_BRAND_BRIEF, X_HANDLE } from "@/lib/adventure-brand";
-import { completeAssistant } from "@/lib/anthropic";
+import { completeAssistant } from "@/lib/llm";
 
 export async function ogilvyWritePost(
   supabase: SupabaseClient,
