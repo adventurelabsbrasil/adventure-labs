@@ -1,0 +1,12 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --adventure-red: #da0028;
+  --adventure-navy: #0a1628;
+}
+
+body {
+  @apply bg-[#0a1628] text-slate-100 antialiased min-h-screen;
+}
