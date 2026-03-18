@@ -22,6 +22,7 @@ Pipeline **Grove · Zazu · Ogilvy** → **@adventurelabsbr**.
 - [docs/ESPECIFICACAO_TECNICA.md](./docs/ESPECIFICACAO_TECNICA.md)
 - [docs/AGENDAMENTO_CRON.md](./docs/AGENDAMENTO_CRON.md) — cron **1×/dia** (Hobby)
 - [docs/X_PUBLICACAO.md](./docs/X_PUBLICACAO.md) — troubleshooting publicação no X
+- [docs/LLM_COTA.md](./docs/LLM_COTA.md) — erro 429 OpenAI / crédito Anthropic
 
 ## Legado
 
