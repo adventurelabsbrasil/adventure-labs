@@ -31,3 +31,6 @@
 [submodule "apps/whatsapp-worker"]
 	path = apps/whatsapp-worker
 	url = https://github.com/adventurelabsbrasil/adv-zazu-whatsapp-worker.git
+[submodule "tools/dino"]
+	path = tools/dino
+	url = https://github.com/adventurelabsbrasil/dino.git
