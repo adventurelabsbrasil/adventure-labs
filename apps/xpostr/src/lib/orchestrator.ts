@@ -224,17 +224,27 @@ export async function runPipelineCycle(
     }
 
     const tw = await publishTweet(postText);
-    const hasCreds =
-      !!process.env.X_ACCESS_TOKEN && !!process.env.X_API_KEY;
+    const hasFullXcreds =
+      !!process.env.X_API_KEY?.trim() &&
+      !!process.env.X_API_SECRET?.trim() &&
+      !!process.env.X_ACCESS_TOKEN?.trim() &&
+      !!process.env.X_ACCESS_SECRET?.trim();
 
     let postStatus: "published" | "dry_run" | "error" = "dry_run";
     let tweetId: string | undefined;
+    let publishNote: string;
 
     if (tw.ok && tw.tweetId) {
       postStatus = "published";
       tweetId = tw.tweetId;
-    } else if (hasCreds && !tw.ok) {
+      publishNote = `tweet ${tw.tweetId}`;
+    } else if (hasFullXcreds && !tw.ok) {
       postStatus = "error";
+      publishNote = tw.error ?? "erro X API";
+    } else {
+      publishNote =
+        tw.error ??
+        "dry run — defina as 4 envs X na Vercel (KEY, SECRET, ACCESS_TOKEN, ACCESS_SECRET)";
     }
 
     await supabase.from("adv_xpostr_posts").insert({
@@ -254,9 +264,16 @@ export async function runPipelineCycle(
         status: "done",
         progress: 100,
         completed_at: new Date().toISOString(),
-        result: tweetId ? `tweet ${tweetId}` : tw.error ?? "dry run",
+        result: publishNote.slice(0, 500),
       }, tPub);
     }
+
+    await supabase.from("adv_xpostr_feed_events").insert({
+      agent_name: "Grove",
+      event_type: postStatus === "published" ? "published" : "publish_skipped",
+      message: `[X] ${publishNote.slice(0, 400)}`,
+      cycle_number: cycleNumber,
+    });
 
     if (tGrove)
       await upsertTask(supabase, { kanban_column: "published" }, tGrove);
@@ -288,7 +305,9 @@ export async function runPipelineCycle(
       supabase,
       cycleNumber,
       postStatus !== "error",
-      tweetId ? `publicado ${tweetId}` : postStatus
+      tweetId
+        ? `publicado ${tweetId}`
+        : `${postStatus}: ${publishNote.slice(0, 350)}`
     );
 
     return {
