@@ -65,7 +65,7 @@ type Snapshot = {
   } | null;
 };
 
-const FIFTEEN_MS = 15 * 60 * 1000;
+const DAY_MS = 24 * 60 * 60 * 1000;
 
 export function DashboardClient() {
   const [snap, setSnap] = useState<Snapshot | null>(null);
@@ -169,10 +169,10 @@ export function DashboardClient() {
   const nextPostEta = (() => {
     const lp = snap?.runState?.last_published_at;
     if (!lp || snap?.runState?.paused) return null;
-    const t = new Date(lp).getTime() + FIFTEEN_MS - now;
-    if (t <= 0) return "pronto para o cron";
-    const m = Math.ceil(t / 60000);
-    return `~${m} min`;
+    const t = new Date(lp).getTime() + DAY_MS - now;
+    if (t <= 0) return "elegível no próximo cron (1×/dia)";
+    const h = Math.ceil(t / 3600000);
+    return `~${h}h até nova janela automática`;
   })();
 
   const queueTasks =
@@ -265,7 +265,7 @@ export function DashboardClient() {
             </>
           )}
           <div className="rounded-lg border border-slate-700 bg-slate-900/50 px-4 py-2 text-sm">
-            <span className="text-slate-500">Próximo slot (cron 15 min): </span>
+            <span className="text-slate-500">Automático (cron 1×/dia, ~10h BRT): </span>
             <span className="text-white font-mono">{nextPostEta ?? "—"}</span>
           </div>
         </section>

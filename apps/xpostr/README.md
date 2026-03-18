@@ -13,6 +13,7 @@ Pipeline **Grove · Zazu · Ogilvy** → **@adventurelabsbr**.
 
 - [PLANO_VOZ_PUBLICA.md](../../knowledge/03_PROJETOS_INTERNOS/xpostr/PLANO_VOZ_PUBLICA.md)
 - [docs/ESPECIFICACAO_TECNICA.md](./docs/ESPECIFICACAO_TECNICA.md)
+- [docs/AGENDAMENTO_CRON.md](./docs/AGENDAMENTO_CRON.md) — cron **1×/dia** (Hobby)
 
 ## Legado
 

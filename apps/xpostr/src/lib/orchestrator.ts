@@ -5,7 +5,10 @@ import { ogilvyWritePost } from "@/lib/agents/ogilvy";
 import { publishTweet } from "@/lib/twitter";
 import { getTopicForCycle } from "@/lib/topics";
 
-const FIFTEEN_MIN_MS = 15 * 60 * 1000;
+/** Cron Vercel Hobby: 1×/dia. Não publicar de novo pelo cron antes disso. */
+const MIN_INTERVAL_CRON_MS = 22 * 60 * 60 * 1000;
+/** Chamadas manuais sem forceIntervalBypass (ex.: API). */
+const MIN_INTERVAL_MANUAL_MS = 60 * 60 * 1000;
 
 async function upsertTask(
   supabase: SupabaseClient,
@@ -47,11 +50,14 @@ export async function runPipelineCycle(
 
   if (state.last_published_at && !opts.forceIntervalBypass) {
     const last = new Date(state.last_published_at).getTime();
-    if (Date.now() - last < FIFTEEN_MIN_MS) {
+    const minMs = opts.fromCron ? MIN_INTERVAL_CRON_MS : MIN_INTERVAL_MANUAL_MS;
+    if (Date.now() - last < minMs) {
       return {
         ok: true,
         skipped: true,
-        reason: "intervalo mínimo 15 min entre publicações",
+        reason: opts.fromCron
+          ? "já houve publicação nas últimas ~22h (cron diário)"
+          : "intervalo mínimo 1h entre publicações (use Rodar ciclo agora para forçar)",
       };
     }
   }
