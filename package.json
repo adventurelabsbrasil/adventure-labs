@@ -8,7 +8,9 @@
     "sync": "cd apps/admin && pnpm run sync:context",
     "railway": "railway",
     "railway:link": "railway link",
-    "railway:status": "railway status"
+    "railway:status": "railway status",
+    "railway:logs": "railway logs",
+    "xpostr:dev": "pnpm --filter adventure-labs-xpostr dev"
   },
   "devDependencies": {
     "@railway/cli": "^4.31.0"
