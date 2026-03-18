@@ -2,6 +2,11 @@
 
 Pipeline **Grove · Zazu · Ogilvy** → **@adventurelabsbr**.
 
+## Vercel
+
+- **Project ID:** `prj_KVuZQTMytWNFVLXgiyJsJ2PabVVN`
+- **Root Directory:** `apps/xpostr`
+
 ## Setup
 
 1. Aplicar [`supabase/migrations/20260317120000_adv_xpostr.sql`](./supabase/migrations/20260317120000_adv_xpostr.sql) no Supabase.
