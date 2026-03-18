@@ -20,7 +20,8 @@ Pipeline autônomo **Grove · Zazu · Ogilvy** para postagens educativas e técn
 
 ## Cadência
 
-- Mínimo **15 minutos** entre publicações (cron Vercel `*/15 * * * *` + mesma regra no backend).
+- **Automático:** **1× por dia** (cron Vercel, ~10h BRT / 13h UTC). Backend exige ~22h desde a última publicação no disparo do cron.
+- **Manual:** **Rodar ciclo agora** força um ciclo extra no mesmo dia.
 
 ## Brief de marca (resumo)
 

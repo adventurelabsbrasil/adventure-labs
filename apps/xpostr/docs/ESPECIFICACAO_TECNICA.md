@@ -24,8 +24,8 @@ Ver [`.env.example`](../.env.example).
 ## Deploy (Vercel)
 
 1. Definir todas as env vars.
-2. `CRON_SECRET` — a Vercel injeta no header Bearer nas crons.
-3. `vercel.json` já define cron a cada 15 min em `/api/cron`.
+2. **`CRON_SECRET`** — obrigatório; na Vercel o cron nativo envia `Authorization: Bearer <CRON_SECRET>` automaticamente.
+3. **Cron:** `vercel.json` → **1×/dia** (13:00 UTC, ~10h BRT). Detalhes em [AGENDAMENTO_CRON.md](./AGENDAMENTO_CRON.md).
 
 ## SQL
 
