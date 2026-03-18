@@ -1,11 +1,11 @@
 ---
-title: Manual Adventure Labs
+
+## title: Manual Adventure Labs
 domain: gestao_corporativa
 tags: [manual, onboarding, visao, negocio]
 version: "1.0"
 updated: 2026-03-16
 revisao: "Revisar trimestralmente ou quando houver mudança de fase, contratação ou saída de cliente."
----
 
 # Manual Adventure Labs
 
@@ -36,47 +36,55 @@ Este manual serve como referência para **humanos e agentes IA**: visão da empr
 
 ### 2.1 Equipe
 
-| Nome | Cargo | E-mail |
-|------|--------|--------|
-| Rodrigo Ribas | Founder, sócio-proprietário | contato@adventurelabs.com.br |
-| Igor Ribas | Assistente de Marketing | igor@adventurelabs.com.br |
-| Mateus Scopel | Gestor de Tráfego Pago Junior | mateuslepocs@gmail.com |
-| Eduardo Tebaldi | Sócio-investidor | eduardo@youngempreendimentos.com.br |
-| Young Empreendimentos | Sócio | — |
+
+| Nome                  | Cargo                         | E-mail                                                                            |
+| --------------------- | ----------------------------- | --------------------------------------------------------------------------------- |
+| Rodrigo Ribas         | Founder, sócio-proprietário   | [contato@adventurelabs.com.br](mailto:contato@adventurelabs.com.br)               |
+| Igor Ribas            | Assistente de Marketing       | [igor@adventurelabs.com.br](mailto:igor@adventurelabs.com.br)                     |
+| Mateus Scopel         | Gestor de Tráfego Pago Junior | [mateuslepocs@gmail.com](mailto:mateuslepocs@gmail.com)                           |
+| Eduardo Tebaldi       | Sócio-investidor              | [eduardo@youngempreendimentos.com.br](mailto:eduardo@youngempreendimentos.com.br) |
+| Young Empreendimentos | Sócio                         | —                                                                                 |
+
 
 ### 2.2 C-Suite (agentes)
 
-| Função | Persona |
-|--------|---------|
-| CEO | Grove |
-| COO | Ohno |
-| CTO | Torvalds |
-| CMO | Ogilvy |
-| CFO | Buffett |
-| CPO | Cagan |
+
+| Função | Persona  |
+| ------ | -------- |
+| CEO    | Grove    |
+| COO    | Ohno     |
+| CTO    | Torvalds |
+| CMO    | Ogilvy   |
+| CFO    | Buffett  |
+| CPO    | Cagan    |
+
 
 **Superior direto dos agentes:** Rodrigo Ribas (Founder).
 
 ### 2.3 Agentes operacionais
 
-| Nome | Função | Escopo |
-|------|--------|--------|
-| Lara | Assistente virtual de Marketing | Relatórios de contas de anúncios, investigação de campanhas, interação com C-Suite |
-| Sueli | Assistente virtual Financeiro | Conciliação bancária, integração com Omie ERP, NF, extratos, boletos e comprovantes; interação com C-Suite |
-| Zazu | Assistente virtual administrativo | WhatsApp, interação com C-Suite |
-| Jebedeg | Assistente virtual administrativo | WhatsApp |
+
+| Nome    | Função                            | Escopo                                                                                                     |
+| ------- | --------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| Lara    | Assistente virtual de Marketing   | Relatórios de contas de anúncios, investigação de campanhas, interação com C-Suite                         |
+| Sueli   | Assistente virtual Financeiro     | Conciliação bancária, integração com Omie ERP, NF, extratos, boletos e comprovantes; interação com C-Suite |
+| Zazu    | Assistente virtual administrativo | WhatsApp, interação com C-Suite                                                                            |
+| Jebedeg | Assistente virtual administrativo | WhatsApp                                                                                                   |
+
 
 ---
 
 ## 3. Clientes
 
-| Empresa | Categoria | Contato |
-|---------|-----------|---------|
-| Young Empreendimentos | Incorporadora | Matheus, Caroline Bortoluzzi, Eduardo Tebaldi |
-| Benditta Marcenaria | Marcenaria e Móveis planejados | Lisa |
-| Lidera Soluções | Empresa de Consultoria | Guilherme Emerim, Charles Simon |
-| Capclear | Higienização de Capacetes | Vagner Porto, Almir |
-| Rose Portal Advocacia | Escritório de Advocacia | Roselaine Portal, Carlo Tebaldi |
+
+| Empresa               | Categoria                      | Contato                                       |
+| --------------------- | ------------------------------ | --------------------------------------------- |
+| Young Empreendimentos | Incorporadora                  | Matheus, Caroline Bortoluzzi, Eduardo Tebaldi |
+| Benditta Marcenaria   | Marcenaria e Móveis planejados | Lisa                                          |
+| Lidera Soluções       | Empresa de Consultoria         | Guilherme Emerim, Charles Simon               |
+| Capclear              | Higienização de Capacetes      | Vagner Porto, Almir                           |
+| Rose Portal Advocacia | Escritório de Advocacia        | Roselaine Portal, Carlo Tebaldi               |
+
 
 ---
 
@@ -84,11 +92,13 @@ Este manual serve como referência para **humanos e agentes IA**: visão da empr
 
 ### 4.1 Produtos (software)
 
-| Produto | Descrição |
-|---------|-----------|
+
+| Produto | Descrição                              |
+| ------- | -------------------------------------- |
 | Talents | ATS (gestão de recrutamento e seleção) |
-| Sales | CRM |
-| Admin | WorkOS (plataforma interna) |
+| Sales   | CRM                                    |
+| Admin   | WorkOS (plataforma interna)            |
+
 
 **Prioridade atual:** Assessoria Martech = **P0**; Talents = **P1**.
 
@@ -96,11 +106,13 @@ Este manual serve como referência para **humanos e agentes IA**: visão da empr
 
 **Assessoria Martech**
 
-| Plano | Valor mensal | Principais entregas |
-|-------|--------------|----------------------|
-| Essencial | R$ 3.500 | Gestão de tráfego (Meta Ads e Google Ads), relatório mensal em PDF, reunião mensal, landing page A/B, até 4 campanhas, criativos estáticos |
-| Scale | R$ 7.000 | Tudo do Essencial + Meta, Google, TikTok, LinkedIn Ads, até 10 campanhas, criativos com roteirização, cronograma editorial, relatório via painel BI/dashboards, reunião semanal |
-| ELITE | Sob consulta | Tudo do Scale + consultoria estratégica trimestral, mentoria mensal, grupo VIP WhatsApp, gestor dedicado, customizações e integrações; bônus: 1 ano de Adventure Labs CRM |
+
+| Plano     | Valor mensal | Principais entregas                                                                                                                                                             |
+| --------- | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Essencial | R$ 3.500     | Gestão de tráfego (Meta Ads e Google Ads), relatório mensal em PDF, reunião mensal, landing page A/B, até 4 campanhas, criativos estáticos                                      |
+| Scale     | R$ 7.000     | Tudo do Essencial + Meta, Google, TikTok, LinkedIn Ads, até 10 campanhas, criativos com roteirização, cronograma editorial, relatório via painel BI/dashboards, reunião semanal |
+| ELITE     | Sob consulta | Tudo do Scale + consultoria estratégica trimestral, mentoria mensal, grupo VIP WhatsApp, gestor dedicado, customizações e integrações; bônus: 1 ano de Adventure Labs CRM       |
+
 
 **Programa ELITE — Assessoria em Gestão de Lançamento Imobiliário**
 
@@ -110,30 +122,34 @@ Este manual serve como referência para **humanos e agentes IA**: visão da empr
 
 ## 5. Projetos em andamento
 
-| Projeto | Detalhes |
-|---------|----------|
-| Admin WorkOS | WorkOS próprio em desenvolvimento |
-| Talents | Gestão de recrutamento e seleção (ATS); já feito para Young Empreendimentos; em implementação para comercializar pela Adventure |
-| Sales | Em testes para comercializar pela Adventure |
-| ELITE | Programa específico para loteadoras; gestão de lançamentos |
-| Assessoria Martech | Core business atual; gestão de tráfego para empresas de serviço |
-| Site Adventure Labs | No ar, com ajustes necessários |
+
+| Projeto             | Detalhes                                                                                                                        |
+| ------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| Admin WorkOS        | WorkOS próprio em desenvolvimento                                                                                               |
+| Talents             | Gestão de recrutamento e seleção (ATS); já feito para Young Empreendimentos; em implementação para comercializar pela Adventure |
+| Sales               | Em testes para comercializar pela Adventure                                                                                     |
+| ELITE               | Programa específico para loteadoras; gestão de lançamentos                                                                      |
+| Assessoria Martech  | Core business atual; gestão de tráfego para empresas de serviço                                                                 |
+| Site Adventure Labs | No ar, com ajustes necessários                                                                                                  |
+
 
 ---
 
 ## 6. Ferramentas
 
-| Ferramenta | Plano / custo |
-|------------|----------------|
-| Omie ERP | 247,2/mês |
-| Google Workspace | Business Standard — R$ 163,60/mês — 2 usuários |
-| Cursor AI | US$ 20/mês |
-| Railway | US$ 5/mês |
-| n8n (via Railway) | Free |
-| Gemini API | Free on demand |
-| OpenClaw | Free |
-| Supabase | Free |
-| Clerk | Free |
+
+| Ferramenta        | Plano / custo                                  |
+| ----------------- | ---------------------------------------------- |
+| Omie ERP          | 247,2/mês                                      |
+| Google Workspace  | Business Standard — R$ 163,60/mês — 2 usuários |
+| Cursor AI         | US$ 20/mês                                     |
+| Railway           | US$ 5/mês                                      |
+| n8n (via Railway) | Free                                           |
+| Gemini API        | Free on demand                                 |
+| OpenClaw          | Free                                           |
+| Supabase          | Free                                           |
+| Clerk             | Free                                           |
+
 
 ---
 
@@ -169,6 +185,9 @@ Este manual serve como referência para **humanos e agentes IA**: visão da empr
 
 ## 9. Histórico de revisões
 
-| Data | Versão | Resumo |
-|------|--------|--------|
-| 2026-03-16 | 1.0 | Criação do manual; conteúdo inicial a partir dos CSVs e respostas do Founder (negócio, fase, prioridades P0/P1, meta 100k). |
+
+| Data       | Versão | Resumo                                                                                                                      |
+| ---------- | ------ | --------------------------------------------------------------------------------------------------------------------------- |
+| 2026-03-16 | 1.0    | Criação do manual; conteúdo inicial a partir dos CSVs e respostas do Founder (negócio, fase, prioridades P0/P1, meta 100k). |
+
+

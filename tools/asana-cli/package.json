@@ -1,0 +1,19 @@
+{
+  "name": "asana-cli-adventure",
+  "version": "1.0.0",
+  "private": true,
+  "description": "OAuth / PAT → ASANA_ACCESS_TOKEN para Admin Andon",
+  "scripts": {
+    "login": "node asana-login.mjs oauth",
+    "login:write": "node asana-login.mjs oauth --write-admin-env",
+    "login:oob": "node asana-login.mjs oauth-oob",
+    "login:oob:write": "node asana-login.mjs oauth-oob --write-admin-env",
+    "pat": "node asana-login.mjs pat",
+    "pat:write": "node asana-login.mjs pat --write-admin-env",
+    "test:igor-task": "node asana-test-igor-task.mjs",
+    "test:igor-task:dry": "node asana-test-igor-task.mjs --dry-run"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "name": "clerk-cli",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Clerk CLI no monorepo — gestão de auth (users, orgs, sessions, Protect) via CLI oficial",
+  "scripts": {
+    "clerk": "npx --yes github:clerk/cli@latest",
+    "postinstall": "echo 'Dica: use pnpm clerk -- <comando> ou, na raiz do monorepo, pnpm --filter clerk-cli clerk -- <comando>'"
+  },
+  "keywords": ["clerk", "auth", "cli"],
+  "author": "",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  }
+}

@@ -1,0 +1,88 @@
+═══════════════════════════════════════════════════════════════
+GUIA RÁPIDO - Como Configurar Variáveis de Ambiente
+═══════════════════════════════════════════════════════════════
+
+📋 OPÇÃO 1: USAR O SCRIPT AUTOMÁTICO (Mais Fácil)
+────────────────────────────────────────────────────────────────
+
+Execute:
+
+    ./configura_env.sh
+
+O script vai:
+  ✓ Pedir suas credenciais OAuth
+  ✓ Configurar no arquivo ~/.zshrc (ou ~/.bashrc)
+  ✓ Salvar permanentemente
+
+
+📋 OPÇÃO 2: CONFIGURAR MANUALMENTE NO TERMINAL
+────────────────────────────────────────────────────────────────
+
+No terminal, execute:
+
+    export GOOGLE_CLIENT_ID="seu-client-id-aqui"
+    export GOOGLE_CLIENT_SECRET="seu-client-secret-aqui"
+
+⚠️  Nota: Estas variáveis são válidas apenas para esta sessão.
+    Para tornar permanente, use a Opção 3 ou 4.
+
+
+📋 OPÇÃO 3: ADICIONAR AO ~/.zshrc (Permanente no macOS)
+────────────────────────────────────────────────────────────────
+
+1. Abra o arquivo:
+    nano ~/.zshrc
+
+2. Adicione no final:
+    export GOOGLE_CLIENT_ID="seu-client-id-aqui"
+    export GOOGLE_CLIENT_SECRET="seu-client-secret-aqui"
+
+3. Salve (Ctrl+X, Y, Enter)
+
+4. Recarregue:
+    source ~/.zshrc
+
+
+📋 OPÇÃO 4: USAR ARQUIVO .env (Recomendado para desenvolvimento)
+────────────────────────────────────────────────────────────────
+
+1. Copie o arquivo de exemplo:
+    cp .env.example .env
+
+2. Edite o arquivo .env e adicione suas credenciais:
+    nano .env
+
+3. Instale python-dotenv:
+    pip3 install python-dotenv
+
+4. O código vai ler automaticamente do arquivo .env
+
+
+═══════════════════════════════════════════════════════════════
+COMO OBTER AS CREDENCIAIS
+═══════════════════════════════════════════════════════════════
+
+1. Acesse: https://console.cloud.google.com/apis/credentials
+
+2. Crie um novo projeto (se necessário)
+
+3. Crie credenciais OAuth 2.0:
+   - Tipo: Aplicativo da Web
+   - URI de redirecionamento: http://localhost:8080/callback
+
+4. Copie o CLIENT_ID e CLIENT_SECRET
+
+Para instruções detalhadas, veja: GUIA_AUTENTICACAO.md
+
+
+═══════════════════════════════════════════════════════════════
+VERIFICAR SE ESTÁ CONFIGURADO
+═══════════════════════════════════════════════════════════════
+
+Execute:
+
+    python3 -c "import os; print('CLIENT_ID:', 'OK' if os.getenv('GOOGLE_CLIENT_ID') else 'NÃO CONFIGURADO'); print('CLIENT_SECRET:', 'OK' if os.getenv('GOOGLE_CLIENT_SECRET') else 'NÃO CONFIGURADO')"
+
+
+═══════════════════════════════════════════════════════════════
+

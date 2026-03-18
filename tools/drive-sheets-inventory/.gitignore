@@ -1,0 +1,7 @@
+credentials.json
+token.json
+.env
+venv/
+.venv/
+schedule/.env.schedule
+schedule/logs/*.log

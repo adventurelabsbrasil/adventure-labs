@@ -2,7 +2,7 @@
 title: Arquitetura Agêntica — C-Suite + Skills
 domain: conhecimento
 tags: [arquitetura, agentes, skills, c-suite, grove]
-updated: 2026-03-07
+updated: 2026-03-18
 ---
 
 # Arquitetura Agêntica: C-Suite + Skills
@@ -48,7 +48,7 @@ Resposta / próximo passo
 C-Suite e skills por diretor:
 
 - **CTO (Torvalds):** supabase-migrations, code-review, monorepo-pnpm, api-routes, ui-components, rls-tenant
-- **COO (Ohno):** sla-prazos-entrega, fluxo-vida-projeto, kanban-board-checklist
+- **COO (Ohno):** sla-prazos-entrega, fluxo-vida-projeto, kanban-board-checklist, google-drive-adventure, asana-csuite-ingest (agente **Andon**)
 - **CMO (Ogilvy):** relatorio-kpis-campanhas, copy-brief-campanha, analise-performance-canal, referencias-ideias-editorial
 - **CFO (Buffett):** one-pager-financeiro, reconciliacao-custos, metricas-saas-agencia
 - **CPO (Cagan):** escopo-projeto-checklist, briefing-cliente-template, dashboard-kpis-especificacao; **Zazu (agente de apoio):** zazu-whatsapp-resumo-diario
@@ -58,6 +58,14 @@ C-Suite e skills por diretor:
 ## 3.1 Agentes de apoio (executor agents)
 
 Além dos C-Levels que planejam e delegam, existem **agentes de apoio** que executam skills em schedule, usam tools externas e produzem founder reports; são implementados como workflows n8n. **Zazu** e **Lara** são exemplos: executam uma skill cada (Zazu: `zazu-whatsapp-resumo-diario`; Lara: sync e análise Meta Ads), usam tools externas (whatsapp-worker; APIs Meta/Admin) e gravam em `adv_founder_reports`. O Cagan (e o C-Suite) consomem o output desses agentes nos últimos 7 dias no contexto do Loop.
+
+**Andon** (Asana): agente de apoio sob Ohno; skill `asana-csuite-ingest` — leitura Asana → resumo em `knowledge/` e (fase 2) espelho em `adv_csuite_memory` com `source: ["asana"]`. Pacote do agente: `apps/admin/agents/andon_asana/`.
+
+---
+
+## 3.2 Pacote de agente (Soul, User, Company, …)
+
+Novos agentes (C-Suite, Grove ou de apoio) devem seguir o template OpenClaw-aligned em `apps/admin/agents/_template_agent/`: **SOUL**, **USER**, **COMPANY**, **REDLINES**, **VOICE**, **PERMISSIONS**, **HEARTBEAT**, **MEMORY**, além de **AGENT.md** como índice. Skills continuam apenas em `agents/skills/<slug>/SKILL.md`. Ver também `AGENTS.md` na raiz do monorepo.
 
 ---
 
@@ -81,4 +89,4 @@ O template e o catálogo estão em `/agents/skills/` (README e _template).
 
 ---
 
-*Última atualização: 2026-03. Origem: plano Agentic Architecture + Tasks.*
+*Última atualização: 2026-03-18. Origem: plano Agentic Architecture + Tasks; pacote agente + Andon.*
