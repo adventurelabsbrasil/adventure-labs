@@ -2,15 +2,18 @@ import { NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
 import { requireXpostrUser } from "@/lib/auth-check";
 
+export const dynamic = "force-dynamic";
+
 export async function GET() {
-  const user = await requireXpostrUser();
-  if (!user) {
-    return NextResponse.json({ error: "não autorizado" }, { status: 401 });
-  }
+  try {
+    const user = await requireXpostrUser();
+    if (!user) {
+      return NextResponse.json({ error: "não autorizado" }, { status: 401 });
+    }
 
-  const supabase = createServerSupabase();
+    const supabase = createServerSupabase();
 
-  const [
+    const [
     agents,
     tasks,
     messages,
@@ -48,17 +51,42 @@ export async function GET() {
     supabase.from("adv_xpostr_run_state").select("*").eq("id", "default").single(),
   ]);
 
-  return NextResponse.json({
-    agents: agents.data ?? [],
-    tasks: tasks.data ?? [],
-    messages: messages.data ?? [],
-    posts: posts.data ?? [],
-    cycles: cycles.data ?? [],
-    feed: feed.data ?? [],
-    runState: runState.data,
-    errors: {
-      agents: agents.error?.message,
-      tasks: tasks.error?.message,
-    },
-  });
+    const errs = [
+      agents.error,
+      tasks.error,
+      messages.error,
+      posts.error,
+      cycles.error,
+      feed.error,
+      runState.error,
+    ].filter(Boolean);
+
+    return NextResponse.json({
+      agents: agents.data ?? [],
+      tasks: tasks.data ?? [],
+      messages: messages.data ?? [],
+      posts: posts.data ?? [],
+      cycles: cycles.data ?? [],
+      feed: feed.data ?? [],
+      runState: runState.data,
+      errors: {
+        agents: agents.error?.message,
+        tasks: tasks.error?.message,
+        supabase:
+          errs.length > 0
+            ? errs.map((e) => e?.message).join(" | ")
+            : undefined,
+      },
+    });
+  } catch (e) {
+    const msg = e instanceof Error ? e.message : String(e);
+    return NextResponse.json(
+      {
+        error: msg,
+        hint:
+          "Confira NEXT_PUBLIC_SUPABASE_URL e SUPABASE_SERVICE_ROLE_KEY. No monorepo, o arquivo é apps/xpostr/.env.local (não use só a raiz). Na Vercel, defina essas vars no projeto do Xpostr.",
+      },
+      { status: 500 }
+    );
+  }
 }

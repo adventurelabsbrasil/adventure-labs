@@ -79,8 +79,12 @@ export function DashboardClient() {
     try {
       const r = await fetch("/api/xpostr/snapshot", { credentials: "include" });
       if (!r.ok) {
-        const j = await r.json().catch(() => ({}));
-        throw new Error(j.error ?? r.statusText);
+        const j = (await r.json().catch(() => ({}))) as {
+          error?: string;
+          hint?: string;
+        };
+        const parts = [j.error, j.hint].filter(Boolean);
+        throw new Error(parts.length ? parts.join(" — ") : r.statusText);
       }
       const data = await r.json();
       setSnap(data);
