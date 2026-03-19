@@ -146,7 +146,7 @@ Pastas e níveis relevantes. Excluídos na listagem: `node_modules`, `.git`, `.n
 ## 3. Convenções e configuração atuais
 
 - **Workspace pnpm:** `pnpm-workspace.yaml` declara `apps/*`, `packages/*` e `tools/*`. Os projetos em `clients/*` não são pacotes do workspace (cada um pode ter seu próprio package.json e repositório como submodule).
-- **Submódulos Git:** Apps e clientes são submodules; cada app/cliente mantém seu próprio repositório. O script `scripts/setup.sh` inicializa submodules e cria o symlink `apps/core/admin/context -> ../../knowledge`.
+- **Submódulos Git:** Apps e clientes são submodules; cada app/cliente mantém seu próprio repositório. O script `scripts/setup.sh` inicializa submodules e cria o symlink `apps/core/admin/context -> ../../../knowledge`.
 - **Nomenclatura:**
   - Clientes: prefixo numérico `NN_nome` (ex.: `01_lidera`, `02_rose`).
   - Knowledge: prefixo numérico `NN_NOME` em maiúsculas (ex.: `00_GESTAO_CORPORATIVA`, `06_CONHECIMENTO`).

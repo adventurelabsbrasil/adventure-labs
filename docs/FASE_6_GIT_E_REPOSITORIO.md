@@ -4,7 +4,7 @@
 
 - **Repo "adventure-labs"** versiona: knowledge/, docs/, .cursor/, .github/, AGENTS.md, workflows/, etc.
 - **Apps e clientes** são **submodules** (cada um = repo separado no GitHub)
-- **Symlink:** `apps/core/admin/context -> ../../knowledge` (sem duplicação)
+- **Symlink:** `apps/core/admin/context -> ../../../knowledge` (sem duplicação)
 - **Workflows n8n:** Fonte canônica em `workflows/n8n/`; `apps/core/admin/n8n_workflows` é symlink para `../../workflows/n8n`
 
 ### Submodules atuais
@@ -28,7 +28,7 @@
 ./scripts/setup.sh
 ```
 
-Cria o symlink `admin/context -> ../../knowledge`.
+Cria o symlink `apps/core/admin/context -> ../../../knowledge`.
 
 ## Checklist de secrets
 

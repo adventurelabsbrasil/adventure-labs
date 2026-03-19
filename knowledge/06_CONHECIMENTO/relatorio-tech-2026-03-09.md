@@ -74,7 +74,7 @@ Resumo do que foi feito em termos de tecnologia para que o C-Suite e a equipe te
 
 ## 5. Monorepo e documentação
 
-- **Repo adventure-labs:** Estrutura com submodules (admin, adventure, elite, finfeed, lidera-space, roseportaladvocacia, young-emp, ranking-vendas, young-talents, lidera-skills). Script `scripts/setup.sh` para init de submodules e symlink `apps/core/admin/context` → `../../knowledge`.
+- **Repo adventure-labs:** Estrutura com submodules (admin, adventure, elite, finfeed, lidera-space, roseportaladvocacia, young-emp, ranking-vendas, young-talents, lidera-skills). Script `scripts/setup.sh` para init de submodules e symlink `apps/core/admin/context` → `../../../knowledge`.
 - **Plano n8n:** Documento `docs/PLANO_N8N_AUTOMACOES_AGENTES_SKILLS_TOOLS.md` com estrutura de automações, agentes, skills e tools; segurança, prioridades e faseamento.
 - **Outros:** Manual do projeto Roles referenciado na base de conhecimento; auditoria de secrets (script + resumo commitável); frontmatter em knowledge para ML/RAG; packages compartilhados (ui, db, config) em estrutura inicial; unificação do registro de ponto no Admin (plano implementado: página `/dashboard/ponto`, geo, saldo, usos, admin editar registros, redirect no Adventure).
 
