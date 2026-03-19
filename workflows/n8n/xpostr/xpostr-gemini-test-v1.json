@@ -1,0 +1,73 @@
+{
+  "name": "Xpostr — Gemini test (cron endpoint)",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "*/1 * * * *"
+            }
+          ]
+        }
+      },
+      "id": "xpostr-schedule-001",
+      "name": "Schedule every 1min",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        240,
+        300
+      ],
+      "notes": "Dispara em 1min para pegar a janela mais recente. O backend pode retornar 'skipped' por intervalo."
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "https://adventure-xpostr.vercel.app/api/cron",
+        "authentication": "none",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "={{ 'Bearer ' + $env.CRON_SECRET }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "xpostr-http-001",
+      "name": "GET /api/cron",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        520,
+        300
+      ],
+      "notes": "Precisa que o n8n tenha env CRON_SECRET igual ao Xpostr.",
+      "continueOnFail": true
+    }
+  ],
+  "connections": {
+    "Schedule every 1min": {
+      "main": [
+        [
+          {
+            "node": "GET /api/cron",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {},
+  "pinData": {},
+  "versionId": "1",
+  "meta": {
+    "templateCredsSetupCompleted": false
+  }
+}
