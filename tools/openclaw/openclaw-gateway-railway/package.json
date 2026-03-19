@@ -1,0 +1,14 @@
+{
+  "name": "@adventure-labs/openclaw-gateway-railway",
+  "private": true,
+  "description": "Runner opcional para Railway (Nixpacks) — alternativa ao template one-click. Ver README.",
+  "scripts": {
+    "start": "openclaw gateway start"
+  },
+  "dependencies": {
+    "openclaw": "2026.3.13"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
