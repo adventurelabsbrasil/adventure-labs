@@ -18,7 +18,7 @@ updated: 2026-03-12
 
 | Artefato | Local |
 |----------|--------|
-| Plano | `apps/admin/docs/PLANO_SKILL_GOOGLE_DRIVE_ADVENTURE.md` |
+| Plano | `apps/core/admin/docs/PLANO_SKILL_GOOGLE_DRIVE_ADVENTURE.md` |
 
 - Objetivo, escopo (leitura/escrita), personas (Founder, Grove, C-Level, n8n/Railway), segurança, fases de implementação e referência à API futura.
 
@@ -26,7 +26,7 @@ updated: 2026-03-12
 
 | Artefato | Local |
 |----------|--------|
-| Skill | `apps/admin/agents/skills/google-drive-adventure/SKILL.md` |
+| Skill | `apps/core/admin/agents/skills/google-drive-adventure/SKILL.md` |
 
 - **Owner:** COO (Ohno). **Persona:** Drive. **Role:** Curador de Documentos Google Drive da Adventure.
 - Seções: Objetivo, Quando usar, Input esperado, Passos, Output esperado, Critérios de revisão.
@@ -36,9 +36,9 @@ updated: 2026-03-12
 
 | Artefato | Alteração |
 |----------|-----------|
-| `apps/admin/agents/grove_ceo.md` | Inclusão na seção **Delegação ao C-Suite**: consultar/atualizar documentos no Google Drive da Adventure → Ohno (COO), skill `google-drive-adventure`; Grove pode acionar em uso pontual; escrita segue protocolo de sobrescrita. |
-| `apps/admin/packages/ai-core/personas/ohno_coo.md` | Nova responsabilidade e linha na tabela **SKILLS ASSOCIADAS** para `google-drive-adventure` (leitura/escrita no Drive; regra de sobrescrita). |
-| `apps/admin/agents/skills/README.md` | Nova linha no catálogo **COO (Ohno)**: `google-drive-adventure \| Drive \| Curador de Documentos Google Drive da Adventure`. |
+| `apps/core/admin/agents/grove_ceo.md` | Inclusão na seção **Delegação ao C-Suite**: consultar/atualizar documentos no Google Drive da Adventure → Ohno (COO), skill `google-drive-adventure`; Grove pode acionar em uso pontual; escrita segue protocolo de sobrescrita. |
+| `apps/core/admin/packages/ai-core/personas/ohno_coo.md` | Nova responsabilidade e linha na tabela **SKILLS ASSOCIADAS** para `google-drive-adventure` (leitura/escrita no Drive; regra de sobrescrita). |
+| `apps/core/admin/agents/skills/README.md` | Nova linha no catálogo **COO (Ohno)**: `google-drive-adventure \| Drive \| Curador de Documentos Google Drive da Adventure`. |
 
 ---
 
@@ -56,7 +56,7 @@ updated: 2026-03-12
 
 ## Referências
 
-- Plano completo: `apps/admin/docs/PLANO_SKILL_GOOGLE_DRIVE_ADVENTURE.md`
-- Skill: `apps/admin/agents/skills/google-drive-adventure/SKILL.md`
-- Grove: `apps/admin/agents/grove_ceo.md` (delegação Drive → Ohno)
-- Ohno: `apps/admin/packages/ai-core/personas/ohno_coo.md` (skill na tabela)
+- Plano completo: `apps/core/admin/docs/PLANO_SKILL_GOOGLE_DRIVE_ADVENTURE.md`
+- Skill: `apps/core/admin/agents/skills/google-drive-adventure/SKILL.md`
+- Grove: `apps/core/admin/agents/grove_ceo.md` (delegação Drive → Ohno)
+- Ohno: `apps/core/admin/packages/ai-core/personas/ohno_coo.md` (skill na tabela)

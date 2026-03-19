@@ -1,12 +1,12 @@
 ---
 description: Diretrizes para rotas do app Adventure (CRM) e uso correto de arquivos de rotas grandes.
-globs: apps/adventure/src/routes/**/*.tsx
+globs: apps/core/adventure/src/routes/**/*.tsx
 alwaysApply: false
 ---
 
 # Rotas do Adventure (CRM) — Boas práticas
 
-- O arquivo principal de rotas é `apps/adventure/src/routes/index.tsx` e hoje concentra dezenas de rotas.
+- O arquivo principal de rotas é `apps/core/adventure/src/routes/index.tsx` e hoje concentra dezenas de rotas.
 - Sempre que possível, manter o **catch-all** (`path: '*'`) como última rota, redirecionando para `/` (home pública) em vez de `/login`.
 - Antes de adicionar uma nova rota, verifique se já existe path semelhante para evitar duplicidade ou conflito.
 

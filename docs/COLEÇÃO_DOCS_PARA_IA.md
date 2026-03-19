@@ -12,23 +12,23 @@ Este arquivo reúne a documentação (README e, quando relevante, PLANO/roadmap)
 - `README.md`
 - `CONTRIBUTING.md`
 - `PLANO_MONOREPO_ADVENTURE_LABS.md`
-- `apps/admin/README.md`
-- `apps/admin/agents/skills/README.md`
-- `apps/admin/n8n_workflows/README.md`
-- `apps/admin/n8n_workflows/csuite/README.md`
-- `apps/admin/n8n_workflows/meta_ads_agent/README.md`
-- `apps/admin/n8n_workflows/sueli/README.md`
-- `apps/admin/public/context-docs/README.md`
-- `apps/admin/public/context-docs/99_ARQUIVO/README.md`
-- `apps/admin/public/agents-docs/skills/README.md`
-- `apps/admin/supabase/README.md`
-- `apps/admin/docs/PLANO_SKILL_GOOGLE_DRIVE_ADVENTURE.md`
-- `apps/adventure/README.md`
-- `apps/adventure/docs/README.md`
-- `apps/adventure/extension/README.md`
-- `apps/adventure/functions/README.md`
-- `apps/elite/README.md`
-- `apps/finfeed/README.md`
+- `apps/core/admin/README.md`
+- `apps/core/admin/agents/skills/README.md`
+- `apps/core/admin/n8n_workflows/README.md`
+- `apps/core/admin/n8n_workflows/csuite/README.md`
+- `apps/core/admin/n8n_workflows/meta_ads_agent/README.md`
+- `apps/core/admin/n8n_workflows/sueli/README.md`
+- `apps/core/admin/public/context-docs/README.md`
+- `apps/core/admin/public/context-docs/99_ARQUIVO/README.md`
+- `apps/core/admin/public/agents-docs/skills/README.md`
+- `apps/core/admin/supabase/README.md`
+- `apps/core/admin/docs/PLANO_SKILL_GOOGLE_DRIVE_ADVENTURE.md`
+- `apps/core/adventure/README.md`
+- `apps/core/adventure/docs/README.md`
+- `apps/core/adventure/extension/README.md`
+- `apps/core/adventure/functions/README.md`
+- `apps/core/elite/README.md`
+- `apps/labs/finfeed/README.md`
 - `clients/02_rose/sites/auxilio-maternidade/README.md`
 - `workflows/README.md`
 - `tools/xtractor/README.md`
@@ -73,7 +73,7 @@ Este arquivo reúne a documentação (README e, quando relevante, PLANO/roadmap)
 - `clients/04_young/young-talents/docs/futuras-melhorias/README.md`
 - `clients/04_young/young-talents/docs/futuras-melhorias/PLANEJAMENTO_TEMPLATES_VAGA.md`
 - `docs/PLANO_N8N_AUTOMACOES_AGENTES_SKILLS_TOOLS.md`
-- `apps/finfeed/PLANO_INICIAL.md`
+- `apps/labs/finfeed/PLANO_INICIAL.md`
 
 ---
 
@@ -101,7 +101,7 @@ Ou, se já clonou sem `--recurse-submodules`:
 ./scripts/setup.sh
 ```
 
-O script inicializa os submodules e cria o symlink `apps/admin/context -> ../../knowledge` (evita duplicação).
+O script inicializa os submodules e cria o symlink `apps/core/admin/context -> ../../knowledge` (evita duplicação).
 
 ## Estrutura
 
@@ -121,7 +121,7 @@ O script inicializa os submodules e cria o symlink `apps/admin/context -> ../../
 
 ## Início rápido
 
-- **Admin:** `cd apps/admin && pnpm dev` (após `./scripts/setup.sh`)
+- **Admin:** `cd apps/core/admin && pnpm dev` (após `./scripts/setup.sh`)
 - **Taxonomia:** `knowledge/00_GESTAO_CORPORATIVA/MANUAL_TAXONOMIA_REPOSITORIO.md`
 - **Agentes:** `AGENTS.md`
 
@@ -153,7 +153,7 @@ Credenciais e dados sensíveis **nunca** no repositório. Ver `_internal/vault/R
 ## Código
 
 - Admin: monorepo pnpm, Next.js, Supabase
-- Ver `.cursorrules` em `apps/admin/` para convenções
+- Ver `.cursorrules` em `apps/core/admin/` para convenções
 
 ## Regra de sobrescrita
 
@@ -449,7 +449,7 @@ Arquivo que orienta o multi-agente sobre:
 2. Configurar `pnpm-workspace.yaml` com apps/*, packages/*, tools/dbgr ✅
 3. `.gitignore` raiz robusto ✅
 4. Configurar `.cursor/rules` e `AGENTS.md` ✅
-5. Skills permanecem em `apps/admin/agents/skills/` ✅
+5. Skills permanecem em `apps/core/admin/agents/skills/` ✅
 
 ### Fase 4 — Segurança e Documentação (1 dia) ✅ Concluída 2026-03-07
 
@@ -468,7 +468,7 @@ Arquivo que orienta o multi-agente sobre:
 
 - **Repo raiz** versiona: knowledge/, docs/, .cursor/, workflows/, etc.
 - **Submodules:** admin, adventure, elite, finfeed, lidera-space, lidera-skills, roseportaladvocacia, young-emp, ranking-vendas, young-talents
-- **Symlink:** `apps/admin/context -> ../../knowledge` (sem duplicação)
+- **Symlink:** `apps/core/admin/context -> ../../knowledge` (sem duplicação)
 - **Setup:** `./scripts/setup.sh` após clone
 - **Documentação:** `docs/FASE_6_GIT_E_REPOSITORIO.md`
 
@@ -488,9 +488,9 @@ Antes de considerar o monorepo pronto:
 
 - [ ] Executar `./scripts/audit-secrets.sh --report` e revisar; nenhum secret no histórico
 - [x] `.env.example` existe onde há `.env` em uso (admin, adventure, elite, rose, young-talents, dbgr, xtractor)
-- [x] `knowledge/` é fonte canônica; `apps/admin/context/` mantém cópia (ver knowledge/README.md)
+- [x] `knowledge/` é fonte canônica; `apps/core/admin/context/` mantém cópia (ver knowledge/README.md)
 - [x] Clientes seguem padrão `clients/NN_nome/projeto`
-- [x] Skills mapeiam para pastas de conhecimento (`.cursor/skills/` + `apps/admin/agents/skills/`)
+- [x] Skills mapeiam para pastas de conhecimento (`.cursor/skills/` + `apps/core/admin/agents/skills/`)
 - [x] AGENTS.md e .cursor/rules estão configurados
 - [x] pnpm workspaces funcionam em `apps/`, `packages/` e `tools/`
 - [x] README raiz explica estrutura e como contribuir
@@ -519,7 +519,7 @@ Antes de considerar o monorepo pronto:
 
 ---
 
-## Fonte: apps/admin/README.md
+## Fonte: apps/core/admin/README.md
 
 # 🚀 Adventure Labs OS - Agentic Workflow
 
@@ -554,7 +554,7 @@ Os nossos agentes são inspirados em referências históricas para manter o rigo
 
 ## 🖥️ Área Admin (painel interno)
 
-O painel interno da equipe fica em `apps/admin` (Next.js, App Router). O app está todo na raiz de `apps/admin` (sem subpasta `apps/admin/apps/admin`).
+O painel interno da equipe fica em `apps/core/admin` (Next.js, App Router). O app está todo na raiz de `apps/core/admin` (sem subpasta `apps/core/admin/apps/core/admin`).
 
 ### Pré-requisitos
 
@@ -565,10 +565,10 @@ O painel interno da equipe fica em `apps/admin` (Next.js, App Router). O app est
 ### Testar local
 
 1. **Instalar dependências**  
-   Na raiz do repositório: `pnpm install` (ou, só para o admin: `cd apps/admin && pnpm install`).
+   Na raiz do repositório: `pnpm install` (ou, só para o admin: `cd apps/core/admin && pnpm install`).
 
 2. **Variáveis de ambiente**  
-   Copie `apps/admin/.env.example` para **`apps/admin/.env.local`** e preencha:
+   Copie `apps/core/admin/.env.example` para **`apps/core/admin/.env.local`** e preencha:
    - `NEXT_PUBLIC_SUPABASE_URL` (ex.: `https://ftctmseyrqhckutpfdeq.supabase.co`)
    - `NEXT_PUBLIC_SUPABASE_ANON_KEY` (chave anon do projeto)
 
@@ -590,7 +590,7 @@ O painel interno da equipe fica em `apps/admin` (Next.js, App Router). O app est
 
 1. **Importar o repositório** no [Vercel](https://vercel.com). Em **Settings** → **General** → **Root Directory**:
    - Se o projeto Vercel estiver ligado ao repositório **admin** (ex.: `adventurelabsbrasil/admin`): deixe **Root Directory em branco** (ou `.`) — a raiz do clone já é o app.
-   - Se estiver ligado ao **monorepo** (ex.: `adventurelabsbrasil/adventure-labs`) e o admin estiver em subpasta: use **Root Directory** `apps/admin`.
+   - Se estiver ligado ao **monorepo** (ex.: `adventurelabsbrasil/adventure-labs`) e o admin estiver em subpasta: use **Root Directory** `apps/core/admin`.
    Em **Build & Development Settings**:
    - **Framework Preset:** Next.js (auto)
    - **Build Command:** em branco (usa `next build`) ou `pnpm run build`
@@ -650,7 +650,7 @@ Roadmap detalhado: [context/00_GESTAO_CORPORATIVA/proximos_passos_admin.md](cont
 
 ---
 
-## Fonte: apps/admin/agents/skills/README.md
+## Fonte: apps/core/admin/agents/skills/README.md
 
 # Skills — Executores da Arquitetura Agêntica
 
@@ -769,7 +769,7 @@ Documento de arquitetura: `context/06_CONHECIMENTO/arquitetura-agentic-csuite-sk
 
 ---
 
-## Fonte: apps/admin/n8n_workflows/README.md
+## Fonte: apps/core/admin/n8n_workflows/README.md
 
 # Workflows n8n — Admin Adventure Labs
 
@@ -815,22 +815,22 @@ n8n_workflows/
 
 ## Importar no n8n (CLI)
 
-O script carrega credenciais de `apps/admin/.env.local` ou de **`GEMINI_CLI/.env`** (repositório irmão). Variáveis: `N8N_API_URL` e `N8N_API_TOKEN` (ou no GEMINI_CLI: `N8N_HOST_URL` e `N8N_API_KEY`).
+O script carrega credenciais de `apps/core/admin/.env.local` ou de **`GEMINI_CLI/.env`** (repositório irmão). Variáveis: `N8N_API_URL` e `N8N_API_TOKEN` (ou no GEMINI_CLI: `N8N_HOST_URL` e `N8N_API_KEY`).
 
 **Executar a partir da raiz do repositório `01_ADVENTURE_LABS`:**
 
 ```bash
 # C-Suite
-./apps/admin/scripts/n8n/import-to-railway.sh "n8n_workflows/C-Suite Autonomous Loop - V11 (Fase 4_ Paralelização + Histórico + Founder Reports).json"
+./apps/core/admin/scripts/n8n/import-to-railway.sh "n8n_workflows/C-Suite Autonomous Loop - V11 (Fase 4_ Paralelização + Histórico + Founder Reports).json"
 
 # Lara (Meta Ads)
-./apps/admin/scripts/n8n/import-to-railway.sh "apps/admin/n8n_workflows/meta_ads_agent/production/lara-meta-ads-agent-v1.json"
+./apps/core/admin/scripts/n8n/import-to-railway.sh "apps/core/admin/n8n_workflows/meta_ads_agent/production/lara-meta-ads-agent-v1.json"
 
 # Sueli (Conciliação bancária)
-./apps/admin/scripts/n8n/import-to-railway.sh "apps/admin/n8n_workflows/sueli/sueli-conciliacao-bancaria-v1.json"
+./apps/core/admin/scripts/n8n/import-to-railway.sh "apps/core/admin/n8n_workflows/sueli/sueli-conciliacao-bancaria-v1.json"
 ```
 
-Ver: [apps/admin/scripts/n8n/import-to-railway.sh](../scripts/n8n/import-to-railway.sh).
+Ver: [apps/core/admin/scripts/n8n/import-to-railway.sh](../scripts/n8n/import-to-railway.sh).
 
 ## Documentação
 
@@ -848,7 +848,7 @@ Ver: [apps/admin/scripts/n8n/import-to-railway.sh](../scripts/n8n/import-to-rail
 
 ---
 
-## Fonte: apps/admin/n8n_workflows/csuite/README.md
+## Fonte: apps/core/admin/n8n_workflows/csuite/README.md
 
 # C-Suite Autonomous Loop — Versionamento
 
@@ -881,7 +881,7 @@ csuite/
 
 ### Via CLI (API REST — n8n no Railway)
 
-Com `N8N_API_URL` e `N8N_API_TOKEN` em `apps/admin/.env.local`:
+Com `N8N_API_URL` e `N8N_API_TOKEN` em `apps/core/admin/.env.local`:
 
 ```bash
 ./scripts/n8n/import-to-railway.sh
@@ -911,7 +911,7 @@ Os nós **GitHub API Tool** (usados pelos C-Levels) consultam a **Search API** (
 
 ---
 
-## Fonte: apps/admin/n8n_workflows/meta_ads_agent/README.md
+## Fonte: apps/core/admin/n8n_workflows/meta_ads_agent/README.md
 
 # Lara — Meta Ads Agent (n8n)
 
@@ -946,7 +946,7 @@ Variável opcional:
 
 ## Importar no n8n (CLI)
 
-A partir da raiz do repositório (ou de `apps/admin`):
+A partir da raiz do repositório (ou de `apps/core/admin`):
 
 ```bash
 # Versão econômica (recomendada para diário)
@@ -956,7 +956,7 @@ A partir da raiz do repositório (ou de `apps/admin`):
 ./scripts/n8n/import-to-railway.sh "n8n_workflows/meta_ads_agent/production/lara-meta-ads-agent-v2.json"
 ```
 
-Credenciais do script: `N8N_API_URL` e `N8N_API_TOKEN` em `apps/admin/.env.local`.
+Credenciais do script: `N8N_API_URL` e `N8N_API_TOKEN` em `apps/core/admin/.env.local`.
 
 ## Estrutura
 
@@ -979,7 +979,7 @@ Credenciais do script: `N8N_API_URL` e `N8N_API_TOKEN` em `apps/admin/.env.local
 
 ---
 
-## Fonte: apps/admin/n8n_workflows/sueli/README.md
+## Fonte: apps/core/admin/n8n_workflows/sueli/README.md
 
 # Sueli — Agente de Conciliação Bancária (n8n)
 
@@ -1021,7 +1021,7 @@ Se o Admin estiver em outro domínio, edite no nó "Get Config" a URL para `http
 A partir da raiz do repositório `01_ADVENTURE_LABS`:
 
 ```bash
-./apps/admin/scripts/n8n/import-to-railway.sh "apps/admin/n8n_workflows/sueli/sueli-conciliacao-bancaria-v1.json"
+./apps/core/admin/scripts/n8n/import-to-railway.sh "apps/core/admin/n8n_workflows/sueli/sueli-conciliacao-bancaria-v1.json"
 ```
 
 Requer `N8N_API_URL` e `N8N_API_TOKEN` (ou equivalentes do script). Após importar, criar/associar credenciais no n8n: Gemini (Google PaLM/Gemini), Omie (HTTP ou variáveis no body), Google Sheets (OAuth2 se usar API), webhook Google Chat.
@@ -1042,13 +1042,13 @@ Contém: objetivo, quando usar, input esperado, passos e output esperado. A exec
 
 ---
 
-## Fonte: apps/admin/public/context-docs/README.md
+## Fonte: apps/core/admin/public/context-docs/README.md
 
 # Base de Conhecimento
 
 Taxonomia 00–99, espelho do Google Drive da agência.
 
-**Fonte canônica do monorepo.** O `apps/admin/context/` mantém cópia para uso interno do Admin; sincronizar quando houver alterações relevantes.
+**Fonte canônica do monorepo.** O `apps/core/admin/context/` mantém cópia para uso interno do Admin; sincronizar quando houver alterações relevantes.
 
 ## Estrutura
 
@@ -1064,7 +1064,7 @@ Taxonomia 00–99, espelho do Google Drive da agência.
 
 ---
 
-## Fonte: apps/admin/public/context-docs/99_ARQUIVO/README.md
+## Fonte: apps/core/admin/public/context-docs/99_ARQUIVO/README.md
 
 # 99_ARQUIVO
 
@@ -1089,7 +1089,7 @@ CSV e `import-projects-config.json` estão no `.gitignore`; o SQL gerado também
 
 ---
 
-## Fonte: apps/admin/public/agents-docs/skills/README.md
+## Fonte: apps/core/admin/public/agents-docs/skills/README.md
 
 # Skills — Executores da Arquitetura Agêntica
 
@@ -1206,7 +1206,7 @@ Documento de arquitetura: `context/06_CONHECIMENTO/arquitetura-agentic-csuite-sk
 
 ---
 
-## Fonte: apps/admin/supabase/README.md
+## Fonte: apps/core/admin/supabase/README.md
 
 # Supabase — Adventure Labs
 
@@ -1236,7 +1236,7 @@ As migrations em `migrations/` usam o prefixo `adv_*`. Se alguma relação já e
 
 ---
 
-## Fonte: apps/admin/docs/PLANO_SKILL_GOOGLE_DRIVE_ADVENTURE.md
+## Fonte: apps/core/admin/docs/PLANO_SKILL_GOOGLE_DRIVE_ADVENTURE.md
 
 # Plano: Skill de Acesso ao Google Drive da Adventure
 
@@ -1332,17 +1332,17 @@ Quando a API existir:
 
 | Artefato     | Local                                                      |
 | ------------ | ---------------------------------------------------------- |
-| Plano        | `apps/admin/docs/PLANO_SKILL_GOOGLE_DRIVE_ADVENTURE.md`    |
-| Skill        | `apps/admin/agents/skills/google-drive-adventure/SKILL.md` |
-| Grove        | `apps/admin/agents/grove_ceo.md`                           |
-| Ohno (COO)   | `apps/admin/packages/ai-core/personas/ohno_coo.md`                            |
-| Catálogo     | `apps/admin/agents/skills/README.md`                       |
-| API (futuro) | `apps/admin/src/app/api/gdrive/...`                        |
+| Plano        | `apps/core/admin/docs/PLANO_SKILL_GOOGLE_DRIVE_ADVENTURE.md`    |
+| Skill        | `apps/core/admin/agents/skills/google-drive-adventure/SKILL.md` |
+| Grove        | `apps/core/admin/agents/grove_ceo.md`                           |
+| Ohno (COO)   | `apps/core/admin/packages/ai-core/personas/ohno_coo.md`                            |
+| Catálogo     | `apps/core/admin/agents/skills/README.md`                       |
+| API (futuro) | `apps/core/admin/src/app/api/gdrive/...`                        |
 
 
 ---
 
-## Fonte: apps/adventure/README.md
+## Fonte: apps/core/adventure/README.md
 
 # CRM Adventure Labs
 
@@ -1441,7 +1441,7 @@ Proprietário - Adventure Labs
 
 ---
 
-## Fonte: apps/adventure/docs/README.md
+## Fonte: apps/core/adventure/docs/README.md
 
 # Documentação - Adventure CRM
 
@@ -1510,7 +1510,7 @@ Proprietário - Adventure Labs
 
 ---
 
-## Fonte: apps/adventure/extension/README.md
+## Fonte: apps/core/adventure/extension/README.md
 
 # Extensão Chrome - Adventure Labs CRM WhatsApp
 
@@ -1577,7 +1577,7 @@ Ver `SUPABASE_MIGRATION.md`.
 
 ---
 
-## Fonte: apps/adventure/functions/README.md
+## Fonte: apps/core/adventure/functions/README.md
 
 # Firebase Functions — descontinuado
 
@@ -1593,7 +1593,7 @@ Configs antigas de Firebase (firebase.json, firestore.indexes, deploy-functions)
 
 ---
 
-## Fonte: apps/elite/README.md
+## Fonte: apps/core/elite/README.md
 
 # ELITE – Método Elite (elite.adventurelabs.com.br)
 
@@ -1727,7 +1727,7 @@ Documentos e código obsoletos ou de outro projeto estão em **`docs/archive/`**
 
 ---
 
-## Fonte: apps/finfeed/README.md
+## Fonte: apps/labs/finfeed/README.md
 
 # Finfeed — Gastos no Cartão Nubank
 
@@ -2398,8 +2398,8 @@ Campanhas, entregas, copy, KPIs (ROAS, CPA, CPL, CVR).
 Variáveis de ambiente do **Admin** para o cliente Lidera.
 
 - **Subdomínio:** `lidera.admin.adventurelabs.com.br`
-- **Vercel:** criar projeto (ex. `admin-lidera`), Root Directory `apps/admin`, colar as variáveis de `.env.example` em Settings → Environment Variables.
-- **Local:** copiar `.env.example` para `apps/admin/.env.local` e preencher com valores reais.
+- **Vercel:** criar projeto (ex. `admin-lidera`), Root Directory `apps/core/admin`, colar as variáveis de `.env.example` em Settings → Environment Variables.
+- **Local:** copiar `.env.example` para `apps/core/admin/.env.local` e preencher com valores reais.
 
 Ver `docs/ADMIN_POR_CLIENTE_SUBDOMINIO.md` na raiz do repositório.
 
@@ -3606,8 +3606,8 @@ supabase/
 Variáveis de ambiente do **Admin** para o cliente Rose.
 
 - **Subdomínio:** `rose.admin.adventurelabs.com.br`
-- **Vercel:** criar projeto (ex. `admin-rose`), Root Directory `apps/admin`, colar as variáveis de `.env.example` em Settings → Environment Variables.
-- **Local:** copiar `.env.example` para `apps/admin/.env.local` e preencher com valores reais.
+- **Vercel:** criar projeto (ex. `admin-rose`), Root Directory `apps/core/admin`, colar as variáveis de `.env.example` em Settings → Environment Variables.
+- **Local:** copiar `.env.example` para `apps/core/admin/.env.local` e preencher com valores reais.
 
 Ver `docs/ADMIN_POR_CLIENTE_SUBDOMINIO.md` na raiz do repositório.
 
@@ -3780,8 +3780,8 @@ Depois de rodar, use o dashboard normalmente; o gráfico e a tabela passam a ter
 Variáveis de ambiente do **Admin** para o cliente Young.
 
 - **Subdomínio:** `young.admin.adventurelabs.com.br`
-- **Vercel:** criar projeto (ex. `admin-young`), Root Directory `apps/admin`, colar as variáveis de `.env.example` em Settings → Environment Variables.
-- **Local:** copiar `.env.example` para `apps/admin/.env.local` e preencher com valores reais.
+- **Vercel:** criar projeto (ex. `admin-young`), Root Directory `apps/core/admin`, colar as variáveis de `.env.example` em Settings → Environment Variables.
+- **Local:** copiar `.env.example` para `apps/core/admin/.env.local` e preencher com valores reais.
 
 Ver `docs/ADMIN_POR_CLIENTE_SUBDOMINIO.md` na raiz do repositório.
 
@@ -4318,7 +4318,7 @@ Componentes UI compartilhados entre apps (Admin, Adventure, Elite, Finfeed, clie
 
 Taxonomia 00–99, espelho do Google Drive da agência.
 
-**Fonte canônica do monorepo.** O `apps/admin/context/` mantém cópia para uso interno do Admin; sincronizar quando houver alterações relevantes.
+**Fonte canônica do monorepo.** O `apps/core/admin/context/` mantém cópia para uso interno do Admin; sincronizar quando houver alterações relevantes.
 
 ## Estrutura
 
@@ -4561,10 +4561,10 @@ updated: 2026-03-07
 
 O monorepo já possui base sólida para expansão agentic:
 
-- **C-Suite em n8n:** Loop autônomo **V11 em produção** (paralelização, histórico, founder reports); versões v7–v9 em `apps/admin/n8n_workflows/csuite/`. Memória pgvector; integração Admin (context-docs API, tarefa→issue GitHub). Ver [n8n_workflows/README.md](../apps/admin/n8n_workflows/README.md).
+- **C-Suite em n8n:** Loop autônomo **V11 em produção** (paralelização, histórico, founder reports); versões v7–v9 em `apps/core/admin/n8n_workflows/csuite/`. Memória pgvector; integração Admin (context-docs API, tarefa→issue GitHub). Ver [n8n_workflows/README.md](../apps/core/admin/n8n_workflows/README.md).
 - **Knowledge:** `knowledge/` (00_GESTAO_CORPORATIVA a 99_ARQUIVO) como fonte canônica; [PLANO_MONOREPO_ADVENTURE_LABS.md](../../PLANO_MONOREPO_ADVENTURE_LABS.md) define taxonomia e princípios de segurança.
-- **Skills:** 21 skills em `apps/admin/agents/skills/` mapeadas por C-Level ([arquitetura-agentic-csuite-skills.md](../knowledge/06_CONHECIMENTO/arquitetura-agentic-csuite-skills.md)).
-- **Scripts e integrações:** `scripts/audit-secrets.sh`, `apps/admin/scripts/n8n/import-to-railway.sh`, `validate-json.sh`, `commit-workflow.sh`; API Admin: `GET /api/csuite/context-docs`, `GET/POST /api/cron/daily-summary` (CRON_SECRET).
+- **Skills:** 21 skills em `apps/core/admin/agents/skills/` mapeadas por C-Level ([arquitetura-agentic-csuite-skills.md](../knowledge/06_CONHECIMENTO/arquitetura-agentic-csuite-skills.md)).
+- **Scripts e integrações:** `scripts/audit-secrets.sh`, `apps/core/admin/scripts/n8n/import-to-railway.sh`, `validate-json.sh`, `commit-workflow.sh`; API Admin: `GET /api/csuite/context-docs`, `GET/POST /api/cron/daily-summary` (CRON_SECRET).
 
 **Restrições assumidas:** Sem atendimento ou interação direta com clientes humanos; apenas agentes↔agentes e equipe interna↔agentes. Foco em organização da empresa, gestão interna e ferramentas para clientes (dados/relatórios/backlog), nunca em chat ou suporte ao cliente final.
 
@@ -4620,7 +4620,7 @@ Fluxos organizados por domínio, com complementaridade e profundidade.
 
 | Fluxo | Objetivo | Gatilho | Dados | Saídas | Profundidade |
 |-------|----------|---------|------|--------|--------------|
-| **C-Suite Autonomous Loop** | Board meeting autônomo; síntese Grove | Schedule (ex.: 12:30) + Webhook | Tasks, Ideias, Vector Memory, **Founder Reports** (últimos 7 dias), context-docs | Issue GitHub, pgvector, Google Chat | **V11 em produção** (2026-03-09). Relatórios founder integrados. Manutenção: [apps/admin/n8n_workflows/README.md](../apps/admin/n8n_workflows/README.md) — ver [CSuite_relatorios_founder](CSuite_relatorios_founder.md) |
+| **C-Suite Autonomous Loop** | Board meeting autônomo; síntese Grove | Schedule (ex.: 12:30) + Webhook | Tasks, Ideias, Vector Memory, **Founder Reports** (últimos 7 dias), context-docs | Issue GitHub, pgvector, Google Chat | **V11 em produção** (2026-03-09). Relatórios founder integrados. Manutenção: [apps/core/admin/n8n_workflows/README.md](../apps/core/admin/n8n_workflows/README.md) — ver [CSuite_relatorios_founder](CSuite_relatorios_founder.md) |
 | **Board Meet (preparação)** | Montar pauta e números para reunião humana | Schedule (ex.: sexta 17h) ou antes do Loop | knowledge/00, indicadores, SLA, one-pager | Doc/issue com pauta e métricas | Nível 2: agregar dados de múltiplas fontes |
 | **Flash CEO (resumo executivo)** | Resumo semanal para founder | Após C-Suite ou Schedule separado | Decisões Grove + ideias aprovadas + lacunas | Issue ou doc em knowledge/ | Nível 2: ler resumo-executivo + questionário e sugerir atualizações |
 
@@ -4663,7 +4663,7 @@ Fluxos organizados por domínio, com complementaridade e profundidade.
 
 | Fluxo | Objetivo | Gatilho | Dados | Saídas | Profundidade |
 |-------|----------|---------|------|--------|--------------|
-| **Lara — Meta Ads Sync** | Sync diário de métricas Meta Ads (clientes + contas Adventure); separação por `owner_type`; após N dias gera relatório analítico (persona Lara + skills) via POST /api/lara/analyze e grava em adv_founder_reports | Schedule (09:00) + Webhook | GET /api/meta/accounts, /mapping, /accounts/:id/insights; POST /api/meta/daily; GET /api/meta/daily; POST /api/lara/analyze; POST /api/csuite/founder-report | adv_meta_ads_daily, adv_founder_reports | **Implementado** (2026-03). Workflow: [apps/admin/n8n_workflows/meta_ads_agent/](../apps/admin/n8n_workflows/meta_ads_agent/). Relatório C-Suite gerado por análise (LLM) via /api/lara/analyze. Memória: adv_lara_memory; APIs: /api/lara/memory, /api/meta/topics. Requer GEMINI_API_KEY no Admin. |
+| **Lara — Meta Ads Sync** | Sync diário de métricas Meta Ads (clientes + contas Adventure); separação por `owner_type`; após N dias gera relatório analítico (persona Lara + skills) via POST /api/lara/analyze e grava em adv_founder_reports | Schedule (09:00) + Webhook | GET /api/meta/accounts, /mapping, /accounts/:id/insights; POST /api/meta/daily; GET /api/meta/daily; POST /api/lara/analyze; POST /api/csuite/founder-report | adv_meta_ads_daily, adv_founder_reports | **Implementado** (2026-03). Workflow: [apps/core/admin/n8n_workflows/meta_ads_agent/](../apps/core/admin/n8n_workflows/meta_ads_agent/). Relatório C-Suite gerado por análise (LLM) via /api/lara/analyze. Memória: adv_lara_memory; APIs: /api/lara/memory, /api/meta/topics. Requer GEMINI_API_KEY no Admin. |
 | **Status por cliente** | Agregar status de entregas por cliente (Lidera, Rose, Young, etc.) | Schedule (ex.: semanal) | adv_tasks, adv_projects (tenant/cliente) | Doc em knowledge/04 ou issue "Status clientes" | Nível 2 |
 | **Alertas de entrega (interno)** | Prazo de entrega por projeto/cliente sem notificar o cliente | Schedule | SLA + due_at + project | Google Chat ou issue interna | Nível 2 |
 | **Relatório de uso (por app cliente)** | Métricas de uso de apps para a equipe | API dos apps → n8n (agregar) | Logs/analytics internos | Dashboard interno ou doc | Nível 3: quando houver API de uso |
@@ -4698,7 +4698,7 @@ Fluxos organizados por domínio, com complementaridade e profundidade.
 
 ### 4.2 Skills (mapeamento para nós e fluxos)
 
-As 21 skills em `apps/admin/agents/skills/` devem ser usadas como **prompt/contexto** nos nós de agente:
+As 21 skills em `apps/core/admin/agents/skills/` devem ser usadas como **prompt/contexto** nos nós de agente:
 
 - **CTO:** code-review, api-routes, ui-components, supabase-migrations, monorepo-pnpm, rls-tenant, n8n
 - **COO:** sla-prazos-entrega, fluxo-vida-projeto, kanban-board-checklist
@@ -4726,7 +4726,7 @@ As 21 skills em `apps/admin/agents/skills/` devem ser usadas como **prompt/conte
 - **No n8n:** IDs, status, títulos, métricas agregadas, textos de decisão; URLs do Admin e do próprio n8n; PAT GitHub com permissão mínima.
 - **Saídas:** Issues e docs em knowledge/ sem dados sensíveis; Google Chat apenas canais internos; relatórios financeiros só com métricas já aprovadas para compartilhamento interno.
 - **Auditoria:** Fluxo "Auditoria de secrets" dispara `./scripts/audit-secrets.sh --report` (ou API que o invoca); resultado em _internal (gitignore); resumo commitável para visibilidade.
-- **Versionamento de workflows:** JSON em `workflows/n8n/` e `apps/admin/n8n_workflows/` sem URLs de webhook ou chaves; usar variáveis de ambiente no n8n (Railway).
+- **Versionamento de workflows:** JSON em `workflows/n8n/` e `apps/core/admin/n8n_workflows/` sem URLs de webhook ou chaves; usar variáveis de ambiente no n8n (Railway).
 
 ---
 
@@ -4764,18 +4764,18 @@ As 21 skills em `apps/admin/agents/skills/` devem ser usadas como **prompt/conte
 
 - Estrutura do monorepo: `PLANO_MONOREPO_ADVENTURE_LABS.md` (raiz GitHub)
 - C-Suite e skills: `knowledge/06_CONHECIMENTO/arquitetura-agentic-csuite-skills.md`
-- Documentação n8n C-Suite: `apps/admin/docs/n8n-csuite-workflow-documentacao.md`, `csuite-n8n-setup-guide.md`
+- Documentação n8n C-Suite: `apps/core/admin/docs/n8n-csuite-workflow-documentacao.md`, `csuite-n8n-setup-guide.md`
 - APIs e cron: `knowledge/00_GESTAO_CORPORATIVA/processos/api-cron-daily-summary.md`, `n8n-workflow-resumo-diario-checklist.md`
 - Backlog de automações: `knowledge/00_GESTAO_CORPORATIVA/backlogs_roadmap/backlog-automacoes.md`
 - Segurança e vault: `PLANO_MONOREPO_ADVENTURE_LABS.md` §3, `docs/FASE_6_GIT_E_REPOSITORIO.md`
-- Scripts: `scripts/audit-secrets.sh`, `apps/admin/scripts/n8n/import-to-railway.sh`, `validate-json.sh`, `commit-workflow.sh`
+- Scripts: `scripts/audit-secrets.sh`, `apps/core/admin/scripts/n8n/import-to-railway.sh`, `validate-json.sh`, `commit-workflow.sh`
 
 Este plano não inclui as ações de implementação passo a passo (criação de cada nó no n8n), mas define a estrutura completa dos fluxos, sua complementaridade, profundidade, segurança e ordem de implementação recomendada.
 
 
 ---
 
-## Fonte: apps/finfeed/PLANO_INICIAL.md
+## Fonte: apps/labs/finfeed/PLANO_INICIAL.md
 
 # Finfeed — Plano inicial
 

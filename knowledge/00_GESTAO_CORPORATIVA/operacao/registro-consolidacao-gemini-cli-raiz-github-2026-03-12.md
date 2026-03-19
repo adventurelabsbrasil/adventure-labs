@@ -30,7 +30,7 @@ updated: 2026-03-12
 | Scripts n8n (Node.js) + package.json | **tools/n8n-scripts/** — scripts `.js`, `package.json`, `package-lock.json`, `.env.example`, `.gitignore`, README. |
 | Workflows JSON (n8n) | **workflows/n8n/** — adicionados `account_manager_pipeline.json`, `notify_google_chat_node.json`, `n8n-csuite-autonomous-loop.json`, `csuite_workflow.json`. |
 | Dump completo (all_workflows_dump.json) | **_internal/archive/n8n-dumps/** |
-| adv_client_inbox_migration.sql | **apps/admin/supabase/migrations/20260316100000_adv_client_inbox.sql** (sem conflito com migrations existentes). |
+| adv_client_inbox_migration.sql | **apps/core/admin/supabase/migrations/20260316100000_adv_client_inbox.sql** (sem conflito com migrations existentes). |
 | Relatórios Founder (relatorio_*.md, temp_admin_report_today.md) | **_internal/archive/relatorios-founder/** |
 | Pasta API (GEMINI_CLI) | **_internal/archive/gemini-cli-API/** (apenas .gitattributes + README; repo vazio). |
 | meus-workflows (backup) | **_internal/archive/gemini-cli-meus-workflows/** (JSONs; equivalentes já em workflows/n8n). |
@@ -63,7 +63,7 @@ updated: 2026-03-12
 - **Scripts n8n:** `01_ADVENTURE_LABS/tools/n8n-scripts/`
 - **Workflows n8n:** `01_ADVENTURE_LABS/workflows/n8n/`
 - **Plano monorepo:** `01_ADVENTURE_LABS/PLANO_MONOREPO_ADVENTURE_LABS.md`
-- **Taxonomia e contexto:** `knowledge/` (00_GESTAO_CORPORATIVA a 99_ARQUIVO); Admin usa `apps/admin/context` (symlink para knowledge quando aplicável).
+- **Taxonomia e contexto:** `knowledge/` (00_GESTAO_CORPORATIVA a 99_ARQUIVO); Admin usa `apps/core/admin/context` (symlink para knowledge quando aplicável).
 
 ---
 

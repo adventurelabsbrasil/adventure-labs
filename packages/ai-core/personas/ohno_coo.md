@@ -15,9 +15,9 @@ RESPONSABILIDADES (O QUE VOCÊ GARANTE VIA SKILLS)
 - Prazos de entrega documentados e alinhados ao SLA (skill sla-prazos-entrega).
 - Ciclo de vida de projetos respeitado: Briefing -> Implementacao -> Execucao -> Relatorio (skill fluxo-vida-projeto).
 - Kanbans e quadros consistentes: separação interno vs clientes, status e listas padronizados (skill kanban-board-checklist).
-- **Asana:** monitorar quadro, gerar resumos para `knowledge/` e (fase 2) espelho C-Suite — agente de apoio **Andon** (`apps/admin/agents/andon_asana/`), skill **asana-csuite-ingest**; escrita destrutiva no Asana só com OK do Founder (ver REDLINES do Andon).
+- **Asana:** monitorar quadro, gerar resumos para `knowledge/` e (fase 2) espelho C-Suite — agente de apoio **Andon** (`apps/core/admin/agents/andon_asana/`), skill **asana-csuite-ingest**; escrita destrutiva no Asana só com OK do Founder (ver REDLINES do Andon).
 - Consultar ou atualizar documentos no Google Drive da Adventure (leitura/escrita): listar pastas, buscar por nome, obter conteúdo, criar/atualizar doc; regra de sobrescrita aplicável (skill google-drive-adventure).
-- Diagnóstico de organização em Docs/Sheets/Slides e arquivos (Excel/CSV/OFX) no Drive: agente de apoio **Google Workspace Advisor** (`apps/admin/agents/google_workspace_advisor/`), skills **google-drive-adventure** + **google-workspace-inspector**.
+- Diagnóstico de organização em Docs/Sheets/Slides e arquivos (Excel/CSV/OFX) no Drive: agente de apoio **Google Workspace Advisor** (`apps/core/admin/agents/google_workspace_advisor/`), skills **google-drive-adventure** + **google-workspace-inspector**.
 
 SKILLS ASSOCIADAS
 

@@ -55,7 +55,7 @@ O CTO (Torvalds) **planeja, delega e revisa**; não executa código. Por isso o 
 
 | Opção | Onde | Papel |
 |-------|------|--------|
-| **Skill (Cursor)** | `apps/admin/agents/skills/cto-executar-item-pauta/` ou `cto-pauta-issues-diaria` | O Torvalds (ou Grove) **delega** a essa skill quando for “executar item X da pauta”. A skill descreve: obter issue, criar branch, implementar, abrir PR, Founder aprova. Quem “executa” no Cursor pode ser humano ou agente seguindo a skill. |
+| **Skill (Cursor)** | `apps/core/admin/agents/skills/cto-executar-item-pauta/` ou `cto-pauta-issues-diaria` | O Torvalds (ou Grove) **delega** a essa skill quando for “executar item X da pauta”. A skill descreve: obter issue, criar branch, implementar, abrir PR, Founder aprova. Quem “executa” no Cursor pode ser humano ou agente seguindo a skill. |
 | **Tool (n8n)** | Novo nó “Tool” no CTO Agent (ex.: HTTP Request para API do Admin ou GitHub) | Limitado: n8n pode abrir branch/PR via GitHub API, mas **não** implementa o código. Serve para “registrar” que um item foi escolhido ou criar branch vazia/PR draft. |
 | **Agente no fluxo n8n** | Segundo agente “Executor” após o CTO | Também não escreve código; no máximo orquestra chamadas de API. A implementação real continua no Cursor/repo. |
 
@@ -83,5 +83,5 @@ Opcional: um **tool** no n8n que chame uma API do Admin para “registrar item d
 ## 4. Arquivos
 
 - **Workflow:** criar `csuite-loop-v10.json` a partir do V9 com as alterações acima (nomes normalizados + Fetch GitHub Issues New + Build Context + CTO prompt + opcional founder-report).
-- **Skills:** `apps/admin/agents/skills/cto-pauta-issues-diaria/SKILL.md` e, se desejado, `cto-executar-item-pauta/SKILL.md` (ou uma única skill com duas “modos”: montar pauta e executar item).
+- **Skills:** `apps/core/admin/agents/skills/cto-pauta-issues-diaria/SKILL.md` e, se desejado, `cto-executar-item-pauta/SKILL.md` (ou uma única skill com duas “modos”: montar pauta e executar item).
 - **Docs:** atualizar `workflows/n8n/csuite/README.md` com V10, nomes normalizados e papel da skill como executor.

@@ -13,8 +13,9 @@ body:
     attributes:
       label: Área
       options:
-        - apps/admin
-        - apps/adventure
+        - apps/core/admin
+        - apps/core/adventure
+        - apps/labs
         - clients
         - knowledge
         - tools

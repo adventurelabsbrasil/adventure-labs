@@ -1,6 +1,6 @@
 ---
 description: Contratos de contextos e tipos críticos do app Adventure (CRM) para evitar propriedades inventadas.
-globs: apps/adventure/src/**/*.{ts,tsx}
+globs: apps/core/adventure/src/**/*.{ts,tsx}
 alwaysApply: false
 ---
 

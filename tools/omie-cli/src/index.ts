@@ -15,9 +15,9 @@ import {
 } from "./client";
 import { listarContasReceber, listarContasPagar } from "./finance";
 
-// Carrega .env do diretório da CLI ou do monorepo (apps/admin)
+// Carrega .env do diretório da CLI ou do monorepo (apps/core/admin)
 dotenv.config({ path: path.join(__dirname, "..", ".env") });
-const adminEnv = path.resolve(__dirname, "../../../apps/admin/.env.local");
+const adminEnv = path.resolve(__dirname, "../../../apps/core/admin/.env.local");
 if (fs.existsSync(adminEnv)) {
   dotenv.config({ path: adminEnv });
 }
@@ -26,7 +26,7 @@ function getConfig(): OmieConfig {
   const appKey = process.env.OMIE_APP_KEY;
   const appSecret = process.env.OMIE_APP_SECRET;
   if (!appKey || !appSecret) {
-    console.error("Erro: defina OMIE_APP_KEY e OMIE_APP_SECRET no .env (ou em apps/admin/.env.local)");
+    console.error("Erro: defina OMIE_APP_KEY e OMIE_APP_SECRET no .env (ou em apps/core/admin/.env.local)");
     process.exit(1);
   }
   return { appKey, appSecret };

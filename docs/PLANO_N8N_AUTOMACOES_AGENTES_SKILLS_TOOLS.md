@@ -11,10 +11,10 @@ updated: 2026-03-07
 
 O monorepo já possui base sólida para expansão agentic:
 
-- **C-Suite em n8n:** Loop autônomo **V11 em produção** (paralelização, histórico, founder reports); versões v7–v9 em `apps/admin/n8n_workflows/csuite/`. Memória pgvector; integração Admin (context-docs API, tarefa→issue GitHub). Ver [n8n_workflows/README.md](../apps/admin/n8n_workflows/README.md).
+- **C-Suite em n8n:** Loop autônomo **V11 em produção** (paralelização, histórico, founder reports); versões v7–v9 em `apps/core/admin/n8n_workflows/csuite/`. Memória pgvector; integração Admin (context-docs API, tarefa→issue GitHub). Ver [n8n_workflows/README.md](../apps/core/admin/n8n_workflows/README.md).
 - **Knowledge:** `knowledge/` (00_GESTAO_CORPORATIVA a 99_ARQUIVO) como fonte canônica; [PLANO_MONOREPO_ADVENTURE_LABS.md](../../PLANO_MONOREPO_ADVENTURE_LABS.md) define taxonomia e princípios de segurança.
-- **Skills:** 21 skills em `apps/admin/agents/skills/` mapeadas por C-Level ([arquitetura-agentic-csuite-skills.md](../knowledge/06_CONHECIMENTO/arquitetura-agentic-csuite-skills.md)).
-- **Scripts e integrações:** `scripts/audit-secrets.sh`, `apps/admin/scripts/n8n/import-to-railway.sh`, `validate-json.sh`, `commit-workflow.sh`; API Admin: `GET /api/csuite/context-docs`, `GET/POST /api/cron/daily-summary` (CRON_SECRET).
+- **Skills:** 21 skills em `apps/core/admin/agents/skills/` mapeadas por C-Level ([arquitetura-agentic-csuite-skills.md](../knowledge/06_CONHECIMENTO/arquitetura-agentic-csuite-skills.md)).
+- **Scripts e integrações:** `scripts/audit-secrets.sh`, `apps/core/admin/scripts/n8n/import-to-railway.sh`, `validate-json.sh`, `commit-workflow.sh`; API Admin: `GET /api/csuite/context-docs`, `GET/POST /api/cron/daily-summary` (CRON_SECRET).
 
 **Restrições assumidas:** Sem atendimento ou interação direta com clientes humanos; apenas agentes↔agentes e equipe interna↔agentes. Foco em organização da empresa, gestão interna e ferramentas para clientes (dados/relatórios/backlog), nunca em chat ou suporte ao cliente final.
 
@@ -70,7 +70,7 @@ Fluxos organizados por domínio, com complementaridade e profundidade.
 
 | Fluxo | Objetivo | Gatilho | Dados | Saídas | Profundidade |
 |-------|----------|---------|------|--------|--------------|
-| **C-Suite Autonomous Loop** | Board meeting autônomo; síntese Grove | Schedule (ex.: 12:30) + Webhook | Tasks, Ideias, Vector Memory, **Founder Reports** (últimos 7 dias), context-docs | Issue GitHub, pgvector, Google Chat | **V11 em produção** (2026-03-09). Relatórios founder integrados. Manutenção: [apps/admin/n8n_workflows/README.md](../apps/admin/n8n_workflows/README.md) — ver [CSuite_relatorios_founder](CSuite_relatorios_founder.md) |
+| **C-Suite Autonomous Loop** | Board meeting autônomo; síntese Grove | Schedule (ex.: 12:30) + Webhook | Tasks, Ideias, Vector Memory, **Founder Reports** (últimos 7 dias), context-docs | Issue GitHub, pgvector, Google Chat | **V11 em produção** (2026-03-09). Relatórios founder integrados. Manutenção: [apps/core/admin/n8n_workflows/README.md](../apps/core/admin/n8n_workflows/README.md) — ver [CSuite_relatorios_founder](CSuite_relatorios_founder.md) |
 | **Board Meet (preparação)** | Montar pauta e números para reunião humana | Schedule (ex.: sexta 17h) ou antes do Loop | knowledge/00, indicadores, SLA, one-pager | Doc/issue com pauta e métricas | Nível 2: agregar dados de múltiplas fontes |
 | **Flash CEO (resumo executivo)** | Resumo semanal para founder | Após C-Suite ou Schedule separado | Decisões Grove + ideias aprovadas + lacunas | Issue ou doc em knowledge/ | Nível 2: ler resumo-executivo + questionário e sugerir atualizações |
 
@@ -113,8 +113,8 @@ Fluxos organizados por domínio, com complementaridade e profundidade.
 
 | Fluxo | Objetivo | Gatilho | Dados | Saídas | Profundidade |
 |-------|----------|---------|------|--------|--------------|
-| **Lara — Meta Ads Sync** | Sync diário de métricas Meta Ads (clientes + contas Adventure); separação por `owner_type`; após N dias gera relatório analítico (persona Lara + skills) via POST /api/lara/analyze e grava em adv_founder_reports | Schedule (09:00) + Webhook | GET /api/meta/accounts, /mapping, /accounts/:id/insights; POST /api/meta/daily; GET /api/meta/daily; POST /api/lara/analyze; POST /api/csuite/founder-report | adv_meta_ads_daily, adv_founder_reports | **Implementado** (2026-03). Workflow: [apps/admin/n8n_workflows/meta_ads_agent/](../apps/admin/n8n_workflows/meta_ads_agent/). Relatório C-Suite gerado por análise (LLM) via /api/lara/analyze. Memória: adv_lara_memory; APIs: /api/lara/memory, /api/meta/topics. Requer GEMINI_API_KEY no Admin. |
-| **Zazu — WhatsApp Grupos resumo diário (Cagan/CPO)** | Agente Zazu: buscar e consolidar mensagens do dia nos grupos de WhatsApp de clientes (worker WhatsApp Web, sem API oficial); publicar resumo em adv_founder_reports para o Cagan e C-Suite lerem | Schedule (18:00 BRT) | Worker GET /daily-messages?date=; POST /api/csuite/founder-report; opcional: POST /api/cron/whatsapp-daily (adv_whatsapp_daily) | adv_founder_reports, (opcional) adv_whatsapp_daily | **Implementado** (2026-03). Workflow: [apps/admin/n8n_workflows/whatsapp_groups_agent/](../apps/admin/n8n_workflows/whatsapp_groups_agent/). Worker: [apps/whatsapp-worker/](../apps/whatsapp-worker/). |
+| **Lara — Meta Ads Sync** | Sync diário de métricas Meta Ads (clientes + contas Adventure); separação por `owner_type`; após N dias gera relatório analítico (persona Lara + skills) via POST /api/lara/analyze e grava em adv_founder_reports | Schedule (09:00) + Webhook | GET /api/meta/accounts, /mapping, /accounts/:id/insights; POST /api/meta/daily; GET /api/meta/daily; POST /api/lara/analyze; POST /api/csuite/founder-report | adv_meta_ads_daily, adv_founder_reports | **Implementado** (2026-03). Workflow: [apps/core/admin/n8n_workflows/meta_ads_agent/](../apps/core/admin/n8n_workflows/meta_ads_agent/). Relatório C-Suite gerado por análise (LLM) via /api/lara/analyze. Memória: adv_lara_memory; APIs: /api/lara/memory, /api/meta/topics. Requer GEMINI_API_KEY no Admin. |
+| **Zazu — WhatsApp Grupos resumo diário (Cagan/CPO)** | Agente Zazu: buscar e consolidar mensagens do dia nos grupos de WhatsApp de clientes (worker WhatsApp Web, sem API oficial); publicar resumo em adv_founder_reports para o Cagan e C-Suite lerem | Schedule (18:00 BRT) | Worker GET /daily-messages?date=; POST /api/csuite/founder-report; opcional: POST /api/cron/whatsapp-daily (adv_whatsapp_daily) | adv_founder_reports, (opcional) adv_whatsapp_daily | **Implementado** (2026-03). Workflow: [apps/core/admin/n8n_workflows/whatsapp_groups_agent/](../apps/core/admin/n8n_workflows/whatsapp_groups_agent/). Worker: [apps/labs/whatsapp-worker/](../apps/labs/whatsapp-worker/). |
 | **Status por cliente** | Agregar status de entregas por cliente (Lidera, Rose, Young, etc.) | Schedule (ex.: semanal) | adv_tasks, adv_projects (tenant/cliente) | Doc em knowledge/04 ou issue "Status clientes" | Nível 2 |
 | **Alertas de entrega (interno)** | Prazo de entrega por projeto/cliente sem notificar o cliente | Schedule | SLA + due_at + project | Google Chat ou issue interna | Nível 2 |
 | **Relatório de uso (por app cliente)** | Métricas de uso de apps para a equipe | API dos apps → n8n (agregar) | Logs/analytics internos | Dashboard interno ou doc | Nível 3: quando houver API de uso |
@@ -149,7 +149,7 @@ Fluxos organizados por domínio, com complementaridade e profundidade.
 
 ### 4.2 Skills (mapeamento para nós e fluxos)
 
-As 21 skills em `apps/admin/agents/skills/` devem ser usadas como **prompt/contexto** nos nós de agente:
+As 21 skills em `apps/core/admin/agents/skills/` devem ser usadas como **prompt/contexto** nos nós de agente:
 
 - **CTO:** code-review, api-routes, ui-components, supabase-migrations, monorepo-pnpm, rls-tenant, n8n
 - **COO:** sla-prazos-entrega, fluxo-vida-projeto, kanban-board-checklist
@@ -178,7 +178,7 @@ As 21 skills em `apps/admin/agents/skills/` devem ser usadas como **prompt/conte
 - **No n8n:** IDs, status, títulos, métricas agregadas, textos de decisão; URLs do Admin e do próprio n8n; PAT GitHub com permissão mínima.
 - **Saídas:** Issues e docs em knowledge/ sem dados sensíveis; Google Chat apenas canais internos; relatórios financeiros só com métricas já aprovadas para compartilhamento interno.
 - **Auditoria:** Fluxo "Auditoria de secrets" dispara `./scripts/audit-secrets.sh --report` (ou API que o invoca); resultado em _internal (gitignore); resumo commitável para visibilidade.
-- **Versionamento de workflows:** JSON em `workflows/n8n/` e `apps/admin/n8n_workflows/` sem URLs de webhook ou chaves; usar variáveis de ambiente no n8n (Railway).
+- **Versionamento de workflows:** JSON em `workflows/n8n/` e `apps/core/admin/n8n_workflows/` sem URLs de webhook ou chaves; usar variáveis de ambiente no n8n (Railway).
 
 ---
 
@@ -216,10 +216,10 @@ As 21 skills em `apps/admin/agents/skills/` devem ser usadas como **prompt/conte
 
 - Estrutura do monorepo: `PLANO_MONOREPO_ADVENTURE_LABS.md` (raiz GitHub)
 - C-Suite e skills: `knowledge/06_CONHECIMENTO/arquitetura-agentic-csuite-skills.md`
-- Documentação n8n C-Suite: `apps/admin/docs/n8n-csuite-workflow-documentacao.md`, `csuite-n8n-setup-guide.md`
+- Documentação n8n C-Suite: `apps/core/admin/docs/n8n-csuite-workflow-documentacao.md`, `csuite-n8n-setup-guide.md`
 - APIs e cron: `knowledge/00_GESTAO_CORPORATIVA/processos/api-cron-daily-summary.md`, `n8n-workflow-resumo-diario-checklist.md`
 - Backlog de automações: `knowledge/00_GESTAO_CORPORATIVA/backlogs_roadmap/backlog-automacoes.md`
 - Segurança e vault: `PLANO_MONOREPO_ADVENTURE_LABS.md` §3, `docs/FASE_6_GIT_E_REPOSITORIO.md`
-- Scripts: `scripts/audit-secrets.sh`, `apps/admin/scripts/n8n/import-to-railway.sh`, `validate-json.sh`, `commit-workflow.sh`
+- Scripts: `scripts/audit-secrets.sh`, `apps/core/admin/scripts/n8n/import-to-railway.sh`, `validate-json.sh`, `commit-workflow.sh`
 
 Este plano não inclui as ações de implementação passo a passo (criação de cada nó no n8n), mas define a estrutura completa dos fluxos, sua complementaridade, profundidade, segurança e ordem de implementação recomendada.

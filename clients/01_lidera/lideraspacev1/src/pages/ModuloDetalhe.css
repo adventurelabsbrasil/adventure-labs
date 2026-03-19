@@ -1,0 +1,210 @@
+.modulo-detalhe-page .detalhe-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.modulo-detalhe-title-emoji {
+  display: block;
+  font-size: 3rem;
+  line-height: 1;
+  margin-bottom: var(--space-2);
+}
+
+.modulo-detalhe-banner-wrap {
+  margin-bottom: 1.5rem;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: var(--border);
+}
+
+.modulo-detalhe-banner {
+  display: block;
+  width: 100%;
+  max-height: 200px;
+  object-fit: cover;
+}
+
+.modulo-detalhe-video-wrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: var(--border);
+}
+
+.modulo-detalhe-video-iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+.modulo-detalhe-list {
+  margin: 0 0 1rem;
+  padding-left: 1.25rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.modulo-detalhe-sublist {
+  list-style: circle;
+}
+
+.modulo-detalhe-materiais {
+  list-style: none;
+  margin: 0 0 1rem;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.modulo-detalhe-material-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  text-decoration: none;
+  font-weight: 500;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  transition: transform 0.2s, box-shadow 0.2s, background 0.2s, border-color 0.2s;
+  min-height: 44px;
+}
+
+.modulo-detalhe-material-link:hover {
+  background: var(--bg-hover, #f3f4f6);
+  border-color: var(--primary);
+  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+  transform: translateY(-1px);
+}
+
+.modulo-detalhe-material-icon {
+  font-size: 1.25rem;
+}
+
+.detalhe-error {
+  color: var(--error-text) !important;
+}
+
+/* Modulo Blocks */
+.modulo-blocos-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.bloco-heading {
+  margin: var(--space-6) 0 var(--space-2);
+  font-family: var(--font-family-serif);
+  font-size: var(--font-size-xl);
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.bloco-text {
+  margin: 0;
+  color: var(--text-primary);
+  line-height: 1.7;
+}
+
+.bloco-text .rich-text-content {
+  margin: 0;
+}
+
+.bloco-link,
+.bloco-subpage {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-3) var(--space-4);
+  font-weight: 500;
+  color: var(--text-primary);
+  text-decoration: none;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.bloco-link:hover,
+.bloco-subpage:hover {
+  background: var(--hover-bg);
+  border-color: var(--border);
+}
+
+.bloco-task {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2) var(--space-3);
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.bloco-task:hover {
+  background: var(--hover-bg);
+}
+
+.bloco-checkbox {
+  width: 1.25rem;
+  height: 1.25rem;
+  accent-color: var(--primary);
+  cursor: pointer;
+}
+
+.bloco-task-done {
+  text-decoration: line-through;
+  color: var(--text-muted);
+}
+
+/* Grids */
+.modulo-subpages-grid,
+.modulo-materiais-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: var(--space-4);
+}
+
+.modulo-subpage-card,
+.modulo-material-card {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  color: var(--text-primary);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.modulo-subpage-emoji,
+.modulo-material-icon {
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.modulo-material-label {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@media (max-width: 767px) {
+  .modulo-detalhe-page .detalhe-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}

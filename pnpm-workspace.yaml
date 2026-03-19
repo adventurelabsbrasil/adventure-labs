@@ -1,7 +1,7 @@
 packages:
-  - 'apps/*'
+  - 'apps/core/*'
+  - 'apps/labs/*'
   - 'apps/clientes/**/*'
   - 'packages/*'
-  # Ferramentas e agentes (não listados no Æxodo explícito, mantidos para não quebrar filtros pnpm na raiz)
   - 'tools/*'
   - 'agents/*'

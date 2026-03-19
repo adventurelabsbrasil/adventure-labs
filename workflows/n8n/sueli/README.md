@@ -56,7 +56,7 @@ A partir da raiz do repositório `01_ADVENTURE_LABS`:
 
 ```bash
 # v2 (Telegram + API Omie Admin)
-cd apps/admin && ./scripts/n8n/import-to-railway.sh "../../workflows/n8n/sueli/sueli-conciliacao-bancaria-v2.json"
+cd apps/core/admin && ./scripts/n8n/import-to-railway.sh "../../workflows/n8n/sueli/sueli-conciliacao-bancaria-v2.json"
 
 # ou v1 (apenas webhook)
 ./scripts/n8n/import-to-railway.sh "../../workflows/n8n/sueli/sueli-conciliacao-bancaria-v1.json"

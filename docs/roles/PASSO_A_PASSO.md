@@ -21,11 +21,11 @@ Pasta dedicada ao **projeto de Roles e RLS** (Admin + Adventure CRM) no Supabase
 
 | Onde | Arquivo | Descrição |
 |------|---------|-----------|
-| **Adventure** | `apps/adventure/supabase/migrations/20260308100000_crm_rls_policies.sql` | RLS do CRM: funções (`get_user_type`, `has_project_access`, `is_developer_or_owner`, etc.) + políticas idempotentes (DROP POLICY IF EXISTS + CREATE) para `users`, `projects`, `project_users`, `deals`, `contacts`, `companies`, `tasks`, `services`, `proposals`, `funnels`, `close_reasons`. |
-| **Admin** | `apps/admin/supabase/migrations/20260308100001_adv_rls_by_role.sql` | RLS por role do Admin: funções (`auth_user_email`, `get_adv_profile_role`, `is_adv_admin`, `adv_can_access_project`) + políticas para `adv_projects`, `adv_tasks`, `adv_task_time_entries` e `adv_project_members` (INSERT/DELETE de membros só para admin). |
-| **Admin** | `apps/admin/supabase/migrations/20260317100000_adv_clients_rls_by_role.sql` | RLS para `adv_clients`: admin vê todos; role `tarefas` só vê clientes que possuem ao menos um projeto em que o usuário está em `adv_project_members`. Ref.: Issue #118. |
-| **Admin** | `apps/admin/supabase/migrations/20260317110000_auth_user_email_from_jwt.sql` | `auth_user_email()` passa a usar claim `email` do JWT (Clerk) quando não houver linha em `auth.users`. Ref.: docs/auth/CLERK_SUPABASE_JWT_RLS.md. |
-| **Admin** | `apps/admin/supabase/migrations/20260318100000_adv_tenants_and_org_members.sql` | Cria tabelas `adv_tenants` (organizações/tenants) e `adv_org_members` (funcionários por tenant com roles `owner/admin/member/viewer`), além de funções `auth_is_adventure_owner`, `current_tenant_slug`, `current_tenant_id` e `org_member_role`. Base para multi-tenant e níveis por organização. |
+| **Adventure** | `apps/core/adventure/supabase/migrations/20260308100000_crm_rls_policies.sql` | RLS do CRM: funções (`get_user_type`, `has_project_access`, `is_developer_or_owner`, etc.) + políticas idempotentes (DROP POLICY IF EXISTS + CREATE) para `users`, `projects`, `project_users`, `deals`, `contacts`, `companies`, `tasks`, `services`, `proposals`, `funnels`, `close_reasons`. |
+| **Admin** | `apps/core/admin/supabase/migrations/20260308100001_adv_rls_by_role.sql` | RLS por role do Admin: funções (`auth_user_email`, `get_adv_profile_role`, `is_adv_admin`, `adv_can_access_project`) + políticas para `adv_projects`, `adv_tasks`, `adv_task_time_entries` e `adv_project_members` (INSERT/DELETE de membros só para admin). |
+| **Admin** | `apps/core/admin/supabase/migrations/20260317100000_adv_clients_rls_by_role.sql` | RLS para `adv_clients`: admin vê todos; role `tarefas` só vê clientes que possuem ao menos um projeto em que o usuário está em `adv_project_members`. Ref.: Issue #118. |
+| **Admin** | `apps/core/admin/supabase/migrations/20260317110000_auth_user_email_from_jwt.sql` | `auth_user_email()` passa a usar claim `email` do JWT (Clerk) quando não houver linha em `auth.users`. Ref.: docs/auth/CLERK_SUPABASE_JWT_RLS.md. |
+| **Admin** | `apps/core/admin/supabase/migrations/20260318100000_adv_tenants_and_org_members.sql` | Cria tabelas `adv_tenants` (organizações/tenants) e `adv_org_members` (funcionários por tenant com roles `owner/admin/member/viewer`), além de funções `auth_is_adventure_owner`, `current_tenant_slug`, `current_tenant_id` e `org_member_role`. Base para multi-tenant e níveis por organização. |
 
 ### 2.2 Documentação e scripts
 
@@ -34,15 +34,15 @@ Pasta dedicada ao **projeto de Roles e RLS** (Admin + Adventure CRM) no Supabase
 | Matriz de roles e acessos | `docs/SUPABASE_ROLES_MATRIZ_ACESSOS.md` | Referência única: por app e por tabela, quem pode SELECT/INSERT/UPDATE/DELETE. |
 | Verificação (runbook) | `docs/SUPABASE_ROLES_VERIFICACAO.md` | Como rodar diagnósticos e onde colar resultados. |
 | Alinhamento apps ↔ banco | `docs/SUPABASE_APPS_ALINHAMENTO.md` | Checklist para conferir se tabelas e RLS batem com Admin e Adventure. |
-| Diagnóstico geral do schema | `apps/admin/supabase/scripts/diagnostico_schema.sql` | Queries para schemas, tabelas, colunas, RLS, FKs, etc. |
-| Diagnóstico RLS e colunas CRM | `apps/admin/supabase/scripts/diagnostico_rls_e_colunas_crm.sql` | Queries A (políticas), B (RLS ativo), C (colunas CRM), D (tabelas dos apps). |
-| Script legado RLS CRM | `apps/adventure/scripts/migration/supabase-rls-policies.sql` | Referência histórica; fonte oficial é a migration `20260308100000_crm_rls_policies.sql`. |
-| README Supabase Admin | `apps/admin/supabase/README.md` | Entrada do Supabase no admin; links para roles e diagnóstico. |
+| Diagnóstico geral do schema | `apps/core/admin/supabase/scripts/diagnostico_schema.sql` | Queries para schemas, tabelas, colunas, RLS, FKs, etc. |
+| Diagnóstico RLS e colunas CRM | `apps/core/admin/supabase/scripts/diagnostico_rls_e_colunas_crm.sql` | Queries A (políticas), B (RLS ativo), C (colunas CRM), D (tabelas dos apps). |
+| Script legado RLS CRM | `apps/core/adventure/scripts/migration/supabase-rls-policies.sql` | Referência histórica; fonte oficial é a migration `20260308100000_crm_rls_policies.sql`. |
+| README Supabase Admin | `apps/core/admin/supabase/README.md` | Entrada do Supabase no admin; links para roles e diagnóstico. |
 
 ### 2.3 Resultados de diagnóstico já salvos
 
-- **Query C (colunas CRM):** `apps/admin/supabase/scripts/queryC_resultado.json`
-- **Query D (tabelas dos apps):** `apps/admin/supabase/scripts/queryD_resultado`
+- **Query C (colunas CRM):** `apps/core/admin/supabase/scripts/queryC_resultado.json`
+- **Query D (tabelas dos apps):** `apps/core/admin/supabase/scripts/queryD_resultado`
 - **Queries A e B:** coladas nas seções 4 e 5 do `estado_schema_template.md` (conforme runbook).
 
 ---
@@ -54,11 +54,11 @@ Pasta dedicada ao **projeto de Roles e RLS** (Admin + Adventure CRM) no Supabase
 1. Abra o **Dashboard do Supabase** do projeto `ftctmseyrqhckutpfdeq`.
 2. Se você usa **um único projeto** para Admin e Adventure:
    - No **SQL Editor**, execute **na ordem**:
-     1. Conteúdo de `apps/adventure/supabase/migrations/20260308100000_crm_rls_policies.sql`
-     2. Conteúdo de `apps/admin/supabase/migrations/20260308100001_adv_rls_by_role.sql`
-     3. Conteúdo de `apps/admin/supabase/migrations/20260317100000_adv_clients_rls_by_role.sql`
-     4. Conteúdo de `apps/admin/supabase/migrations/20260317110000_auth_user_email_from_jwt.sql`
-     5. Conteúdo de `apps/admin/supabase/migrations/20260318100000_adv_tenants_and_org_members.sql`
+     1. Conteúdo de `apps/core/adventure/supabase/migrations/20260308100000_crm_rls_policies.sql`
+     2. Conteúdo de `apps/core/admin/supabase/migrations/20260308100001_adv_rls_by_role.sql`
+     3. Conteúdo de `apps/core/admin/supabase/migrations/20260317100000_adv_clients_rls_by_role.sql`
+     4. Conteúdo de `apps/core/admin/supabase/migrations/20260317110000_auth_user_email_from_jwt.sql`
+     5. Conteúdo de `apps/core/admin/supabase/migrations/20260318100000_adv_tenants_and_org_members.sql`
    - Ou, se as migrations forem aplicadas via CLI: rode `supabase db push` a partir do app que estiver ligado a esse projeto (Admin ou Adventure) — **certifique-se de que as duas migrations acima existam no histórico aplicado** (podem estar em pastas diferentes; se necessário, execute-as manualmente no SQL Editor).
 3. Se Admin e Adventure usam **projetos Supabase diferentes**:
    - No projeto do **Adventure:** aplique `20260308100000_crm_rls_policies.sql`.
@@ -138,12 +138,12 @@ Pasta dedicada ao **projeto de Roles e RLS** (Admin + Adventure CRM) no Supabase
 | Matriz de roles e acessos | [SUPABASE_ROLES_MATRIZ_ACESSOS.md](../SUPABASE_ROLES_MATRIZ_ACESSOS.md) |
 | Runbook de verificação | [SUPABASE_ROLES_VERIFICACAO.md](../SUPABASE_ROLES_VERIFICACAO.md) |
 | Checklist alinhamento apps | [SUPABASE_APPS_ALINHAMENTO.md](../SUPABASE_APPS_ALINHAMENTO.md) |
-| Migration RLS CRM (Adventure) | `apps/adventure/supabase/migrations/20260308100000_crm_rls_policies.sql` |
-| Migration RLS Admin por role | `apps/admin/supabase/migrations/20260308100001_adv_rls_by_role.sql` |
-| Migration RLS adv_clients (Admin) | `apps/admin/supabase/migrations/20260317100000_adv_clients_rls_by_role.sql` |
-| auth_user_email from JWT (Admin) | `apps/admin/supabase/migrations/20260317110000_auth_user_email_from_jwt.sql` |
-| Diagnóstico RLS/CRM | `apps/admin/supabase/scripts/diagnostico_rls_e_colunas_crm.sql` |
-| Perfil e roles no Admin (código) | `apps/admin/src/lib/auth-profile.ts` |
+| Migration RLS CRM (Adventure) | `apps/core/adventure/supabase/migrations/20260308100000_crm_rls_policies.sql` |
+| Migration RLS Admin por role | `apps/core/admin/supabase/migrations/20260308100001_adv_rls_by_role.sql` |
+| Migration RLS adv_clients (Admin) | `apps/core/admin/supabase/migrations/20260317100000_adv_clients_rls_by_role.sql` |
+| auth_user_email from JWT (Admin) | `apps/core/admin/supabase/migrations/20260317110000_auth_user_email_from_jwt.sql` |
+| Diagnóstico RLS/CRM | `apps/core/admin/supabase/scripts/diagnostico_rls_e_colunas_crm.sql` |
+| Perfil e roles no Admin (código) | `apps/core/admin/src/lib/auth-profile.ts` |
 | Tabela `tasks` (public) = CRM, não Lidera | [SUPABASE_APPS_ALINHAMENTO.md](../SUPABASE_APPS_ALINHAMENTO.md) § 2.1 |
 
 ---

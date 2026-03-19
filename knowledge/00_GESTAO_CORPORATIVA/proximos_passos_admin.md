@@ -26,7 +26,7 @@ Documento de referência para o Grove e para o Founder. Atualizado conforme o MV
 Checklist detalhado: [go-live-admin-checklist.md](checklists_config/go-live-admin-checklist.md).
 
 - [x] **Deploy no Vercel**  
-  - Root Directory: `apps/admin`.  
+  - Root Directory: `apps/core/admin`.  
   - Env: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`.  
   - Redirect URL no Supabase: `https://admin.adventurelabs.com.br/auth/callback`.
 

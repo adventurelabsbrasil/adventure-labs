@@ -18,9 +18,9 @@ Ref.: [api-cron-daily-summary.md](api-cron-daily-summary.md), [decisao-resumo-di
 
 Se o build falhar com `ERR_INVALID_THIS` ou "not compatible lockfile" no `pnpm install`:
 
-1. **Node na Vercel:** A Vercel descontinuou Node 18. Use **20.x** ou **24.x** (o `apps/admin/package.json` tem `engines.node` definido; a Vercel usa esse valor). Se a build reclamar de versão, ajuste para a que a mensagem indicar (ex.: `24.x`).
-2. Confirme **Install Command** = `pnpm install` e **Build Command** = `pnpm run build` (ou o que estiver em `apps/admin/vercel.json`).
-3. **pnpm + ERR_INVALID_THIS:** O `apps/admin/vercel.json` já está configurado com **Install Command** = `npm install` e **Build Command** = `npm run build` para evitar o bug do pnpm no ambiente Vercel. No desenvolvimento local continue usando pnpm. Se a Vercel ignorar o vercel.json, use Override nas configurações do projeto com os mesmos comandos.
+1. **Node na Vercel:** A Vercel descontinuou Node 18. Use **20.x** ou **24.x** (o `apps/core/admin/package.json` tem `engines.node` definido; a Vercel usa esse valor). Se a build reclamar de versão, ajuste para a que a mensagem indicar (ex.: `24.x`).
+2. Confirme **Install Command** = `pnpm install` e **Build Command** = `pnpm run build` (ou o que estiver em `apps/core/admin/vercel.json`).
+3. **pnpm + ERR_INVALID_THIS:** O `apps/core/admin/vercel.json` já está configurado com **Install Command** = `npm install` e **Build Command** = `npm run build` para evitar o bug do pnpm no ambiente Vercel. No desenvolvimento local continue usando pnpm. Se a Vercel ignorar o vercel.json, use Override nas configurações do projeto com os mesmos comandos.
 
 ---
 

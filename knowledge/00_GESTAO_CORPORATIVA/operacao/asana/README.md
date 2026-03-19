@@ -5,7 +5,7 @@ Esta pasta recebe **apenas** exportações/resumos gerados pelo agente **Andon**
 ## Convenção
 
 - Arquivos sugeridos: `snapshot-YYYY-MM-DD.md`
-- Frontmatter e seções: ver `apps/admin/agents/andon_asana/VOICE.md` e o SKILL da skill.
+- Frontmatter e seções: ver `apps/core/admin/agents/andon_asana/VOICE.md` e o SKILL da skill.
 
 ## Conflitos
 

@@ -22,7 +22,7 @@ Já devem existir: `NEXT_PUBLIC_SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY` (POST
 
 1. **Importar o workflow**  
    `workflows/n8n/andon_asana/andon-asana-daily-v1.json`  
-   (ex.: `apps/admin/scripts/n8n/import-to-railway.sh` com caminho para esse JSON).
+   (ex.: `apps/core/admin/scripts/n8n/import-to-railway.sh` com caminho para esse JSON).
 
 2. **Criar credencial**  
    Tipo **Header Auth**:  

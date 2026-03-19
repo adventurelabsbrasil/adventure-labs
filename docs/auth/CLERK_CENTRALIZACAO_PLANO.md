@@ -8,7 +8,7 @@
 
 | App | Auth hoje | Backend / observação |
 |-----|-----------|----------------------|
-| **apps/admin** | Supabase (email + Google), allowlist `ADMIN_ALLOWED_EMAILS` | Middleware em `apps/admin/src/middleware.ts`, login em `apps/admin/src/app/login/page.tsx` |
+| **apps/core/admin** | Supabase (email + Google), allowlist `ADMIN_ALLOWED_EMAILS` | Middleware em `apps/core/admin/src/middleware.ts`, login em `apps/core/admin/src/app/login/page.tsx` |
 | **lidera-space** | Supabase (sessão + `space_users.role`) | `lidera-space/supabase/config.toml` já tem `[auth.third_party.clerk]` **enabled = false** |
 | **lideraspacev1** | Supabase (password + Google) | AuthContext, Login |
 | **lidera-dre** | Supabase + tabela `dre_perfis` | AuthContext |
@@ -47,7 +47,7 @@ Cada app usa um ou mais projetos Supabase; não há Clerk no front-end hoje. O p
      Não use ponto e vírgula entre `USING` e `WITH CHECK` — ambos fazem parte do mesmo `CREATE POLICY`.
    - Opcional: função centralizada `auth.is_owner()` que retorna `(auth.jwt()->>'email') = 'contato@adventurelabs.com.br'` e usar em todas as políticas “owner” em cada projeto.
 
-3. **Admin (apps/admin) e “ver todos os dados”**
+3. **Admin (apps/core/admin) e “ver todos os dados”**
    - No app admin, quando o usuário logado for **contato@adventurelabs.com.br**, usar clientes Supabase configurados com as URLs/keys dos **outros** projetos (read-only ou read-write) e chamar as APIs desses projetos; em cada um desses projetos as políticas RLS acima permitem que esse e-mail leia (e, se desejado, escreva) em todas as tabelas. Assim o mesmo token Clerk dá acesso em todos os bancos.
 
 4. **CLI**
@@ -82,7 +82,7 @@ Decisão: uma Clerk Application para todos os apps ou uma por cliente. Recomenda
 
 ---
 
-## Fase 2 — Admin (apps/admin) como piloto
+## Fase 2 — Admin (apps/core/admin) como piloto
 
 1. **Código:** Instalar `@clerk/nextjs`; trocar login por Clerk; middleware com `clerkMiddleware`; allowlist via Clerk (e manter owner contato@adventurelabs.com.br).
 2. **Supabase:** Ativar Clerk como third-party; usar token Clerk no client Supabase; RLS com `auth.jwt()->>'sub'` e política “owner” para `contato@adventurelabs.com.br`.
@@ -118,7 +118,7 @@ Ordem sugerida: lidera-space → lideraspacev1 → lidera-dre → young-talents.
 ## Resumo de entregas
 
 - **docs/auth/CLERK_SETUP.md**: visão única, env vars, comandos CLI, redirect URLs, Supabase third-party, **e-mail owner e políticas RLS owner**.
-- **apps/admin**: auth 100% Clerk; middleware e allowlist via Clerk; políticas owner no Supabase do admin.
+- **apps/core/admin**: auth 100% Clerk; middleware e allowlist via Clerk; políticas owner no Supabase do admin.
 - **Cada projeto Supabase**: Clerk third-party; RLS por `auth.jwt()->>'sub'`; **políticas owner para contato@adventurelabs.com.br**.
 - **lidera-space, lideraspacev1, lidera-dre, young-talents**: Clerk no front; Supabase com Clerk + políticas owner.
 - **Scripts/CLI**: documentação e scripts para allowlist e auditoria; verificação do usuário owner via `clerk users list`.

@@ -57,10 +57,10 @@ Resumo do que foi feito em termos de tecnologia para que o C-Suite e a equipe te
 ## 3. C-Suite (n8n) — Founder Reports e V11 em produção
 
 - **Integração:** O workflow C-Suite passou a **ler** os relatórios do founder (`adv_founder_reports`, últimos 7 dias) no Build Context. O Grove e os C-Levels recebem a seção "=== RELATÓRIOS DO FOUNDER (últimos 7 dias) ===" no contexto.
-- **Versão em produção:** **V11** — *C-Suite Autonomous Loop - V11 (Fase 4: Paralelização + Histórico + Founder Reports)*. Arquivo: `apps/admin/n8n_workflows/C-Suite Autonomous Loop - V11 (Fase 4_ Paralelização + Histórico + Founder Reports).json`.
+- **Versão em produção:** **V11** — *C-Suite Autonomous Loop - V11 (Fase 4: Paralelização + Histórico + Founder Reports)*. Arquivo: `apps/core/admin/n8n_workflows/C-Suite Autonomous Loop - V11 (Fase 4_ Paralelização + Histórico + Founder Reports).json`.
 - **Ajustes:** Nó "Fetch Founder Reports1" com `alwaysOutputData: true` para não travar quando não houver relatórios; Build Context defensivo quando não há output.
 - **Importação:** Script `import-to-railway.sh` atualizado para carregar credenciais de `GEMINI_CLI/.env` (N8N_HOST_URL, N8N_API_KEY). V11 importado no n8n (Railway) com sucesso.
-- **Documentação:** `docs/CSuite_relatorios_founder.md`, `apps/admin/n8n_workflows/README.md` (V11 como versão de manutenção), `csuite/CHANGELOG.md` com entrada [11.0.0]. Referência ao manual de roles em `knowledge/README.md` e docs de verificação/alinhamento Supabase.
+- **Documentação:** `docs/CSuite_relatorios_founder.md`, `apps/core/admin/n8n_workflows/README.md` (V11 como versão de manutenção), `csuite/CHANGELOG.md` com entrada [11.0.0]. Referência ao manual de roles em `knowledge/README.md` e docs de verificação/alinhamento Supabase.
 
 ---
 
@@ -74,7 +74,7 @@ Resumo do que foi feito em termos de tecnologia para que o C-Suite e a equipe te
 
 ## 5. Monorepo e documentação
 
-- **Repo adventure-labs:** Estrutura com submodules (admin, adventure, elite, finfeed, lidera-space, roseportaladvocacia, young-emp, ranking-vendas, young-talents, lidera-skills). Script `scripts/setup.sh` para init de submodules e symlink `apps/admin/context` → `../../knowledge`.
+- **Repo adventure-labs:** Estrutura com submodules (admin, adventure, elite, finfeed, lidera-space, roseportaladvocacia, young-emp, ranking-vendas, young-talents, lidera-skills). Script `scripts/setup.sh` para init de submodules e symlink `apps/core/admin/context` → `../../knowledge`.
 - **Plano n8n:** Documento `docs/PLANO_N8N_AUTOMACOES_AGENTES_SKILLS_TOOLS.md` com estrutura de automações, agentes, skills e tools; segurança, prioridades e faseamento.
 - **Outros:** Manual do projeto Roles referenciado na base de conhecimento; auditoria de secrets (script + resumo commitável); frontmatter em knowledge para ML/RAG; packages compartilhados (ui, db, config) em estrutura inicial; unificação do registro de ponto no Admin (plano implementado: página `/dashboard/ponto`, geo, saldo, usos, admin editar registros, redirect no Adventure).
 
@@ -91,9 +91,9 @@ Resumo do que foi feito em termos de tecnologia para que o C-Suite e a equipe te
 ### Integração Google Ads e Meta Business Manager
 
 - **Segurança:** Allowlist no middleware (`ADMIN_ALLOWED_EMAILS`); apenas e-mails configurados acessam dashboard e APIs `/api/ads/*`, `/api/meta/*`. Acesso sem perfil em `adv_profiles` negado (redirect login). CLI pode chamar as APIs com header `x-admin-key` = `CRON_SECRET`.
-- **Google Ads:** Lib `apps/admin/src/lib/google-ads.ts` (google-ads-api); env `GOOGLE_ADS_*`; rotas `GET/PATCH /api/ads/google/campaigns` e `campaigns/[id]`. Frontend em `/dashboard/ads` (aba Google Ads) com lista de campanhas e ações pausar/ativar.
+- **Google Ads:** Lib `apps/core/admin/src/lib/google-ads.ts` (google-ads-api); env `GOOGLE_ADS_*`; rotas `GET/PATCH /api/ads/google/campaigns` e `campaigns/[id]`. Frontend em `/dashboard/ads` (aba Google Ads) com lista de campanhas e ações pausar/ativar.
 - **Meta (Business Manager):** Lib `meta-business.ts` (Graph API v21, System User token); env `META_BM_*`; rotas `GET /api/meta/accounts`, `GET /api/meta/accounts/[id]/campaigns`, `PATCH /api/meta/campaigns/[id]`. Aba Meta no `/dashboard/ads` com seletor de conta e lista de campanhas.
-- **CLI:** Script `apps/admin/scripts/ads-cli.mjs` para listar/pausar/ativar campanhas (Google e Meta) via APIs do Admin com `CRON_SECRET`.
+- **CLI:** Script `apps/core/admin/scripts/ads-cli.mjs` para listar/pausar/ativar campanhas (Google e Meta) via APIs do Admin com `CRON_SECRET`.
 - **Documentação:** `docs/ADS_META_ADMIN.md` (acesso, variáveis, APIs, CLI, uso com Cursor/Gemini); `docs/CREDENCIAIS_GOOGLE_E_META.md` (passo a passo para obter credenciais Google Cloud — Drive e Google Ads — e Meta BM; inclui correção para erro 403 access_denied ao adicionar usuários de teste na tela de consentimento OAuth). `.env.example` do admin atualizado com todas as variáveis e explicação de que `CRON_SECRET` é um valor inventado (ex.: `openssl rand -hex 32`).
 
 ### Admin por cliente (subdomínio e env por cliente)

@@ -7,7 +7,7 @@ Como o Admin usa **Clerk** como IdP e **Supabase** com RLS por role (`adv_profil
 ## Fluxo atual
 
 1. Usuário faz login no Admin via **Clerk** (ex.: Google).
-2. O app chama `createClient()` em `apps/admin/src/lib/supabase/server.ts`, que obtém o **JWT da sessão Clerk** (`getToken()` ou template `supabase`) e envia no header `Authorization` para o Supabase.
+2. O app chama `createClient()` em `apps/core/admin/src/lib/supabase/server.ts`, que obtém o **JWT da sessão Clerk** (`getToken()` ou template `supabase`) e envia no header `Authorization` para o Supabase.
 3. O **Supabase** está configurado com Clerk como **Third-party provider** (Authentication → Providers). Ele valida o JWT do Clerk e usa:
    - `auth.uid()` = claim `sub` do JWT (ID do usuário no Clerk)
    - **Não** cria linha em `auth.users` automaticamente (Clerk é o dono da identidade).

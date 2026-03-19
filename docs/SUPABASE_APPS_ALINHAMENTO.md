@@ -38,7 +38,7 @@ O Admin usa `supabase.from("...")` com nomes literais. Preencha após obter a li
 
 ## 2. App Adventure — mapeamento collection → tabela
 
-O Adventure usa `getDocuments(collectionName)` (camelCase); o mapeamento para tabelas Supabase está em `apps/adventure/src/lib/supabase/db.ts` (`toTableName`). Preencha após cruzar com a lista de tabelas e colunas do banco.
+O Adventure usa `getDocuments(collectionName)` (camelCase); o mapeamento para tabelas Supabase está em `apps/core/adventure/src/lib/supabase/db.ts` (`toTableName`). Preencha após cruzar com a lista de tabelas e colunas do banco.
 
 | Collection (código) | Tabela Supabase | Existe no banco? | Colunas críticas (ex.: project_id, user_id) existem? | RLS alinhada com usePermissions / has_project_access? (sim/não/melhorar) | Ação |
 |---------------------|-----------------|------------------|------------------------------------------------------|-------------------------------------------------------------------------|------|
@@ -65,7 +65,7 @@ O Adventure usa `getDocuments(collectionName)` (camelCase); o mapeamento para ta
 
 ## 2.1 Esclarecimento: tabela `tasks` (sem schema = public)
 
-A tabela **`tasks`** (schema `public`) é do **Adventure CRM**, não do Lidera. Definição: `apps/adventure/scripts/migration/supabase-schema.sql` (project_id, deal_id, title, type, status, due_date, etc.) — tarefas de negócio (ligar para cliente, follow-up, reunião).
+A tabela **`tasks`** (schema `public`) é do **Adventure CRM**, não do Lidera. Definição: `apps/core/adventure/scripts/migration/supabase-schema.sql` (project_id, deal_id, title, type, status, due_date, etc.) — tarefas de negócio (ligar para cliente, follow-up, reunião).
 
 - **Lidera (lidera-space)** usa **outro** projeto Supabase e **não** tem tabela `tasks`; tem `programs`, `modules`, `lessons`, `notes`, `progress`.
 - Se no projeto compartilhado (ftctmseyrqhckutpfdeq) você vir dados em `tasks` que parecem de “liderança” ou genéricos, podem ser mocks/demo do CRM (ex.: demoSeed do Adventure) ou seed aplicado por engano. A **estrutura** da tabela é a do CRM; o **conteúdo** pode ter sido populado por outro seed. Para limpar ou alinhar: identificar a origem dos dados e, se for seed equivocado, remover ou migrar para o app correto.
@@ -74,16 +74,16 @@ A tabela **`tasks`** (schema `public`) é do **Adventure CRM**, não do Lidera. 
 
 ## 3. Melhorias priorizadas (resumo)
 
-- [x] **RLS CRM Adventure:** migration `apps/adventure/supabase/migrations/20260308100000_crm_rls_policies.sql` criada (idempotente); aplicar com `supabase db push` ou SQL Editor.
-- [x] **RLS Admin por role:** migration `apps/admin/supabase/migrations/20260308100001_adv_rls_by_role.sql` criada; restringe adv_projects, adv_tasks, adv_task_time_entries e adv_project_members (INSERT/DELETE de membros só admin).
+- [x] **RLS CRM Adventure:** migration `apps/core/adventure/supabase/migrations/20260308100000_crm_rls_policies.sql` criada (idempotente); aplicar com `supabase db push` ou SQL Editor.
+- [x] **RLS Admin por role:** migration `apps/core/admin/supabase/migrations/20260308100001_adv_rls_by_role.sql` criada; restringe adv_projects, adv_tasks, adv_task_time_entries e adv_project_members (INSERT/DELETE de membros só admin).
 - [ ] Preencher o checklist acima (colunas 1–2) com os resultados das queries C e D para novas tabelas/ajustes.
 
 ---
 
 ## 4. Como preencher
 
-1. Rode `apps/admin/supabase/scripts/diagnostico_rls_e_colunas_crm.sql` no SQL Editor do Supabase.
+1. Rode `apps/core/admin/supabase/scripts/diagnostico_rls_e_colunas_crm.sql` no SQL Editor do Supabase.
 2. Use a **query A** (políticas) e **query B** (RLS ativo) para preencher o estado_schema_template (seções 4 e 5).
-3. Use a **query C** (colunas CRM) para verificar se todas as tabelas CRM têm a coluna `project_id` (ou o nome real) onde o script RLS espera. Resultado de exemplo: `apps/admin/supabase/scripts/queryC_resultado.json`.
-4. Use a **query D** (tabelas dos apps) para marcar "Existe no banco?" nas tabelas acima. Resultado de exemplo: `apps/admin/supabase/scripts/queryD_resultado`.
+3. Use a **query C** (colunas CRM) para verificar se todas as tabelas CRM têm a coluna `project_id` (ou o nome real) onde o script RLS espera. Resultado de exemplo: `apps/core/admin/supabase/scripts/queryC_resultado.json`.
+4. Use a **query D** (tabelas dos apps) para marcar "Existe no banco?" nas tabelas acima. Resultado de exemplo: `apps/core/admin/supabase/scripts/queryD_resultado`.
 5. Para cada tabela, confira nas políticas (query A) se o que o app faz (SELECT/INSERT/UPDATE/DELETE) está permitido; preencha "RLS permite?" e "Ação".

@@ -146,7 +146,7 @@ Pastas e níveis relevantes. Excluídos na listagem: `node_modules`, `.git`, `.n
 ## 3. Convenções e configuração atuais
 
 - **Workspace pnpm:** `pnpm-workspace.yaml` declara `apps/*`, `packages/*` e `tools/*`. Os projetos em `clients/*` não são pacotes do workspace (cada um pode ter seu próprio package.json e repositório como submodule).
-- **Submódulos Git:** Apps e clientes são submodules; cada app/cliente mantém seu próprio repositório. O script `scripts/setup.sh` inicializa submodules e cria o symlink `apps/admin/context -> ../../knowledge`.
+- **Submódulos Git:** Apps e clientes são submodules; cada app/cliente mantém seu próprio repositório. O script `scripts/setup.sh` inicializa submodules e cria o symlink `apps/core/admin/context -> ../../knowledge`.
 - **Nomenclatura:**
   - Clientes: prefixo numérico `NN_nome` (ex.: `01_lidera`, `02_rose`).
   - Knowledge: prefixo numérico `NN_NOME` em maiúsculas (ex.: `00_GESTAO_CORPORATIVA`, `06_CONHECIMENTO`).
@@ -159,7 +159,7 @@ Pastas e níveis relevantes. Excluídos na listagem: `node_modules`, `.git`, `.n
 
 - **Duplicações:** "01_lidera" e "01_lidera 2"; "adventure" e "adventure 2"; múltiplas variantes de projetos Lidera (lidera-space, lideraspace, lideraspacev1, Lidera/*, lidera-, etc.). Pastas em `_internal/archive/` espelham clones/versões antigas (temp_admin_report_*, adventure-, etc.).
 - **Nomenclatura:** Knowledge usa MAIÚSCULAS (`00_GESTAO_CORPORATIVA`); clientes usam minúsculas com número. Inconsistência em nomes de projetos (hífen vs nada vs " 2").
-- **Estrutura confusa:** `knowledge/knowledge/` (pasta aninhada com mesmo nome); `context/` na raiz vs `apps/admin/context` (symlink para knowledge); docs tanto na raiz (`docs/`) quanto dentro de apps e clientes.
+- **Estrutura confusa:** `knowledge/knowledge/` (pasta aninhada com mesmo nome); `context/` na raiz vs `apps/core/admin/context` (symlink para knowledge); docs tanto na raiz (`docs/`) quanto dentro de apps e clientes.
 - **Workspace:** `clients/*` não está no pnpm workspace (proposital para submodules independentes); `tools/*` está no workspace na configuração atual.
 - **Documentação visual:** Já existem em `docs/estrutura-visual/` os arquivos 01 a 05 e `mapa-estrutura.html` com diagramas de raiz, monorepo, apps, clientes e conexões. Este documento é o **mapeamento de pastas** focado em uso com IA para segunda etapa de análise.
 
@@ -173,7 +173,7 @@ Pastas e níveis relevantes. Excluídos na listagem: `node_modules`, `.git`, `.n
 - **Nomenclatura e convenção:** Mistura de maiúsculas (knowledge) e minúsculas (clients); nomes com espaço ("adventure 2", "01_lidera 2") são problemáticos em CLI e scripts. Falta convenção única para nomes de projetos (kebab-case vs sem hífen).
 - **Separação de responsabilidades:** Fronteira entre apps (produtos da casa), clients (por cliente) e knowledge (base de conhecimento) está clara na raiz, mas dentro de clients há admins e sites misturados; docs estão na raiz em `docs/` e também em cada app/cliente, sem regra clara de “fonte canônica” para cada tipo de doc.
 - **Workspace e dependências:** `tools/*` no pnpm workspace permite reuso de pacotes entre apps e tools; `clients/*` fora do workspace reflete que cada cliente pode ser um deploy/repo independente. Falta documentar explicitamente quando um novo “tool” ou “app” deve entrar no workspace e como clientes consomem packages (se consumirem).
-- **Preparação para IA/ML e multi-agentes:** A taxonomia em `knowledge/` (00–99) e o symlink `apps/admin/context -> knowledge` facilitam RAG e contexto único. `.cursor/skills/` já está organizado por domínio (gestao-corporativa, comercial, marketing, etc.). Pontos fracos: duplicação de nomes e pastas obscuras atrapalham indexação e “onde colocar” novo conhecimento; `knowledge/knowledge/` é ambíguo.
+- **Preparação para IA/ML e multi-agentes:** A taxonomia em `knowledge/` (00–99) e o symlink `apps/core/admin/context -> knowledge` facilitam RAG e contexto único. `.cursor/skills/` já está organizado por domínio (gestao-corporativa, comercial, marketing, etc.). Pontos fracos: duplicação de nomes e pastas obscuras atrapalham indexação e “onde colocar” novo conhecimento; `knowledge/knowledge/` é ambíguo.
 - **Escalabilidade e onboarding:** Adicionar um novo cliente implica criar `clients/NN_nome/` e possivelmente submodules; a existência de "01_lidera 2" e variantes de nome dificulta explicar “um projeto por cliente”. Onboarding de novo dev ou agente exige entender a diferença entre apps, clients, knowledge e archive.
 
 ### 5.2 Sugestões de melhoria e otimização (priorizável)

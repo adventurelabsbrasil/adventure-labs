@@ -4,17 +4,17 @@
 
 - **Repo "adventure-labs"** versiona: knowledge/, docs/, .cursor/, .github/, AGENTS.md, workflows/, etc.
 - **Apps e clientes** são **submodules** (cada um = repo separado no GitHub)
-- **Symlink:** `apps/admin/context -> ../../knowledge` (sem duplicação)
-- **Workflows n8n:** Fonte canônica em `workflows/n8n/`; `apps/admin/n8n_workflows` é symlink para `../../workflows/n8n`
+- **Symlink:** `apps/core/admin/context -> ../../knowledge` (sem duplicação)
+- **Workflows n8n:** Fonte canônica em `workflows/n8n/`; `apps/core/admin/n8n_workflows` é symlink para `../../workflows/n8n`
 
 ### Submodules atuais
 
 | Path | URL |
 |------|-----|
-| apps/admin | https://github.com/adventurelabsbrasil/admin.git |
-| apps/adventure | https://github.com/adventurelabsbrasil/adventure.git |
-| apps/elite | https://github.com/adventurelabsbrasil/elite.git |
-| apps/finfeed | https://github.com/adventurelabsbrasil/finfeed.git |
+| apps/core/admin | https://github.com/adventurelabsbrasil/admin.git |
+| apps/core/adventure | https://github.com/adventurelabsbrasil/adventure.git |
+| apps/core/elite | https://github.com/adventurelabsbrasil/elite.git |
+| apps/labs/finfeed | https://github.com/adventurelabsbrasil/finfeed.git |
 | apps/clientes/lidera/space | https://github.com/adventurelabsbrasil/lidera-space.git |
 | clients/02_rose/roseportaladvocacia | https://github.com/adventurelabsbrasil/roseportaladvocacia.git |
 | clients/04_young/young-emp | https://github.com/adventurelabsbrasil/young-emp.git |

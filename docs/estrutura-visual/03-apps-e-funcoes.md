@@ -25,4 +25,4 @@ flowchart LR
 | **elite** | App Elite | — | adventurelabsbrasil/elite |
 | **finfeed** | App Finfeed | — | adventurelabsbrasil/finfeed |
 
-Setup após clone: `./scripts/setup.sh` (inicializa submodules e symlink `apps/admin/context -> ../../knowledge`).
+Setup após clone: `./scripts/setup.sh` (inicializa submodules e symlink `apps/core/admin/context -> ../../knowledge`).

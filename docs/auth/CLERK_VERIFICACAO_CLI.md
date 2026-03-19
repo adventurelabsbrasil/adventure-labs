@@ -38,7 +38,7 @@ Comando: `./scripts/clerk-allowlist-admin.sh list-users`
 
 ## 4. Build do app Admin (Next.js)
 
-Comando: `pnpm run admin:install` e `pnpm run build` em `apps/admin`.
+Comando: `pnpm run admin:install` e `pnpm run build` em `apps/core/admin`.
 
 - **Compilação:** OK (Next.js compila o código).  
 - **TypeScript (strict):** há erros de tipo em vários componentes por uso de `useSupabaseClient()` sem checagem de `null` (`'supabase' is possibly 'null'`). Esses erros **não são da migração Clerk**; são do cliente Supabase que retorna `SupabaseClient | null` quando não há sessão.  
@@ -75,5 +75,5 @@ A migração para Clerk está **operacional** para login, middleware, allowlist 
 ./scripts/clerk-allowlist-admin.sh list-users  # Usuários
 
 pnpm run admin:dev   # Subir o Admin em dev (porta 3001)
-pnpm run admin:install && cd apps/admin && pnpm run build  # Build de produção
+pnpm run admin:install && cd apps/core/admin && pnpm run build  # Build de produção
 ```

@@ -94,7 +94,7 @@ Para cada fase, há tarefas **para o Comando Estelar** (arquitetura, prompts, sc
 - [ ] Especificar o layout desejado da página de C-Suite no Admin (seções, filtros por data/cliente/tipo).
 
 **Cursor**
-- [ ] Implementar no `apps/admin`:
+- [ ] Implementar no `apps/core/admin`:
   - API route ou hooks para buscar `adv_csuite_memory` com filtros;
   - página/section que lista relatórios diários (tipo `founder_csuite_daily`), com visual limpo.
 
@@ -125,7 +125,7 @@ Para cada fase, há tarefas **para o Comando Estelar** (arquitetura, prompts, sc
 1. Abrir este arquivo: `docs/PLANO_EXECUCAO_OPENCLAW_HIBRIDO_CURSOR.md`.
 2. Confirmar com o Founder quais fases/tarefas estão prioritárias.
 3. Para cada tarefa marcada como **Cursor**:
-   - localizar o código correspondente (apps/admin, workflows n8n, tools, etc.);
+   - localizar o código correspondente (apps/core/admin, workflows n8n, tools, etc.);
    - implementar seguindo as especificações do Comando Estelar;
    - atualizar este arquivo marcando o que foi concluído (se fizer sentido).
 

@@ -12,21 +12,21 @@ Atualize este documento quando alterar roles ou políticas; use a [verificação
 
 | Tabela | Uso no frontend | Observação |
 |--------|------------------|-------------|
-| `adv_profiles` | `apps/admin/src/lib/auth-profile.ts` (perfil: role + allowedProjectIds); `apps/admin/src/app/dashboard/equipe/page.tsx` (lista de perfis) | Fonte da role do usuário (admin / tarefas) |
+| `adv_profiles` | `apps/core/admin/src/lib/auth-profile.ts` (perfil: role + allowedProjectIds); `apps/core/admin/src/app/dashboard/equipe/page.tsx` (lista de perfis) | Fonte da role do usuário (admin / tarefas) |
 | `adv_project_members` | `auth-profile.ts` (projetos permitidos para role tarefas); `equipe/page.tsx` (membros por projeto) | Define quais projetos o usuário com role `tarefas` pode acessar |
 | `adv_clients`, `adv_projects` | CRUD no dashboard (clientes e projetos) | |
 | `adv_tasks`, `adv_task_time_entries` | Tarefas e apontamento de tempo; filtro por `allowedProjectIds` quando role = tarefas | Filtro aplicado no frontend |
 | `adv_founder_reports` | `/dashboard/relatorio`: escrita no formulário; leitura no histórico. **n8n C-Suite** lê (SELECT) últimos 7 dias para contexto do Grove | Relatórios do founder; consumidos pelo workflow C-Suite |
 | `adv_csuite_memory` | `/dashboard/csuite-diario`; **POST** `/api/csuite/founder-report` com `csuite_memory` (n8n Zazu). Loop C-Suite (n8n) lê/escreve | Memória C-Suite; ver [ADV_CSUITE_MEMORY_METADATA](ADV_CSUITE_MEMORY_METADATA.md) |
 | `adv_daily_summaries` | `/dashboard/relatorio` e dashboard: resumos diários; cron/API gera via `daily-summary.ts` | Resumos consolidados por dia |
-| `adv_time_bank_locations`, `adv_time_bank_entries`, `adv_time_bank_usages` | Ponto (registro e seção admin); `apps/admin/src/app/dashboard/ponto/page.tsx` usa `profile?.role !== "tarefas"` para exibir seção admin | **Time Bank do Admin** (identificação por `user_email`) |
+| `adv_time_bank_locations`, `adv_time_bank_entries`, `adv_time_bank_usages` | Ponto (registro e seção admin); `apps/core/admin/src/app/dashboard/ponto/page.tsx` usa `profile?.role !== "tarefas"` para exibir seção admin | **Time Bank do Admin** (identificação por `user_email`) |
 
 ### 1.2 App Adventure — CRM (React, Supabase Auth)
 
 | Tabela | Uso no frontend | Observação |
 |--------|------------------|-------------|
-| `users` | `apps/adventure/src/features/users/hooks/useUsers.ts`, `useProjects.ts`, `usePermissions.ts` | Campo `user_type` (ex.: developer, owner) e `role` para permissões |
-| `projects` | `useProjects.ts`, `apps/adventure/src/contexts/ProjectContext.tsx` | |
+| `users` | `apps/core/adventure/src/features/users/hooks/useUsers.ts`, `useProjects.ts`, `usePermissions.ts` | Campo `user_type` (ex.: developer, owner) e `role` para permissões |
+| `projects` | `useProjects.ts`, `apps/core/adventure/src/contexts/ProjectContext.tsx` | |
 | `project_users` | `useProjectUsers.ts`, `useCurrentProjectUser.ts` (projectMembers); `useMemberProducts.ts` | Role por projeto: owner, admin, user, viewer |
 | `deals`, `contacts`, `companies`, `tasks`, `services`, `proposals`, `funnels` | Hooks e features do CRM | Acesso conforme `has_project_access` / `project_users` (se RLS do script aplicado) |
 | `whatsapp_conversations` | CRM / extensão | RLS aplicado em migration: owner do projeto ou project_users ativo |
@@ -73,7 +73,7 @@ Atualize este documento quando alterar roles ou políticas; use a [verificação
 | `close_reasons` | — | todos | developer/owner | developer/owner | developer/owner | |
 | `whatsapp_conversations` | owner do projeto ou project_users ativo | RLS aplicado (migration) | idem | idem | idem | |
 
-**Nota:** Se o script `apps/adventure/scripts/migration/supabase-rls-policies.sql` **não** estiver aplicado, as tabelas do CRM podem estar sem RLS ou com políticas antigas. Verificar com a [verificação](SUPABASE_ROLES_VERIFICACAO.md).
+**Nota:** Se o script `apps/core/adventure/scripts/migration/supabase-rls-policies.sql` **não** estiver aplicado, as tabelas do CRM podem estar sem RLS ou com políticas antigas. Verificar com a [verificação](SUPABASE_ROLES_VERIFICACAO.md).
 
 ### 2.3 Time Bank — Admin (`adv_time_bank_*`)
 
@@ -109,12 +109,12 @@ Atualize este documento quando alterar roles ou políticas; use a [verificação
 - **Projeto Roles (passo a passo e organização):** [docs/roles/PASSO_A_PASSO.md](roles/PASSO_A_PASSO.md) — o que foi feito, o que fazer e resultados esperados.
 - Verificação (como rodar diagnóstico e o que checar): [SUPABASE_ROLES_VERIFICACAO.md](SUPABASE_ROLES_VERIFICACAO.md)
 - Alinhamento tabelas e RLS com os apps Admin e Adventure (checklist): [SUPABASE_APPS_ALINHAMENTO.md](SUPABASE_APPS_ALINHAMENTO.md)
-- Perfil e roles no Admin: `apps/admin/src/lib/auth-profile.ts`
-- Permissões no Adventure: `apps/adventure/src/hooks/usePermissions.ts`
-- Definição de perfis e membros (Admin): `apps/admin/supabase/migrations/20250312100001_adv_profiles_and_project_members.sql`
-- **RLS CRM (Adventure):** migration oficial `apps/adventure/supabase/migrations/20260308100000_crm_rls_policies.sql` (idempotente). Script legado: `apps/adventure/scripts/migration/supabase-rls-policies.sql`.
-- **RLS Admin por role (admin vs tarefas):** `apps/admin/supabase/migrations/20260308100001_adv_rls_by_role.sql` — restringe adv_projects, adv_tasks, adv_task_time_entries e adv_project_members (INSERT/DELETE só admin).
-- Diagnóstico do schema: `apps/admin/supabase/scripts/diagnostico_schema.sql`
+- Perfil e roles no Admin: `apps/core/admin/src/lib/auth-profile.ts`
+- Permissões no Adventure: `apps/core/adventure/src/hooks/usePermissions.ts`
+- Definição de perfis e membros (Admin): `apps/core/admin/supabase/migrations/20250312100001_adv_profiles_and_project_members.sql`
+- **RLS CRM (Adventure):** migration oficial `apps/core/adventure/supabase/migrations/20260308100000_crm_rls_policies.sql` (idempotente). Script legado: `apps/core/adventure/scripts/migration/supabase-rls-policies.sql`.
+- **RLS Admin por role (admin vs tarefas):** `apps/core/admin/supabase/migrations/20260308100001_adv_rls_by_role.sql` — restringe adv_projects, adv_tasks, adv_task_time_entries e adv_project_members (INSERT/DELETE só admin).
+- Diagnóstico do schema: `apps/core/admin/supabase/scripts/diagnostico_schema.sql`
 
 ---
 
@@ -137,4 +137,4 @@ WHERE routine_schema = 'public'
 | has_project_access     |
 | is_developer_or_owner  |
 
-**Conclusão:** As funções do RLS do CRM **estão aplicadas** no projeto. A migration oficial é `apps/adventure/supabase/migrations/20260308100000_crm_rls_policies.sql` (idempotente, com DROP POLICY IF EXISTS). Use-a para aplicar ou atualizar o RLS do CRM; o script legado `supabase-rls-policies.sql` permanece como referência.
+**Conclusão:** As funções do RLS do CRM **estão aplicadas** no projeto. A migration oficial é `apps/core/adventure/supabase/migrations/20260308100000_crm_rls_policies.sql` (idempotente, com DROP POLICY IF EXISTS). Use-a para aplicar ou atualizar o RLS do CRM; o script legado `supabase-rls-policies.sql` permanece como referência.

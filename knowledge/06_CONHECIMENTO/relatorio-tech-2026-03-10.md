@@ -9,11 +9,11 @@ updated: 2026-03-10
 
 Resumo do que foi feito em termos de tecnologia para que o C-Suite e a equipe tenham visibilidade. Este documento é consumido pela API `/api/csuite/context-docs` e pelo workflow n8n (Build Context).
 
-**Escopo:** alterações no monorepo **01_ADVENTURE_LABS** e no submodule **apps/admin**, incluindo docs e base de conhecimento.
+**Escopo:** alterações no monorepo **01_ADVENTURE_LABS** e no submodule **apps/core/admin**, incluindo docs e base de conhecimento.
 
 ---
 
-## 1. Admin (apps/admin) — Catálogo de Apps/Ativos, Sidebar e Estrutura
+## 1. Admin (apps/core/admin) — Catálogo de Apps/Ativos, Sidebar e Estrutura
 
 ### Catálogo único de apps/ativos
 
@@ -26,7 +26,7 @@ Resumo do que foi feito em termos de tecnologia para que o C-Suite e a equipe te
 
 ### Estrutura do app Next.js
 
-- **Refatoração:** unificação do app em `apps/admin` (removida duplicação `apps/admin/apps/admin`). Estrutura “achatada” para build e deploy corretos no Vercel.
+- **Refatoração:** unificação do app em `apps/core/admin` (removida duplicação `apps/core/admin/apps/core/admin`). Estrutura “achatada” para build e deploy corretos no Vercel.
 - **Docs:** documento sobre **Root Directory vazio** quando o Vercel usa o repositório do admin (não monorepo), para evitar erros de build.
 
 ### Build e dependências

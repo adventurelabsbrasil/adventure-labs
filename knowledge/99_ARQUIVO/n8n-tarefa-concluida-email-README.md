@@ -99,7 +99,7 @@ Se `N8N_WEBHOOK_TAREFA_CONCLUIDA` não estiver definida, a notificação é igno
 
 1. **Confirmar que o webhook está sendo chamado**  
    No n8n: **Executions** (menu lateral). Marque uma tarefa como concluída no Admin e veja se aparece uma nova execução para o workflow "Admin: tarefa concluída → email".  
-   - Se **não aparecer nenhuma execução**: o Admin não está chamando o n8n. Confira em `apps/admin/.env.local` (e no servidor onde roda o Admin) se `N8N_WEBHOOK_TAREFA_CONCLUIDA` está definida com a URL de **produção** do webhook (ex.: `https://seu-n8n.up.railway.app/webhook/admin-tarefa-concluida`). Reinicie o servidor do Admin após alterar o `.env`.
+   - Se **não aparecer nenhuma execução**: o Admin não está chamando o n8n. Confira em `apps/core/admin/.env.local` (e no servidor onde roda o Admin) se `N8N_WEBHOOK_TAREFA_CONCLUIDA` está definida com a URL de **produção** do webhook (ex.: `https://seu-n8n.up.railway.app/webhook/admin-tarefa-concluida`). Reinicie o servidor do Admin após alterar o `.env`.
 
 2. **Ver se o workflow falha no Gmail**  
    Em **Executions**, abra a execução que acabou de rodar. Clique no nó **Gmail**.  

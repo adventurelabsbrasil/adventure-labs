@@ -17,7 +17,7 @@ Ele lê a planilha de inventário (aba `Índice`, colunas A:H, `fileId` na colun
    - [`google-workspace-advisor-monthly-v1.json`](./google-workspace-advisor-monthly-v1.json)
 2. No nó HTTP Request `Run Google Workspace Advisor (Admin API)`, configurar:
    - Credencial **HTTP Header Auth** com header `x-admin-key`
-   - Valor: o mesmo `CRON_SECRET` configurado no Vercel do Admin (apps/admin).
+   - Valor: o mesmo `CRON_SECRET` configurado no Vercel do Admin (apps/core/admin).
 3. Ativar o workflow.
 
 ## Pré-requisitos no Admin (Vercel)

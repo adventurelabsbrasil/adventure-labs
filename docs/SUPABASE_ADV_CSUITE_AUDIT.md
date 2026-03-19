@@ -6,7 +6,7 @@
 
 | Aspecto | Estado esperado |
 |---------|------------------|
-| Colunas | `id`, `content`, `metadata` (jsonb), `embedding` (vector, nullable), `created_at`, `updated_at` — ver [apps/admin/docs/n8n-csuite-workflow-documentacao.md](../apps/admin/docs/n8n-csuite-workflow-documentacao.md). |
+| Colunas | `id`, `content`, `metadata` (jsonb), `embedding` (vector, nullable), `created_at`, `updated_at` — ver [apps/core/admin/docs/n8n-csuite-workflow-documentacao.md](../apps/core/admin/docs/n8n-csuite-workflow-documentacao.md). |
 | Escritores | Workflow C-Suite (INSERT decisão Grove + embedding), Memory Cleanup, **POST `/api/csuite/founder-report`** com `csuite_memory` (espelho Zazu, embedding NULL). |
 | Leitores | n8n (últimas N entradas + RAG), futuro Admin `/dashboard/csuite-diario`. |
 | RLS | Tabelas `adv_*` do Admin seguem políticas do projeto compartilhado; **n8n e cron usam credenciais com bypass** (service role ou API Admin). Inserções via API Admin respeitam `tenant_id` implícito Adventure (`00000000-0000-0000-0000-000000000000`) onde aplicável. |

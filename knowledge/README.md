@@ -2,7 +2,7 @@
 
 Taxonomia 00–99, espelho do Google Drive da agência.
 
-**Fonte canônica do monorepo.** O `apps/admin/context` é symlink para `../../knowledge` (fonte única); não existe mais pasta `context/` na raiz nem cópia duplicada no Admin.
+**Fonte canônica do monorepo.** O `apps/core/admin/context` é symlink para `../../knowledge` (fonte única); não existe mais pasta `context/` na raiz nem cópia duplicada no Admin.
 
 ## Estrutura
 
@@ -66,5 +66,5 @@ Consumidos pela API `/api/csuite/context-docs` e pelo workflow n8n (Build Contex
 
 | Documento | Descrição |
 |-----------|-----------|
-| [06_CONHECIMENTO/manual-agentes-e-skills.md](06_CONHECIMENTO/manual-agentes-e-skills.md) | **Manual — agentes e skills** — Índice canônico no monorepo: onde estão AGENTS.md, arquitetura C-Suite + skills, catálogo em `apps/admin/agents/skills/README.md`, templates, manual da empresa, WorkOS, compilado para IA. Ordem de leitura sugerida para Founder e C-Suite. |
+| [06_CONHECIMENTO/manual-agentes-e-skills.md](06_CONHECIMENTO/manual-agentes-e-skills.md) | **Manual — agentes e skills** — Índice canônico no monorepo: onde estão AGENTS.md, arquitetura C-Suite + skills, catálogo em `apps/core/admin/agents/skills/README.md`, templates, manual da empresa, WorkOS, compilado para IA. Ordem de leitura sugerida para Founder e C-Suite. |
 | [06_CONHECIMENTO/referencia-coleção-docs-para-ia.md](06_CONHECIMENTO/referencia-coleção-docs-para-ia.md) | **Coleção de documentação para IA** — Referência ao compilado `docs/COLEÇÃO_DOCS_PARA_IA.md`: reúne README e PLANO/roadmap de apps, sites, workflows, tools, skills e agentes (implementado + pendente/futuro). O C-Suite deve saber que existe este arquivo exportável que mostra em que ponto estamos e onde queremos chegar. |

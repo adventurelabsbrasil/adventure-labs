@@ -1,40 +1,58 @@
-# Mapa do monorepo (Æxodo — apps de clientes)
+# Mapa do monorepo (taxonomia ACORE)
 
-Atualizado em **2026-03** após mover apps de `clients/*` e `apps/benditta-dashboard` para `apps/clientes/*`.
+Atualizado em **2026-03**: clientes em `apps/clientes/`, apps internos em **`apps/core/`** e laboratório em **`apps/labs/`**.
 
 ## Workspace pnpm (`pnpm-workspace.yaml`)
 
 | Padrão | Conteúdo |
 |--------|----------|
-| `apps/*` | Admin, Adventure, xpostr, finfeed, etc. + pasta `clientes/` (sem `package.json` na raiz de `clientes`) |
-| `apps/clientes/**/*` | Cada app de cliente com `package.json` próprio |
+| `apps/core/*` | Admin, Adventure, Elite (submódulos Git oficiais) |
+| `apps/labs/*` | Finfeed, xpostr, WhatsApp worker (submódulos oficiais) |
+| `apps/clientes/**/*` | Apps de clientes (`@cliente/*`) |
 | `packages/*` | Libs compartilhadas (`@adventure-labs/*`, etc.) |
-| `tools/*`, `agents/*` | Ferramentas internas (mantidas no workspace) |
+| `tools/*`, `agents/*` | Ferramentas e agentes |
 
-## Apps de clientes (`apps/clientes/`)
+## `apps/core/` (canônico)
 
-| Caminho | Pacote pnpm | Origem |
-|---------|-------------|--------|
-| `young-talents/plataforma/` | `@cliente/young-plataforma` | `clients/04_young/young-talents` |
-| `lidera/space/` | `@cliente/lidera-space` | `clients/01_lidera/lidera-space` |
-| `lidera/skills/` | `@cliente/lidera-skills` | `clients/01_lidera/lidera-skills` |
-| `lidera/flow/` | `@cliente/lidera-flow` | *Placeholder* — código legado “Lidera Flow” (PLL) a incorporar |
-| `benditta/app/` | `@cliente/benditta-app` | `apps/benditta-dashboard` |
+| Caminho | Repo remoto (submódulo) |
+|---------|-------------------------|
+| `admin/` | `adventurelabsbrasil/admin` |
+| `adventure/` | `adventurelabsbrasil/adventure` |
+| `elite/` | `adventurelabsbrasil/elite` |
 
-## O que permaneceu em `clients/`
+## `apps/labs/`
 
-- Artefatos por cliente que **não** são app versionado como workspace (CSV, READMEs, `lidera-dre`, Rose, etc.).
-- Índice Young: `clients/04_young/README.md` aponta para a plataforma em `apps/clientes/`.
+| Caminho | Repo remoto (submódulo) |
+|---------|-------------------------|
+| `finfeed/` | `adventurelabsbrasil/finfeed` |
+| `xpostr/` | *(código local no monorepo pai)* |
+| `whatsapp-worker/` | `adventurelabsbrasil/adv-zazu-whatsapp-worker` |
 
-## Integração com o Admin
+## `apps/clientes/`
 
-- O **Admin** consome Benditta via **`@adventure-labs/benditta-meta-dashboard`** (`packages/benditta-meta-dashboard`), **não** via import do app `@cliente/benditta-app`.
+| Caminho | Pacote pnpm |
+|---------|-------------|
+| `young-talents/plataforma/` | `@cliente/young-plataforma` |
+| `lidera/space/` | `@cliente/lidera-space` |
+| `lidera/skills/` | `@cliente/lidera-skills` |
+| `lidera/flow/` | `@cliente/lidera-flow` (placeholder PLL) |
+| `benditta/app/` | `@cliente/benditta-app` |
+
+## Integração Admin ↔ Benditta
+
+- O **Admin** usa **`@adventure-labs/benditta-meta-dashboard`** (`packages/`), não importa o app `@cliente/benditta-app` diretamente.
 
 ## Comandos úteis
 
 ```bash
-pnpm benditta:dev    # @cliente/benditta-app (porta 3002)
+pnpm admin:dev
+pnpm xpostr:dev
+pnpm benditta:dev
 pnpm --filter @cliente/lidera-space dev
-pnpm --filter @cliente/lidera-skills dev
-pnpm --filter @cliente/young-plataforma dev
+```
+
+## Setup local
+
+```bash
+./scripts/setup.sh   # submódulos + symlink apps/core/admin/context → knowledge
 ```

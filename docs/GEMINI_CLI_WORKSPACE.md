@@ -25,7 +25,7 @@ A partir daí, o Gemini terá acesso a:
 
 - **knowledge/** — Base de conhecimento (taxonomia 00–99)
 - **AGENTS.md** — Diretrizes para multi-agentes (Grove, C-Suite)
-- **apps/admin/.cursorrules** — Regras do Adventure Labs OS
+- **apps/core/admin/.cursorrules** — Regras do Adventure Labs OS
 - **workflows/n8n/** — Workflows n8n versionados
 - **tools/n8n-scripts/** — Scripts Node para API n8n (upload/export de workflows)
 

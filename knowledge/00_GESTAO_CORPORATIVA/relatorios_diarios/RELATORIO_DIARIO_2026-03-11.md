@@ -57,7 +57,7 @@ No dia 11/03/2026 foram tratados **clientes (Rose, Young Talents)**, **Admin (UI
 - **Implementado:**  
   - **Adventure:** rota explícita `/young-talents` com página informativa e links (candidato → youngempreendimentos.../apply; equipe → youngempreendimentos.../). Catch-all `path: '*'` passando a redirecionar para **/** (home pública) em vez de `/login`.  
   - **Young Talents:** `PUBLIC_PATHS` com `'/'`; rota `/` com redirecionamento condicional: usuário logado → `/dashboard`, não logado → `/apply`. Remoção de useEffect redundante que forçava ida para /apply.  
-  - **Documentação:** `apps/admin/context/04_PROJETOS_DE_CLIENTES/young_talents_arquitetura_urls_auth.md` e seção no README do Young Talents (URLs, Auth, fluxos).  
+  - **Documentação:** `apps/core/admin/context/04_PROJETOS_DE_CLIENTES/young_talents_arquitetura_urls_auth.md` e seção no README do Young Talents (URLs, Auth, fluxos).  
   - **Supabase (Young Talents):** Site URL e Redirect URLs conferidos (apenas domínio youngempreendimentos.adventurelabs.com.br; sem adventurelabs.com.br).
 - **Registro:** migration de seed da tarefa em `adv_tasks` (Young Talents security/UX); duas issues criadas no repositório adventure-labs (#1 Adventure rota/young-talents e catch-all, #2 Young Talents landing raiz e rotas públicas). Definido que as issues de desenvolvimento do Admin ficam no repositório **admin**, não no adventure-labs.
 
@@ -70,7 +70,7 @@ No dia 11/03/2026 foram tratados **clientes (Rose, Young Talents)**, **Admin (UI
   - PLANO_MONOREPO_ADVENTURE_LABS.md movido para a raiz de 01_ADVENTURE_LABS.  
   - `tools/n8n-scripts` criado (scripts JS, package.json, .env.example, README).  
   - Workflows n8n migrados/arquivados (evitando duplicata com workflows existentes); all_workflows_dump em _internal/archive/n8n-dumps.  
-  - Migration adv_client_inbox em apps/admin/supabase/migrations.  
+  - Migration adv_client_inbox em apps/core/admin/supabase/migrations.  
   - Relatórios e temp em _internal/archive/relatorios-founder.  
   - API/ e meus-workflows arquivados em _internal/archive.  
   - `docs/GEMINI_CLI_WORKSPACE.md` com uso recomendado (raiz 01_ADVENTURE_LABS).  
@@ -99,15 +99,15 @@ No repositório **01_ADVENTURE_LABS** (adventure-labs), commits do dia:
 | 55016e7   | chore: update admin submodule (slugify fix for Vercel build) |
 | 3656600   | chore: update submodules (Young Talents security/UX, n8n C-Suite) |
 
-Arquivos impactados: `clients/02_rose/sites/auxilio-maternidade/*`, `apps/admin` (referência do submodule), `apps/adventure`, `clients/04_young/young-talents`.
+Arquivos impactados: `clients/02_rose/sites/auxilio-maternidade/*`, `apps/core/admin` (referência do submodule), `apps/core/adventure`, `clients/04_young/young-talents`.
 
 ---
 
 ## 4. Base de conhecimento — referências
 
-- **Lara / Meta Ads:** `apps/admin/n8n_workflows/meta_ads_agent/README.md`, `CONFIGURAR_CREDENCIAIS_N8N.md`, `docs/ADS_META_ADMIN.md`, `docs/PLANO_N8N_AUTOMACOES_AGENTES_SKILLS_TOOLS.md`.
-- **Young Talents / segurança:** `apps/admin/context/04_PROJETOS_DE_CLIENTES/young_talents_arquitetura_urls_auth.md`, `young_talents_tarefa_github_checklist.md`.
-- **Admin / issues:** `apps/admin/docs/admin-issues-checklist-conclusao.md`, `admin-issues-pendencias.md`, `supabase/scripts/mark_tasks_done.sql`.
+- **Lara / Meta Ads:** `apps/core/admin/n8n_workflows/meta_ads_agent/README.md`, `CONFIGURAR_CREDENCIAIS_N8N.md`, `docs/ADS_META_ADMIN.md`, `docs/PLANO_N8N_AUTOMACOES_AGENTES_SKILLS_TOOLS.md`.
+- **Young Talents / segurança:** `apps/core/admin/context/04_PROJETOS_DE_CLIENTES/young_talents_arquitetura_urls_auth.md`, `young_talents_tarefa_github_checklist.md`.
+- **Admin / issues:** `apps/core/admin/docs/admin-issues-checklist-conclusao.md`, `admin-issues-pendencias.md`, `supabase/scripts/mark_tasks_done.sql`.
 - **Rose / Auxílio-Maternidade:** `clients/02_rose/sites/auxilio-maternidade/README.md`.
 - **Gemini CLI:** `docs/GEMINI_CLI_WORKSPACE.md`, `GEMINI_CLI/README.md`.
 

@@ -1,0 +1,10 @@
+um aplicativo web que mostra notas musicais em forma de geometria das ondas. a ideia é que ele seja colorido e mostre a onda vibrando em todos os lados possiveis de forma que demostre a musica de forma espacial.
+o usuario ira usar o mouse ou o dedo para tocar a nota. ele tem a opcao de a nota soar continuamente ou deixar de soar
+o timbre será similar a um piano em mid
+cada nota será uma linha horizontal, do mais grave ao mais agudo perceptivel ao ouvido humano, cabendo na tela de um computador, de baixo para cima, ou seja, ao usuario tocar a linha mais baixa, soará a nota mais grave
+por consequencia deste toque, ira mostrar um grafico na lateral em diversos angulos e cores
+quando o usuario toca uma nota ela fica da cor especifica daquela nota de acordo com a escala
+as cores irão passar pelas cores do arco-iris desde o vermelho até o violeta, voltando para o vermelho na proxima oitava, gerando um loop de cores. Desde o Lá (A) até o outro Lá (A) exisitrão notas da escala cromatica
+Entre o Lá e o Sol, ou seja, do Vermelho ao Laranja, é necessario que contenha o Lá sustenido ou Sol Bemol, que terá a cor de vermelho alaranjado. e assim consequentemente em cada nota
+o app precisa ser musical e ao mesmo tempo matematico e visual
+ao o usuario tocar as notas individuais ou sobrepostas no lado esquerdo da tela, nessas linhas horizontais, o lado direito mostrará a geometria em angulos diferentes, mostrando ondas em diferentes angulos

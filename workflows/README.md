@@ -4,4 +4,4 @@ Definições de automações (n8n). **Não incluir secrets** — usar variáveis
 
 ## n8n/
 
-**Fonte canônica** dos workflows n8n do monorepo. O path `apps/admin/n8n_workflows` é symlink para `../../workflows/n8n`. Workflows exportados do n8n; importar via JSON.
+**Fonte canônica** dos workflows n8n do monorepo. O path `apps/core/admin/n8n_workflows` é symlink para `../../workflows/n8n`. Workflows exportados do n8n; importar via JSON.

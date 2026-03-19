@@ -29,7 +29,7 @@ Ref.: [github-project-e-integracao.md](../00_GESTAO_CORPORATIVA/github-project-e
 | nome, slug, descricao | Identificação e resumo |
 | tipo | Classificador: app, saas, tool, landing, internal, outro |
 | phase | Fase: idea, mvp, production, maintenance |
-| repo_path | Caminho no monorepo (ex.: `apps/admin`, `clients/01_lidera/lidera-dre`) |
+| repo_path | Caminho no monorepo (ex.: `apps/core/admin`, `clients/01_lidera/lidera-dre`) |
 | owner_email | Proprietário (negócio/gestor) |
 | assignee_email | Responsável técnico / desenvolvedor |
 | github_owner, github_repo, vercel_url, supabase_project_ref | Links Git, deploy e Supabase |
@@ -52,9 +52,9 @@ O conteúdo vivo está no Admin. Para referência rápida em docs/context, segue
 
 | App | Tipo | Fase | Repo path | Observação |
 |-----|------|------|-----------|------------|
-| Admin | internal | production | apps/admin | Painel interno. Deploy Vercel, Supabase. |
-| CRM Adventure | saas | production | apps/adventure | CRM de serviços. |
-| Landing ELITE | landing | production | apps/elite | Captação de leads. |
+| Admin | internal | production | apps/core/admin | Painel interno. Deploy Vercel, Supabase. |
+| CRM Adventure | saas | production | apps/core/adventure | CRM de serviços. |
+| Landing ELITE | landing | production | apps/core/elite | Captação de leads. |
 | Lidera DRE, Skills, Space | saas/app | production | clients/01_lidera/... | Apps cliente Lidera. |
 | Young Talents, Ranking Vendas | saas/app | production | clients/04_young/... | Banco de talentos, ranking. |
 | Rose Portal Advocacia | app | production | clients/02_rose/... | Portal advocacia. |
@@ -65,7 +65,7 @@ O conteúdo vivo está no Admin. Para referência rápida em docs/context, segue
 ## Manutenção
 
 - **Admin:** Cadastrar/editar cada ativo em **Dashboard → Ativos**. Usar **tipo** e **fase** para classificadores; **repo_path** alinhado à taxonomia do repositório (`apps/`, `clients/`, `tools/`).
-- **Seed inicial:** O arquivo `apps/admin/supabase/seed_catalogo_apps.sql` contém INSERTs condicionais para popular o catálogo (apps, clients, tools). Executar uma vez após aplicar as migrations (incluindo `20260310100001_adv_apps_catalogo_columns.sql`).
+- **Seed inicial:** O arquivo `apps/core/admin/supabase/seed_catalogo_apps.sql` contém INSERTs condicionais para popular o catálogo (apps, clients, tools). Executar uma vez após aplicar as migrations (incluindo `20260310100001_adv_apps_catalogo_columns.sql`).
 - **Este doc:** Atualizar quando houver novo app ou quando a lista no Admin for alterada, para o Grove ter referência em `/context`.
 - **Fase futura (opcional):** Script que gera este markdown a partir de `adv_apps`; ou integração GitHub/Vercel para descoberta semimanual.
 

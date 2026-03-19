@@ -38,7 +38,7 @@ node asana-login.mjs oauth --write-admin-env
 
 Ao concluir, o terminal mostra `ASANA_ACCESS_TOKEN=...`.
 
-Anexa `ASANA_ACCESS_TOKEN` em `apps/admin/.env.local` (crie o arquivo se não existir).
+Anexa `ASANA_ACCESS_TOKEN` em `apps/core/admin/.env.local` (crie o arquivo se não existir).
 
 **Nota:** token OAuth da Asana **pode expirar** (horas). Para **cron 24/7 no Vercel**, o mais estável é criar um **Personal Access Token** em Asana → Settings → Apps → **Personal access tokens** e colar com o comando abaixo (não expira como OAuth).
 
@@ -56,11 +56,11 @@ Cole o PAT; se válido, imprime o usuário e pode usar `--write-admin-env`.
 - `ASANA_PROJECT_GIDS` — GIDs dos projetos, vírgula.
 - `CRON_SECRET` — já existente.
 
-Teste: `cd apps/admin && pnpm test:andon`.
+Teste: `cd apps/core/admin && pnpm test:andon`.
 
 ## Teste: listar tarefas + criar tarefa para o Igor
 
-Usa o mesmo `ASANA_ACCESS_TOKEN` do Admin (lê `apps/admin/.env.local`). Projeto: primeiro GID de `ASANA_PROJECT_GIDS` ou `ASANA_TEST_PROJECT_GID`.
+Usa o mesmo `ASANA_ACCESS_TOKEN` do Admin (lê `apps/core/admin/.env.local`). Projeto: primeiro GID de `ASANA_PROJECT_GIDS` ou `ASANA_TEST_PROJECT_GID`.
 
 ```bash
 cd tools/asana-cli

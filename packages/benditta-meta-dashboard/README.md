@@ -4,7 +4,7 @@ Pacote **isolado** com parser do CSV do Meta (export PT-BR), agregações (CPL, 
 
 ## Consumidores
 
-- **`apps/admin`** — rotas `/dashboard/benditta` e `/dashboard/benditta/tabela` (CSV em `/public/benditta/BM-202603-MetaReport.csv`).
+- **`apps/core/admin`** — rotas `/dashboard/benditta` e `/dashboard/benditta/tabela` (CSV em `/public/benditta/BM-202603-MetaReport.csv`).
 - **`apps/clientes/benditta/app`** (`@cliente/benditta-app`) — app Next standalone (porta 3002) para extrair como subrepo/submódulo sem levar o restante do monorepo.
 
 ## Contrato do CSV
