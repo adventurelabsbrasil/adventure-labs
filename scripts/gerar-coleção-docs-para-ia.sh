@@ -34,20 +34,20 @@ IMPLEMENTADO = [
     ".cursor/skills/marketing/README.md",
     "clients/01_lidera/README.md", "clients/01_lidera/admin/README.md",
     "clients/01_lidera/lidera-dre/README.md", "clients/01_lidera/lidera-dre/scripts/README.md",
-    "clients/01_lidera/lidera-skills/README.md", "clients/01_lidera/lidera-space/README.md",
+    "apps/clientes/lidera/skills/README.md", "apps/clientes/lidera/space/README.md",
     "clients/01_lidera/lideraspacev1/README.md", "clients/02_rose/README.md",
     "clients/02_rose/admin/README.md", "clients/02_rose/roseportaladvocacia/README.md",
     "clients/03_speed/README.md", "clients/04_young/README.md", "clients/04_young/admin/README.md",
-    "clients/04_young/ranking-vendas/README.md", "clients/04_young/young-talents/README.md",
-    "clients/04_young/young-talents/docs/README.md", "clients/05_benditta/README.md",
+    "clients/04_young/ranking-vendas/README.md", "apps/clientes/young-talents/plataforma/README.md",
+    "apps/clientes/young-talents/plataforma/docs/README.md", "clients/05_benditta/README.md",
     "clients/06_capclear/README.md", "packages/config/README.md", "packages/db/README.md",
     "packages/ui/README.md", "knowledge/README.md", "knowledge/99_ARQUIVO/README.md",
     "docs/estrutura-visual/README.md", "docs/roles/README.md", "_internal/vault/README.md",
 ]
 
 PENDENTE = [
-    "clients/04_young/young-talents/docs/futuras-melhorias/README.md",
-    "clients/04_young/young-talents/docs/futuras-melhorias/PLANEJAMENTO_TEMPLATES_VAGA.md",
+    "apps/clientes/young-talents/plataforma/docs/futuras-melhorias/README.md",
+    "apps/clientes/young-talents/plataforma/docs/futuras-melhorias/PLANEJAMENTO_TEMPLATES_VAGA.md",
     "docs/PLANO_N8N_AUTOMACOES_AGENTES_SKILLS_TOOLS.md", "apps/finfeed/PLANO_INICIAL.md",
 ]
 

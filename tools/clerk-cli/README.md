@@ -72,4 +72,4 @@ pnpm --filter clerk-cli clerk -- whoami
 
 - [Repositório Clerk CLI](https://github.com/clerk/cli)
 - [Clerk Dashboard](https://dashboard.clerk.com)
-- Integração Supabase + Clerk: ver `clients/01_lidera/lidera-space/supabase/config.toml` (third_party.clerk).
+- Integração Supabase + Clerk: ver `apps/clientes/lidera/space/supabase/config.toml` (third_party.clerk).

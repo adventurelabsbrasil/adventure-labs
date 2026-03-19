@@ -1,6 +1,10 @@
-# Secrets e credenciais
+# Secrets e credenciais (Service Role / tokens — nunca no GitHub)
 .env
 .env.*
+*.env
+*.env.local
+**/.env
+**/.env.local
 .clerk/
 !.env.example
 *credenciais*.md

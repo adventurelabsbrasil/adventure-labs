@@ -2,7 +2,7 @@
 title: Referência — Coleção de documentação para IA (C-Suite)
 domain: conhecimento
 tags: [csuite, documentação, contexto, squad, estado-atual, roadmap]
-updated: 2026-03-12
+updated: 2026-03-20
 ---
 
 # Referência — Coleção de documentação para IA
@@ -13,6 +13,7 @@ Documento de referência para o **C-Suite** e para quem contribui com o squad: e
 
 - **Caminho no monorepo:** `docs/COLEÇÃO_DOCS_PARA_IA.md` (raiz do repositório 01_ADVENTURE_LABS).
 - **Conteúdo:** Reúne README e, quando relevante, PLANO/roadmap de **apps, sites, workflows, tools, skills e agentes**, separados em **implementado** e **pendente/futuro**.
+- **Complemento (mapa de links):** [manual-agentes-e-skills.md](manual-agentes-e-skills.md) — índice de onde estão AGENTS.md, arquitetura agêntica, catálogo de skills, templates e personas C-Level (não substitui o compilado; orienta navegação).
 
 ## Para que serve
 

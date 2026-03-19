@@ -26,7 +26,13 @@ Status **`error`** nos últimos posts. Causas típicas:
 
 **Correção:** no [developer.x.com](https://developer.x.com) confira app com **Read and write**, regenere **Access Token + Secret** após mudar permissões.
 
-## 3. Erro **403 Forbidden** (“Request failed with code 403”)
+## 3. Erro **401 Unauthorized**
+
+O X rejeitou as credenciais. **Não** use Bearer Token nem OAuth 2.0 — o Xpostr usa **OAuth 1.0a** (User context).
+
+Checklist: (1) Na Vercel, mapear **OAuth 1.0a** assim: `X_API_KEY` = Consumer Key, `X_API_SECRET` = Consumer Secret, `X_ACCESS_TOKEN` = Access Token, `X_ACCESS_SECRET` = Access Token Secret. (2) Colar cada valor sem espaços/quebras no início ou fim. (3) Regenerar os 4 (ou ao menos Access Token + Secret), colar de novo na Vercel e **Redeploy**. (4) Access Token deve ser da conta **@adventurelabsbr**.
+
+## 4. Erro **403 Forbidden** (“Request failed with code 403”)
 
 O texto foi gerado (Ogilvy ok), mas o **X não autorizou** o tweet. Não é bug do Xpostr.
 
@@ -46,7 +52,7 @@ Checklist (nessa ordem):
    O Access Token deve ser da conta **@adventurelabsbr** (ou a que deve publicar). Token de outro usuário posta na outra conta.
 
 5. **Callback / App type**  
-   App precisa ser tipo que suporte **OAuth 1.0a** com usuário (User context) — é o que o `twitter-api-v2` usa para tweetar.
+   App precisa ser tipo que suporte **OAuth 1.0a** com usuário (User context) — é o que o Xpostr usa para tweetar.
 
 ## Onde ver no dashboard
 

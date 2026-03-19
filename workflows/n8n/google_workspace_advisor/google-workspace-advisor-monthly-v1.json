@@ -1,0 +1,64 @@
+{
+  "name": "Google Workspace Advisor — Mensal (Planilhas inventário)",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "00 30 8 1 * *"
+            }
+          ]
+        }
+      },
+      "id": "c2e3c0a9-6c6f-4b1e-9f5a-2f2d3a7b6c01",
+      "name": "Schedule Mensal (dia 1 08:30)",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        300
+      ],
+      "notes": "Executa mensalmente no dia 1 às 08:30 (horário local do host do n8n)."
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "url": "https://admin.adventurelabs.com.br/api/csuite/google-workspace-advisor-inspect",
+        "responseMode": "lastNode",
+        "jsonParameters": true,
+        "bodyParametersJson": "{}",
+        "options": {}
+      },
+      "id": "a1c2e3d4-5f6a-4b7c-8d9e-0a1b2c3d4e5f",
+      "name": "Run Google Workspace Advisor (Admin API)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        260,
+        300
+      ],
+      "notes": "Configure a credencial HTTP Header Auth (x-admin-key = CRON_SECRET) no n8n após importar."
+    }
+  ],
+  "connections": {
+    "Schedule Mensal (dia 1 08:30)": {
+      "main": [
+        [
+          {
+            "node": "Run Google Workspace Advisor (Admin API)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "1"
+}
+

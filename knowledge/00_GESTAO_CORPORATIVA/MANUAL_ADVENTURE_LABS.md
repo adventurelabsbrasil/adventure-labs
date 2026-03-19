@@ -177,7 +177,7 @@ Este manual serve como referência para **humanos e agentes IA**: visão da empr
 
 ## 8. Para agentes IA
 
-- **Contexto:** Base de conhecimento em `knowledge/` (taxonomia 00–99). Admin em `apps/admin/`. Skills em `apps/admin/agents/skills/`. Manual de taxonomia em `knowledge/00_GESTAO_CORPORATIVA/MANUAL_TAXONOMIA_REPOSITORIO.md`. Diretrizes em `AGENTS.md`.
+- **Contexto:** Base de conhecimento em `knowledge/` (taxonomia 00–99). Admin em `apps/admin/`. Skills em `apps/admin/agents/skills/`. Manual de taxonomia em `knowledge/00_GESTAO_CORPORATIVA/MANUAL_TAXONOMIA_REPOSITORIO.md`. Diretrizes em `AGENTS.md`. **Índice de documentação de agentes e skills:** `knowledge/06_CONHECIMENTO/manual-agentes-e-skills.md`.
 - **Regra de conflito:** Em conflito de dados ou código: **PARE** → mostre o existente → pergunte ao Founder: [1] Substituir | [2] Manter | [3] Mesclar.
 - **Sigilo:** Nunca versionar credenciais, .env, extratos ou respostas sigilosas. Vault: `_internal/vault/`.
 

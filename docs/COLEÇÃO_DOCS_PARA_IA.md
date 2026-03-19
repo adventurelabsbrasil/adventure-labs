@@ -1335,7 +1335,7 @@ Quando a API existir:
 | Plano        | `apps/admin/docs/PLANO_SKILL_GOOGLE_DRIVE_ADVENTURE.md`    |
 | Skill        | `apps/admin/agents/skills/google-drive-adventure/SKILL.md` |
 | Grove        | `apps/admin/agents/grove_ceo.md`                           |
-| Ohno (COO)   | `apps/admin/agents/ohno_coo.md`                            |
+| Ohno (COO)   | `apps/admin/packages/ai-core/personas/ohno_coo.md`                            |
 | Catálogo     | `apps/admin/agents/skills/README.md`                       |
 | API (futuro) | `apps/admin/src/app/api/gdrive/...`                        |
 
