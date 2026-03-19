@@ -11,7 +11,9 @@
     "pat": "node asana-login.mjs pat",
     "pat:write": "node asana-login.mjs pat --write-admin-env",
     "test:igor-task": "node asana-test-igor-task.mjs",
-    "test:igor-task:dry": "node asana-test-igor-task.mjs --dry-run"
+    "test:igor-task:dry": "node asana-test-igor-task.mjs --dry-run",
+    "create:marketing-artifact": "node asana-create-marketing-artifact.mjs",
+    "create:marketing-artifact:dry": "node asana-create-marketing-artifact.mjs --dry-run"
   },
   "engines": {
     "node": ">=18"

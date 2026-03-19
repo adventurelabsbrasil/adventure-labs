@@ -175,7 +175,10 @@ def export_to_spreadsheet(
             ]
         )
 
-    clear_range = _range_quote(tab, "A1:Z50000")
+    # Importante: não limpar colunas além de H.
+    # O inventário (A:H) pode ser enriquecido por outros processos (ex.: agente Advisor)
+    # usando colunas I+ sem perder conteúdo anterior.
+    clear_range = _range_quote(tab, "A1:H50000")
     service.values().clear(spreadsheetId=spreadsheet_id, range=clear_range).execute()
 
     rng = _range_quote(tab, f"A1:H{max(1, len(rows))}")

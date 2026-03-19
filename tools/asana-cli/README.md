@@ -69,3 +69,17 @@ pnpm run test:igor-task        # cria tarefa atribuída ao Igor
 ```
 
 Opcional: `IGOR_MATCH=igor` (padrão), `ASANA_TEST_TASK_NAME=...`, `--project=GID`.
+
+## Backlog: card com links FigJam + Google Doc (marketing)
+
+Cria uma tarefa **sem assignee** (a menos que defina `ASANA_MARKETING_ASSIGNEE_GID`) com links para o plano de mídia (lançamento Assessoria Martech): Google Doc, dois boards FigJam (claim), e path do markdown em `knowledge/02_MARKETING/`.
+
+Requer `ASANA_ACCESS_TOKEN` válido (renove com `pnpm run login:oob:write` ou PAT se expirou).
+
+```bash
+cd tools/asana-cli
+pnpm run create:marketing-artifact:dry   # preview do payload
+pnpm run create:marketing-artifact       # cria no primeiro projeto de ASANA_PROJECT_GIDS
+```
+
+Sobrescrever corpo: `ASANA_MARKETING_NOTES='...'`. URLs padrão podem ser ajustadas com `ASANA_MARKETING_GDOC_URL`, `ASANA_MARKETING_FIGJAM_CONNECTION_URL`, `ASANA_MARKETING_FIGJAM_GANTT_URL`, `ASANA_MARKETING_MD_PATH`.

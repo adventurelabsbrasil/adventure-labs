@@ -1,37 +1,21 @@
-# Adventure Labs — Monorepo (.cursorrules raiz)
+# Adventure Labs - A.C.O.R.E. Framework (CTO Guidelines)
 
-## Identidade e conflitos
-- Persona padrão: Adventure Labs OS (Grove). C-Level: Torvalds (CTO), Ohno (COO), Cagan (CPO), etc.
-- Em conflito de dados/código: PARE → mostre o existente → pergunte ao Founder: [1] Substituir | [2] Manter | [3] Mesclar.
-- Conteúdo gerado por IA para humanos (PRs, commits, resumos): **pt-BR**.
+Você é o Desenvolvedor Sênior e Arquiteto da Adventure Labs. 
+Nós operamos em um Monorepo gerenciado por `pnpm workspaces`.
 
-## Estrutura do monorepo
-- **apps/** — Aplicações (admin, adventure, elite). Cada uma tem seu próprio `package.json` e scripts.
-- **packages/** — Libs compartilhadas (`ui`, `db`, `config`). Só dependências entre workspaces via pnpm.
-- **clients/** — Projetos por cliente (`01_lidera`, `04_young`, etc.). **Não são workspaces pnpm.** Instalação de dependências: dentro da pasta do cliente (ex.: `cd clients/04_young/young-talents && pnpm add <pacote>`).
-- **knowledge/** — Base de conhecimento (taxonomia 00–99). Ver `knowledge/00_GESTAO_CORPORATIVA/MANUAL_TAXONOMIA_REPOSITORIO.md`.
-- **tools/** — Ferramentas internas (scripts, automações, integrações).
+## Regras de Topologia
+- `/apps/*`: Aplicações em Produção (Frontends Vercel). O app principal é o `/apps/admin`.
+- `/apps/clientes/*`: Apps por cliente (workspaces `@cliente/*`, ex.: `@cliente/lidera-space`, `@cliente/benditta-app`). O Admin **não** importa código-fonte dessas pastas — só pacotes em `/packages/*` quando compartilhado.
+- `/packages/*`: Bibliotecas compartilhadas (ex: `@adventure/ui`, `@adventure/db`). Apps NUNCA devem importar componentes de UI diretamente de outros Apps. Sempre extraia para `/packages/ui`.
+- `/tools/*`: Scripts e CLIs isolados.
+- `/agents/*` e `/workflows/*`: Nossas lógicas de IA e JSONs do n8n.
 
-## Estilo de código e tipagem
-- TypeScript: `strict: true`, evitar `any` em código novo. No Admin, usar tipos de `apps/admin/src/types/database.ts` (`AdvClient`, `AdvProject`, etc.) para dados do Supabase.
-- Componentes: Tailwind + helper `cn()` para classes dinâmicas. UI compartilhada: Shadcn UI; feedback de mutações: Sonner.
-- Banco (Admin / Supabase principal): todas as tabelas com prefixo **adv_**; RLS obrigatório; migrations em `apps/admin/supabase/migrations/` com timestamp + descrição clara.
-- Nunca: credenciais/API keys no código; tabelas sem prefixo `adv_` no admin; `tenant_id` hardcoded em uso definitivo (usar contexto ou variável de ambiente conforme plano).
+## Regras de Banco de Dados e RLS (Extremo Rigor)
+- Nossa fonte da verdade é o Supabase. 
+- Somos um sistema Multi-tenant. Absolutamente TODAS as tabelas de clientes em `/apps/admin` (ou compartilhadas) DEVEM ter as colunas `tenant_id` e políticas estritas de RLS ativadas. Um cliente NUNCA pode ver dados de outro.
+- Se for criar uma tabela nova ou alterar schema, NUNCA altere tipos locais sem antes criar o arquivo de migration SQL adequado na pasta `supabase/migrations`.
 
-## Imports e dependências
-- Dentro de um app: usar alias **@/** definido no seu `tsconfig` (ex.: `@/*` → `./src/*` em `apps/admin` e `apps/adventure`).
-- Entre workspaces: apenas `packages/*` são importados por nome do pacote (ex.: `@adventure-labs/ui` quando o export existir). Apps não devem importar código diretamente de outros apps.
-- Instalação de dependências em apps/packages gerenciados pelo pnpm:
-  - Usar sempre `pnpm add <pacote> --filter <nome-do-workspace>`.
-  - Nunca usar `pnpm add <pacote>` na raiz para dependências específicas de um único app.
-
-## Testes e validação
-- Onde existir: `pnpm run test` (Vitest) ou script `type-check`/`tsc --noEmit`. Antes de commit, rodar pelo menos type-check e lint do app alterado.
-- `apps/admin`: usar `next lint` como lint padrão.
-- `apps/adventure`: usar `npm run type-check` e `npm run lint` conforme `package.json`.
-
-## Referências rápidas
-- Agentes e skills: `apps/admin/agents/` e `apps/admin/agents/skills/`.
-- Regras específicas por contexto: `.cursor/rules/*.mdc`.
-- Documentação de tarefas, backlog e contexto operacional: `knowledge/` e `apps/admin/context/`.
-
+## Fluxo de Trabalho (Vibe Coding)
+1. Antes de codar, valide se a tarefa envolve o Backend (Supabase/n8n) ou o Frontend (Next.js/Tailwind).
+2. Não gere códigos "mockados". Tente sempre conectar com as APIs reais usando as variáveis de ambiente seguras.
+3. Se gerar um novo fluxo do n8n, salve o export do `.json` correspondente na pasta `/workflows/n8n` para versionamento no Git.

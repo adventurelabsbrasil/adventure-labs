@@ -37,7 +37,7 @@ updated: 2026-03-12
 | Artefato | Alteração |
 |----------|-----------|
 | `apps/admin/agents/grove_ceo.md` | Inclusão na seção **Delegação ao C-Suite**: consultar/atualizar documentos no Google Drive da Adventure → Ohno (COO), skill `google-drive-adventure`; Grove pode acionar em uso pontual; escrita segue protocolo de sobrescrita. |
-| `apps/admin/agents/ohno_coo.md` | Nova responsabilidade e linha na tabela **SKILLS ASSOCIADAS** para `google-drive-adventure` (leitura/escrita no Drive; regra de sobrescrita). |
+| `apps/admin/packages/ai-core/personas/ohno_coo.md` | Nova responsabilidade e linha na tabela **SKILLS ASSOCIADAS** para `google-drive-adventure` (leitura/escrita no Drive; regra de sobrescrita). |
 | `apps/admin/agents/skills/README.md` | Nova linha no catálogo **COO (Ohno)**: `google-drive-adventure \| Drive \| Curador de Documentos Google Drive da Adventure`. |
 
 ---
@@ -59,4 +59,4 @@ updated: 2026-03-12
 - Plano completo: `apps/admin/docs/PLANO_SKILL_GOOGLE_DRIVE_ADVENTURE.md`
 - Skill: `apps/admin/agents/skills/google-drive-adventure/SKILL.md`
 - Grove: `apps/admin/agents/grove_ceo.md` (delegação Drive → Ohno)
-- Ohno: `apps/admin/agents/ohno_coo.md` (skill na tabela)
+- Ohno: `apps/admin/packages/ai-core/personas/ohno_coo.md` (skill na tabela)

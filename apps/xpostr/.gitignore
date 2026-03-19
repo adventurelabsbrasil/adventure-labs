@@ -1,0 +1,6 @@
+# Secrets — ACORE / Infisical
+.env
+.env.*
+*.env
+*.env.local
+!.env.example

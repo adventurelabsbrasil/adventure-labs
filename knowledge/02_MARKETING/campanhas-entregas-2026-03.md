@@ -2,7 +2,7 @@
 title: Campanhas e entregas — Março 2026
 domain: marketing
 tags: [campanhas, entregas, kpis]
-updated: 2026-03-07
+updated: 2026-03-19
 ---
 
 # Campanhas e entregas — Março 2026
@@ -55,6 +55,7 @@ Resumo de campanhas, criativos e entregas de marketing extraído do Brain Dump (
 - **Instagram:** agendar novos posts no perfil da Adventure.
 - **Design de capas:** LinkedIn e YouTube com ID visual da Adventure.
 - **Campanhas:** assessoria martech; SaaS (ATS, CRM).
+- **FigJam — plano de mídia (lançamento Assessoria Martech):** [figjam-plano-midia-lancamento-assessoria-martech.md](./figjam-plano-midia-lancamento-assessoria-martech.md) — mapa de conexões + cronograma Gantt (claim FigJam) + tabela de etapas com anotações; Google Doc como fonte narrativa.
 - **Webinar terça 16h (03/03):** adaptar PPT, realizar, avisos no grupo VIP e individual.
 - **Webinar w11:** adicionar saldo, rodar campanha; gravar novo vídeo ou usar criativos do Igor.
 - **Apresentação padrão:** diagnóstico do negócio com ID Adventure (para diagnósticos gratuitos, ex. Valmir).

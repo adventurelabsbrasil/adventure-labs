@@ -1,0 +1,41 @@
+---
+description: Regras de design system Adventure Labs para criativos em redes sociais (LinkedIn, Instagram, X) e uso no Figma. Paleta, tipografia, formatos por plataforma e referências oficiais.
+globs: "**/*.md", "**/figma*", "**/criativo*", "knowledge/02_MARKETING/**"
+alwaysApply: false
+---
+
+# Adventure Labs — Design System (Redes Sociais)
+
+Regras para criativos da marca em **LinkedIn**, **Instagram** e **X (Twitter)**. Fonte canônica: [knowledge/02_MARKETING/adventure-labs-social-design-system.md](knowledge/02_MARKETING/adventure-labs-social-design-system.md).
+
+## Identidade visual (resumo)
+
+- **Cores oficiais:** Deep Space Blue `#031445` (confiabilidade, fundos, Smart); Bold Venture Red `#DA0028` (CTAs, energia, Bold); branco para texto/respiro. Não inventar cores.
+- **Tipografia:** Space Grotesk (principal).
+- **Símbolo:** A + seta Norte; não distorcer; manter área de respiro. Logo em versão escura/clara conforme fundo.
+- **Tom:** Direto, orientado a dados, ousado sem ser irresponsável; pt-BR. Evitar jargão de agência e promessas sem métricas.
+- **Slogan:** Bold Moves. Smart Growth. / Movimentos ousados. Crescimento inteligente.
+
+## Formatos por plataforma
+
+- **LinkedIn:** Feed 1200×627 ou 1080×1080; banner perfil 1584×396; carrossel 1080×1080/slide.
+- **Instagram:** Feed 1080×1080 (quadrado) ou 1080×1350 (4:5); Stories/Reels 1080×1920 (9:16); área segura nas bordas.
+- **X (Twitter):** Imagem no post 1200×628 (2:1) ou 1080×1080.
+
+## Referências Figma (oficial)
+
+- **Marca (logos, paleta, tipografia):** [AdVenture](https://www.figma.com/design/RvMVbTd6eTvFGLBcItq2ms/AdVenture?node-id=0-1)
+- **Cards orgânicos (social):** [Criativos \| Orgânicos](https://www.figma.com/design/3NE3LaYrzQoUK7CQYAplvg/Criativos-%7C-Org%C3%A2nicos?node-id=0-1)
+- **Cards ads:** [Criativos \| Ads](https://www.figma.com/design/tZk3Bj3nHhMUYXzN1B9U5q/Criativos-%7C-Ads)
+
+## Fluxo com Figma MCP
+
+Quando o usuário compartilhar um link do Figma ou pedir validação de criativo:
+
+1. O Figma MCP exige que um **layer esteja selecionado** no app Figma para retornar contexto.
+2. Se o usuário tiver um frame selecionado: usar `get_design_context` (e opcionalmente `get_screenshot`) para extrair padrões (tipografia, cores, dimensões).
+3. Validar ou documentar contra as regras deste design system e do doc em `knowledge/02_MARKETING/adventure-labs-social-design-system.md`.
+
+## Proibições
+
+- Não alterar proporção do logo; não usar cores fora da paleta oficial; não usar tom genérico de agência.

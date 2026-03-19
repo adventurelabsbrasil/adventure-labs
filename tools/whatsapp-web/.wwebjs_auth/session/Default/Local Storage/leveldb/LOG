@@ -1,0 +1,8 @@
+2026/03/16-11:08:06.638 50c98 Creating DB /Users/ribasrodrigo91/Documents/GitHub/01_ADVENTURE_LABS/tools/whatsapp-web/.wwebjs_auth/session/Default/Local Storage/leveldb since it was missing.
+2026/03/16-11:08:06.642 50c98 Reusing MANIFEST /Users/ribasrodrigo91/Documents/GitHub/01_ADVENTURE_LABS/tools/whatsapp-web/.wwebjs_auth/session/Default/Local Storage/leveldb/MANIFEST-000001
+2026/03/16-14:34:35.690 50c9b Level-0 table #5: started
+2026/03/16-14:34:35.695 50c9b Level-0 table #5: 19237 bytes OK
+2026/03/16-14:34:35.698 50c9b Delete type=0 #3
+2026/03/16-19:50:26.065 50c9b Level-0 table #7: started
+2026/03/16-19:50:26.072 50c9b Level-0 table #7: 13976 bytes OK
+2026/03/16-19:50:26.074 50c9b Delete type=0 #4

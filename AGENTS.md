@@ -37,6 +37,7 @@ Exemplo de agente de apoio completo: [`apps/admin/agents/andon_asana/`](apps/adm
 
 | Recurso | Path |
 |---------|------|
+| **Índice: manual agentes/skills** | `knowledge/06_CONHECIMENTO/manual-agentes-e-skills.md` — mapa de toda a documentação relacionada |
 | Base de conhecimento | `knowledge/` (00_GESTAO_CORPORATIVA … 99_ARQUIVO) |
 | Admin (contexto interno) | `apps/admin/context/` (symlink → `knowledge/`) |
 | Clientes | `clients/01_lidera/`, `clients/02_rose/`, etc. |

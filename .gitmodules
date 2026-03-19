@@ -11,7 +11,7 @@
 	path = apps/adventure
 	url = https://github.com/adventurelabsbrasil/adventure.git
 [submodule "clients/01_lidera/lidera-space"]
-	path = clients/01_lidera/lidera-space
+	path = apps/clientes/lidera/space
 	url = https://github.com/adventurelabsbrasil/lidera-space.git
 [submodule "clients/02_rose/roseportaladvocacia"]
 	path = clients/02_rose/roseportaladvocacia
@@ -23,10 +23,10 @@
 	path = clients/04_young/ranking-vendas
 	url = https://github.com/rodrigoribasyoung/ranking-vendas.git
 [submodule "clients/04_young/young-talents"]
-	path = clients/04_young/young-talents
+	path = apps/clientes/young-talents/plataforma
 	url = https://github.com/adventurelabsbrasil/young-talents.git
 [submodule "clients/01_lidera/lidera-skills"]
-	path = clients/01_lidera/lidera-skills
+	path = apps/clientes/lidera/skills
 	url = https://github.com/adventurelabsbrasil/lidera-skills.git
 [submodule "apps/whatsapp-worker"]
 	path = apps/whatsapp-worker

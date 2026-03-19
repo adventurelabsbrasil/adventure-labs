@@ -1,0 +1,15 @@
+-- Seed opcional: mapeamento conta Meta Ads → cliente ou Adventure (adv_client_meta_accounts).
+-- Preencher conforme suas contas; o workflow Lara usa GET /api/meta/mapping para saber owner_type.
+-- Para contas próprias da Adventure: client_id NULL, owner_type = 'adventure'.
+-- Para contas de cliente: client_id = id em adv_clients, owner_type = 'cliente'.
+
+-- Exemplo (descomente e ajuste IDs):
+-- INSERT INTO adv_client_meta_accounts (tenant_id, client_id, meta_account_id, account_name, owner_type)
+-- VALUES
+--   ('00000000-0000-0000-0000-000000000000', NULL, 'act_123456789', 'Adventure Labs (própria)', 'adventure'),
+--   ('00000000-0000-0000-0000-000000000000', '<uuid-do-cliente>', 'act_987654321', 'Conta Cliente X', 'cliente')
+-- ON CONFLICT (meta_account_id) DO UPDATE SET
+--   account_name = EXCLUDED.account_name,
+--   client_id = EXCLUDED.client_id,
+--   owner_type = EXCLUDED.owner_type,
+--   updated_at = now();
