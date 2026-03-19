@@ -54,6 +54,7 @@ Relatórios diários ou pontuais do que foi feito em termos de tecnologia. Consu
 
 | Documento | Descrição |
 |-----------|-----------|
+| [06_CONHECIMENTO/relatorio-tech-2026-03-19.md](06_CONHECIMENTO/relatorio-tech-2026-03-19.md) | **Relatório Tech — 19/03/2026** — Agentes de benchmark martech (benchmark_adventure, benchmark_clientes, benchmark_conteudo) e 9 skills; delegação Grove → Ogilvy/CPO; registro em operação. |
 | [06_CONHECIMENTO/relatorio-tech-2026-03-10.md](06_CONHECIMENTO/relatorio-tech-2026-03-10.md) | **Relatório Tech — 10/03/2026** — Admin (catálogo apps/ativos, filtros, tabela, estrutura Next.js); Lidera DRE (app multi-tenant, auth, export); PLL Planilha CEF + docs C-Suite; Young Talents export CSV/XLS/PDF; Lara (API analyze, n8n); Sueli (sueli-config); base de conhecimento atualizada. |
 | [06_CONHECIMENTO/relatorio-tech-2026-03-09.md](06_CONHECIMENTO/relatorio-tech-2026-03-09.md) | **Relatório Tech — 09/03/2026** — CRM, Space, C-Suite V11, Time Bank; Admin (Google Ads, Meta BM, allowlist, /dashboard/ads, CLI); credenciais e env por cliente (subdomínio, template, clients/XX/admin). |
 | [06_CONHECIMENTO/lidera-pll-planilha-cef-2026-03-10.md](06_CONHECIMENTO/lidera-pll-planilha-cef-2026-03-10.md) | **Lidera PLL — Planilha CEF (10/03/2026)** — Gestão de estoque e lista de compras para restaurantes (Programa Lucro e Liberdade); Google Sheets + Apps Script; links da planilha e do script; 1 de 5 do pacote. |
