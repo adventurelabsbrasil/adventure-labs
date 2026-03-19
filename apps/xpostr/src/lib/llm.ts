@@ -128,11 +128,14 @@ type Provider = "openai" | "anthropic" | "gemini";
  * Ordem fixa: OpenAI → Anthropic → Gemini (só entra quem tem chave).
  * Se um falhar por cota/crédito, tenta o próximo.
  */
-export async function completeAssistant(
+export type LlmProvider = Provider | "simulation";
+export type LlmResult = { text: string; provider: LlmProvider };
+
+export async function completeAssistantWithProvider(
   system: string,
   user: string,
   maxTokens = 1500
-): Promise<string> {
+): Promise<LlmResult> {
   const chain: { id: Provider; run: () => Promise<string> }[] = [];
 
   if (process.env.OPENAI_API_KEY?.trim()) {
@@ -155,7 +158,10 @@ export async function completeAssistant(
   }
 
   if (chain.length === 0) {
-    return `[sem LLM] Defina OPENAI_API_KEY, ANTHROPIC_API_KEY ou GEMINI_API_KEY (Google AI Studio).`;
+    return {
+      text: `[sem LLM] Defina OPENAI_API_KEY, ANTHROPIC_API_KEY ou GEMINI_API_KEY (Google AI Studio).`,
+      provider: "simulation",
+    };
   }
 
   const tried: Provider[] = [];
@@ -165,7 +171,8 @@ export async function completeAssistant(
     const { id, run } = chain[i]!;
     tried.push(id);
     try {
-      return await run();
+      const text = await run();
+      return { text, provider: id };
     } catch (e) {
       lastError = e;
       const hasNext = i < chain.length - 1;
@@ -182,4 +189,13 @@ export async function completeAssistant(
   }
 
   throw lastError;
+}
+
+export async function completeAssistant(
+  system: string,
+  user: string,
+  maxTokens = 1500
+): Promise<string> {
+  const r = await completeAssistantWithProvider(system, user, maxTokens);
+  return r.text;
 }

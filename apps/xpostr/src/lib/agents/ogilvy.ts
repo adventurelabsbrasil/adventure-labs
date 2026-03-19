@@ -1,6 +1,6 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { ADVENTURE_BRAND_BRIEF, X_HANDLE } from "@/lib/adventure-brand";
-import { completeAssistant } from "@/lib/llm";
+import { completeAssistantWithProvider } from "@/lib/llm";
 
 export async function ogilvyWritePost(
   supabase: SupabaseClient,
@@ -41,7 +41,13 @@ ${ctx}
 
 Escreva UM único tweet pronto para publicar.`;
 
-  let content = (await completeAssistant(system, user, 500)).trim();
+  const { text, provider } = await completeAssistantWithProvider(
+    system,
+    user,
+    500
+  );
+
+  let content = text.trim();
   content = content.replace(/^["']|["']$/g, "").slice(0, 280);
 
   const { data: og } = await supabase
@@ -64,6 +70,13 @@ Escreva UM único tweet pronto para publicar.`;
     agent_name: "Ogilvy",
     event_type: "copy_done",
     message: `Rascunho: ${content.slice(0, 120)}…`,
+    cycle_number: cycleNumber,
+  });
+
+  await supabase.from("adv_xpostr_feed_events").insert({
+    agent_name: "Ogilvy",
+    event_type: "llm_provider",
+    message: `LLM provider (Ogilvy): ${provider}`,
     cycle_number: cycleNumber,
   });
 

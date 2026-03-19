@@ -1,6 +1,6 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { ADVENTURE_BRAND_BRIEF } from "@/lib/adventure-brand";
-import { completeAssistant } from "@/lib/llm";
+import { completeAssistantWithProvider } from "@/lib/llm";
 
 export async function zazuResearch(
   supabase: SupabaseClient,
@@ -35,7 +35,11 @@ Responda em português do Brasil. Seja factual e acionável. Sem hashtags na pes
 
 Gere um briefing de 3 a 6 bullets curtos: tendências, implicações para empresas de serviço 100k+, e ângulos para post educativo no X.`;
 
-  const report = await completeAssistant(system, user, 1200);
+  const { text: report, provider } = await completeAssistantWithProvider(
+    system,
+    user,
+    1200
+  );
 
   await supabase.from("adv_xpostr_agent_messages").insert({
     from_agent: "Zazu",
@@ -49,6 +53,13 @@ Gere um briefing de 3 a 6 bullets curtos: tendências, implicações para empres
     agent_name: "Zazu",
     event_type: "research_done",
     message: "Briefing enviado ao Ogilvy",
+    cycle_number: cycleNumber,
+  });
+
+  await supabase.from("adv_xpostr_feed_events").insert({
+    agent_name: "Zazu",
+    event_type: "llm_provider",
+    message: `LLM provider (Zazu): ${provider}`,
     cycle_number: cycleNumber,
   });
 
