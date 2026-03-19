@@ -32,3 +32,11 @@ openclaw_workspace_backup_1/
 openclaw/.openclaw/
 openclaw_workspace_backup_1/
 .DS_Store
+
+# Lixo de Contexto e Mídia
+*.opus
+*.zip
+*.mp3
+*.mp4
+*WhatsApp Chat*/
+knowledge/99_ARQUIVO/**/*.csv
