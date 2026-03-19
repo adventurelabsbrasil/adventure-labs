@@ -26,6 +26,13 @@
 
 Exemplo de agente de apoio completo: [`apps/admin/agents/andon_asana/`](apps/admin/agents/andon_asana/) (Asana → base híbrida C-Suite + Founder).
 
+**Gerentes de conta:** três agentes (um por cliente ativo) — `gerente_rose`, `gerente_benditta`, `gerente_young` — owner Cagan (CPO). Cada um usa skills compartilhadas (relatório-kpis-campanhas, copy-brief-campanha, analise-performance-canal, briefing-cliente-template, escopo-projeto-checklist, dashboard-kpis-especificacao) e a skill de contexto do cliente: `rose-portal-advocacia-contexto`, `benditta-marcenaria-contexto`, `young-empreendimentos-contexto`. Acionados pelo Grove ou Cagan para demandas de CX, marketing, produtos e escopo daquele cliente.
+
+**Benchmark martech (três agentes de apoio):**
+- **benchmark_adventure** (owner Ogilvy/CMO): exclusivo para a Adventure — tendências martech, concorrentes, dashboards/BI/automações, SaaS/microsaas. Skills: `benchmark-martech-tendencias`, `benchmark-concorrentes-adventure`, `benchmark-dashboards-bi-automacoes`. Acionado pelo Grove ou Ogilvy para inovação interna.
+- **benchmark_clientes** (owner Cagan/CPO): exclusivo para clientes da Adventure — mercado/setor/nicho do cliente, concorrência no setor, tendências por nicho. Skills: `benchmark-mercado-setor-cliente`, `benchmark-concorrencia-setor`, `benchmark-tendencias-por-nicho`. Acionado pelo Grove, Cagan ou gerentes de conta.
+- **benchmark_conteudo** (owner Ogilvy/CMO): trend topics, criatividade, inovação, educação martech. Skills: `benchmark-trend-topics-conteudo`, `benchmark-martech-criatividade-inovacao`, `benchmark-educacao-novidades-martech`. Acionado pelo Grove ou Ogilvy para conteúdo e educação. Estes agentes estão previstos para integrações com C-Suite e equipe.
+
 ## Onde buscar contexto
 
 | Recurso | Path |
