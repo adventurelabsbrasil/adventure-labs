@@ -101,7 +101,7 @@ Ou, se já clonou sem `--recurse-submodules`:
 ./scripts/setup.sh
 ```
 
-O script inicializa os submodules e cria o symlink `apps/core/admin/context -> ../../knowledge` (evita duplicação).
+O script inicializa os submodules e cria o symlink `apps/core/admin/context -> ../../../knowledge` (evita duplicação).
 
 ## Estrutura
 
@@ -468,7 +468,7 @@ Arquivo que orienta o multi-agente sobre:
 
 - **Repo raiz** versiona: knowledge/, docs/, .cursor/, workflows/, etc.
 - **Submodules:** admin, adventure, elite, finfeed, lidera-space, lidera-skills, roseportaladvocacia, young-emp, ranking-vendas, young-talents
-- **Symlink:** `apps/core/admin/context -> ../../knowledge` (sem duplicação)
+- **Symlink:** `apps/core/admin/context -> ../../../knowledge` (sem duplicação)
 - **Setup:** `./scripts/setup.sh` após clone
 - **Documentação:** `docs/FASE_6_GIT_E_REPOSITORIO.md`
 

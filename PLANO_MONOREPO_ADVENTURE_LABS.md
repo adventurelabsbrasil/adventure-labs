@@ -302,7 +302,7 @@ Arquivo que orienta o multi-agente sobre:
 
 - **Repo raiz** versiona: knowledge/, docs/, .cursor/, workflows/, etc.
 - **Submodules:** admin, adventure, elite, finfeed, lidera-space, lidera-skills, roseportaladvocacia, young-emp, ranking-vendas, young-talents
-- **Symlink:** `apps/core/admin/context -> ../../knowledge` (sem duplicação)
+- **Symlink:** `apps/core/admin/context -> ../../../knowledge` (sem duplicação)
 - **Setup:** `./scripts/setup.sh` após clone
 - **Documentação:** `docs/FASE_6_GIT_E_REPOSITORIO.md`
 
@@ -322,7 +322,7 @@ Antes de considerar o monorepo pronto:
 
 - [x] Executar `./scripts/audit-secrets.sh --report` e revisar; nenhum secret no histórico
 - [x] `.env.example` existe onde há `.env` em uso (admin, adventure, elite, rose, young-talents, dbgr, xtractor)
-- [x] `knowledge/` é fonte canônica; `apps/core/admin/context` é symlink para `../../knowledge` (ver knowledge/README.md)
+- [x] `knowledge/` é fonte canônica; `apps/core/admin/context` é symlink para `../../../knowledge` (ver knowledge/README.md)
 - [x] Clientes seguem padrão `clients/NN_nome/projeto`
 - [x] Skills mapeiam para pastas de conhecimento (`.cursor/skills/` + `apps/core/admin/agents/skills/`)
 - [x] AGENTS.md e .cursor/rules estão configurados
@@ -342,7 +342,7 @@ Antes de considerar o monorepo pronto:
 ## 9. Referências
 
 - Estrutura atual: `01_ADVENTURE_LABS/`, `GEMINI_CLI/`
-- Taxonomia existente: `knowledge/` (00–99); `apps/core/admin/context` → symlink para `../../knowledge`
+- Taxonomia existente: `knowledge/` (00–99); `apps/core/admin/context` → symlink para `../../../knowledge`
 - Skills Cursor: `~/.cursor/skills-cursor/`
 - Regras Cursor: `.cursor/rules/` (formato .mdc)
 
