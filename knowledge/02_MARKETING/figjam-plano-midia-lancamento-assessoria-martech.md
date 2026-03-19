@@ -71,7 +71,7 @@ Use estas linhas como **ponto de partida**; ajuste datas e owners no board e no 
 ## Manutenção
 
 - Quando o Google Doc mudar, atualizar **tabela e stickies** no FigJam e a data `updated` deste arquivo.
-- **Card no Asana:** com `ASANA_ACCESS_TOKEN` válido em `apps/admin/.env.local`, rode:
+- **Card no Asana:** com `ASANA_ACCESS_TOKEN` válido em `apps/core/admin/.env.local`, rode:
 
   `cd tools/asana-cli && pnpm run create:marketing-artifact`
 

@@ -8,8 +8,8 @@ Projeto Supabase compartilhado: **ftctmseyrqhckutpfdeq**. Este documento descrev
 
 1. Abra o **Supabase Dashboard** do projeto (ftctmseyrqhckutpfdeq) e vá em **SQL Editor**.
 2. Abra o arquivo:
-   - **Principal:** `apps/admin/supabase/scripts/diagnostico_schema.sql`
-   - **Complementar (opcional):** `apps/admin/supabase/scripts/diagnostico_schema_extra.sql`
+   - **Principal:** `apps/core/admin/supabase/scripts/diagnostico_schema.sql`
+   - **Complementar (opcional):** `apps/core/admin/supabase/scripts/diagnostico_schema_extra.sql`
 3. Copie todo o conteúdo de `diagnostico_schema.sql` e execute no SQL Editor.
 4. O script contém várias queries (1 a 9). Anote ou exporte os resultados, em especial das **queries 4 e 5**.
 
@@ -17,7 +17,7 @@ Projeto Supabase compartilhado: **ftctmseyrqhckutpfdeq**. Este documento descrev
 
 ## 2. O que anotar (queries 4 e 5)
 
-**Opção em um único script:** Use `apps/admin/supabase/scripts/diagnostico_rls_e_colunas_crm.sql`. Ele reproduz as queries 4 e 5 (políticas RLS e tabelas com RLS ativo), lista as colunas das tabelas CRM usadas pelo script RLS (para investigar o erro `column "project_id" does not exist`) e inclui uma query com as tabelas referenciadas pelos apps Admin e Adventure. Rode no SQL Editor e cole os resultados no estado_schema_template (seções 4 e 5) e use a lista de colunas para analisar o erro do supabase-rls-policies.
+**Opção em um único script:** Use `apps/core/admin/supabase/scripts/diagnostico_rls_e_colunas_crm.sql`. Ele reproduz as queries 4 e 5 (políticas RLS e tabelas com RLS ativo), lista as colunas das tabelas CRM usadas pelo script RLS (para investigar o erro `column "project_id" does not exist`) e inclui uma query com as tabelas referenciadas pelos apps Admin e Adventure. Rode no SQL Editor e cole os resultados no estado_schema_template (seções 4 e 5) e use a lista de colunas para analisar o erro do supabase-rls-policies.
 
 ### Query 4 — Políticas RLS
 
@@ -43,7 +43,7 @@ Lista quais tabelas têm RLS ligado (`rls_enabled`) e se é forçado (`rls_force
 
 ## 3. Verificar se o script RLS do CRM está aplicado
 
-O arquivo `apps/adventure/scripts/migration/supabase-rls-policies.sql` define funções e políticas para o CRM (users, projects, project_users, deals, contacts, etc.), mas **não está em** `supabase/migrations/`, então pode não estar aplicado no projeto.
+O arquivo `apps/core/adventure/scripts/migration/supabase-rls-policies.sql` define funções e políticas para o CRM (users, projects, project_users, deals, contacts, etc.), mas **não está em** `supabase/migrations/`, então pode não estar aplicado no projeto.
 
 No SQL Editor, execute (ou consulte o resultado do diagnóstico):
 
@@ -62,9 +62,9 @@ WHERE routine_schema = 'public'
 
 ## 4. Onde documentar o resultado
 
-- **Estado do schema (snapshot):** Use o template `apps/admin/supabase/docs/estado_schema_template.md` e preencha com os resultados das queries 1–8 (e, se usar, do `diagnostico_schema_extra.sql`). Os resultados das queries A e B do `diagnostico_rls_e_colunas_crm.sql` correspondem às seções 4 e 5 do template.
+- **Estado do schema (snapshot):** Use o template `apps/core/admin/supabase/docs/estado_schema_template.md` e preencha com os resultados das queries 1–8 (e, se usar, do `diagnostico_schema_extra.sql`). Os resultados das queries A e B do `diagnostico_rls_e_colunas_crm.sql` correspondem às seções 4 e 5 do template.
 - **Matriz de roles e acessos:** Atualize `docs/SUPABASE_ROLES_MATRIZ_ACESSOS.md` com o estado real das políticas (quem pode SELECT/INSERT/UPDATE/DELETE por tabela/role), principalmente após rodar esta verificação.
-- **Alinhamento com os apps:** Use a query C (colunas CRM) para investigar o erro do supabase-rls-policies; use a query D (tabelas dos apps) e o checklist em `docs/SUPABASE_APPS_ALINHAMENTO.md` para cruzar existência de tabelas e RLS com Admin e Adventure. Resultados das queries C e D podem ser guardados em `apps/admin/supabase/scripts/queryC_resultado.json` e `apps/admin/supabase/scripts/queryD_resultado` para referência.
+- **Alinhamento com os apps:** Use a query C (colunas CRM) para investigar o erro do supabase-rls-policies; use a query D (tabelas dos apps) e o checklist em `docs/SUPABASE_APPS_ALINHAMENTO.md` para cruzar existência de tabelas e RLS com Admin e Adventure. Resultados das queries C e D podem ser guardados em `apps/core/admin/supabase/scripts/queryC_resultado.json` e `apps/core/admin/supabase/scripts/queryD_resultado` para referência.
 
 ---
 
@@ -72,9 +72,9 @@ WHERE routine_schema = 'public'
 
 - **Manual do projeto Roles (passo a passo):** [docs/roles/PASSO_A_PASSO.md](roles/PASSO_A_PASSO.md) — guia único: o que foi feito, o que fazer e resultados esperados.
 - Plano: Roles do Admin e Adventure (CRM) no Supabase.
-- Script de diagnóstico: `apps/admin/supabase/scripts/diagnostico_schema.sql`
-- Script RLS e colunas CRM: `apps/admin/supabase/scripts/diagnostico_rls_e_colunas_crm.sql`
-- Script extra: `apps/admin/supabase/scripts/diagnostico_schema_extra.sql`
-- Template de estado do schema: `apps/admin/supabase/docs/estado_schema_template.md`
+- Script de diagnóstico: `apps/core/admin/supabase/scripts/diagnostico_schema.sql`
+- Script RLS e colunas CRM: `apps/core/admin/supabase/scripts/diagnostico_rls_e_colunas_crm.sql`
+- Script extra: `apps/core/admin/supabase/scripts/diagnostico_schema_extra.sql`
+- Template de estado do schema: `apps/core/admin/supabase/docs/estado_schema_template.md`
 - Matriz de acessos: `docs/SUPABASE_ROLES_MATRIZ_ACESSOS.md`
 - Checklist alinhamento apps: `docs/SUPABASE_APPS_ALINHAMENTO.md`

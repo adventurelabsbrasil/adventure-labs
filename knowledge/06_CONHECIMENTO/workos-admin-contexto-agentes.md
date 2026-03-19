@@ -7,7 +7,7 @@ updated: 2026-03-18
 
 # WorkOS (Admin) — o que agentes devem saber
 
-Na Adventure Labs, **Admin** é a plataforma interna referida no manual como **WorkOS** (produto em evolução). Código em `apps/admin/`.
+Na Adventure Labs, **Admin** é a plataforma interna referida no manual como **WorkOS** (produto em evolução). Código em `apps/core/admin/`.
 
 ## Stack do Admin
 

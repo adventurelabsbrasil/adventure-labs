@@ -62,7 +62,7 @@ Foi criada e entregue uma **landing page de conversão** para o serviço de **Au
 ## Base de conhecimento (admin)
 
 Este relatório foi registrado na base de conhecimento do admin em:  
-`apps/admin/conhecimento/relatorio_site_auxilio_maternidade_rose_2026-03-11.md`
+`apps/core/admin/conhecimento/relatorio_site_auxilio_maternidade_rose_2026-03-11.md`
 
 ---
 

@@ -152,7 +152,7 @@ Tabelas a confirmar em código antes de remover. **Não dropar sem backup.**
 
 ## Referências
 
-- CRM (tabelas e RLS): `apps/adventure/docs/CRM_TABELAS_E_ROLES_VERIFICACAO.md`
+- CRM (tabelas e RLS): `apps/core/adventure/docs/CRM_TABELAS_E_ROLES_VERIFICACAO.md`
 - Space (LMS): schema e RLS no repo — migração `apps/clientes/lidera/space/supabase/migrations/20260311100000_space_tables_prefix.sql`; doc completa `apps/clientes/lidera/space/docs/COMO_FUNCIONA_BANCO_E_ROLES.md`. Aplicado apenas no Supabase do cliente, não neste projeto.
-- Script para listar tabelas: `apps/adventure/supabase/scripts/listar_todas_tabelas_public.sql`
-- Diagnóstico CRM: `apps/adventure/supabase/scripts/diagnostico_crm_tables_rls.sql`
+- Script para listar tabelas: `apps/core/adventure/supabase/scripts/listar_todas_tabelas_public.sql`
+- Diagnóstico CRM: `apps/core/adventure/supabase/scripts/diagnostico_crm_tables_rls.sql`

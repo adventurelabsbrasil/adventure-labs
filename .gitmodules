@@ -1,14 +1,14 @@
-[submodule "apps/admin"]
-	path = apps/admin
+[submodule "apps/core/admin"]
+	path = apps/core/admin
 	url = https://github.com/adventurelabsbrasil/admin.git
-[submodule "apps/finfeed"]
-	path = apps/finfeed
+[submodule "apps/labs/finfeed"]
+	path = apps/labs/finfeed
 	url = https://github.com/adventurelabsbrasil/finfeed.git
-[submodule "apps/elite"]
-	path = apps/elite
+[submodule "apps/core/elite"]
+	path = apps/core/elite
 	url = https://github.com/adventurelabsbrasil/elite.git
-[submodule "apps/adventure"]
-	path = apps/adventure
+[submodule "apps/core/adventure"]
+	path = apps/core/adventure
 	url = https://github.com/adventurelabsbrasil/adventure.git
 [submodule "clients/01_lidera/lidera-space"]
 	path = apps/clientes/lidera/space
@@ -28,8 +28,8 @@
 [submodule "clients/01_lidera/lidera-skills"]
 	path = apps/clientes/lidera/skills
 	url = https://github.com/adventurelabsbrasil/lidera-skills.git
-[submodule "apps/whatsapp-worker"]
-	path = apps/whatsapp-worker
+[submodule "apps/labs/whatsapp-worker"]
+	path = apps/labs/whatsapp-worker
 	url = https://github.com/adventurelabsbrasil/adv-zazu-whatsapp-worker.git
 [submodule "tools/dino"]
 	path = tools/dino

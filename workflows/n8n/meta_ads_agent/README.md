@@ -31,7 +31,7 @@ Variável opcional:
 
 ## Importar no n8n (CLI)
 
-A partir da raiz do repositório (ou de `apps/admin`):
+A partir da raiz do repositório (ou de `apps/core/admin`):
 
 ```bash
 # Versão econômica (recomendada para diário)
@@ -41,7 +41,7 @@ A partir da raiz do repositório (ou de `apps/admin`):
 ./scripts/n8n/import-to-railway.sh "n8n_workflows/meta_ads_agent/production/lara-meta-ads-agent-v2.json"
 ```
 
-Credenciais do script: `N8N_API_URL` e `N8N_API_TOKEN` em `apps/admin/.env.local`.
+Credenciais do script: `N8N_API_URL` e `N8N_API_TOKEN` em `apps/core/admin/.env.local`.
 
 ## Estrutura
 

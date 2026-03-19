@@ -1,5 +1,5 @@
 ---
-description: Checklist curto para antes de commit em apps/admin e apps/adventure.
+description: Checklist curto para antes de commit em apps/core/admin e apps/core/adventure.
 globs: "apps/{admin,adventure}/**/*.{ts,tsx}"
 alwaysApply: false
 ---
@@ -8,19 +8,19 @@ alwaysApply: false
 
 Sempre que houver alterações em:
 
-- `apps/admin/**`
-- `apps/adventure/**`
+- `apps/core/admin/**`
+- `apps/core/adventure/**`
 
 recomende e, quando possível, automatize:
 
 - Rodar **type-check** do app afetado:
   - Admin: `pnpm --filter adventure-labs-admin run type-check` (se o script existir) ou pelo menos `next lint` + `next build`.
-  - Adventure: `npm run type-check` na pasta `apps/adventure` (ou script equivalente definido no `package.json`).
+  - Adventure: `npm run type-check` na pasta `apps/core/adventure` (ou script equivalente definido no `package.json`).
 - Rodar **lint** do app afetado:
   - Admin: `next lint`.
   - Adventure: `npm run lint`.
 - Verificar se:
   - Não há `any` novo desnecessário.
   - Imports apontam para paths reais (especialmente `@/features/**`).
-  - Contextos e tipos seguem as regras de `apps/adventure/.cursorrules` e `apps/admin/src/types/database.ts`.
+  - Contextos e tipos seguem as regras de `apps/core/adventure/.cursorrules` e `apps/core/admin/src/types/database.ts`.
 

@@ -48,7 +48,7 @@ Conclusão: `/groups` e `/daily-messages` não tinham timeout no worker; o proxy
 - **GET /groups** — no log: 499 em 14 s e 500 em 3 min (sem timeout no worker).
 - **GET /daily-messages** — no log: 499 em 7 s (proxy/cliente fechou; worker sem timeout).
 
-**Correções aplicadas no worker** (`apps/whatsapp-worker/src/index.js`):
+**Correções aplicadas no worker** (`apps/labs/whatsapp-worker/src/index.js`):
 
 1. **GET /groups**
    - Timeout **15 s** em `client.getChats()`.

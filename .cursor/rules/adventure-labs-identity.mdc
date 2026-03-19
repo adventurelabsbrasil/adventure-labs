@@ -17,5 +17,5 @@ Em conflito de dados ou código: PARE → mostre o existente → pergunte ao Fou
 ## Contexto
 
 - Base de conhecimento: `knowledge/` (taxonomia 00–99)
-- Admin: `apps/admin/`
-- Skills: `apps/admin/agents/skills/`
+- Admin: `apps/core/admin/`
+- Skills: `apps/core/admin/agents/skills/`

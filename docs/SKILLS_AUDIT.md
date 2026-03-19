@@ -21,5 +21,5 @@ Data: 2026-03-19
 ## Justificativa tecnica
 
 - Estrutura duplicada e sem conteudo executavel.
-- Taxonomia de skills em uso real esta em `apps/admin/agents/skills/`.
+- Taxonomia de skills em uso real esta em `apps/core/admin/agents/skills/`.
 - Padrao vigente do monorepo para auth/backend esta orientado a Next.js + Supabase Auth.

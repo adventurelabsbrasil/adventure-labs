@@ -10,7 +10,7 @@ CLI para **cadastrar**, **listar** e **alterar** clientes no [Omie](https://app.
    cp .env.example .env
    ```
 
-2. Preencha no `.env` (ou em `apps/admin/.env.local` — a CLI carrega os dois):
+2. Preencha no `.env` (ou em `apps/core/admin/.env.local` — a CLI carrega os dois):
 
    ```
    OMIE_APP_KEY=sua_app_key

@@ -25,9 +25,9 @@ Pipeline autônomo **Grove · Zazu · Ogilvy** para postagens educativas e técn
 
 ## Brief de marca (resumo)
 
-Ver código: `apps/xpostr/src/lib/adventure-brand.ts`.
+Ver código: `apps/labs/xpostr/src/lib/adventure-brand.ts`.
 
 ## Documentação técnica
 
-- `apps/xpostr/docs/ESPECIFICACAO_TECNICA.md`
-- Migration SQL: `apps/xpostr/supabase/migrations/20260317120000_adv_xpostr.sql`
+- `apps/labs/xpostr/docs/ESPECIFICACAO_TECNICA.md`
+- Migration SQL: `apps/labs/xpostr/supabase/migrations/20260317120000_adv_xpostr.sql`

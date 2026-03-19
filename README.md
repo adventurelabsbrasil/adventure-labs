@@ -16,7 +16,7 @@ Ou, se já clonou sem `--recurse-submodules`:
 ./scripts/setup.sh
 ```
 
-O script inicializa os submodules e cria o symlink `apps/admin/context -> ../../knowledge` (evita duplicação).
+O script inicializa os submodules e cria o symlink `apps/core/admin/context -> ../../knowledge` (evita duplicação).
 
 ## Estrutura
 
@@ -45,7 +45,7 @@ pnpm install
 Se **pnpm** não estiver instalado: `npm install -g pnpm` ou [instalar o pnpm](https://pnpm.io/installation). Para instalar só o Admin sem pnpm, entre na pasta do app e use npm:
 
 ```bash
-cd apps/admin && npm install
+cd apps/core/admin && npm install
 ```
 
 **Problemas comuns**
@@ -60,7 +60,7 @@ cd apps/admin && npm install
 
 ## Início rápido
 
-- **Admin:** `cd apps/admin && pnpm dev` (ou `npm run dev` após `npm install` em `apps/admin`)
+- **Admin:** `cd apps/core/admin && pnpm dev` (ou `npm run dev` após `npm install` em `apps/core/admin`)
 - **Taxonomia:** `knowledge/00_GESTAO_CORPORATIVA/MANUAL_TAXONOMIA_REPOSITORIO.md`
 - **Agentes:** `AGENTS.md`
 

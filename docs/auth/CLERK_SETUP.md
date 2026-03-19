@@ -7,7 +7,7 @@ Visão única para configuração de auth centralizada no Clerk, variáveis de a
 
 | App               | Clerk Application               | Env (front)                         | Env (server)       |
 | ----------------- | ------------------------------- | ----------------------------------- | ------------------ |
-| **apps/admin**    | Adventure Labs (mesma instance) | `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` | `CLERK_SECRET_KEY` |
+| **apps/core/admin**    | Adventure Labs (mesma instance) | `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` | `CLERK_SECRET_KEY` |
 | **lidera-space**  | Adventure Labs                  | `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` | `CLERK_SECRET_KEY` |
 | **lidera-dre**    | Adventure Labs                  | `VITE_CLERK_PUBLISHABLE_KEY`        | (backend Supabase) |
 | **young-talents** | Adventure Labs                  | `VITE_CLERK_PUBLISHABLE_KEY`        | (backend Supabase) |
@@ -122,7 +122,7 @@ Se o login com Clerk (ex.: Google) falha ou você é redirecionado para **/acess
 
 | Onde | O que verificar |
 |------|-----------------|
-| **apps/admin/.env.local** | Uma única linha `ADMIN_ALLOWED_EMAILS` com todos os e-mails permitidos (incluindo o que você usa para logar). Se houver duas linhas, a última prevalece e pode bloquear outros e-mails. |
+| **apps/core/admin/.env.local** | Uma única linha `ADMIN_ALLOWED_EMAILS` com todos os e-mails permitidos (incluindo o que você usa para logar). Se houver duas linhas, a última prevalece e pode bloquear outros e-mails. |
 | **Clerk Dashboard → Session token** | Claim `email` no session token (ex.: `{{user.primary_email_address}}`). Sem isso, o middleware pode não receber o e-mail e considerar acesso negado. |
 | **Clerk Dashboard → Paths** | Redirect URLs: dev `http://localhost:3001/**`, prod `https://admin.adventurelabs.com.br/**` (ou o domínio real). |
 | **Navegador (dev)** | Após tentar logar, acesse **http://localhost:3001/api/debug-auth** e confira `wouldBeAllowed`, `emailFromSessionClaims`, `emailFromClerkApi` e `ADMIN_ALLOWED_EMAILS_loaded`. |

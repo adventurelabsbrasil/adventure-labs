@@ -3,7 +3,7 @@ set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 ENV_FILE_ROOT="$ROOT_DIR/.env.local"
-ENV_FILE_ADMIN="$ROOT_DIR/apps/admin/.env.local"
+ENV_FILE_ADMIN="$ROOT_DIR/apps/core/admin/.env.local"
 
 if [[ -f "$ENV_FILE_ROOT" ]]; then
   ENV_FILE="$ENV_FILE_ROOT"
@@ -16,7 +16,7 @@ else
   exit 1
 fi
 
-# Variaveis obrigatorias para apps/admin (sem expor valores)
+# Variaveis obrigatorias para apps/core/admin (sem expor valores)
 REQUIRED_VARS=(
   "NEXT_PUBLIC_SUPABASE_URL"
   "NEXT_PUBLIC_SUPABASE_ANON_KEY"
@@ -26,7 +26,7 @@ REQUIRED_VARS=(
 )
 
 echo "Arquivo de ambiente usado: $ENV_FILE"
-echo "Validando variaveis obrigatorias para apps/admin..."
+echo "Validando variaveis obrigatorias para apps/core/admin..."
 echo
 
 missing=0

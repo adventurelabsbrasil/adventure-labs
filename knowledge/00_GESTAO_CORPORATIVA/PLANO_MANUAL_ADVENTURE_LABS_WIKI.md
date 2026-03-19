@@ -27,10 +27,10 @@ Este documento complementa o plano do **Manual de Conhecimento Adventure Labs** 
 
 ## Implementação sugerida
 
-1. **Nova rota:** `apps/admin/src/app/dashboard/manual/page.tsx` (ou `wiki/page.tsx`).
+1. **Nova rota:** `apps/core/admin/src/app/dashboard/manual/page.tsx` (ou `wiki/page.tsx`).
 2. **Carregar conteúdo:** fetch de `/context-docs/00_GESTAO_CORPORATIVA/MANUAL_ADVENTURE_LABS.md` ou leitura estática no build.
 3. **Renderizar:** `react-markdown` (já usado em `docs-context/page.tsx`), com componentes para links internos, links para dashboard e externos.
-4. **Menu:** em `apps/admin/src/app/dashboard/nav-config.ts`, no grupo "Conhecimento & Admin", adicionar item **"Manual"** (ou "Wiki") com ícone `BookOpen` ou `BookMarked`, href `/dashboard/manual`.
+4. **Menu:** em `apps/core/admin/src/app/dashboard/nav-config.ts`, no grupo "Conhecimento & Admin", adicionar item **"Manual"** (ou "Wiki") com ícone `BookOpen` ou `BookMarked`, href `/dashboard/manual`.
 5. **Sync:** garantir que o manual entre no `sync-context-docs.mjs` (se `context` for symlink para `knowledge`, o arquivo em `00_GESTAO_CORPORATIVA/` já entra).
 
 ## Entregáveis (atualizados)

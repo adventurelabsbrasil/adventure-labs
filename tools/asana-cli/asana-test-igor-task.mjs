@@ -2,7 +2,7 @@
 /**
  * Teste Asana: lista tarefas abertas do projeto e cria uma tarefa atribuída ao Igor.
  *
- * Env (token em apps/admin/.env.local ou tools/asana-cli/.env):
+ * Env (token em apps/core/admin/.env.local ou tools/asana-cli/.env):
  *   ASANA_ACCESS_TOKEN
  *   ASANA_PROJECT_GIDS ou ASANA_TEST_PROJECT_GID (projeto onde criar/listar)
  *

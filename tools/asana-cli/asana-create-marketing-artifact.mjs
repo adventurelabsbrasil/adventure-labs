@@ -2,7 +2,7 @@
 /**
  * Cria tarefa no Asana (backlog marketing) com links para artefatos: FigJam, Google Doc, markdown no repo.
  *
- * Env (token em apps/admin/.env.local ou tools/asana-cli/.env):
+ * Env (token em apps/core/admin/.env.local ou tools/asana-cli/.env):
  *   ASANA_ACCESS_TOKEN
  *   ASANA_PROJECT_GIDS ou ASANA_TEST_PROJECT_GID (primeiro projeto usado se lista)
  *

@@ -4,15 +4,16 @@ Você é o Desenvolvedor Sênior e Arquiteto da Adventure Labs.
 Nós operamos em um Monorepo gerenciado por `pnpm workspaces`.
 
 ## Regras de Topologia
-- `/apps/*`: Aplicações em Produção (Frontends Vercel). O app principal é o `/apps/admin`.
-- `/apps/clientes/*`: Apps por cliente (workspaces `@cliente/*`, ex.: `@cliente/lidera-space`, `@cliente/benditta-app`). O Admin **não** importa código-fonte dessas pastas — só pacotes em `/packages/*` quando compartilhado.
+- `/apps/core/*`: Apps canônicos Adventure (Admin, Adventure, Elite). O principal é **`/apps/core/admin`**.
+- `/apps/labs/*`: Experimentos e ferramentas (ex.: finfeed, xpostr, whatsapp-worker).
+- `/apps/clientes/*`: Apps por cliente (workspaces `@cliente/*`). O Admin **não** importa código-fonte dessas pastas — só pacotes em `/packages/*` quando compartilhado.
 - `/packages/*`: Bibliotecas compartilhadas (ex: `@adventure/ui`, `@adventure/db`). Apps NUNCA devem importar componentes de UI diretamente de outros Apps. Sempre extraia para `/packages/ui`.
 - `/tools/*`: Scripts e CLIs isolados.
 - `/agents/*` e `/workflows/*`: Nossas lógicas de IA e JSONs do n8n.
 
 ## Regras de Banco de Dados e RLS (Extremo Rigor)
 - Nossa fonte da verdade é o Supabase. 
-- Somos um sistema Multi-tenant. Absolutamente TODAS as tabelas de clientes em `/apps/admin` (ou compartilhadas) DEVEM ter as colunas `tenant_id` e políticas estritas de RLS ativadas. Um cliente NUNCA pode ver dados de outro.
+- Somos um sistema Multi-tenant. Absolutamente TODAS as tabelas de clientes em `/apps/core/admin` (ou compartilhadas) DEVEM ter as colunas `tenant_id` e políticas estritas de RLS ativadas. Um cliente NUNCA pode ver dados de outro.
 - Se for criar uma tabela nova ou alterar schema, NUNCA altere tipos locais sem antes criar o arquivo de migration SQL adequado na pasta `supabase/migrations`.
 
 ## Fluxo de Trabalho (Vibe Coding)

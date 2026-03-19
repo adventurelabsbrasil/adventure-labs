@@ -17,14 +17,14 @@ OUT = BASE / "docs" / "COLEÇÃO_DOCS_PARA_IA.md"
 
 IMPLEMENTADO = [
     "README.md", "CONTRIBUTING.md", "PLANO_MONOREPO_ADVENTURE_LABS.md",
-    "apps/admin/README.md", "apps/admin/agents/skills/README.md",
-    "apps/admin/n8n_workflows/README.md", "apps/admin/n8n_workflows/csuite/README.md",
-    "apps/admin/n8n_workflows/meta_ads_agent/README.md", "apps/admin/n8n_workflows/sueli/README.md",
-    "apps/admin/public/context-docs/README.md", "apps/admin/public/context-docs/99_ARQUIVO/README.md",
-    "apps/admin/public/agents-docs/skills/README.md", "apps/admin/supabase/README.md",
-    "apps/admin/docs/PLANO_SKILL_GOOGLE_DRIVE_ADVENTURE.md",
-    "apps/adventure/README.md", "apps/adventure/docs/README.md", "apps/adventure/extension/README.md",
-    "apps/adventure/functions/README.md", "apps/elite/README.md", "apps/finfeed/README.md",
+    "apps/core/admin/README.md", "apps/core/admin/agents/skills/README.md",
+    "apps/core/admin/n8n_workflows/README.md", "apps/core/admin/n8n_workflows/csuite/README.md",
+    "apps/core/admin/n8n_workflows/meta_ads_agent/README.md", "apps/core/admin/n8n_workflows/sueli/README.md",
+    "apps/core/admin/public/context-docs/README.md", "apps/core/admin/public/context-docs/99_ARQUIVO/README.md",
+    "apps/core/admin/public/agents-docs/skills/README.md", "apps/core/admin/supabase/README.md",
+    "apps/core/admin/docs/PLANO_SKILL_GOOGLE_DRIVE_ADVENTURE.md",
+    "apps/core/adventure/README.md", "apps/core/adventure/docs/README.md", "apps/core/adventure/extension/README.md",
+    "apps/core/adventure/functions/README.md", "apps/core/elite/README.md", "apps/labs/finfeed/README.md",
     "clients/02_rose/sites/auxilio-maternidade/README.md", "workflows/README.md",
     "tools/xtractor/README.md", "tools/dbgr/README.md", "tools/n8n-scripts/README.md",
     "tools/notebooklm/README.md", "tools/musicalart/README.md",
@@ -48,7 +48,7 @@ IMPLEMENTADO = [
 PENDENTE = [
     "apps/clientes/young-talents/plataforma/docs/futuras-melhorias/README.md",
     "apps/clientes/young-talents/plataforma/docs/futuras-melhorias/PLANEJAMENTO_TEMPLATES_VAGA.md",
-    "docs/PLANO_N8N_AUTOMACOES_AGENTES_SKILLS_TOOLS.md", "apps/finfeed/PLANO_INICIAL.md",
+    "docs/PLANO_N8N_AUTOMACOES_AGENTES_SKILLS_TOOLS.md", "apps/labs/finfeed/PLANO_INICIAL.md",
 ]
 
 def read_file(path):

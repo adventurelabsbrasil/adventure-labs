@@ -8,7 +8,7 @@ Bem-vindo à Wiki do repositório **adventure-labs**. Aqui fica o **manual naveg
 - Quais são as **skills** disponíveis (por owner) e o que cada uma faz.
 - Como entram as **automações** (n8n, workers, OpenClaw, integrações externas).
 
-> Fonte da verdade dos detalhes (código, arquivos, frontmatter) continua sendo o monorepo (pasta `knowledge/` e submódulo `apps/admin`). A Wiki é uma visão condensada para Founder, C-Suite e onboarding.
+> Fonte da verdade dos detalhes (código, arquivos, frontmatter) continua sendo o monorepo (pasta `knowledge/` e submódulo `apps/core/admin`). A Wiki é uma visão condensada para Founder, C-Suite e onboarding.
 
 ### Índice rápido
 
@@ -23,8 +23,8 @@ Bem-vindo à Wiki do repositório **adventure-labs**. Aqui fica o **manual naveg
 - Manual canônico: `knowledge/06_CONHECIMENTO/manual-agentes-e-skills.md`
 - Diretrizes multi-agentes: `AGENTS.md` na raiz do monorepo
 - Arquitetura agêntica detalhada: `knowledge/06_CONHECIMENTO/arquitetura-agentic-csuite-skills.md`
-- Catálogo de skills e templates: `apps/admin/agents/skills/`
-- Pacotes de agentes (AGENT/SOUL/USER…): `apps/admin/agents/`
+- Catálogo de skills e templates: `apps/core/admin/agents/skills/`
+- Pacotes de agentes (AGENT/SOUL/USER…): `apps/core/admin/agents/`
 
 ### Diagrama visual (opcional)
 

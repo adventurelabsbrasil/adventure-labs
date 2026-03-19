@@ -57,7 +57,7 @@ Abaixo, itens extraídos dos docs de planejamento para criar como **issues** e c
 
 | Título sugerido | Descrição (corpo do issue) | Labels sugeridas |
 |-----------------|----------------------------|-------------------|
-| [ ] Deploy Admin no Vercel | Root: `apps/admin`. Env: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`. Redirect URL no Supabase: `https://admin.adventurelabs.com.br/auth/callback`. Ref.: go-live-admin-checklist.md | infra, go-live |
+| [ ] Deploy Admin no Vercel | Root: `apps/core/admin`. Env: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`. Redirect URL no Supabase: `https://admin.adventurelabs.com.br/auth/callback`. Ref.: go-live-admin-checklist.md | infra, go-live |
 | [ ] Configurar domínio admin.adventurelabs.com.br | CNAME no DNS; adicionar domínio no projeto Vercel. Ref.: go-live-admin-checklist.md | infra, go-live |
 | [ ] Validação com equipe (login, CRUD, Kanbans) | Rodrigo, Igor e Mateus testam login (Google), clientes, projetos, tarefas, plano do dia, ações, relatório. Ref.: go-live-admin-checklist.md | go-live, validação |
 
@@ -135,12 +135,12 @@ Objetivo: o **Admin** e/ou o **Grove** poderem consultar projetos e issues do Gi
 
 ### 3.6 Implementação (feita)
 
-- **Código:** `apps/admin/src/lib/github.ts` (fetch issues), `apps/admin/src/app/dashboard/backlog-github-block.tsx` (bloco no Painel), `apps/admin/src/app/api/github/issues/route.ts` (API).
+- **Código:** `apps/core/admin/src/lib/github.ts` (fetch issues), `apps/core/admin/src/app/dashboard/backlog-github-block.tsx` (bloco no Painel), `apps/core/admin/src/app/api/github/issues/route.ts` (API).
 - **Variáveis de ambiente (servidor):**
   - `GITHUB_TOKEN` — token com escopo `repo` (read). **Não** usar `NEXT_PUBLIC_` (nunca expor no client).
   - `GITHUB_REPO_OWNER` — dono do repositório (ex.: `AdventureLabs` ou seu usuário).
   - `GITHUB_REPO_NAME` — nome do repo (ex.: `admin`).
-- **Onde configurar:** Vercel → Project → Settings → Environment Variables; local: `.env.local` na raiz de `apps/admin` (ou do monorepo conforme seu setup).
+- **Onde configurar:** Vercel → Project → Settings → Environment Variables; local: `.env.local` na raiz de `apps/core/admin` (ou do monorepo conforme seu setup).
 - **Dashboard:** Na página Início do Admin aparece o bloco **Backlog GitHub** com as issues abertas e link para o GitHub.
 - **API para contexto / Grove:**
   - `GET /api/github/issues` — retorna JSON `{ ok, issues }` ou `{ ok: false, error }`.

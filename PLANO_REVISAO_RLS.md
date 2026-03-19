@@ -7,7 +7,7 @@
 Após análise do código do App Admin e das policies do Supabase:
 
 1. **Falha na Integração de JWT do Clerk:**
-   - O `createClient()` (em `apps/admin/src/lib/supabase/server.ts`) tenta buscar um JWT template chamado `supabase` no Clerk (`getToken({ template: "supabase" })`).
+   - O `createClient()` (em `apps/core/admin/src/lib/supabase/server.ts`) tenta buscar um JWT template chamado `supabase` no Clerk (`getToken({ template: "supabase" })`).
    - Se este template não existe no dashboard do Clerk, ele faz um fallback para o token padrão.
    - O token padrão **não possui a claim `role: "authenticated"` nem a claim `email`**.
    - Consequência: O Supabase avalia as requisições como anônimas (`anon`), e todas as políticas RLS (que exigem `TO authenticated`) bloqueiam sumariamente o acesso, deixando o dashboard vazio para os usuários.
@@ -42,8 +42,8 @@ Criar uma migration no Supabase para alterar a role de `'tarefas'` para `'member
   Em `adv_rls_by_role.sql` e na função `adv_can_access_project()`, alterar as checagens `get_adv_profile_role() = 'tarefas'` para `get_adv_profile_role() = 'member'`.
 
 ### Passo 3: Atualizar o Frontend (App Admin)
-- Em `apps/admin/src/lib/auth-profile.ts`: Modificar as condicionais de `role !== "tarefas"` para `role !== "member"`.
-- Em `apps/admin/src/types/database.ts` (ou onde o tipo `AdvProfileRole` estiver exportado): Alterar para `"admin" | "member"`.
+- Em `apps/core/admin/src/lib/auth-profile.ts`: Modificar as condicionais de `role !== "tarefas"` para `role !== "member"`.
+- Em `apps/core/admin/src/types/database.ts` (ou onde o tipo `AdvProfileRole` estiver exportado): Alterar para `"admin" | "member"`.
 
 ### Passo 4: Provisionamento de Acesso (Igor e Mateus)
 - No banco de dados Supabase (tabela `adv_profiles`), certificar-se de que os e-mails `igor@adventurelabs.com.br` e `mateuslepocs@gmail.com` estão cadastrados com a role desejada (`'admin'` ou `'member'`).

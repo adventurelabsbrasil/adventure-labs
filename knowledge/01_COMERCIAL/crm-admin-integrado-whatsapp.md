@@ -11,7 +11,7 @@ CRM mínimo viável dentro do **Admin** (`/dashboard/crm`), com schema próprio 
 
 ## Onde está
 
-- **Frontend:** `apps/admin` — rotas sob `/dashboard/crm` (leads/funil, contatos, empresas, projetos/produtos, importar do WhatsApp).
+- **Frontend:** `apps/core/admin` — rotas sob `/dashboard/crm` (leads/funil, contatos, empresas, projetos/produtos, importar do WhatsApp).
 - **Backend:** Mesmo Supabase da Adventure/Admin; tabelas `adv_crm_*` (funnel_stages, companies, contacts, deals, products, whatsapp_sync, funcoes, subfuncoes).
 - **Auth:** Apenas identidade do Admin (Supabase Auth + `adv_profiles`). RLS por `tenant_id` (padrão único tenant Adventure).
 - **WhatsApp:** Worker expõe `GET /chats`; Admin tem proxy `GET/POST /api/admin/crm/whatsapp-chats` e página "Importar do WhatsApp" para criar contatos a partir dos chats.

@@ -62,5 +62,5 @@ O script:
 ## Relação com o manual em `knowledge/`
 
 - Índice canônico de documentos (incluindo esta Wiki): `knowledge/06_CONHECIMENTO/manual-agentes-e-skills.md`
-- A Wiki é uma **vista de leitura navegável** do que já está no repositório (não substitui `knowledge/` nem o submódulo `apps/admin`).
+- A Wiki é uma **vista de leitura navegável** do que já está no repositório (não substitui `knowledge/` nem o submódulo `apps/core/admin`).
 

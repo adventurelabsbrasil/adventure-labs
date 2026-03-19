@@ -7,7 +7,7 @@ Checklist para deploy do Admin no Vercel e validação com a equipe. Ref.: [prox
 ## 1. Deploy no Vercel
 
 - [ ] Criar projeto no Vercel (ou usar existente) vinculado ao repositório.
-- [ ] **Root Directory:** `apps/admin` (monorepo).
+- [ ] **Root Directory:** `apps/core/admin` (monorepo).
 - [ ] Variáveis de ambiente:
   - [ ] `NEXT_PUBLIC_SUPABASE_URL`
   - [ ] `NEXT_PUBLIC_SUPABASE_ANON_KEY`

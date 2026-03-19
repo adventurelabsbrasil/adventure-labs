@@ -12,7 +12,7 @@ Este documento registra **o que foi feito** na implementação do Zazu e **o que
 ### Worker (adv-zazu-whatsapp-worker)
 
 - [x] Repositório próprio no GitHub: **adventurelabsbrasil/adv-zazu-whatsapp-worker**
-- [x] Localmente no monorepo como submodule: `01_ADVENTURE_LABS/apps/whatsapp-worker`
+- [x] Localmente no monorepo como submodule: `01_ADVENTURE_LABS/apps/labs/whatsapp-worker`
 - [x] Deploy no Railway como serviço separado (Dockerfile com dependências Chromium)
 - [x] Variáveis: `SESSION_PATH=/data`, volume persistente para sessão WhatsApp
 - [x] **Porta:** Configuração no Railway ajustada para **8080** (porta injetada pelo Railway); evita 502 Bad Gateway
@@ -34,14 +34,14 @@ Este documento registra **o que foi feito** na implementação do Zazu e **o que
   - `GET /api/admin/zazu-qr` — proxy para status e QR do worker (timeout 30s)
   - `GET /api/admin/zazu-qr-page` — proxy da página HTML do QR (para iframe fallback)
   - `GET /api/admin/zazu-groups` — proxy para `GET /groups` do worker (timeout 45s)
-- [x] Documentação: `apps/admin/docs/SETUP_ZAZU_RAILWAY_E_N8N.md` (guia passo a passo, incluindo nota sobre porta 8080)
+- [x] Documentação: `apps/core/admin/docs/SETUP_ZAZU_RAILWAY_E_N8N.md` (guia passo a passo, incluindo nota sobre porta 8080)
 
 ### Registro e conhecimento
 
-- [x] Registro do agente: `apps/admin/context/00_GESTAO/registro-adv-zazu-2026-03.md`
+- [x] Registro do agente: `apps/core/admin/context/00_GESTAO/registro-adv-zazu-2026-03.md`
 - [x] Processo: `knowledge/00_GESTAO_CORPORATIVA/processos/whatsapp-grupos-resumo-diario-cpo.md`
 - [x] Este documento de status: `knowledge/00_GESTAO_CORPORATIVA/operacao/zazu-status-e-proximos-passos.md`
-- [x] **Agente e skill documentados:** identidade do agente em `apps/admin/agents/zazu.md`; skill em `apps/admin/agents/skills/zazu-whatsapp-resumo-diario/SKILL.md`. Tool whatsapp-worker registrada no plano n8n (sec. 4.3) e arquitetura agentic (agentes de apoio: Zazu, Lara).
+- [x] **Agente e skill documentados:** identidade do agente em `apps/core/admin/agents/zazu.md`; skill em `apps/core/admin/agents/skills/zazu-whatsapp-resumo-diario/SKILL.md`. Tool whatsapp-worker registrada no plano n8n (sec. 4.3) e arquitetura agentic (agentes de apoio: Zazu, Lara).
 
 ---
 
@@ -53,13 +53,13 @@ Este documento registra **o que foi feito** na implementação do Zazu e **o que
 - [ ] No **Railway** → serviço **adv-zazu-whatsapp-worker** → **Variables**: criar/editar **WHATSAPP_GROUP_IDS** (ou **WHATSAPP_GROUP_NAMES**) com os IDs/nomes copiados
 - [ ] Redeploy do worker se necessário para aplicar variáveis
 
-Referência de grupos desejados no registro: `apps/admin/context/00_GESTAO/registro-adv-zazu-2026-03.md` (sec. Grupos no fluxo).
+Referência de grupos desejados no registro: `apps/core/admin/context/00_GESTAO/registro-adv-zazu-2026-03.md` (sec. Grupos no fluxo).
 
 ### 2. n8n (Railway)
 
 - [ ] Variável **WHATSAPP_WORKER_URL** no n8n = URL do worker (ex.: `https://adv-zazu-whatsapp-worker-production.up.railway.app`)
 - [ ] Credencial **Header Auth** para o Admin: nome ex. "Admin CRON (Zazu)", header `x-admin-key`, valor = **CRON_SECRET** do Admin (Vercel)
-- [ ] Importar workflow Zazu: caminho canônico `workflows/n8n/whatsapp_groups_agent/whatsapp-groups-daily-v1.json`. De `apps/admin`: `./scripts/n8n/import-to-railway.sh ../../workflows/n8n/whatsapp_groups_agent/whatsapp-groups-daily-v1.json` (ou import manual no n8n)
+- [ ] Importar workflow Zazu: caminho canônico `workflows/n8n/whatsapp_groups_agent/whatsapp-groups-daily-v1.json`. De `apps/core/admin`: `./scripts/n8n/import-to-railway.sh ../../workflows/n8n/whatsapp_groups_agent/whatsapp-groups-daily-v1.json` (ou import manual no n8n)
 - [ ] No workflow: associar a credencial ao nó que faz **POST Founder Report**
 - [ ] **Ativar** o workflow (toggle Active)
 
@@ -80,11 +80,11 @@ Referência de grupos desejados no registro: `apps/admin/context/00_GESTAO/regis
 
 | Item | Local |
 |------|--------|
-| Guia de setup | `apps/admin/docs/SETUP_ZAZU_RAILWAY_E_N8N.md` |
-| Registro do agente | `apps/admin/context/00_GESTAO/registro-adv-zazu-2026-03.md` |
+| Guia de setup | `apps/core/admin/docs/SETUP_ZAZU_RAILWAY_E_N8N.md` |
+| Registro do agente | `apps/core/admin/context/00_GESTAO/registro-adv-zazu-2026-03.md` |
 | Processo (Cagan/CPO) | `knowledge/00_GESTAO_CORPORATIVA/processos/whatsapp-grupos-resumo-diario-cpo.md` |
 | Worker (repo) | [adventurelabsbrasil/adv-zazu-whatsapp-worker](https://github.com/adventurelabsbrasil/adv-zazu-whatsapp-worker) |
-| Worker (local) | `01_ADVENTURE_LABS/apps/whatsapp-worker` (submodule) |
-| Agente Zazu | `apps/admin/agents/zazu.md` |
-| Skill resumo diário | `apps/admin/agents/skills/zazu-whatsapp-resumo-diario/SKILL.md` |
+| Worker (local) | `01_ADVENTURE_LABS/apps/labs/whatsapp-worker` (submodule) |
+| Agente Zazu | `apps/core/admin/agents/zazu.md` |
+| Skill resumo diário | `apps/core/admin/agents/skills/zazu-whatsapp-resumo-diario/SKILL.md` |
 | Workflow n8n (canônico) | `workflows/n8n/whatsapp_groups_agent/whatsapp-groups-daily-v1.json` |

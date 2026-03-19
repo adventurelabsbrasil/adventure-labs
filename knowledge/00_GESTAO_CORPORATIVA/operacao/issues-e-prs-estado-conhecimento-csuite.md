@@ -3,7 +3,7 @@
 **Objetivo:** Referência para o C-Suite: **não gerar avisos nem novas issues** sobre os itens abaixo; já resolvidos ou já tratados. Usar este documento para evitar feedback duplicado sobre temas encerrados.
 
 **Última atualização:** 2026-03-13  
-**Referência detalhada:** `apps/admin/docs/admin-issues-pendencias.md`, `apps/admin/docs/admin-issues-checklist-conclusao.md`
+**Referência detalhada:** `apps/core/admin/docs/admin-issues-pendencias.md`, `apps/core/admin/docs/admin-issues-checklist-conclusao.md`
 
 ---
 

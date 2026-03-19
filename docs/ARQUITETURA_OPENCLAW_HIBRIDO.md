@@ -67,12 +67,12 @@ Mantém:
 
 | Item | Onde |
 |------|------|
-| POST founder-report + espelho memória | `apps/admin/src/app/api/csuite/founder-report/route.ts` |
-| GET memória diária (JSON) | `apps/admin/src/app/api/csuite/daily-memory/route.ts` |
+| POST founder-report + espelho memória | `apps/core/admin/src/app/api/csuite/founder-report/route.ts` |
+| GET memória diária (JSON) | `apps/core/admin/src/app/api/csuite/daily-memory/route.ts` |
 | UI memória diária | `/dashboard/csuite-diario` |
 | Workflow Zazu (n8n) | `workflows/n8n/whatsapp_groups_agent/whatsapp-groups-daily-v1.json` |
-| Andon Asana (API + n8n) | `apps/admin/.../api/csuite/andon-asana-run/route.ts` · `workflows/n8n/andon_asana/` |
-| Grupos WhatsApp (env) | `apps/whatsapp-worker/.env.example` |
+| Andon Asana (API + n8n) | `apps/core/admin/.../api/csuite/andon-asana-run/route.ts` · `workflows/n8n/andon_asana/` |
+| Grupos WhatsApp (env) | `apps/labs/whatsapp-worker/.env.example` |
 | Runner gateway opcional | `tools/openclaw/openclaw-gateway-railway/` |
 
 **Republicar no n8n:** após pull, reimportar ou editar o workflow Zazu para incluir `csuite_memory` no body (já no JSON do repo).

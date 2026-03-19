@@ -42,7 +42,7 @@ flowchart LR
     end
 
     subgraph executionLayer["Skills e Agentes de apoio"]
-        skillsNode["Skills em apps/admin/agents/skills"]
+        skillsNode["Skills em apps/core/admin/agents/skills"]
         supportAgentsNode["Agentes de apoio (Andon, benchmark_*, Zazu, etc.)"]
     end
 

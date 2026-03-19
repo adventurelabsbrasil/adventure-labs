@@ -7,7 +7,7 @@ updated: 2026-03-20
 
 # Manual — Onde fica a documentação de agentes e skills
 
-Este arquivo é o **índice canônico** no monorepo: não existe um único PDF “manual de agentes”; a visão está distribuída entre a raiz, `knowledge/` e o submodule **apps/admin**. Use-o para onboarding (humanos, Founder, C-Suite) e para orientar IAs no Cursor.
+Este arquivo é o **índice canônico** no monorepo: não existe um único PDF “manual de agentes”; a visão está distribuída entre a raiz, `knowledge/` e o submodule **apps/core/admin**. Use-o para onboarding (humanos, Founder, C-Suite) e para orientar IAs no Cursor.
 
 ---
 
@@ -15,7 +15,7 @@ Este arquivo é o **índice canônico** no monorepo: não existe um único PDF �
 
 1. **[AGENTS.md](../../AGENTS.md)** (raiz) — diretrizes e estrutura.
 2. **[arquitetura-agentic-csuite-skills.md](arquitetura-agentic-csuite-skills.md)** — arquitetura e fluxo.
-3. **[apps/admin/agents/skills/README.md](../../apps/admin/agents/skills/README.md)** — catálogo de skills e como criar novas.
+3. **[apps/core/admin/agents/skills/README.md](../../apps/core/admin/agents/skills/README.md)** — catálogo de skills e como criar novas.
 
 Complementos: manual da empresa, WorkOS, compilado para IA (abaixo).
 
@@ -33,7 +33,7 @@ Complementos: manual da empresa, WorkOS, compilado para IA (abaixo).
 
 | Recurso | Caminho | Conteúdo |
 |---------|---------|----------|
-| **Arquitetura agêntica** | [arquitetura-agentic-csuite-skills.md](arquitetura-agentic-csuite-skills.md) | Camadas (C-Suite planeja / Skills executam), fluxo Founder → Grove → C-Level → Skill, onde cada camada vive (`apps/admin/agents/`, `apps/admin/agents/skills/`), agentes de apoio, template OpenClaw-aligned. |
+| **Arquitetura agêntica** | [arquitetura-agentic-csuite-skills.md](arquitetura-agentic-csuite-skills.md) | Camadas (C-Suite planeja / Skills executam), fluxo Founder → Grove → C-Level → Skill, onde cada camada vive (`apps/core/admin/agents/`, `apps/core/admin/agents/skills/`), agentes de apoio, template OpenClaw-aligned. |
 
 *(Paths no doc de arquitetura usam `/agents/` como atalho relativo ao app Admin.)*
 
@@ -43,8 +43,8 @@ Complementos: manual da empresa, WorkOS, compilado para IA (abaixo).
 
 | Recurso | Caminho | Conteúdo |
 |---------|---------|----------|
-| **README das skills** | [../../apps/admin/agents/skills/README.md](../../apps/admin/agents/skills/README.md) | Catálogo por owner (CTO, COO, CMO, CFO, CPO, contexto cliente), persona/email/role, estrutura de pasta, frontmatter. |
-| **Template SKILL** | [../../apps/admin/agents/skills/_template/SKILL.md](../../apps/admin/agents/skills/_template/SKILL.md) | Modelo para nova skill. |
+| **README das skills** | [../../apps/core/admin/agents/skills/README.md](../../apps/core/admin/agents/skills/README.md) | Catálogo por owner (CTO, COO, CMO, CFO, CPO, contexto cliente), persona/email/role, estrutura de pasta, frontmatter. |
+| **Template SKILL** | [../../apps/core/admin/agents/skills/_template/SKILL.md](../../apps/core/admin/agents/skills/_template/SKILL.md) | Modelo para nova skill. |
 
 ---
 
@@ -52,8 +52,8 @@ Complementos: manual da empresa, WorkOS, compilado para IA (abaixo).
 
 | Recurso | Caminho | Conteúdo |
 |---------|---------|----------|
-| **Template pacote** | [../../apps/admin/agents/_template_agent/](../../apps/admin/agents/_template_agent/) | AGENT.md, SOUL, USER, COMPANY, REDLINES, PERMISSIONS, VOICE, MEMORY, HEARTBEAT. |
-| **Exemplo completo** | [../../apps/admin/agents/andon_asana/](../../apps/admin/agents/andon_asana/) | Agente de apoio Asana (referenciado no AGENTS.md). |
+| **Template pacote** | [../../apps/core/admin/agents/_template_agent/](../../apps/core/admin/agents/_template_agent/) | AGENT.md, SOUL, USER, COMPANY, REDLINES, PERMISSIONS, VOICE, MEMORY, HEARTBEAT. |
+| **Exemplo completo** | [../../apps/core/admin/agents/andon_asana/](../../apps/core/admin/agents/andon_asana/) | Agente de apoio Asana (referenciado no AGENTS.md). |
 
 ---
 
@@ -93,7 +93,7 @@ Complementos: manual da empresa, WorkOS, compilado para IA (abaixo).
 
 ## Personas C-Level e Grove (delegação)
 
-Arquivos em **[apps/admin/agents/](../../apps/admin/agents/)** (submodule): `grove_ceo.md`, `ohno_coo.md`, `torvalds_cto.md`, `ogilvy_cmo.md`, `buffett_cfo.md`, `cagan_cpo.md` — instruções de persona e delegação; complementam a arquitetura.
+Arquivos em **[apps/core/admin/agents/](../../apps/core/admin/agents/)** (submodule): `grove_ceo.md`, `ohno_coo.md`, `torvalds_cto.md`, `ogilvy_cmo.md`, `buffett_cfo.md`, `cagan_cpo.md` — instruções de persona e delegação; complementam a arquitetura.
 
 Pacotes de agentes nomeados (pastas com `AGENT.md`): mesmo diretório, ex.: `andon_asana/`, `benchmark_adventure/`, `gerente_rose/`, etc.
 
@@ -105,5 +105,5 @@ Pacotes de agentes nomeados (pastas com `AGENT.md`): mesmo diretório, ex.: `and
 |----------|---------|
 | Regras gerais e lista de agentes na raiz | [AGENTS.md](../../AGENTS.md) |
 | Como funciona C-Suite vs Skill | [arquitetura-agentic-csuite-skills.md](arquitetura-agentic-csuite-skills.md) |
-| Lista de skills e como criar | [apps/admin/agents/skills/README.md](../../apps/admin/agents/skills/README.md) |
+| Lista de skills e como criar | [apps/core/admin/agents/skills/README.md](../../apps/core/admin/agents/skills/README.md) |
 | Índice único (este manual) | `knowledge/06_CONHECIMENTO/manual-agentes-e-skills.md` |

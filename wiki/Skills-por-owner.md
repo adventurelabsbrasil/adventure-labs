@@ -1,6 +1,6 @@
 ## Skills por owner (CTO, COO, CMO, CFO, CPO)
 
-Resumo do catálogo em `apps/admin/agents/skills/README.md`. A fonte da verdade permanece no repositório **admin**.
+Resumo do catálogo em `apps/core/admin/agents/skills/README.md`. A fonte da verdade permanece no repositório **admin**.
 
 ### CTO (Torvalds)
 
@@ -67,5 +67,5 @@ Resumo do catálogo em `apps/admin/agents/skills/README.md`. A fonte da verdade 
 | `benditta-marcenaria-contexto` | Bárbara Mendes | Contexto do cliente Benditta Marcenaria |
 | `young-empreendimentos-contexto` | Yago Costa | Contexto do cliente Young Empreendimentos |
 
-> Para detalhes (Objetivo, Quando usar, Input, Passos, Output, Critérios de revisão), veja cada `SKILL.md` em `apps/admin/agents/skills/<slug>/SKILL.md`.
+> Para detalhes (Objetivo, Quando usar, Input, Passos, Output, Critérios de revisão), veja cada `SKILL.md` em `apps/core/admin/agents/skills/<slug>/SKILL.md`.
 

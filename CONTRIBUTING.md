@@ -15,7 +15,7 @@
 ## Código
 
 - Admin: monorepo pnpm, Next.js, Supabase
-- Ver `.cursorrules` em `apps/admin/` para convenções
+- Ver `.cursorrules` em `apps/core/admin/` para convenções
 
 ## Regra de sobrescrita
 

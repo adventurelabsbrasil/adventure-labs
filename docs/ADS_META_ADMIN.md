@@ -10,7 +10,7 @@ Este documento descreve a integração das contas **Google Ads** e **Meta (Busin
 
 ## Variáveis de ambiente
 
-Configurar em `apps/admin/.env.local` (ou Vercel). Todas as variáveis abaixo são **somente servidor** (não usar `NEXT_PUBLIC_`).
+Configurar em `apps/core/admin/.env.local` (ou Vercel). Todas as variáveis abaixo são **somente servidor** (não usar `NEXT_PUBLIC_`).
 
 | Variável | Obrigatório | Descrição |
 |----------|-------------|-----------|
@@ -81,31 +81,31 @@ Base URL: mesma do Admin (ex.: `https://admin.adventurelabs.com.br` ou `http://l
 
 ## Uso da CLI
 
-O script `apps/admin/scripts/ads-cli.mjs` chama as APIs acima usando o header `x-admin-key`.
+O script `apps/core/admin/scripts/ads-cli.mjs` chama as APIs acima usando o header `x-admin-key`.
 
 Variáveis: `ADMIN_URL` (default `http://localhost:3001`), `CRON_SECRET` (obrigatório).
 
 ```bash
-# Da raiz do monorepo ou de apps/admin
+# Da raiz do monorepo ou de apps/core/admin
 export ADMIN_URL=https://admin.adventurelabs.com.br
 export CRON_SECRET=seu_cron_secret
 
 # Google Ads: listar campanhas
-node apps/admin/scripts/ads-cli.mjs google campaigns
+node apps/core/admin/scripts/ads-cli.mjs google campaigns
 
 # Google Ads: pausar / ativar campanha
-node apps/admin/scripts/ads-cli.mjs google pause CAMPAIGN_ID
-node apps/admin/scripts/ads-cli.mjs google enable CAMPAIGN_ID
+node apps/core/admin/scripts/ads-cli.mjs google pause CAMPAIGN_ID
+node apps/core/admin/scripts/ads-cli.mjs google enable CAMPAIGN_ID
 
 # Meta: listar contas
-node apps/admin/scripts/ads-cli.mjs meta accounts
+node apps/core/admin/scripts/ads-cli.mjs meta accounts
 
 # Meta: listar campanhas de uma conta
-node apps/admin/scripts/ads-cli.mjs meta campaigns act_123456789
+node apps/core/admin/scripts/ads-cli.mjs meta campaigns act_123456789
 
 # Meta: pausar / ativar campanha
-node apps/admin/scripts/ads-cli.mjs meta pause CAMPAIGN_ID
-node apps/admin/scripts/ads-cli.mjs meta enable CAMPAIGN_ID
+node apps/core/admin/scripts/ads-cli.mjs meta pause CAMPAIGN_ID
+node apps/core/admin/scripts/ads-cli.mjs meta enable CAMPAIGN_ID
 ```
 
 ## Uso com Cursor AI ou Gemini

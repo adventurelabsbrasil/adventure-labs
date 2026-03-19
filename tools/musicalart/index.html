@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Musical Art</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="header">
+    <h1>Musical Art</h1>
+    <div class="header-options">
+      <span class="keyboard-hint">Teclado: 1–0, Q–P, A–L, Z–N, M (grave → agudo)</span>
+      <label class="toggle">
+        <input type="checkbox" id="continuous" />
+        <span>Som contínuo (segurar)</span>
+      </label>
+    </div>
+  </header>
+
+  <main class="main">
+    <section class="left" id="keyboard">
+      <div class="keyboard-inner" id="keyboard-inner"></div>
+    </section>
+    <section class="right">
+      <div class="waves-grid">
+        <div class="wave-frame" data-angle="0"><canvas id="waves-0" aria-label="Ângulo 0°"></canvas><span class="frame-label">0°</span></div>
+        <div class="wave-frame" data-angle="1"><canvas id="waves-1" aria-label="Ângulo 90°"></canvas><span class="frame-label">90°</span></div>
+        <div class="wave-frame" data-angle="2"><canvas id="waves-2" aria-label="Ângulo 180°"></canvas><span class="frame-label">180°</span></div>
+        <div class="wave-frame" data-angle="3"><canvas id="waves-3" aria-label="Ângulo 270°"></canvas><span class="frame-label">270°</span></div>
+        <div class="wave-frame wave-frame-summary"><canvas id="waves-summary" aria-label="Esfera A2–A6 girando"></canvas><span class="frame-label">Esfera (A2–A6)</span></div>
+      </div>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>

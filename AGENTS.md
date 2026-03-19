@@ -22,9 +22,9 @@
 | `HEARTBEAT.md` | Checklist periódico (vazio se sem poll) |
 | `MEMORY.md` | Política: `knowledge/` vs `adv_csuite_memory` |
 
-**Template:** copiar [`apps/admin/agents/_template_agent/`](apps/admin/agents/_template_agent/). **Bootstrap na sessão:** ler na ordem `AGENT.md` → `SOUL.md` → `USER.md` → `COMPANY.md` → `REDLINES.md` → `PERMISSIONS.md` → `VOICE.md` → `MEMORY.md` → `HEARTBEAT.md` → skills necessárias.
+**Template:** copiar [`apps/core/admin/agents/_template_agent/`](apps/core/admin/agents/_template_agent/). **Bootstrap na sessão:** ler na ordem `AGENT.md` → `SOUL.md` → `USER.md` → `COMPANY.md` → `REDLINES.md` → `PERMISSIONS.md` → `VOICE.md` → `MEMORY.md` → `HEARTBEAT.md` → skills necessárias.
 
-Exemplo de agente de apoio completo: [`apps/admin/agents/andon_asana/`](apps/admin/agents/andon_asana/) (Asana → base híbrida C-Suite + Founder).
+Exemplo de agente de apoio completo: [`apps/core/admin/agents/andon_asana/`](apps/core/admin/agents/andon_asana/) (Asana → base híbrida C-Suite + Founder).
 
 **Gerentes de conta:** três agentes (um por cliente ativo) — `gerente_rose`, `gerente_benditta`, `gerente_young` — owner Cagan (CPO). Cada um usa skills compartilhadas (relatório-kpis-campanhas, copy-brief-campanha, analise-performance-canal, briefing-cliente-template, escopo-projeto-checklist, dashboard-kpis-especificacao) e a skill de contexto do cliente: `rose-portal-advocacia-contexto`, `benditta-marcenaria-contexto`, `young-empreendimentos-contexto`. Acionados pelo Grove ou Cagan para demandas de CX, marketing, produtos e escopo daquele cliente.
 
@@ -39,9 +39,9 @@ Exemplo de agente de apoio completo: [`apps/admin/agents/andon_asana/`](apps/adm
 |---------|------|
 | **Índice: manual agentes/skills** | `knowledge/06_CONHECIMENTO/manual-agentes-e-skills.md` — mapa de toda a documentação relacionada |
 | Base de conhecimento | `knowledge/` (00_GESTAO_CORPORATIVA … 99_ARQUIVO) |
-| Admin (contexto interno) | `apps/admin/context/` (symlink → `knowledge/`) |
+| Admin (contexto interno) | `apps/core/admin/context/` (symlink → `knowledge/`) |
 | Clientes | `clients/01_lidera/`, `clients/02_rose/`, etc. |
-| Skills dos agentes | `apps/admin/agents/skills/` |
+| Skills dos agentes | `apps/core/admin/agents/skills/` |
 | WorkOS (Admin) p/ agentes | `knowledge/06_CONHECIMENTO/workos-admin-contexto-agentes.md` |
 | Manual de taxonomia | `knowledge/00_GESTAO_CORPORATIVA/MANUAL_TAXONOMIA_REPOSITORIO.md` |
 | OpenClaw (local + Railway) | `knowledge/00_GESTAO_CORPORATIVA/processos/openclaw-local-e-railway.md` → manual completo: `tools/openclaw/OPENCLAW-MANUAL-LOCAL-E-RAILWAY.md`. WhatsApp: `tools/openclaw/whatsapp/`. **Workspace** = pasta `openclaw/` na raiz do monorepo; `~/.openclaw/workspace` e `OPENCLAW_HOME` devem apontar para `.../01_ADVENTURE_LABS/openclaw`. |

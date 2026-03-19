@@ -6,7 +6,7 @@ Este documento descreve a integração entre os **relatórios do founder** (tela
 
 **Zazu (WhatsApp):** o POST `/api/csuite/founder-report` pode incluir `csuite_memory: { type: "founder_csuite_daily", date, source: ["zazu_whatsapp"] }` (CRON_SECRET). Nesse caso há **dual-write** para `adv_csuite_memory` — listagem em `/dashboard/csuite-diario`. Ver [ADV_CSUITE_MEMORY_METADATA.md](ADV_CSUITE_MEMORY_METADATA.md).
 
-**Versão em produção:** o C-Suite publicado no n8n (Railway) é o **V11** — *C-Suite Autonomous Loop - V11 (Fase 4: Paralelização + Histórico + Founder Reports)*. Para manutenções futuras, ver [apps/admin/n8n_workflows/README.md](../apps/admin/n8n_workflows/README.md).
+**Versão em produção:** o C-Suite publicado no n8n (Railway) é o **V11** — *C-Suite Autonomous Loop - V11 (Fase 4: Paralelização + Histórico + Founder Reports)*. Para manutenções futuras, ver [apps/core/admin/n8n_workflows/README.md](../apps/core/admin/n8n_workflows/README.md).
 
 ---
 
@@ -24,12 +24,12 @@ Este documento descreve a integração entre os **relatórios do founder** (tela
 
 **Arquivos alterados / versões com founder reports:**
 
-- `apps/admin/n8n_workflows/n8n-csuite-autonomous-loop.json`
-- `apps/admin/n8n_workflows/csuite/production/csuite-loop-v9.json`
-- **`apps/admin/n8n_workflows/C-Suite Autonomous Loop - V11 (Fase 4_ Paralelização + Histórico + Founder Reports).json`** — versão publicada (evolução do V10). Para publicar no n8n via CLI: rode o script a partir do repositório `01_ADVENTURE_LABS`; o script carrega credenciais de `apps/admin/.env.local` ou de **`GEMINI_CLI/.env`** (repositório irmão), onde podem estar `N8N_HOST_URL` e `N8N_API_KEY` (aceitos como alias de `N8N_API_URL` e `N8N_API_TOKEN`). Exemplo:
+- `apps/core/admin/n8n_workflows/n8n-csuite-autonomous-loop.json`
+- `apps/core/admin/n8n_workflows/csuite/production/csuite-loop-v9.json`
+- **`apps/core/admin/n8n_workflows/C-Suite Autonomous Loop - V11 (Fase 4_ Paralelização + Histórico + Founder Reports).json`** — versão publicada (evolução do V10). Para publicar no n8n via CLI: rode o script a partir do repositório `01_ADVENTURE_LABS`; o script carrega credenciais de `apps/core/admin/.env.local` ou de **`GEMINI_CLI/.env`** (repositório irmão), onde podem estar `N8N_HOST_URL` e `N8N_API_KEY` (aceitos como alias de `N8N_API_URL` e `N8N_API_TOKEN`). Exemplo:
   ```bash
   cd /caminho/para/01_ADVENTURE_LABS
-  ./apps/admin/scripts/n8n/import-to-railway.sh "n8n_workflows/C-Suite Autonomous Loop - V11 (Fase 4_ Paralelização + Histórico + Founder Reports).json"
+  ./apps/core/admin/scripts/n8n/import-to-railway.sh "n8n_workflows/C-Suite Autonomous Loop - V11 (Fase 4_ Paralelização + Histórico + Founder Reports).json"
   ```
 
 **Mudanças:**
@@ -55,7 +55,7 @@ Com isso, o C-Suite (e o Grove) passam a “saber” o que foi registrado nos re
 
 **Arquivo alterado:**
 
-- `apps/admin/src/app/dashboard/relatorio/page.tsx`
+- `apps/core/admin/src/app/dashboard/relatorio/page.tsx`
 
 **Mudança:**
 
@@ -89,9 +89,9 @@ O C-Suite **não** escreve em `adv_founder_reports` (nem em `feedback`); esse ca
 
 ## 4. Referências no repositório
 
-- **Versão em uso e manutenção:** [apps/admin/n8n_workflows/README.md](../apps/admin/n8n_workflows/README.md) — indica V11 como produção e como reimportar
-- Workflows n8n: `apps/admin/n8n_workflows/` (V11 na raiz), `apps/admin/n8n_workflows/csuite/production/` (v7–v9)
-- Página de relatórios: `apps/admin/src/app/dashboard/relatorio/page.tsx`
-- Tabela: migration `apps/admin/supabase/migrations/20250303100000_adv_founder_reports.sql`
+- **Versão em uso e manutenção:** [apps/core/admin/n8n_workflows/README.md](../apps/core/admin/n8n_workflows/README.md) — indica V11 como produção e como reimportar
+- Workflows n8n: `apps/core/admin/n8n_workflows/` (V11 na raiz), `apps/core/admin/n8n_workflows/csuite/production/` (v7–v9)
+- Página de relatórios: `apps/core/admin/src/app/dashboard/relatorio/page.tsx`
+- Tabela: migration `apps/core/admin/supabase/migrations/20250303100000_adv_founder_reports.sql`
 - Matriz de acessos: [SUPABASE_ROLES_MATRIZ_ACESSOS.md](SUPABASE_ROLES_MATRIZ_ACESSOS.md)
 - Plano de automações n8n: [PLANO_N8N_AUTOMACOES_AGENTES_SKILLS_TOOLS.md](PLANO_N8N_AUTOMACOES_AGENTES_SKILLS_TOOLS.md)

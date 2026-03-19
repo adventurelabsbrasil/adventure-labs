@@ -10,10 +10,10 @@
 
 ## Pré-requisitos
 
-1. **Worker WhatsApp** em execução e acessível (deploy em Railway ou outro host). Ver [apps/whatsapp-worker/README.md](../../whatsapp-worker/README.md).
+1. **Worker WhatsApp** em execução e acessível (deploy em Railway ou outro host). Ver [apps/labs/whatsapp-worker/README.md](../../whatsapp-worker/README.md).
 2. **URL do worker:** editar `WORKER_BASE_URL` no nó **Set Date + Worker URL** (Code). O n8n 2.12+ costuma bloquear `$env` (`N8N_BLOCK_ENV_ACCESS_IN_NODE`); por isso a URL fica no workflow, não em variável de ambiente.
    - *Opcional (admin):* no Railway do n8n, remover/definir `N8N_BLOCK_ENV_ACCESS_IN_NODE=false` para voltar a usar `$env.WHATSAPP_WORKER_URL` no GET (menos seguro em instâncias multiusuário).
-3. **Timeout:** o GET ao worker usa **300000 ms** (5 min). No worker, `PUPPETEER_PROTOCOL_TIMEOUT_MS` default 10 min — ver [apps/whatsapp-worker/README.md](../../whatsapp-worker/README.md) se aparecer `Runtime.callFunctionOn timed out`.
+3. **Timeout:** o GET ao worker usa **300000 ms** (5 min). No worker, `PUPPETEER_PROTOCOL_TIMEOUT_MS` default 10 min — ver [apps/labs/whatsapp-worker/README.md](../../whatsapp-worker/README.md) se aparecer `Runtime.callFunctionOn timed out`.
 4. **Credencial HTTP Header Auth** no n8n para chamar o Admin:
    - Nome do header: `x-admin-key`
    - Valor: `CRON_SECRET` do Admin (mesmo usado pela Lara e outros fluxos).
@@ -29,25 +29,25 @@
 
 ## Importar no n8n (CLI)
 
-O script roda a partir de `apps/admin`. Caminho canônico do JSON: `workflows/n8n/whatsapp_groups_agent/whatsapp-groups-daily-v1.json`.
+O script roda a partir de `apps/core/admin`. Caminho canônico do JSON: `workflows/n8n/whatsapp_groups_agent/whatsapp-groups-daily-v1.json`.
 
 **A partir da raiz do monorepo (01_ADVENTURE_LABS):**
 
 ```bash
-cd apps/admin && ./scripts/n8n/import-to-railway.sh "../../workflows/n8n/whatsapp_groups_agent/whatsapp-groups-daily-v1.json"
+cd apps/core/admin && ./scripts/n8n/import-to-railway.sh "../../workflows/n8n/whatsapp_groups_agent/whatsapp-groups-daily-v1.json"
 ```
 
-**Ou, a partir de `apps/admin`,** se existir symlink `n8n_workflows` → `../../workflows/n8n`:
+**Ou, a partir de `apps/core/admin`,** se existir symlink `n8n_workflows` → `../../workflows/n8n`:
 
 ```bash
 ./scripts/n8n/import-to-railway.sh "n8n_workflows/whatsapp_groups_agent/whatsapp-groups-daily-v1.json"
 ```
 
-Credenciais: `N8N_API_URL` e `N8N_API_TOKEN` em `apps/admin/.env.local`.
+Credenciais: `N8N_API_URL` e `N8N_API_TOKEN` em `apps/core/admin/.env.local`.
 
 ## Arquivamento opcional (adv_whatsapp_daily)
 
-Para histórico queryable por grupo/data, o fluxo pode enviar os dados para `POST /api/cron/whatsapp-daily` (header `x-admin-key` ou `Authorization: Bearer CRON_SECRET`). Body: `{ date: "YYYY-MM-DD", groups: [ { id, name, messages } ] }`. Insere em `adv_whatsapp_daily`. Ver [F4] no plano e rota em `apps/admin/src/app/api/cron/whatsapp-daily/route.ts`.
+Para histórico queryable por grupo/data, o fluxo pode enviar os dados para `POST /api/cron/whatsapp-daily` (header `x-admin-key` ou `Authorization: Bearer CRON_SECRET`). Body: `{ date: "YYYY-MM-DD", groups: [ { id, name, messages } ] }`. Insere em `adv_whatsapp_daily`. Ver [F4] no plano e rota em `apps/core/admin/src/app/api/cron/whatsapp-daily/route.ts`.
 
 ## Resumo opcional com LLM (F3)
 
@@ -56,5 +56,5 @@ Para reduzir ruído e destacar tópicos relevantes (pedidos, dúvidas, feedback,
 ## Referências
 
 - Plano: [docs/PLANO_N8N_AUTOMACOES_AGENTES_SKILLS_TOOLS.md](../../../docs/PLANO_N8N_AUTOMACOES_AGENTES_SKILLS_TOOLS.md).
-- Worker: [apps/whatsapp-worker/README.md](../../whatsapp-worker/README.md).
-- Founder report API: [apps/admin/src/app/api/csuite/founder-report/route.ts](../../src/app/api/csuite/founder-report/route.ts).
+- Worker: [apps/labs/whatsapp-worker/README.md](../../whatsapp-worker/README.md).
+- Founder report API: [apps/core/admin/src/app/api/csuite/founder-report/route.ts](../../src/app/api/csuite/founder-report/route.ts).

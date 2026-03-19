@@ -33,7 +33,7 @@ csuite/
 
 ### Via CLI (API REST — n8n no Railway)
 
-Com `N8N_API_URL` e `N8N_API_TOKEN` em `apps/admin/.env.local`:
+Com `N8N_API_URL` e `N8N_API_TOKEN` em `apps/core/admin/.env.local`:
 
 ```bash
 ./scripts/n8n/import-to-railway.sh
@@ -66,7 +66,7 @@ Na **V10** (csuite-loop-v10.json):
 - **CTO Agent Torvalds:** Instrução (system message) para montar a **Pauta do dia** (bugs e melhorias) e indicar que a execução de cada item deve ser delegada à skill **cto-executar-item-pauta** no Cursor; cada item vira PR para o Founder aprovar.
 - **Post CTO Pauta (opcional):** Envia POST para `/api/csuite/founder-report` com título "CTO Pauta — YYYY-MM-DD" e conteúdo = relatório do CTO, persistindo em `adv_founder_reports`. Requer variável `CRON_SECRET` no n8n (mesmo valor do Admin).
 
-**Executor no fluxo:** O CTO não executa código. As skills **cto-pauta-issues-diaria** e **cto-executar-item-pauta** (em `apps/admin/agents/skills/`) são o contrato de execução: o CTO delega a execução dos itens da pauta; cada item resulta em PR para o Founder aprovar. Ver [PLANO_CTO_PAUTA_ISSUES_V10.md](PLANO_CTO_PAUTA_ISSUES_V10.md).
+**Executor no fluxo:** O CTO não executa código. As skills **cto-pauta-issues-diaria** e **cto-executar-item-pauta** (em `apps/core/admin/agents/skills/`) são o contrato de execução: o CTO delega a execução dos itens da pauta; cada item resulta em PR para o Founder aprovar. Ver [PLANO_CTO_PAUTA_ISSUES_V10.md](PLANO_CTO_PAUTA_ISSUES_V10.md).
 
 ## V12 (a partir do V11 ativo)
 

@@ -73,7 +73,7 @@ Após gerar o domínio (próximo passo), adicionar:
 ### 4.1 Variáveis de ambiente (webhook)
 
 - **Só servidor** (nunca `NEXT_PUBLIC_`): a URL do webhook não deve ir para o client.
-- Em `apps/admin/.env.local` e no Vercel (Environment Variables):
+- Em `apps/core/admin/.env.local` e no Vercel (Environment Variables):
 
 ```bash
 # n8n — webhook (disparar workflows por URL)
@@ -89,7 +89,7 @@ Para o **Admin** (ou o Grove/agente) **chamar a API do n8n** (listar fluxos, cri
 | Onde | Para quê |
 |------|----------|
 | `context/00_GESTAO_CORPORATIVA/credenciais-adventure.md` | Cópia de referência (arquivo **não versionado**, no `.gitignore`). O Grove pode usar esse arquivo quando você pedir algo que envolva a API do n8n. |
-| `apps/admin/.env.local` (e Vercel) | O **app** usa em runtime. Todas as rotas API ou server components que chamarem o n8n devem usar `process.env.N8N_API_TOKEN` e `process.env.N8N_API_URL`. |
+| `apps/core/admin/.env.local` (e Vercel) | O **app** usa em runtime. Todas as rotas API ou server components que chamarem o n8n devem usar `process.env.N8N_API_TOKEN` e `process.env.N8N_API_URL`. |
 
 **Como configurar:**
 
@@ -97,7 +97,7 @@ Para o **Admin** (ou o Grove/agente) **chamar a API do n8n** (listar fluxos, cri
    No n8n: **Settings** → **API** → ativar "Public API" se necessário → **Create an API key** (ou usar um JWT existente). Copie o token.
 
 2. **Salvar no Admin (ambiente local)**  
-   Em `apps/admin/.env.local` (não versionado), adicione:
+   Em `apps/core/admin/.env.local` (não versionado), adicione:
 
    ```bash
    # n8n — Public API (listar/criar/executar workflows a partir do Admin)

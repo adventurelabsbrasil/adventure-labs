@@ -9,16 +9,16 @@ Passos recomendados:
    - Se for trabalho de **Desenvolvimento (TI)**, criar uma issue no GitHub e vincular à tarefa.
 
 2. **Escopo**
-   - Definir claramente quais apps (`apps/admin`, `apps/adventure`, etc.) e quais packages (`packages/ui`, `packages/db`, etc.) serão afetados.
+   - Definir claramente quais apps (`apps/core/admin`, `apps/core/adventure`, etc.) e quais packages (`packages/ui`, `packages/db`, etc.) serão afetados.
    - Usar a skill `monorepo-pnpm` para decidir onde colocar código (app específico vs package reutilizável) e como instalar dependências com `pnpm --filter`.
 
 3. **Schema (se houver impacto em banco)**
    - Usar a skill `supabase-migrations` para desenhar a migration.
    - Conferir o schema atual via Supabase MCP (`list_tables`/equivalente) antes de criar a migration.
-   - Criar migrations em `apps/admin/supabase/migrations/` com prefixo `adv_` e RLS adequada.
+   - Criar migrations em `apps/core/admin/supabase/migrations/` com prefixo `adv_` e RLS adequada.
 
 4. **Backend / API**
-   - No Admin: implementar em `apps/admin/app/api/**`, usando tipos de `apps/admin/src/types/database.ts`.
+   - No Admin: implementar em `apps/core/admin/app/api/**`, usando tipos de `apps/core/admin/src/types/database.ts`.
    - Em outros apps: seguir a convenção local (por exemplo, API externa ou funções server-side).
 
 5. **UI**

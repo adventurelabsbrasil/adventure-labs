@@ -9,7 +9,7 @@ updated: 2026-03-19
 
 Resumo do que foi feito em termos de tecnologia para que o C-Suite e a equipe tenham visibilidade. Este documento é consumido pela API `/api/csuite/context-docs` e pelo workflow n8n (Build Context) para que o C-Suite tenha visibilidade.
 
-**Escopo:** agentes e skills de benchmark martech no monorepo **01_ADVENTURE_LABS** (`apps/admin/agents/` e `apps/admin/agents/skills/`).
+**Escopo:** agentes e skills de benchmark martech no monorepo **01_ADVENTURE_LABS** (`apps/core/admin/agents/` e `apps/core/admin/agents/skills/`).
 
 ---
 
@@ -29,13 +29,13 @@ Previsto: integrações futuras com C-Suite e outros membros da equipe.
 
 ## 2. Skills de benchmark (9 novas)
 
-Criadas em `apps/admin/agents/skills/` com SKILL.md completo (frontmatter + Objetivo, Quando usar, Input, Passos, Output, Critérios de revisão).
+Criadas em `apps/core/admin/agents/skills/` com SKILL.md completo (frontmatter + Objetivo, Quando usar, Input, Passos, Output, Critérios de revisão).
 
 - **benchmark-martech-tendencias**, **benchmark-concorrentes-adventure**, **benchmark-dashboards-bi-automacoes** → agente benchmark_adventure.
 - **benchmark-mercado-setor-cliente**, **benchmark-concorrencia-setor**, **benchmark-tendencias-por-nicho** → agente benchmark_clientes.
 - **benchmark-trend-topics-conteudo**, **benchmark-martech-criatividade-inovacao**, **benchmark-educacao-novidades-martech** → agente benchmark_conteudo.
 
-Catálogo e personas: ver `apps/admin/agents/skills/README.md`.
+Catálogo e personas: ver `apps/core/admin/agents/skills/README.md`.
 
 ---
 
@@ -44,7 +44,7 @@ Catálogo e personas: ver `apps/admin/agents/skills/README.md`.
 | Documento | Alteração |
 |-----------|-----------|
 | **AGENTS.md** (raiz) | Seção "Benchmark martech (três agentes de apoio)" com descrição dos agentes e skills. |
-| **apps/admin/agents/grove_ceo.md** | Delegação ao C-Suite: quando acionar benchmark_adventure, benchmark_clientes e benchmark_conteudo. |
+| **apps/core/admin/agents/grove_ceo.md** | Delegação ao C-Suite: quando acionar benchmark_adventure, benchmark_clientes e benchmark_conteudo. |
 | **knowledge/00_GESTAO_CORPORATIVA/operacao/registro-benchmark-agentes-martech-2026-03-19.md** | Registro completo do que foi feito e onde o C-Suite/Founder acessam. |
 
 ---

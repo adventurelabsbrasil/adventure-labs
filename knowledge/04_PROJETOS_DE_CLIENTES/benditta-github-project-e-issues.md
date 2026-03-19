@@ -34,7 +34,7 @@ Associe ao repositório desejado pela UI (Projects → Link a repository) ou con
 **Corpo:**
 
 - Tabelas com prefixo `adv_`, `tenant_id` / `client_id`, políticas RLS obrigatórias.
-- Migrações em `apps/admin/supabase/migrations/`.
+- Migrações em `apps/core/admin/supabase/migrations/`.
 - UI lê apenas dados do tenant atual.
 
 ### 3) Sincronização incremental e cache
