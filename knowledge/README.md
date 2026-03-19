@@ -2,7 +2,7 @@
 
 Taxonomia 00–99, espelho do Google Drive da agência.
 
-**Fonte canônica do monorepo.** O `apps/core/admin/context` é symlink para `../../knowledge` (fonte única); não existe mais pasta `context/` na raiz nem cópia duplicada no Admin.
+**Fonte canônica do monorepo.** O `apps/core/admin/context` é symlink para `../../../knowledge` (fonte única); não existe mais pasta `context/` na raiz nem cópia duplicada no Admin.
 
 ## Estrutura
 

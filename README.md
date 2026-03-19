@@ -16,7 +16,7 @@ Ou, se já clonou sem `--recurse-submodules`:
 ./scripts/setup.sh
 ```
 
-O script inicializa os submodules e cria o symlink `apps/core/admin/context -> ../../knowledge` (evita duplicação).
+O script inicializa os submodules e cria o symlink `apps/core/admin/context -> ../../../knowledge` (evita duplicação).
 
 ## Estrutura
 
