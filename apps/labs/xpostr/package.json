@@ -6,8 +6,7 @@
     "node": ">=18"
   },
   "scripts": {
-    "dev": "infisical run --env=dev -- pnpm exec next dev --port 3005",
-    "dev:raw": "next dev --port 3005",
+    "dev": "next dev --port 3005",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",

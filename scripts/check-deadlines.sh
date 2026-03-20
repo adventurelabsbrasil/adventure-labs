@@ -3,7 +3,7 @@
 # se alguma estiver vencendo hoje (America/Sao_Paulo).
 #
 # ASANA_ACCESS_TOKEN: exporte no shell ou use apenas coluna Due no BACKLOG.
-# Com Infisical (recomendado): infisical run --env=dev -- ./scripts/check-deadlines.sh
+# Com Infisical (recomendado na raiz): pnpm check-deadlines  (path /monorepo)
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
