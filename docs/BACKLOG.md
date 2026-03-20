@@ -20,15 +20,20 @@ Sem esses dois campos, a feature nao entra em desenvolvimento.
 
 ## Quadro de backlog
 
-Colunas **Due (Asana)** e **Atualizado em** usam `AAAA-MM-DD`. Deixe Due vazio quando o prazo vier so da API; o script `scripts/check-deadlines.sh` consulta o Asana para linhas `P0`.
+Colunas **Due (Asana)** e **Atualizado em** usam `AAAA-MM-DD`. A coluna **Agenda** espelha compromissos do CTO / Human (nao necessariamente due_on do Asana).
 
-| Issue ID | Origem | Titulo | Prioridade tecnica | Status | Owner | Due (Asana) | Atualizado em | Notas |
-|----------|--------|--------|--------------------|--------|-------|-------------|---------------|-------|
-| 1213744799182618 | Asana | Consertar campanha Google Ads [Rose] | P0 | todo | Lead Vibe-Coder | | 2026-03-19 | Tracking/LP/codigo: P0. Senao, reclassificar para P2 operacao. |
-| 1213710771598087 | Asana | Legal approval of campaign details (lote) | P0 | todo | Adventure Labs | 2026-03-19 | 2026-03-19 | Varias subtarefas iguais no Asana; GID representativo. Compliance / desbloqueio de veiculacao. |
-| 1213709221981206 | Asana | Landing Page (MVP Martech 2026T2) | P1 | todo | Adventure Labs | | 2026-03-19 | Desenvolvimento web — alinhar issue GitHub + adv_tasks (Torvalds). |
-| 1213741757711478 | Asana | Formularios (MVP Martech 2026T2) | P1 | todo | TBD | | 2026-03-19 | Captura / forms — dev. |
-| 1213709221981281 | Asana | Tag Manager (MVP Martech 2026T2) | P1 | todo | Igor Ribas | 2026-03-23 | 2026-03-19 | GTM / tags — dev + configuracao. |
+| Issue ID | Origem | Titulo | Prioridade tecnica | Status | Owner | Due (Asana) | Agenda | Atualizado em | Notas |
+|----------|--------|--------|--------------------|--------|-------|-------------|--------|---------------|-------|
+| 1213744799182618 | Asana | Consertar campanha Google Ads [Rose] | P0 | todo | Lead Vibe-Coder | | 2026-03-21 10:00 | 2026-03-20 | Diagnostico API + Infisical `GOOGLE_ADS_*`; CID Rose em GOOGLE_ADS_CONTAS_REGISTRO. |
+| — | Operacional | Teste login Carla — Young Talents (Vercel) | P0 | todo | Human / Carla | | 2026-03-21 09:00 | 2026-03-20 | Repo = Supabase Auth; validar deploy Vercel vs commit + envs `VITE_*`. Ver ACORE_SESSION_LOG. |
+| 1213710771598087 | Asana | Legal approval of campaign details (lote) | P0 | todo | Adventure Labs | 2026-03-19 | — | 2026-03-20 | Varias subtarefas; compliance. Revalidar se prazo deslizou no Asana. |
+| 1213709221981242 | Asana | Cronograma Editorial [Planejamento] (MVP Martech) | P1 | todo | Igor Ribas | 2026-03-20 | — | 2026-03-20 | Vista no Asana; Igor. |
+| 1213709221981253 | Asana | Ficha tecnica do produto (MVP Martech) | P1 | todo | Adventure Labs | 2026-03-20 | — | 2026-03-20 | Vista no Asana. |
+| 1213709221981331 | Asana | Esboco (Copy/Wireframes) (MVP Martech) | P1 | todo | Igor Ribas | 2026-03-20 | — | 2026-03-20 | Vista no Asana. |
+| 1213709221981206 | Asana | Landing Page (MVP Martech 2026T2) | P1 | todo | Adventure Labs | | — | 2026-03-19 | Dev web; GitHub + adv_tasks. |
+| 1213741757711478 | Asana | Formularios (MVP Martech 2026T2) | P1 | todo | TBD | | — | 2026-03-19 | Captura / forms. |
+| 1213709221981281 | Asana | Tag Manager (MVP Martech 2026T2) | P1 | todo | Igor Ribas | 2026-03-23 | — | 2026-03-19 | GTM. |
+| — | CTO | Hostinger VPS + Coolify (migrar apps do Mac) | P2 | todo | Human | | 2026-03-21 14:00 | 2026-03-20 | Infra; fora do Asana ate criar tarefa. |
 
 ## Fluxo padrao por feature
 
@@ -42,5 +47,9 @@ Colunas **Due (Asana)** e **Atualizado em** usam `AAAA-MM-DD`. Deixe Due vazio q
 
 ```bash
 # Na raiz do monorepo; requer ASANA_ACCESS_TOKEN (ver docs/INFISICAL_SYNC.md)
-./scripts/check-deadlines.sh
+pnpm check-deadlines
 ```
+
+## Continuidade
+
+- Sessao e handoff: [ACORE_SESSION_LOG.md](ACORE_SESSION_LOG.md)
