@@ -6,7 +6,7 @@ Este arquivo e o espelho operacional das demandas de produto/engenharia vindas d
 
 Antes de iniciar qualquer implementacao, registrar:
 
-1. **ID da Issue** (GitHub/Asana)
+1. **ID da Issue** (GitHub/Asana) — usar **GID numerico do Asana** quando ainda nao houver issue GitHub; depois pode-se prefixar `GH-` na mesma linha (coluna Notas).
 2. **Prioridade tecnica** (`P0`, `P1`, `P2`, `P3`)
 
 Sem esses dois campos, a feature nao entra em desenvolvimento.
@@ -20,9 +20,15 @@ Sem esses dois campos, a feature nao entra em desenvolvimento.
 
 ## Quadro de backlog
 
-| Issue ID | Origem | Titulo | Prioridade tecnica | Status | Owner | Atualizado em |
-|----------|--------|--------|--------------------|--------|-------|---------------|
-| _preencher_ | GitHub/Asana | _preencher_ | P0/P1/P2/P3 | todo/in_progress/done | _preencher_ | AAAA-MM-DD |
+Colunas **Due (Asana)** e **Atualizado em** usam `AAAA-MM-DD`. Deixe Due vazio quando o prazo vier so da API; o script `scripts/check-deadlines.sh` consulta o Asana para linhas `P0`.
+
+| Issue ID | Origem | Titulo | Prioridade tecnica | Status | Owner | Due (Asana) | Atualizado em | Notas |
+|----------|--------|--------|--------------------|--------|-------|-------------|---------------|-------|
+| 1213744799182618 | Asana | Consertar campanha Google Ads [Rose] | P0 | todo | Lead Vibe-Coder | | 2026-03-19 | Tracking/LP/codigo: P0. Senao, reclassificar para P2 operacao. |
+| 1213710771598087 | Asana | Legal approval of campaign details (lote) | P0 | todo | Adventure Labs | 2026-03-19 | 2026-03-19 | Varias subtarefas iguais no Asana; GID representativo. Compliance / desbloqueio de veiculacao. |
+| 1213709221981206 | Asana | Landing Page (MVP Martech 2026T2) | P1 | todo | Adventure Labs | | 2026-03-19 | Desenvolvimento web — alinhar issue GitHub + adv_tasks (Torvalds). |
+| 1213741757711478 | Asana | Formularios (MVP Martech 2026T2) | P1 | todo | TBD | | 2026-03-19 | Captura / forms — dev. |
+| 1213709221981281 | Asana | Tag Manager (MVP Martech 2026T2) | P1 | todo | Igor Ribas | 2026-03-23 | 2026-03-19 | GTM / tags — dev + configuracao. |
 
 ## Fluxo padrao por feature
 
@@ -31,3 +37,10 @@ Sem esses dois campos, a feature nao entra em desenvolvimento.
 3. Implementar.
 4. Validar (type-check/lint/teste de sanidade).
 5. Atualizar status no backlog.
+
+## Checagem de prazos (P0)
+
+```bash
+# Na raiz do monorepo; requer ASANA_ACCESS_TOKEN (ver docs/INFISICAL_SYNC.md)
+./scripts/check-deadlines.sh
+```
