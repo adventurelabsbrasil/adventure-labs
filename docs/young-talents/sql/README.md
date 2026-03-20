@@ -1,14 +1,22 @@
 # Young Talents — SQL de diagnóstico e correção (Supabase)
 
+Este diretório contém scripts **genéricos** de diagnóstico. **Não** versione aqui project refs, chaves nem dados reais de clientes — use o link do CLI com o ref do **seu** projeto (Dashboard → Settings → General).
+
+## Modelo de segurança (resumo)
+
+- Acesso ao ATS interno exige linha em `young_talents.user_roles` (staff). RLS restringe `SELECT` a quem tem permissão; formulário **`/apply`** usa role **anon** + RPCs/políticas específicas.
+- Migrations canônicas do app: `apps/clientes/young-talents/plataforma/supabase/migrations/` (**037+**). Espelho em `clients/04_young/young-talents/...` (**025–028**). Ver **`apps/clientes/young-talents/plataforma/docs/SECURITY_MODEL.md`** e a página wiki **`wiki/Young-Talents-ATS-Seguranca.md`** (índice em `wiki/Home.md`).
+
 ## CLI (local)
 
-O projeto **Young Talents** pode ser linkado a partir de:
+A partir da pasta do cliente (ajuste o caminho se usar outro clone):
 
 `clients/04_young/young-talents`
 
 ```bash
 cd clients/04_young/young-talents
-supabase link --project-ref ttvwfocuftsvyziecjeu --yes
+# Substitua YOUR_PROJECT_REF pelo ref do projeto no dashboard Supabase
+supabase link --project-ref YOUR_PROJECT_REF --yes
 ```
 
 - `supabase db dump` exige **Docker** rodando na máquina.
@@ -22,6 +30,8 @@ supabase link --project-ref ttvwfocuftsvyziecjeu --yes
 4. (Recomendado) Aplique **`026_revoke_all_anon_public_user_roles.sql`** — em projetos onde o `anon` ainda tinha `INSERT`/`UPDATE`/`DELETE` na view `public.user_roles`, remove todos os privilégios do `anon` nessa view.
 5. `03-verificacao-pos-025.sql` — checklist rápido após deploy.
 6. `04-consultar-role-por-email.sql` — ver `role` de um e-mail em `user_roles`.
+7. Migration **`028_ats_staff_select_and_no_auto_user_role.sql`** (path `clients/04_young/...`) — RLS com `has_privileged_role('viewer')`; RPC `public_candidate_email_exists`; sync sem INSERT automático; `anon` em `cities`; etc.
+8. Se o deploy oficial for pelo app **`apps/clientes/young-talents/plataforma`**, use as migrations **`037`–`039`** (SELECT staff via `has_staff_access()`, sync sem viewer, RPC + cidades + `activity_log`). Ver `apps/clientes/young-talents/plataforma/docs/SECURITY_MODEL.md`.
 
 ## Leitura dos resultados (exemplo saudável)
 

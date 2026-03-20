@@ -22,6 +22,7 @@ Conteúdo-fonte fica **no próprio monorepo**, em `wiki/`:
 - `wiki/Agentes-de-apoio.md`
 - `wiki/Skills-por-owner.md`
 - `wiki/Automacoes-e-integracoes.md`
+- `wiki/Young-Talents-ATS-Seguranca.md` — modelo de acesso ao ATS (RLS, staff, `/apply`; sem segredos)
 
 A Wiki é um **espelho** dessa pasta — edições diretas na UI da Wiki serão sobrescritas quando o script de publicação rodar.
 
