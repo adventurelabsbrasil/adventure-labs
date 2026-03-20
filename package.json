@@ -13,7 +13,8 @@
     "railway:status": "railway status",
     "railway:logs": "railway logs",
     "xpostr:dev": "pnpm --filter adventure-labs-xpostr dev",
-    "benditta:dev": "pnpm --filter @cliente/benditta-app dev"
+    "benditta:dev": "pnpm --filter @cliente/benditta-app dev",
+    "secrets:push:infisical": "bash tools/scripts/infisical-push-env-local.sh"
   },
   "devDependencies": {
     "@railway/cli": "^4.31.0"
