@@ -21,7 +21,7 @@ Configurar em `apps/core/admin/.env.local` (ou Vercel). Todas as variáveis abai
 | `GOOGLE_ADS_CLIENT_SECRET` | Sim* | Client Secret. |
 | `GOOGLE_ADS_DEVELOPER_TOKEN` | Sim* | Developer Token aprovado no Google Ads. |
 | `GOOGLE_ADS_REFRESH_TOKEN` | Sim* | Refresh token com escopo `https://www.googleapis.com/auth/adwords` (offline). |
-| `GOOGLE_ADS_CUSTOMER_ID` | Sim* | ID da conta (MCC ou anunciante), ex.: `123-456-7890`. |
+| `GOOGLE_ADS_CUSTOMER_ID` | Sim* | ID da conta (MCC ou anunciante), ex.: `123-456-7890`. Registro interno por cliente: [GOOGLE_ADS_CONTAS_REGISTRO.md](GOOGLE_ADS_CONTAS_REGISTRO.md). |
 | **Meta** | | |
 | `META_BM_SYSTEM_USER_TOKEN` | Sim* | Token do System User do Business Manager. |
 | `META_APP_ID` | Não | ID do app (opcional). |
