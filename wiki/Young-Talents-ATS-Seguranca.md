@@ -45,6 +45,10 @@ Quem já tinha linha em `user_roles` (ex.: `viewer` criado por trigger antigo) *
 - Não commitar `.env`, service role keys, senhas, e-mails pessoais de clientes ou **project ref** do Supabase em READMEs.
 - Usar `.env.example` só com **nomes** de variáveis e placeholders (`https://YOUR_PROJECT.supabase.co`).
 
+## Governança do repositório (histórico)
+
+Decisões sobre **acesso ao Git** e **fluxo de contribuição** (repositório privado, fork, PRs) ficam em **`docs/young-talents/CHANGELOG.md`** — ver entrada datada (ex.: 2026-03-20).
+
 ---
 
 [[Home]] · Ver também `docs/young-talents/sql/README.md` e `SECURITY_MODEL.md` no app plataforma.

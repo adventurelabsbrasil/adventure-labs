@@ -44,3 +44,7 @@ supabase link --project-ref YOUR_PROJECT_REF --yes
 
 - Políticas e o app checavam `user_id = auth.uid()`, mas a linha de staff tinha **`user_id` NULL** (pré-cadastro) ou **UUID errado**.
 - O trigger `sync_user_role_on_login` fazia match **`email = email`** sensível a maiúsculas/minúsculas, então não atualizava o `user_id`.
+
+## Governança / histórico (Git)
+
+- **`../CHANGELOG.md`** — decisões de acesso ao repositório e fluxo de contribuição (ex.: privado, fork).
