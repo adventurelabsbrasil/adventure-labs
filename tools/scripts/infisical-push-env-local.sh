@@ -186,6 +186,43 @@ collect_scan_roots() {
   echo "clients"
 }
 
+# Infisical CLI rejeita chaves com valor vazio (ex.: OPENAI_API_KEY=).
+# Gera $2 como copia de $1 sem essas linhas; comentarios e linhas em branco omitidos no destino.
+filter_env_skip_empty_values() {
+  local src="$1" dest="$2" label="${3:-$1}"
+  if ! command -v python3 >/dev/null 2>&1; then
+    echo "ERRO: python3 e necessario para filtrar chaves vazias antes do Infisical." >&2
+    return 1
+  fi
+  python3 - "$src" "$dest" "$label" <<'PY'
+import re
+import sys
+
+src, dst, label = sys.argv[1], sys.argv[2], sys.argv[3]
+pat = re.compile(
+    r"^(?P<indent>\s*)(?:(?P<exp>export)\s+)?(?P<key>[A-Za-z_][A-Za-z0-9_]*)=(?P<val>.*)$"
+)
+with open(src, encoding="utf-8-sig", errors="replace") as inf, open(dst, "w", encoding="utf-8") as out:
+    for line in inf:
+        raw = line.rstrip("\n\r")
+        if not raw.strip():
+            continue
+        if raw.lstrip().startswith("#"):
+            continue
+        m = pat.match(raw)
+        if m:
+            v = m.group("val").strip()
+            if len(v) >= 2 and v[0] == v[-1] and v[0] in "\"'":
+                v = v[1:-1]
+            if v == "":
+                sys.stderr.write(
+                    f"AVISO: ignorando '{m.group('key')}' (valor vazio) em {label} — Infisical rejeita\n"
+                )
+                continue
+        out.write(line)
+PY
+}
+
 collect_env_files() {
   local f r roots root abs_root
   [[ -f "$ROOT/.env.local" ]] && echo ".env.local"
@@ -234,20 +271,39 @@ while IFS= read -r rel; do
     else
       echo "[dry-run] infisical secrets set --file=\"$abs\" --path=\"$ipath\" --env=\"$ENV_NAME\""
     fi
+    echo "    (na execucao real: chaves com valor vazio sao omitidas antes do Infisical)" >&2
     continue
   fi
   ensure_infisical_folder "$ipath"
+  _filtered=""
+  file_use="$abs"
+  if have_infisical; then
+    _filtered="$(mktemp -t adv-infisical-env.XXXXXX)"
+    if ! filter_env_skip_empty_values "$abs" "$_filtered" "$rel"; then
+      rm -f "$_filtered"
+      echo "ERRO: falha ao preparar $rel para Infisical" >&2
+      import_failures=$((import_failures + 1))
+      continue
+    fi
+    if [[ ! -s "$_filtered" ]]; then
+      echo "AVISO: apos filtrar chaves vazias, nada restou em $rel — pulando import" >&2
+      rm -f "$_filtered"
+      continue
+    fi
+    file_use="$_filtered"
+  fi
   if ((${#EXTRA_ARGS[@]})); then
-    if ! infisical secrets set --file="$abs" --path="$ipath" --env="$ENV_NAME" "${EXTRA_ARGS[@]}"; then
+    if ! infisical secrets set --file="$file_use" --path="$ipath" --env="$ENV_NAME" "${EXTRA_ARGS[@]}"; then
       echo "ERRO: falha ao importar $rel" >&2
       import_failures=$((import_failures + 1))
     fi
   else
-    if ! infisical secrets set --file="$abs" --path="$ipath" --env="$ENV_NAME"; then
+    if ! infisical secrets set --file="$file_use" --path="$ipath" --env="$ENV_NAME"; then
       echo "ERRO: falha ao importar $rel" >&2
       import_failures=$((import_failures + 1))
     fi
   fi
+  [[ -n "$_filtered" ]] && rm -f "$_filtered"
 done < <(collect_env_files | sort -u)
 
 if [[ "$unmapped" -gt 0 ]]; then

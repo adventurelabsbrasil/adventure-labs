@@ -71,6 +71,8 @@ Outras chaves ja documentadas em `apps/core/admin/.env.example` (GitHub, n8n, Ge
 
 ## Import em lote (subir `.env.local` para o Infisical)
 
+O Infisical **nao aceita** secret com valor vazio. O script `infisical-push-env-local.sh` **omite** linhas `KEY=` / `KEY=""` antes do `secrets set` e emite `AVISO` no terminal (ex.: `OPENAI_API_KEY` vazio). Preencha a chave no painel Infisical ou no `.env.local` quando for usar.
+
 1. Dry-run (lista pastas e comandos):
 
 ```bash
