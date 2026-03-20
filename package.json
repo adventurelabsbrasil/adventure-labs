@@ -3,7 +3,7 @@
   "private": true,
   "description": "Raiz do monorepo — use pnpm install na raiz ou npm install em cada app (apps/core/admin, etc.)",
   "scripts": {
-    "admin:dev": "pnpm --filter adventure-labs-admin dev",
+    "admin:dev": "infisical run --env=dev --path=/admin -- pnpm --filter adventure-labs-admin dev",
     "test:andon": "pnpm --filter adventure-labs-admin run test:andon",
     "test:andon:post": "pnpm --filter adventure-labs-admin run test:andon:post",
     "admin:install": "pnpm --filter adventure-labs-admin install",
@@ -12,8 +12,10 @@
     "railway:link": "railway link",
     "railway:status": "railway status",
     "railway:logs": "railway logs",
-    "xpostr:dev": "pnpm --filter adventure-labs-xpostr dev",
-    "benditta:dev": "pnpm --filter @cliente/benditta-app dev",
+    "xpostr:dev": "infisical run --env=dev --path=/labs/xpostr -- pnpm --filter adventure-labs-xpostr dev",
+    "benditta:dev": "infisical run --env=dev --path=/clientes/benditta -- pnpm --filter @cliente/benditta-app dev",
+    "young:dev": "infisical run --env=dev --path=/clientes/young-talents -- pnpm --filter @cliente/young-plataforma dev",
+    "check-deadlines": "infisical run --env=dev --path=/monorepo -- bash scripts/check-deadlines.sh",
     "secrets:push:infisical": "bash tools/scripts/infisical-push-env-local.sh"
   },
   "devDependencies": {

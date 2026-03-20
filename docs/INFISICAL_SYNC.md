@@ -7,7 +7,7 @@ Sem **Developer Token** e credenciais OAuth do **Google Ads** (e demais APIs), f
 1. **Nunca** commitar tokens, refresh tokens ou chaves em `.env`, `.env.local` ou Markdown.
 2. **Fonte da verdade** dos segredos: projeto Infisical (ambiente `dev` / `staging` / `prod` alinhado ao Vercel/Railway).
 3. **Espelho local**: nomes de variaveis em cada app `/.env.example`; valores apenas no Infisical.
-4. **Desenvolvimento local**: o script **`dev`** dos apps usa **`infisical run`** por padrao (secrets injetados na hora). **`build`** e **`start`** permanecem sem CLI Infisical para nao quebrar Vercel/CI — la as variaveis vêm do painel (sincronizadas com o Infisical). Emergencia local sem CLI: `pnpm dev:raw` onde existir.
+4. **Desenvolvimento local**: os scripts **`dev`** / **`build`** / **`start`** **dentro de cada app** sao **comandos puros** (`next dev`, `vite`, etc.) — **sem** `infisical run` embutido (evita dupla injecao e conflito de chaves). O Human chama **`infisical run` na raiz do monorepo** (ver `package.json` da raiz: `admin:dev`, `xpostr:dev`, etc.), com `--path` alinhado ao [FOLDERS_MAP](#mapa-monorepo---pastas-infisical-folders_map). **Producao (Vercel/CI)** continua com variaveis do painel, sincronizadas com o Infisical.
 
 ## Instalacao do CLI
 
@@ -85,12 +85,14 @@ O Infisical **nao aceita** secret com valor vazio. O script `infisical-push-env-
 INFISICAL_ENV=dev ./tools/scripts/infisical-push-env-local.sh
 ```
 
-3. Validar um app (ex.: Admin):
+3. Validar um app (ex.: Admin) — **sempre a partir da raiz do monorepo**:
 
 ```bash
-cd apps/core/admin && pnpm dev
-# equivale a: infisical run --env=dev -- pnpm exec next dev --port 3001
+pnpm admin:dev
+# internamente: infisical run --env=dev --path=/admin -- pnpm --filter adventure-labs-admin dev
 ```
+
+Se o Admin precisar tambem de secrets que estao **so** em `/monorepo`, duplique-as no Infisical em `/admin` ou ajuste o comando `admin:dev` na raiz (outro `--path`, conforme a doc do Infisical para o seu projeto).
 
 4. **Somente depois** de confirmar login, build e APIs (ex. `/api/ads/google/campaigns`), remover os `.env.local` locais:
 
@@ -113,18 +115,22 @@ infisical secrets set --file="./apps/core/admin/.env.local" --path="/admin" --en
 
 ## Rodar os apps (somente com secrets do Infisical)
 
-| App | Comando |
-|-----|---------|
-| Admin | `cd apps/core/admin && pnpm dev` |
-| xpostr | `cd apps/labs/xpostr && pnpm dev` |
-| Young (Vite) | `cd apps/clientes/young-talents/plataforma && pnpm dev` |
-| Benditta | `cd apps/clientes/benditta/app && pnpm dev` |
-| Monorepo (atalho) | `pnpm admin:dev` |
+Na **raiz** do repositorio (`infisical link` ja feito):
+
+| App | Comando (raiz) | Path Infisical usado |
+|-----|----------------|----------------------|
+| Admin | `pnpm admin:dev` | `/admin` |
+| xpostr | `pnpm xpostr:dev` | `/labs/xpostr` |
+| Young (Vite) | `pnpm young:dev` | `/clientes/young-talents` |
+| Benditta | `pnpm benditta:dev` | `/clientes/benditta` |
+
+Dentro de cada app, `pnpm dev` continua disponivel **sem** Infisical (util para CI ou depuracao com `.env.local`).
 
 Scripts de prazo / cron na raiz:
 
 ```bash
-infisical run --env=dev -- ./scripts/check-deadlines.sh
+pnpm check-deadlines
+# equivale a: infisical run --env=dev --path=/monorepo -- bash scripts/check-deadlines.sh
 ```
 
 ## Vercel / CI
@@ -148,4 +154,4 @@ Validacao no Admin: `/dashboard/ads` (aba Google) ou `GET /api/ads/google/campai
 
 - [Infisical CLI — secrets set --file](https://infisical.com/docs/cli/commands/secrets)
 - `apps/core/admin/.env.example` — lista de nomes esperados
-- `scripts/check-deadlines.sh` — preferir `infisical run -- ./scripts/check-deadlines.sh`
+- `scripts/check-deadlines.sh` — na raiz: `pnpm check-deadlines`

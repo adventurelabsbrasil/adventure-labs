@@ -332,8 +332,8 @@ if [[ "$DELETE_AFTER" -eq 1 ]]; then
       echo "Removido: $rel"
     fi
   done < <(collect_env_files | sort -u)
-  echo "Feito. Valide: infisical run --env=$ENV_NAME -- pnpm --filter adventure-labs-admin exec next --version"
+  echo "Feito. Valide na raiz: pnpm admin:dev (ou infisical run --env=$ENV_NAME --path=/admin -- ...)"
 fi
 
 echo
-echo "OK. Proximo passo: infisical run (veja docs/INFISICAL_SYNC.md)."
+echo "OK. Proximo passo: na raiz do monorepo, pnpm admin:dev (veja docs/INFISICAL_SYNC.md)."
