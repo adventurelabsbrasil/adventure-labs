@@ -26,19 +26,28 @@ infisical link
 
 Para CI / identidade de maquina, use `INFISICAL_TOKEN` ou `INFISICAL_PROJECT_ID` (ver [documentacao](https://infisical.com/docs/cli/commands/secrets)).
 
-## Mapa monorepo -> pastas Infisical
+## Mapa monorepo -> pastas Infisical (FOLDERS_MAP)
 
-Cada `.env.local` encontrado sob `apps/*` (e o da raiz) deve virar secrets na pasta indicada — mesmo mapa usado por `tools/scripts/infisical-push-env-local.sh`:
+Fonte da verdade no script: comentario **FOLDERS_MAP** e funcao `foldermap_infisical_path()` em `tools/scripts/infisical-push-env-local.sh`.
 
-| Arquivo `.env.local` (relativo a raiz) | Pasta Infisical (`--path`) |
-|----------------------------------------|----------------------------|
+Scan: raiz do repo + `apps/core`, `apps/labs`, `apps/clientes`, legado `apps/admin` / `apps/adventure`, e `clients/`. Diretorios ausentes geram **AVISO** e sao ignorados (a ingestao continua).
+
+| Origem (exemplos) | Pasta Infisical (`--path`) |
+|-------------------|----------------------------|
 | `.env.local` | `/monorepo` |
-| `apps/core/admin/.env.local` | `/admin` |
-| `apps/labs/xpostr/.env.local` | `/labs/xpostr` |
-| `apps/clientes/young-talents/plataforma/.env.local` | `/clientes/young-talents` |
+| `apps/core/admin/.env.local` (canonico) ou `apps/admin/.env.local` (legado) | `/admin` |
+| `apps/core/adventure/.env.local` ou `apps/adventure/.env.local` | `/core/adventure` |
+| `apps/core/elite/.env.local` ou `apps/elite/.env.local` | `/core/elite` |
+| `apps/labs/<lab>/.env.local` | `/labs/<lab>` |
 | `apps/clientes/benditta/app/.env.local` | `/clientes/benditta` |
+| `apps/clientes/young-talents/plataforma/.env.local` | `/clientes/young-talents` |
+| `apps/clientes/lidera/flow/.env.local` | `/clientes/lidera` |
+| `apps/clientes/<c>/<app>/.env.local` (demais) | `/clientes/<c>/<app>` |
+| `clients/<slug>/admin/.env.local` | `/clients/<slug>/admin` |
+| `clients/<a>/<b>/.env.local` | `/clients/<a>/<b>` |
+| `clients/<slug>/.env.local` | `/clients/<slug>` |
 
-Novos apps: edite `infisical_path_for_file()` no script de push antes de importar.
+Novos apps: atualize o case e os fallbacks em `foldermap_infisical_path()` e rode `./tools/scripts/infisical-push-env-local.sh --dry-run`.
 
 ## Variaveis minimas para Admin + Ads + Asana
 
