@@ -2,7 +2,8 @@
 # Compara tarefas P0 citadas em docs/BACKLOG.md com due_on no Asana e avisa no terminal
 # se alguma estiver vencendo hoje (America/Sao_Paulo).
 #
-# Autoria: script de governanca ACORE (Aider nao estava no PATH neste ambiente).
+# ASANA_ACCESS_TOKEN: exporte no shell ou use apenas coluna Due no BACKLOG.
+# Com Infisical (recomendado): infisical run --env=dev -- ./scripts/check-deadlines.sh
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
