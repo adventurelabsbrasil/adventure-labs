@@ -1,19 +1,24 @@
 # Young Talents — histórico operacional (governança Git)
 
-Registro de decisões sobre **repositório**, **acesso** e **fluxo de contribuição**. Complementa o changelog técnico do app em `apps/clientes/young-talents/plataforma` (commits do repositório `young-talents`).
+Registro de decisões sobre **repositório**, **acesso** e **fluxo de contribuição**. Complementa o changelog técnico do app em `apps/clientes/young-talents/plataforma`.
 
 ---
 
-## 2026-03-20 — Acesso privado e contribuição via fork
+## 2026-03-21 — Produto interno Adventure; monorepo como SSOT; fim do fluxo emergencial externo
 
-- O código no **GitHub** foi compartilhado com **Eduardo Tebaldi** e o repositório passou a ser tratado como **privado** (acesso restrito à equipe/autorizados).
-- A partir desta data, **Eduardo Tebaldi** passa a trabalhar a partir de um **fork** do projeto/código e a submeter alterações por esse fluxo (ex.: pull requests para o repositório upstream, conforme combinado com o Founder/equipe Adventure Labs).
+- O ATS **Young Talents** é **produto interno** da Adventure Labs (ativo comercializável após ajustes). Ver [`docs/YOUNG_TALENTS_PRODUTO_INTERNO.md`](../YOUNG_TALENTS_PRODUTO_INTERNO.md).
+- **Fonte de verdade do código:** monorepo **`01_ADVENTURE_LABS`** (`apps/clientes/young-talents/plataforma` + espelho `clients/04_young/young-talents`). Equipa e agentes Cursor: **commit e push** aqui para correcções, issues e melhorias (sem credenciais no Git).
+- O repositório **`adventurelabsbrasil/young-talents`** deixa de ser o canal preferido após o período de **manutenção emergencial** (incidentes desde 17/mar/2026). Consolidar mudanças no monorepo; no GitHub, **rever permissões** de colaboradores externos quando já não forem necessárias.
 
-> Manter este arquivo atualizado quando mudar política de acesso, ownership do fork ou processo de merge.
+## 2026-03-20 — Acesso privado e contribuição via fork *(período encerrado — ver 2026-03-21)*
+
+- Registo histórico: repositório tratado como privado; colaborador externo com fluxo de fork/PR para corrigir erros pós-manutenção.
+- **Estado atual:** substituído pelo fluxo do monorepo (secção acima).
 
 ---
 
 ## Ver também
 
+- [`docs/YOUNG_TALENTS_PRODUTO_INTERNO.md`](../YOUNG_TALENTS_PRODUTO_INTERNO.md)
 - Modelo de segurança (RLS, staff): `wiki/Young-Talents-ATS-Seguranca.md` (raiz do monorepo).
 - SQL de diagnóstico: `docs/young-talents/sql/README.md`.
