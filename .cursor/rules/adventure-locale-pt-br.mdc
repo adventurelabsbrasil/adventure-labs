@@ -1,0 +1,27 @@
+---
+description: Idioma padrão pt-BR para prosa e docs; inglês só na camada de programação
+alwaysApply: true
+---
+
+# Idioma — Adventure Labs
+
+## Padrão: português brasileiro (pt-BR)
+
+Use **pt-BR** em:
+
+- Respostas ao utilizador (chat)
+- Documentação em Markdown (`docs/`, `knowledge/`, `wiki/`, READMEs orientados a equipa)
+- Texto de produto visível ao utilizador (UI, toasts, emails de sistema, mensagens de erro para humanos)
+
+**Preferências de vocabulário (pt-BR):** *você*, *arquivo*, *aplicativo*, *salvar*.  
+**Evitar** português de Portugal em texto novo: *tu*, *ficheiro*, *consola* (salvo citação de fonte externa).
+
+## Inglês — só na parte de programação
+
+Mantenha em **inglês** quando for código ou ecossistema técnico:
+
+- Nomes de variáveis, funções, classes, arquivos de código, rotas REST, chaves JSON técnicas
+- Palavras-chave da linguagem, nomes de pacotes npm, APIs e bibliotecas de terceiros
+- Comentários curtos alinhados a APIs em inglês (opcional); para explicar regra de negócio à equipa, **pt-BR** é aceitável
+
+**Resumo:** prosa e docs → **pt-BR**; forma e integração técnica do código → **inglês**; strings de UI → **pt-BR**.

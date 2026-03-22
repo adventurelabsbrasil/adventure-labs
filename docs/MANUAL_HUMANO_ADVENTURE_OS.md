@@ -2,6 +2,8 @@
 
 Guia curto para equipa Adventure: **onde começar** e **como não contornar o sistema**.
 
+**Idioma:** documentação da empresa em **português brasileiro (pt-BR)**; no código, termos técnicos e nomes em inglês são normais. Detalhe: [`.cursor/rules/adventure-locale-pt-br.mdc`](../.cursor/rules/adventure-locale-pt-br.mdc).
+
 ## Começar aqui
 
 1. Resumo: [`PLANO_ADVENTURE_OS_UNIFICADO.md`](PLANO_ADVENTURE_OS_UNIFICADO.md)  

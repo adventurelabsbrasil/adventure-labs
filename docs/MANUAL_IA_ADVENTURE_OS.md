@@ -1,5 +1,7 @@
 # Manual IA / Cursor — Adventure OS
 
+**Idioma:** respostas e documentação em **pt-BR**; inglês na camada técnica do código (nomes, APIs, libs). Regra: [`.cursor/rules/adventure-locale-pt-br.mdc`](../.cursor/rules/adventure-locale-pt-br.mdc).
+
 ## Bootstrap de sessão (ordem sugerida)
 
 1. [`knowledge/06_CONHECIMENTO/os-registry/INDEX.md`](../knowledge/06_CONHECIMENTO/os-registry/INDEX.md) — **onde está cada coisa**  

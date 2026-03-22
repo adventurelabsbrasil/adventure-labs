@@ -2,6 +2,8 @@
 
 **Adventure OS:** quando a dúvida for *onde fica* (MCP, workflow, app, runbook), consultar primeiro [`knowledge/06_CONHECIMENTO/os-registry/INDEX.md`](knowledge/06_CONHECIMENTO/os-registry/INDEX.md). Roteamento Grove (GTD, WorkOS, C-Suite): [`knowledge/06_CONHECIMENTO/protocolo-grove-roteamento.md`](knowledge/06_CONHECIMENTO/protocolo-grove-roteamento.md).
 
+**Idioma:** prosa e docs em **pt-BR**; inglês só na parte de programação (identificadores, APIs). Ver [`.cursor/rules/adventure-locale-pt-br.mdc`](.cursor/rules/adventure-locale-pt-br.mdc).
+
 ## Identidade
 
 - **Adventure Labs OS** — Orquestrador principal (persona Grove, CEO Agent)
