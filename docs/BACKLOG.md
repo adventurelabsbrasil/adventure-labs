@@ -32,8 +32,8 @@ Colunas **Due (Asana)** e **Atualizado em** usam `AAAA-MM-DD`. A coluna **Agenda
 
 | Issue ID | Origem | Titulo | Prioridade tecnica | Status | Owner | Due (Asana) | Agenda | Atualizado em | Notas |
 |----------|--------|--------|--------------------|--------|-------|-------------|--------|---------------|-------|
-| 1213744799182618 | Asana | Consertar campanha Google Ads [Rose] | P0 | todo | Lead Vibe-Coder | | 2026-03-21 10:00 | 2026-03-20 | Diagnostico API + Infisical `GOOGLE_ADS_*`; CID Rose em GOOGLE_ADS_CONTAS_REGISTRO. |
-| — | Operacional | Teste login Carla — Young Talents (Vercel) | P0 | em_validacao | Human / Carla | | 2026-03-21 09:00 | 2026-03-21 | Hotfix repo: ecrã explícito se faltar `VITE_*` em prod; `RequireAuth` em rotas internas; login volta a `state.from` seguro. **Redeploy Vercel** + teste Carla. Ver `plataforma/docs/TROUBLESHOOTING_LOGIN.md`. |
+| 1213744799182618 | Asana | Consertar campanha Google Ads [Rose] | P0 | todo | Lead Vibe-Coder | | 2026-03-21 10:00 | 2026-03-22 | Diagnostico API + Infisical `GOOGLE_ADS_*`; CID Rose em GOOGLE_ADS_CONTAS_REGISTRO. Próximo passo técnico após retoma do plano. |
+| — | Operacional | Teste login Carla — Young Talents (Vercel) | P0 | em_validacao | Human / Carla | | 2026-03-21 09:00 | 2026-03-22 | Hotfix repo já no Git; **Redeploy Vercel** + teste humano. Ver `plataforma/docs/TROUBLESHOOTING_LOGIN.md`. |
 | — | Governanca | Young Talents → produto interno Adventure (SSOT monorepo) | P2 | feito | Founder | | — | 2026-03-21 | Doc: `docs/YOUNG_TALENTS_PRODUTO_INTERNO.md`; CHANGELOG `docs/young-talents/CHANGELOG.md`; manuais + INDEX. Repo externo `adventurelabsbrasil/young-talents` — rever permissões no GitHub. |
 | 1213710771598087 | Asana | Legal approval of campaign details (lote) | P0 | todo | Adventure Labs | 2026-03-19 | — | 2026-03-20 | Varias subtarefas; compliance. Revalidar se prazo deslizou no Asana. |
 | 1213709221981242 | Asana | Cronograma Editorial [Planejamento] (MVP Martech) | P1 | todo | Igor Ribas | 2026-03-20 | — | 2026-03-20 | Vista no Asana; Igor. |
