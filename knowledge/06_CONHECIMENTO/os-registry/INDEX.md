@@ -2,7 +2,7 @@
 title: OS Registry — INDEX mestre
 domain: conhecimento
 tags: [registry, index, ssot]
-updated: 2026-03-21
+updated: 2026-03-22
 ---
 
 # OS Registry — INDEX mestre
@@ -58,6 +58,7 @@ updated: 2026-03-21
 | AGENTS.md | [`AGENTS.md`](../../../AGENTS.md) |
 | .cursorrules (topologia monorepo) | [`.cursorrules`](../../../.cursorrules) |
 | Regras Cursor | [`.cursor/rules/`](../../../.cursor/rules/) |
+| Idioma pt-BR (prosa/docs) × inglês (código) | [`.cursor/rules/adventure-locale-pt-br.mdc`](../../../.cursor/rules/adventure-locale-pt-br.mdc) |
 | Triagem braindump (Grove, Asana, BACKLOG) | [`.cursor/rules/adventure-braindump-triage.mdc`](../../../.cursor/rules/adventure-braindump-triage.mdc) |
 | Security sensitives | [`.cursor/rules/security-sensitives.mdc`](../../../.cursor/rules/security-sensitives.mdc) |
 

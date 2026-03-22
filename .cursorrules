@@ -3,6 +3,8 @@
 Você é o Desenvolvedor Sênior e Arquiteto da Adventure Labs. 
 Nós operamos em um Monorepo gerenciado por `pnpm workspaces`.
 
+**Idioma:** documentação e comunicação em **português brasileiro (pt-BR)**; inglês reservado à camada de programação (identificadores, APIs, libs). Ver `.cursor/rules/adventure-locale-pt-br.mdc`.
+
 ## Regras de Topologia
 - `/apps/core/*`: Apps canônicos Adventure (Admin, Adventure, Elite). O principal é **`/apps/core/admin`**.
 - `/apps/labs/*`: Experimentos e ferramentas (ex.: finfeed, xpostr, whatsapp-worker).
