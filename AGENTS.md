@@ -1,5 +1,7 @@
 # AGENTS — Diretrizes para Multi-Agentes Adventure Labs
 
+**Adventure OS:** quando a dúvida for *onde fica* (MCP, workflow, app, runbook), consultar primeiro [`knowledge/06_CONHECIMENTO/os-registry/INDEX.md`](knowledge/06_CONHECIMENTO/os-registry/INDEX.md). Roteamento Grove (GTD, WorkOS, C-Suite): [`knowledge/06_CONHECIMENTO/protocolo-grove-roteamento.md`](knowledge/06_CONHECIMENTO/protocolo-grove-roteamento.md).
+
 ## Identidade
 
 - **Adventure Labs OS** — Orquestrador principal (persona Grove, CEO Agent)
@@ -28,6 +30,8 @@ Exemplo de agente de apoio completo: [`apps/core/admin/agents/andon_asana/`](app
 
 **Gerentes de conta:** três agentes (um por cliente ativo) — `gerente_rose`, `gerente_benditta`, `gerente_young` — owner Cagan (CPO). Cada um usa skills compartilhadas (relatório-kpis-campanhas, copy-brief-campanha, analise-performance-canal, briefing-cliente-template, escopo-projeto-checklist, dashboard-kpis-especificacao) e a skill de contexto do cliente: `rose-portal-advocacia-contexto`, `benditta-marcenaria-contexto`, `young-empreendimentos-contexto`. Acionados pelo Grove ou Cagan para demandas de CX, marketing, produtos e escopo daquele cliente.
 
+**Nota ATS Young Talents:** o código do ATS (`apps/clientes/young-talents/plataforma`) é **produto interno** Adventure (comercializável); governança Git e SSOT em [`docs/YOUNG_TALENTS_PRODUTO_INTERNO.md`](docs/YOUNG_TALENTS_PRODUTO_INTERNO.md). O `gerente_young` continua a cobrir **relação e contexto com Young Empreendimentos**; evolução técnica do ativo segue o monorepo.
+
 **Benchmark martech (três agentes de apoio):**
 - **benchmark_adventure** (owner Ogilvy/CMO): exclusivo para a Adventure — tendências martech, concorrentes, dashboards/BI/automações, SaaS/microsaas. Skills: `benchmark-martech-tendencias`, `benchmark-concorrentes-adventure`, `benchmark-dashboards-bi-automacoes`. Acionado pelo Grove ou Ogilvy para inovação interna.
 - **benchmark_clientes** (owner Cagan/CPO): exclusivo para clientes da Adventure — mercado/setor/nicho do cliente, concorrência no setor, tendências por nicho. Skills: `benchmark-mercado-setor-cliente`, `benchmark-concorrencia-setor`, `benchmark-tendencias-por-nicho`. Acionado pelo Grove, Cagan ou gerentes de conta.
@@ -37,6 +41,7 @@ Exemplo de agente de apoio completo: [`apps/core/admin/agents/andon_asana/`](app
 
 | Recurso | Path |
 |---------|------|
+| **OS Registry (INDEX)** | `knowledge/06_CONHECIMENTO/os-registry/INDEX.md` — descoberta: rules, skills, workflows, MCPs, clientes, segurança, crons, etc. |
 | **Índice: manual agentes/skills** | `knowledge/06_CONHECIMENTO/manual-agentes-e-skills.md` — mapa de toda a documentação relacionada |
 | Base de conhecimento | `knowledge/` (00_GESTAO_CORPORATIVA … 99_ARQUIVO) |
 | Admin (contexto interno) | `apps/core/admin/context/` (symlink → `knowledge/`) |
