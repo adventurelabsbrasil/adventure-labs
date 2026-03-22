@@ -1,6 +1,6 @@
 # Plano Adventure OS unificado (referência no repositório)
 
-**Última atualização:** 2026-03-21
+**Última atualização:** 2026-03-22
 
 O texto **completo** do programa (ACORE + SSOT + os-registry + Drive + Asana + storage + email + crons + benchmark + células martech + **taxonomia expandida de dimensões** / mini-companhias) é mantido como **plano Cursor**:
 

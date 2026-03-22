@@ -4,6 +4,38 @@ Registro operacional para handoff entre Human, CTO (Torvalds) e agentes. Atualiz
 
 ---
 
+## 2026-03-22 — Retoma plano (checkpoint)
+
+### Posição (Adventure OS + ACORE)
+
+| Eixo | Estado |
+|------|--------|
+| **Adventure OS** | **Fase 2 — Alinhamento** (Fase 3 = automações novas só com runbook + INDEX + `n8n-schedule.md`). |
+| **ACORE** | Fases 0–1 estáveis; **Fase 2** (Vercel / Young em validação); **Fase 3** (Ads, Martech P1); **Fase 4** VPS/Coolify depende de infra. |
+
+### Feito desde a última retoma (referência)
+
+| Tema | Resumo |
+|------|--------|
+| **Idioma** | Regra Cursor [`adventure-locale-pt-br.mdc`](../.cursor/rules/adventure-locale-pt-br.mdc) (`alwaysApply`): **pt-BR** para prosa/docs; **inglês** na camada de programação. Referências em `.cursorrules`, `AGENTS.md`, manuais humano/IA, INDEX §3. |
+
+### Próximos passos (ordem sugerida)
+
+| Prioridade | Ação | Dono / notas |
+|------------|------|----------------|
+| **P0** | **Rose — Google Ads** (`1213744799182618`) | Infisical `GOOGLE_ADS_*` + diagnóstico rotas Admin; ver `GOOGLE_ADS_CONTAS_REGISTRO.md`. |
+| **P0** | **Young — login produção** | Redeploy Vercel + envs; teste humano; BACKLOG já `em_validacao`. |
+| **P0** | **Legal campanhas** (`1213710771598087`) | Humano / compliance; revalidar prazo no Asana. |
+| **P1** | MVP Martech (várias linhas Asana) | Igor / equipe conforme BACKLOG. |
+| **P2** | VPS Hostinger + Coolify | Só após contratar/preparar máquina. |
+| **Governança** | Rever ACL do repo `adventurelabsbrasil/young-talents` | Humano (doc `YOUNG_TALENTS_PRODUTO_INTERNO.md`). |
+
+### Onde paramos
+
+- Plano retomado; execução técnica segue [`BACKLOG.md`](BACKLOG.md). Prompt copy-paste: [`PLANO_ADVENTURE_OS_UNIFICADO.md`](PLANO_ADVENTURE_OS_UNIFICADO.md) (*Retomar no Cursor*).
+
+---
+
 ## 2026-03-20 — Retoma plano (Adventure OS Fase 2)
 
 ### Feito nesta janela
