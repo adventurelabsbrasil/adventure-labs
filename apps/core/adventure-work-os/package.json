@@ -1,0 +1,7 @@
+{
+  "name": "@adventure/adventure-work-os",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Programa Adventure Work OS — método operacional híbrido humano + IA (documentação versionada, sem build).",
+  "scripts": {}
+}
