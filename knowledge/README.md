@@ -15,6 +15,13 @@ Taxonomia 00–99, espelho do Google Drive da agência.
 - `06_CONHECIMENTO` — Arquitetura, manuais
 - `99_ARQUIVO` — Histórico, avulsos
 
+## Adventure OS (índice operacional)
+
+- **[06_CONHECIMENTO/os-registry/INDEX.md](06_CONHECIMENTO/os-registry/INDEX.md)** — mapa mestre (MCPs, workflows, clientes, segurança, crons, storage…).
+- **Manuais:** [docs/MANUAL_HUMANO_ADVENTURE_OS.md](../docs/MANUAL_HUMANO_ADVENTURE_OS.md) · [docs/MANUAL_IA_ADVENTURE_OS.md](../docs/MANUAL_IA_ADVENTURE_OS.md)
+- **Plano:** [docs/PLANO_ADVENTURE_OS_UNIFICADO.md](../docs/PLANO_ADVENTURE_OS_UNIFICADO.md)
+- **Work OS (fluxo e governança):** [apps/core/adventure-work-os/README.md](../apps/core/adventure-work-os/README.md) — programa canônico em `core`; módulos, checklist sensível, RACI, diagramas.
+
 ## Frontmatter para ML/RAG
 
 Para facilitar indexação e embeddings, novos documentos devem incluir frontmatter YAML no início:

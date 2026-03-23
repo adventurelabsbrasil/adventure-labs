@@ -20,6 +20,7 @@ updated: 2026-03-22
 | Manual humano | [`docs/MANUAL_HUMANO_ADVENTURE_OS.md`](../../../docs/MANUAL_HUMANO_ADVENTURE_OS.md) |
 | Manual IA | [`docs/MANUAL_IA_ADVENTURE_OS.md`](../../../docs/MANUAL_IA_ADVENTURE_OS.md) |
 | Protocolo Grove | [`protocolo-grove-roteamento.md`](../protocolo-grove-roteamento.md) |
+| **Adventure Work OS** (método híbrido humano + IA, M01+) | [`apps/core/adventure-work-os/README.md`](../../../apps/core/adventure-work-os/README.md) |
 | Este registry | [`README.md`](README.md) |
 
 ---
