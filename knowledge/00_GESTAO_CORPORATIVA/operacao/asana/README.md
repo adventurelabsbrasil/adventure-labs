@@ -2,6 +2,19 @@
 
 Esta pasta recebe **apenas** exportações/resumos gerados pelo agente **Andon** (skill `asana-csuite-ingest`), salvo exceção aprovada pelo Founder.
 
+## Triagem manual (MCP / Grove)
+
+Ficheiros `triagem-projeto-tasks-YYYY-MM-DD.md`: snapshot de leitura do projeto **Tasks** no Asana, alinhado a BACKLOG/ACORE/ADR-0001 (não substituem o Andon).
+
+## Playbook operacional (GTD-Lite)
+
+Para operação diária de gestão de projetos no Asana (Inbox, Core, Clientes, Labs), usar:
+
+- [`playbook-operacional-gtd-lite-comando-estelar.md`](./playbook-operacional-gtd-lite-comando-estelar.md)
+- Seções de referência rápida:
+  - `Campos oficiais do Inbox (snapshot atual)`
+  - `Padrao de preenchimento (humano + IA)`
+
 ## Convenção
 
 - Arquivos sugeridos: `snapshot-YYYY-MM-DD.md`

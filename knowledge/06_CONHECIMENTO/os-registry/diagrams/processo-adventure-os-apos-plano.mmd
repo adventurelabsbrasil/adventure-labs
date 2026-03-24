@@ -1,0 +1,35 @@
+%% Alvo — após plano Adventure OS completo (inbox WorkOS opcional, CI registry, RAG, auditoria)
+flowchart TB
+  subgraph IN["Entrada — canal único em evolução"]
+    U([Humano])
+    U --> CH{{Canal de captura}}
+    CH -->|sempre válido| AS2([Asana Tasks\ncaptura e GTD empresa])
+    CH -->|fase produto WorkOS| INB([Inbox ou formulário\nno Admin WorkOS])
+  end
+
+  subgraph GV["Grove — triagem e distribuição"]
+    AS2 --> GR([Grove humano ou IA\nGTD + perguntas se ambíguo])
+    INB --> GR
+    GR --> REG([os-registry INDEX\n+ manifests YAML opcional])
+    REG --> CI([CI valida links e manifests])
+    CI --> RAG([RAG em knowledge\n+ memória adv_csuite])
+  end
+
+  subgraph DS["Distribuição explícita"]
+    RAG --> DST{{Destino}}
+    DST -->|operacional produto| W2([WorkOS adv APIs\ntarefas internas])
+    DST -->|planejamento| CSU([C-Suite personas\nagentes · skills · n8n])
+    DST -->|engenharia| GH([Monorepo MCP\nskill · PR · migrations])
+  end
+
+  subgraph GO["Governança madura"]
+    GH --> ADR([ADRs para SSOT\ne topologia])
+    W2 --> AUD([Auditoria e trilha\nno produto])
+    CSU --> WIK([Wiki árvore completa\nbraindump promovido])
+    ADR --> GATE([Gate cultural\nnada contorna\nAsana · taxonomia · INDEX])
+  end
+
+  subgraph SCH["Automações alinhadas ao doc"]
+    N8S([n8n Vercel cron\nhorários n8n-schedule])
+    N8S -.->|só após runbook\nno registry| W2
+  end

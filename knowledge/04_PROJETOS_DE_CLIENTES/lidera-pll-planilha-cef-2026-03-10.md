@@ -14,6 +14,19 @@ updated: 2026-03-10
 
 **Progresso no pacote:** Planilha **1 de 5** do combinado no projeto.
 
+## Referências operacionais (preencher/manter)
+
+- **Asana (projeto):** `[PREENCHER_URL_ASANA_LIDERA]`
+- **Drive (pasta principal):** `[PREENCHER_URL_DRIVE_LIDERA]`
+- **Google Ads (Customer ID):** `[PREENCHER_CUSTOMER_ID_GOOGLE]`
+- **Meta Ads (Ad Account ID):** `[PREENCHER_AD_ACCOUNT_META]`
+
+## Governança de dados
+
+- Não registrar segredos/token em markdown do repo.
+- **Infisical:** armazenar credenciais e variáveis sensíveis do projeto.
+- **Supabase (registry):** usar para IDs/metadados operacionais quando houver necessidade de consulta estruturada por agentes.
+
 ### Links do ativo
 
 | Recurso | URL |

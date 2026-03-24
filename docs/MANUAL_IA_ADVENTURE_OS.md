@@ -29,6 +29,9 @@
 - `./tools/scripts/typecheck-workspaces.sh`  
 - `./tools/scripts/lint-workspaces.sh`  
 - `./tools/scripts/test-workspaces.sh`
+- Para contexto de segurança Supabase (roles/RLS/advisories), consultar:
+  - [`docs/RELATORIO_ROLES_E_SECURITY_ADVISOR_ADVENTURELABSBRASIL.md`](RELATORIO_ROLES_E_SECURITY_ADVISOR_ADVENTURELABSBRASIL.md)
+  - `apps/clientes/young-talents/plataforma/docs/RELATORIO_ROLES_E_SECURITY_ADVISOR.md`
 
 ## Fase 2 (opcional)
 
@@ -37,10 +40,10 @@
 
 ## Young Talents / Adventure Talents (ATS)
 
-- Tratar como **produto interno** Adventure: [`docs/YOUNG_TALENTS_PRODUTO_INTERNO.md`](YOUNG_TALENTS_PRODUTO_INTERNO.md).  
-- **SSOT:** `apps/clientes/young-talents/plataforma/` (commit + push no monorepo para fixes, issues e melhorias; sem secrets).  
-- Histórico de acesso/repo: [`docs/young-talents/CHANGELOG.md`](young-talents/CHANGELOG.md).  
-- Não reintroduzir o repo `adventurelabsbrasil/young-talents` como fonte sem decisão explícita do Founder.
+- Tratar como **projeto de cliente entregue** (propriedade Young Empreendimentos): [`docs/YOUNG_TALENTS_PROJETO_ENTREGUE.md`](YOUNG_TALENTS_PROJETO_ENTREGUE.md).  
+- Monorepo mantém histórico técnico/handoff em `apps/clientes/young-talents/plataforma/`; não assumir roadmap comercial interno.  
+- **Supabase compartilhado:** a Adventure mantém acesso ao projeto Supabase do Young Talents para suporte e diagnóstico quando necessário.  
+- Histórico de acesso/repo: [`docs/young-talents/CHANGELOG.md`](young-talents/CHANGELOG.md).
 
 ---
 

@@ -1,0 +1,36 @@
+%% Estado atual — Adventure OS (captura, triagem, destinos, engenharia, n8n)
+%% Fonte: protocolo Grove + INDEX + plano unificado (fase atual)
+flowchart TB
+  subgraph CAP["Captura operacional (hoje)"]
+    F(["Founder / equipa"])
+    F --> AS([Asana Tasks\nGTD empresa — canal principal])
+  end
+
+  subgraph TRI["Triagem estilo Grove (GTD)"]
+    AS --> G{{Contexto claro?}}
+    G -->|não| Q([Perguntas mínimas\nprojeto · prazo · sensível])
+    Q --> G
+    G -->|sim| IDX([os-registry INDEX.md\nclassificar tipo + owner])
+  end
+
+  subgraph ONDE["Onde gravar ou executar"]
+    IDX --> T{{Tipo de trabalho}}
+    T -->|conhecimento canónico| K([knowledge/ taxonomia 00–99])
+    T -->|índice / planos / ADRs| D([docs/ + wiki/])
+    T -->|código cliente / core| AP([apps/ + workflows/n8n])
+  end
+
+  subgraph ENG["Execução engenharia"]
+    T -->|PR / migration / MCP| C([Cursor + skills + MCP])
+    C --> BL([docs/BACKLOG.md\nquando vira item técnico])
+    BL --> PR([PR + migrations\nsupabase/migrations])
+    PR --> IDX2([Atualizar INDEX\nquando mudar superfície])
+  end
+
+  subgraph PROD["Produto e automações (hoje)"]
+    T -->|tarefas internas adv_*| WO([Admin WorkOS\nRLS multitenant])
+    WO --> N8([n8n jobs\nagenda: n8n-schedule.md])
+  end
+
+  K -.-> IDX2
+  D -.-> IDX2

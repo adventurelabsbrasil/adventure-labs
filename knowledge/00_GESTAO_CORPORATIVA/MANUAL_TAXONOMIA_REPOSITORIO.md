@@ -109,6 +109,21 @@ clients/
 - **Cada projeto de cliente = repositório Git separado** — versionamento por funções específicas.
 - **README por cliente:** Resumo do que o cliente tem, sem dados sensíveis.
 
+### 4.3 `clients/` × `apps/clientes/` (decisão canónica)
+
+Ambos existem **por desenho**; não são duplicatas arbitrárias.
+
+| Destino | Uso |
+|---------|-----|
+| **`clients/NN_nome/`** | Repositório **Git separado** (submodule): código e histórico do cliente **fora** do workspace pnpm unificado. |
+| **`apps/clientes/nome-app/`** | Aplicação **dentro** do `pnpm-workspace` (topologia [`.cursorrules`](../../.cursorrules)): entregas versionadas no monorepo quando **não** há repo próprio. |
+
+**Admin core** (`apps/core/admin`) **não** importa código-fonte de `apps/clientes/` — apenas pacotes em `packages/*` quando partilhados.
+
+Nova entrega: preferir **submodule** em `clients/` para isolamento de deploy, **salvo** decisão explícita de workspace em `apps/clientes/`. Registrar mudanças no [`os-registry/INDEX.md`](../06_CONHECIMENTO/os-registry/INDEX.md) §9.
+
+**ADR:** [docs/adr/0002-clients-submodule-vs-apps-clientes-workspace.md](../../docs/adr/0002-clients-submodule-vs-apps-clientes-workspace.md).
+
 ---
 
 ## 5. Aplicações e Pacotes
