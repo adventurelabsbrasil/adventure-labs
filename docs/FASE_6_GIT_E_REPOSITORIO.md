@@ -15,12 +15,12 @@
 | apps/core/adventure | https://github.com/adventurelabsbrasil/adventure.git |
 | apps/core/elite | https://github.com/adventurelabsbrasil/elite.git |
 | apps/labs/finfeed | https://github.com/adventurelabsbrasil/finfeed.git |
-| apps/clientes/lidera/space | https://github.com/adventurelabsbrasil/lidera-space.git |
-| clients/02_rose/roseportaladvocacia | https://github.com/adventurelabsbrasil/roseportaladvocacia.git |
-| clients/04_young/young-emp | https://github.com/adventurelabsbrasil/young-emp.git |
-| clients/04_young/ranking-vendas | https://github.com/rodrigoribasyoung/ranking-vendas.git |
-| apps/clientes/young-talents/plataforma | https://github.com/adventurelabsbrasil/young-talents.git |
-| apps/clientes/lidera/skills | https://github.com/adventurelabsbrasil/lidera-skills.git |
+| apps/clientes/01_lidera/lidera/space | https://github.com/adventurelabsbrasil/lidera-space.git |
+| apps/clientes/02_rose/roseportaladvocacia | https://github.com/adventurelabsbrasil/roseportaladvocacia.git |
+| apps/clientes/04_young/young-emp | https://github.com/adventurelabsbrasil/young-emp.git |
+| apps/clientes/04_young/ranking-vendas | https://github.com/rodrigoribasyoung/ranking-vendas.git |
+| apps/clientes/04_young/young-talents | https://github.com/adventurelabsbrasil/young-talents.git |
+| apps/clientes/01_lidera/lidera/skills | https://github.com/adventurelabsbrasil/lidera-skills.git |
 
 ### Setup após clone
 

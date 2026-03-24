@@ -1,6 +1,6 @@
 # Clerk — legado (isolamento)
 
-**Lidera Flow (PLL):** slot reservado em `apps/clientes/lidera/flow/` (`@cliente/lidera-flow`). Este arquivo documenta o app **Space** (área de membros).
+**Lidera Flow (PLL):** slot reservado em `apps/clientes/01_lidera/lidera/flow/` (`@cliente/lidera-flow`). Este arquivo documenta o app **Space** (área de membros).
 
 **Status (2026-03):** Este app **não** declara `@clerk/nextjs` nem variáveis `CLERK_*` no código-fonte atual.
 

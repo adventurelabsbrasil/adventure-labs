@@ -71,11 +71,11 @@ foldermap_infisical_path() {
       echo "/clientes/benditta"
       return
       ;;
-    apps/clientes/young-talents/plataforma/.env.local)
+    apps/clientes/04_young/young-talents/.env.local)
       echo "/clientes/young-talents"
       return
       ;;
-    apps/clientes/lidera/flow/.env.local)
+    apps/clientes/01_lidera/lidera/flow/.env.local)
       echo "/clientes/lidera"
       return
       ;;
