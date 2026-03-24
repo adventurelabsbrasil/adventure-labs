@@ -16,7 +16,9 @@
     "benditta:dev": "infisical run --env=dev --path=/clientes/benditta -- pnpm --filter @cliente/benditta-app dev",
     "young:dev": "infisical run --env=dev --path=/clientes/young-talents -- pnpm --filter @cliente/young-plataforma dev",
     "check-deadlines": "infisical run --env=dev --path=/monorepo -- bash scripts/check-deadlines.sh",
-    "secrets:push:infisical": "bash tools/scripts/infisical-push-env-local.sh"
+    "secrets:push:infisical": "bash tools/scripts/infisical-push-env-local.sh",
+    "asana:router:dry": "node tools/scripts/asana-inbox-router.mjs",
+    "asana:router:apply": "node tools/scripts/asana-inbox-router.mjs --apply"
   },
   "devDependencies": {
     "@railway/cli": "^4.31.0"
