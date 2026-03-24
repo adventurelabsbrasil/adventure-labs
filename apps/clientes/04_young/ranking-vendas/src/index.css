@@ -1,0 +1,28 @@
+@import 'tailwindcss';
+
+:root {
+  --young-orange: #fe5009;
+  --young-teal: #00bcbc;
+  --young-bg: #070a0f;
+  --young-panel: #0b1220;
+  --young-text: #e5e7eb;
+  --young-muted: #94a3b8;
+  --young-border: rgba(148, 163, 184, 0.18);
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: 'Space Grotesk', ui-sans-serif, system-ui, sans-serif;
+  background: var(--young-bg);
+  color: var(--young-text);
+}
+
+::selection {
+  background: color-mix(in srgb, var(--young-teal) 30%, transparent);
+}

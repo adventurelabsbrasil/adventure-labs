@@ -1,0 +1,1473 @@
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { 
+  Users, Mail, History, Database, Layout, UploadCloud, Download, 
+  Plus, Trash2, Edit3, Save, Search, FileText, CheckSquare, X
+} from 'lucide-react';
+import { CSV_FIELD_MAPPING_OPTIONS, PIPELINE_STAGES } from '../constants';
+import DataManager from './DataManager';
+import * as XLSX from 'xlsx';
+
+// Helper para mostrar toast (será passado do App ou criado localmente)
+let showToast = (message, type = 'info') => {
+  alert(message); // Fallback simples
+};
+
+export default function SettingsPage({ 
+  onOpenCsvModal,
+  activeSettingsTab,
+  onSettingsTabChange,
+  onShowToast,
+  userRoles = [],
+  currentUserRole = 'admin',
+  onSetUserRole,
+  onRemoveUserRole,
+  onCreateUserWithPassword,
+  currentUserEmail,
+  currentUserName,
+  currentUserPhoto,
+  activityLog = [],
+  candidateFields = []
+}) {
+  // Usar toast do App se disponível
+  if (onShowToast) showToast = onShowToast;
+  const navigate = useNavigate();
+  
+  const activeTab = activeSettingsTab || 'campos';
+  const setActiveTab = (tab) => {
+    if (onSettingsTabChange) onSettingsTabChange(tab);
+  };
+
+  const isAdmin = currentUserRole === 'admin';
+
+  const tabs = [
+    { id: 'campos', label: 'Gerenciamento de Campos', icon: Database },
+    { id: 'pipeline', label: 'Configuração do Pipeline', icon: Layout },
+    { id: 'import', label: 'Importar / Exportar', icon: UploadCloud },
+    { id: 'users', label: 'Usuários', icon: Users },
+    { id: 'emails', label: 'Modelos de Email', icon: Mail },
+    { id: 'history', label: 'Histórico de Ações', icon: History },
+    ...(isAdmin ? [{ id: 'activity', label: 'Log de Atividades', icon: FileText }] : []),
+  ];
+
+  return (
+    <div className="flex flex-col h-full bg-brand-dark text-slate-200">
+      {/* Header e Navegação */}
+      <div className="p-6 border-b border-brand-border bg-brand-card">
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Configurações do Sistema</h2>
+          {/* Perfil do usuário atual */}
+          <div className="flex items-center gap-3 bg-gray-800/50 rounded-lg px-4 py-2">
+            {currentUserPhoto ? (
+              <img src={currentUserPhoto} alt="" className="w-8 h-8 rounded-full"/>
+            ) : (
+              <div className="w-8 h-8 rounded-full bg-gray-700 flex items-center justify-center">
+                <Users size={16}/>
+              </div>
+            )}
+            <div className="text-sm">
+              <div className="font-medium text-gray-900 dark:text-white">{currentUserName || currentUserEmail}</div>
+              <div className="text-xs text-gray-400">{currentUserRole === 'admin' ? 'Administrador' : currentUserRole === 'editor' ? 'Recrutador' : 'Visualizador'}</div>
+            </div>
+          </div>
+        </div>
+        <div className="flex gap-1 overflow-x-auto custom-scrollbar pb-1">
+          {tabs.map(tab => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={`flex items-center gap-2 px-5 py-3 rounded-t-lg font-bold text-sm transition-all border-b-2 whitespace-nowrap ${
+                activeTab === tab.id 
+                  ? 'bg-brand-dark text-brand-orange border-brand-orange' 
+                  : 'text-slate-500 border-transparent hover:text-slate-300 hover:bg-brand-dark/50'
+              }`}
+            >
+              <tab.icon size={16} /> {tab.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Conteúdo das Abas */}
+      <div className="flex-1 p-6 overflow-y-auto custom-scrollbar">
+        {activeTab === 'campos' && <FieldsManager candidateFields={candidateFields} />}
+        {activeTab === 'pipeline' && <PipelineManager />}
+        {activeTab === 'companies' && <CompaniesManager onShowToast={onShowToast} />}
+        {activeTab === 'import' && <ImportExportManager onOpenCsvModal={onOpenCsvModal} onShowToast={onShowToast} />}
+        {activeTab === 'users' && <UserManager userRoles={userRoles} currentUserRole={currentUserRole} onSetUserRole={onSetUserRole} onRemoveUserRole={onRemoveUserRole} onCreateUserWithPassword={onCreateUserWithPassword} currentUserEmail={currentUserEmail} currentUserName={currentUserName} currentUserPhoto={currentUserPhoto} onShowToast={onShowToast} />}
+        {activeTab === 'emails' && (
+          <>
+            <div className="mb-4 px-4 py-2 bg-gray-700/50 border border-gray-600 rounded-lg text-gray-400 text-sm">
+              <strong>Em desenvolvimento.</strong> Modelos de e-mail ainda não persistem no servidor.
+            </div>
+            <EmailTemplateManager />
+          </>
+        )}
+        {activeTab === 'history' && (
+          <>
+            <div className="mb-4 px-4 py-2 bg-gray-700/50 border border-gray-600 rounded-lg text-gray-400 text-sm">
+              <strong>Em desenvolvimento.</strong> Histórico de ações ainda não persiste no servidor.
+            </div>
+            <MassActionHistory />
+          </>
+        )}
+        {activeTab === 'activity' && isAdmin && <ActivityLog activityLog={activityLog} />}
+      </div>
+    </div>
+  );
+}
+
+// --- SUB-COMPONENTES DE CADA ABA ---
+
+const FieldsManager = ({ candidateFields = [] }) => {
+  const [candidateFieldsState, setCandidateFieldsState] = useState([]);
+  const [jobFieldsState, setJobFieldsState] = useState([]);
+  const [activeSection, setActiveSection] = useState('candidate');
+  const [search, setSearch] = useState('');
+  const [loading, setLoading] = useState(true);
+  const [editingField, setEditingField] = useState(null);
+
+  // Inicializar campos usando CANDIDATE_FIELDS do constants
+  useEffect(() => {
+    // Usar campos passados via props ou fallback para CSV_FIELD_MAPPING_OPTIONS
+    const defaultCandidateFields = candidateFields.length > 0 
+      ? candidateFields.map(f => ({
+          id: f.key,
+          displayName: f.displayName, // Nome visual para exibição
+          csvLabel: f.csvLabel, // Nome original do CSV/Forms
+          type: f.type || 'text',
+          category: f.category || 'geral',
+          visible: true,
+          required: false
+        }))
+      : CSV_FIELD_MAPPING_OPTIONS.map((f) => ({
+          id: f.value, 
+          displayName: f.label.replace(':', ''),
+          csvLabel: f.label,
+          type: 'text', 
+          visible: true, 
+          required: false
+        }));
+    setCandidateFieldsState(defaultCandidateFields);
+    
+    const defaultJobFields = [
+      { id: 'title', displayName: 'Título', csvLabel: 'Título', type: 'text', visible: true, required: false },
+      { id: 'company', displayName: 'Empresa', csvLabel: 'Empresa', type: 'select', visible: true, required: false },
+      { id: 'city', displayName: 'Cidade', csvLabel: 'Cidade da vaga', type: 'select', visible: true, required: false },
+      { id: 'interestArea', displayName: 'Área', csvLabel: 'Área de interesse', type: 'select', visible: true, required: false },
+      { id: 'description', displayName: 'Descrição', csvLabel: 'Descrição', type: 'textarea', visible: true, required: false },
+      { id: 'requirements', displayName: 'Requisitos', csvLabel: 'Requisitos', type: 'textarea', visible: true, required: false },
+      { id: 'salary', displayName: 'Salário', csvLabel: 'Faixa salarial', type: 'text', visible: true, required: false },
+      { id: 'status', displayName: 'Status', csvLabel: 'Status', type: 'select', visible: true, required: false },
+    ];
+    setJobFieldsState(defaultJobFields);
+    setLoading(false);
+  }, [candidateFields]);
+
+  const handleToggleVisibility = (fieldId, currentValue) => {
+    if (activeSection === 'candidate') {
+      setCandidateFieldsState(prev => prev.map(f => f.id === fieldId ? { ...f, visible: !currentValue } : f));
+    } else {
+      setJobFieldsState(prev => prev.map(f => f.id === fieldId ? { ...f, visible: !currentValue } : f));
+    }
+    if (onShowToast) onShowToast('Visibilidade atualizada', 'success');
+    // TODO: Salvar no Firestore quando implementar persistência
+  };
+
+  const handleToggleRequired = (fieldId, currentValue) => {
+    if (activeSection === 'candidate') {
+      setCandidateFieldsState(prev => prev.map(f => f.id === fieldId ? { ...f, required: !currentValue } : f));
+    } else {
+      setJobFieldsState(prev => prev.map(f => f.id === fieldId ? { ...f, required: !currentValue } : f));
+    }
+    if (onShowToast) onShowToast('Obrigatoriedade atualizada', 'success');
+    // TODO: Salvar no Firestore quando implementar persistência
+  };
+
+  const filteredCandidateFields = candidateFieldsState.filter(f => 
+    f.displayName?.toLowerCase().includes(search.toLowerCase()) ||
+    f.csvLabel?.toLowerCase().includes(search.toLowerCase()) ||
+    f.id?.toLowerCase().includes(search.toLowerCase())
+  );
+  const filteredJobFields = jobFieldsState.filter(f => 
+    f.displayName?.toLowerCase().includes(search.toLowerCase()) ||
+    f.csvLabel?.toLowerCase().includes(search.toLowerCase()) ||
+    f.id?.toLowerCase().includes(search.toLowerCase())
+  );
+
+  return (
+    <div className="space-y-6 max-w-5xl mx-auto animate-in fade-in">
+      <div className="flex justify-between items-center">
+        <div className="flex gap-2">
+          <button
+            onClick={() => setActiveSection('candidate')}
+            className={`px-4 py-2 rounded-lg font-bold text-sm transition-colors ${
+              activeSection === 'candidate'
+                ? 'bg-brand-orange text-white'
+                : 'bg-brand-card text-slate-400 hover:bg-brand-hover hover:text-white'
+            }`}
+          >
+            Campos do Candidato
+          </button>
+          <button
+            onClick={() => setActiveSection('job')}
+            className={`px-4 py-2 rounded-lg font-bold text-sm transition-colors ${
+              activeSection === 'job'
+                ? 'bg-brand-orange text-white'
+                : 'bg-brand-card text-slate-400 hover:bg-brand-hover hover:text-white'
+            }`}
+          >
+            Campos da Vaga
+          </button>
+        </div>
+        <div className="flex gap-3">
+        <div className="relative w-64">
+          <Search className="absolute left-3 top-2.5 text-slate-500" size={16} />
+          <input 
+            className="w-full bg-brand-card border border-brand-border rounded-lg pl-9 pr-4 py-2 text-sm text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:border-brand-cyan outline-none"
+            placeholder="Buscar campo..."
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+          />
+        </div>
+                      <div className="flex items-center gap-2">
+                        <button 
+                          onClick={() => showToast('Funcionalidade de campo personalizado em desenvolvimento', 'info')}
+                          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium flex items-center gap-2 text-sm transition-colors dark:bg-blue-500 dark:hover:bg-blue-600"
+                        >
+          <Plus size={16}/> Novo Campo Personalizado
+        </button>
+                        <div className="px-3 py-1.5 bg-yellow-100 dark:bg-yellow-900/30 border border-yellow-300 dark:border-yellow-700 rounded-lg text-xs text-yellow-800 dark:text-yellow-300 font-medium">
+                          ⚠️ Em desenvolvimento
+                        </div>
+                      </div>
+        </div>
+      </div>
+
+      {/* Legenda */}
+      <div className="flex gap-4 text-xs text-gray-500 dark:text-gray-400">
+        <span><strong className="text-gray-900 dark:text-white">Nome Visual:</strong> Exibido nas tabelas e formulários</span>
+        <span><strong className="text-cyan-400">Nome do Campo (CSV/Forms):</strong> Nome original da planilha/formulário</span>
+      </div>
+
+      <div className="bg-brand-card border border-brand-border rounded-xl overflow-hidden shadow-lg">
+        <table className="w-full text-left text-sm">
+          <thead className="bg-brand-dark/50 text-slate-400 font-bold uppercase text-xs">
+            <tr>
+              <th className="p-4">Nome Visual</th>
+              <th className="p-4">Nome do Campo (CSV/Forms)</th>
+              <th className="p-4">Tipo</th>
+              <th className="p-4 text-center">Categoria</th>
+              <th className="p-4 text-center">Visível</th>
+              <th className="p-4 text-center hidden">Obrigatório</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-brand-border">
+            {(activeSection === 'candidate' ? filteredCandidateFields : filteredJobFields).map(field => (
+              <tr key={field.id} className="hover:bg-brand-hover/50 dark:hover:bg-brand-hover/50 transition-colors">
+                <td className="p-4">
+                  <span className="font-bold text-white">{field.displayName}</span>
+                  <span className="block text-xs text-gray-500 font-mono mt-0.5">id: {field.id}</span>
+                </td>
+                <td className="p-4 text-cyan-400 text-sm">{field.csvLabel}</td>
+                <td className="p-4 text-slate-400 capitalize">{field.type}</td>
+                <td className="p-4 text-center">
+                  <span className={`px-2 py-0.5 rounded text-xs ${
+                    field.category === 'pessoal' ? 'bg-blue-900/30 text-blue-300' :
+                    field.category === 'profissional' ? 'bg-green-900/30 text-green-300' :
+                    field.category === 'links' ? 'bg-purple-900/30 text-purple-300' :
+                    field.category === 'processo' ? 'bg-yellow-900/30 text-yellow-300' :
+                    field.category === 'sistema' ? 'bg-gray-900/30 text-gray-300' :
+                    'bg-gray-700 text-gray-400'
+                  }`}>
+                    {field.category || 'geral'}
+                  </span>
+                </td>
+                <td className="p-4 text-center">
+                  <input
+                    type="checkbox"
+                    checked={field.visible}
+                    onChange={() => handleToggleVisibility(field.id, field.visible)}
+                    className="accent-brand-cyan cursor-pointer w-4 h-4"
+                    title="Alternar visibilidade"
+                  />
+                </td>
+                <td className="p-4 text-center hidden">
+                   <input
+                     type="checkbox"
+                     checked={field.required}
+                     onChange={() => handleToggleRequired(field.id, field.required)}
+                     className="accent-brand-orange cursor-pointer w-4 h-4"
+                     title="Alternar obrigatoriedade"
+                   />
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+};
+
+const PipelineManager = () => {
+  const [stages, setStages] = useState(PIPELINE_STAGES);
+  const [editingStage, setEditingStage] = useState(null);
+  const [newStageName, setNewStageName] = useState('');
+  const [showAddStage, setShowAddStage] = useState(false);
+  const [rejectionReasons, setRejectionReasons] = useState([
+    'Salário Incompatível',
+    'Sem qualificação técnica',
+    'Fit Cultural',
+    'Aceitou outra proposta'
+  ]);
+
+  const handleAddStage = () => {
+    if (newStageName.trim() && !stages.includes(newStageName.trim())) {
+      const updated = [...stages, newStageName.trim()];
+      setStages(updated);
+      setNewStageName('');
+      setShowAddStage(false);
+      if (onShowToast) onShowToast('Etapa adicionada com sucesso', 'success');
+      // TODO: Salvar no Firestore quando implementar persistência
+    } else if (stages.includes(newStageName.trim())) {
+      if (onShowToast) onShowToast('Esta etapa já existe', 'error');
+    }
+  };
+
+  const handleEditStage = (oldName, newName) => {
+    if (newName.trim() && newName.trim() !== oldName) {
+      if (stages.includes(newName.trim())) {
+        if (onShowToast) onShowToast('Esta etapa já existe', 'error');
+        return;
+      }
+      const updated = stages.map(s => s === oldName ? newName.trim() : s);
+      setStages(updated);
+      setEditingStage(null);
+      if (onShowToast) onShowToast('Etapa atualizada', 'success');
+      // TODO: Salvar no Firestore quando implementar persistência
+    }
+  };
+
+  const handleDeleteStage = (stageName) => {
+    if (window.confirm(`Tem certeza que deseja remover a etapa "${stageName}"?`)) {
+      const updated = stages.filter(s => s !== stageName);
+      setStages(updated);
+      if (onShowToast) onShowToast('Etapa removida', 'success');
+      // TODO: Salvar no Firestore quando implementar persistência
+    }
+  };
+
+  return (
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-6xl mx-auto animate-in fade-in">
+      {/* Etapas do Funil */}
+      <div className="space-y-4">
+        <div className="flex justify-between items-center">
+          <h3 className="text-lg font-bold text-white">Etapas do Funil (Kanban)</h3>
+          <button 
+            onClick={() => setShowAddStage(!showAddStage)}
+            className="text-brand-cyan hover:underline text-sm font-bold flex items-center gap-1"
+          >
+            <Plus size={14}/> Adicionar Etapa
+          </button>
+        </div>
+        
+        {showAddStage && (
+          <div className="bg-brand-card border border-brand-border rounded-lg p-4 flex gap-2">
+            <input
+              type="text"
+              value={newStageName}
+              onChange={e => setNewStageName(e.target.value)}
+              placeholder="Nome da nova etapa"
+              className="flex-1 bg-brand-dark border border-brand-border rounded px-3 py-2 text-sm text-white outline-none focus:border-brand-cyan"
+              onKeyPress={e => e.key === 'Enter' && handleAddStage()}
+            />
+            <button
+              onClick={handleAddStage}
+              className="bg-brand-cyan text-white px-4 py-2 rounded text-sm font-bold hover:bg-cyan-400"
+            >
+              Adicionar
+            </button>
+            <button
+              onClick={() => { setShowAddStage(false); setNewStageName(''); }}
+              className="bg-brand-dark border border-brand-border text-slate-400 px-4 py-2 rounded text-sm hover:text-white"
+            >
+              <X size={16}/>
+            </button>
+        </div>
+        )}
+
+        <div className="bg-brand-card border border-brand-border rounded-xl overflow-hidden">
+           {stages.map((stage, index) => (
+             <div key={stage} className="p-4 border-b border-brand-border last:border-0 flex justify-between items-center hover:bg-brand-dark/30 group">
+                <div className="flex items-center gap-3 flex-1">
+                  <span className="bg-brand-dark text-slate-500 w-6 h-6 flex items-center justify-center rounded-full text-xs font-mono">{index + 1}</span>
+                  {editingStage === stage ? (
+                    <input
+                      type="text"
+                      defaultValue={stage}
+                      onBlur={e => handleEditStage(stage, e.target.value)}
+                      onKeyPress={e => e.key === 'Enter' && handleEditStage(stage, e.target.value)}
+                      className="flex-1 bg-brand-dark border border-brand-border rounded px-2 py-1 text-sm text-white outline-none focus:border-brand-cyan"
+                      autoFocus
+                    />
+                  ) : (
+                  <span className="font-medium text-white">{stage}</span>
+                  )}
+                </div>
+                <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <button 
+                    onClick={() => setEditingStage(editingStage === stage ? null : stage)}
+                    className="p-1.5 text-blue-400 hover:bg-blue-500/10 rounded"
+                    title="Editar etapa"
+                  >
+                    <Edit3 size={14}/>
+                  </button>
+                  <button 
+                    onClick={() => handleDeleteStage(stage)}
+                    className="p-1.5 text-red-400 hover:bg-red-500/10 rounded"
+                    title="Remover etapa"
+                  >
+                    <Trash2 size={14}/>
+                  </button>
+                </div>
+             </div>
+           ))}
+        </div>
+      </div>
+
+      {/* Gatilhos e Motivos */}
+      <div className="space-y-8">
+        <div className="space-y-4">
+          <h3 className="text-lg font-bold text-white">Gatilhos de Fechamento</h3>
+          <div className="bg-brand-card border border-brand-border rounded-xl p-4 space-y-2">
+             {['Contratado', 'Reprovado', 'Desistiu da Vaga'].map(status => (
+               <div key={status} className="flex items-center justify-between p-3 bg-brand-dark/30 rounded-lg border border-transparent hover:border-brand-border">
+                  <span className="text-sm font-bold text-slate-200">{status}</span>
+                  <span className="text-xs bg-green-900/30 text-green-400 px-2 py-1 rounded border border-green-900/50">Ativo</span>
+               </div>
+             ))}
+          </div>
+        </div>
+
+        <div className="space-y-4">
+           <div className="flex justify-between items-center">
+             <h3 className="text-lg font-bold text-white">Motivos de Perda</h3>
+             <button 
+               onClick={() => {
+                 const newReason = prompt('Digite o novo motivo de perda:');
+                 if (newReason && newReason.trim() && !rejectionReasons.includes(newReason.trim())) {
+                   setRejectionReasons(prev => [...prev, newReason.trim()]);
+                   if (onShowToast) onShowToast('Motivo adicionado', 'success');
+                   // TODO: Salvar no Firestore quando implementar persistência
+                 } else if (rejectionReasons.includes(newReason.trim())) {
+                   if (onShowToast) onShowToast('Este motivo já existe', 'error');
+                 }
+               }}
+               className="text-brand-cyan hover:underline text-sm font-bold flex items-center gap-1"
+             >
+               <Plus size={14}/> Novo Motivo
+             </button>
+           </div>
+           <div className="bg-brand-card border border-brand-border rounded-xl p-4 space-y-2">
+              {rejectionReasons.map((m, idx) => (
+                <div key={idx} className="text-sm text-slate-300 p-2 border-b border-brand-border last:border-0 flex justify-between items-center">
+                  <span>{m}</span>
+                  <button 
+                    onClick={() => {
+                      if (window.confirm(`Remover motivo "${m}"?`)) {
+                        setRejectionReasons(prev => prev.filter(r => r !== m));
+                        if (onShowToast) onShowToast('Motivo removido', 'success');
+                        // TODO: Salvar no Firestore quando implementar persistência
+                      }
+                    }}
+                    className="text-slate-500 hover:text-red-400 transition-colors"
+                    title="Remover motivo"
+                  >
+                    <Trash2 size={14}/>
+                  </button>
+                </div>
+              ))}
+              {rejectionReasons.length === 0 && (
+                <div className="text-sm text-slate-500 text-center py-4">Nenhum motivo cadastrado</div>
+              )}
+           </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const ImportExportManager = ({ onOpenCsvModal, onShowToast }) => {
+  const [exportType, setExportType] = useState('candidates'); // 'candidates' ou 'jobs'
+  const [exportFormat, setExportFormat] = useState('csv'); // 'csv' ou 'xlsx'
+  const [exporting, setExporting] = useState(false);
+
+  const exportData = async () => {
+    setExporting(true);
+    try {
+      // TODO: Migrar para Supabase
+      const collectionName = exportType === 'candidates' ? 'candidates' : 'jobs';
+      const data = [];
+
+      if (data.length === 0) {
+        if (onShowToast) onShowToast('Nenhum dado encontrado para exportar', 'info');
+        else alert('Nenhum dado encontrado para exportar');
+        setExporting(false);
+        return;
+      }
+
+      // Preparar dados para exportação
+      const headers = Object.keys(data[0]);
+      const rows = data.map(item => headers.map(header => item[header] || ''));
+
+      if (exportFormat === 'csv') {
+        // Exportar CSV
+        const csvContent = [
+          headers.join(','),
+          ...rows.map(row => row.map(cell => {
+            const cellStr = String(cell || '');
+            // Escapar vírgulas e aspas
+            if (cellStr.includes(',') || cellStr.includes('"') || cellStr.includes('\n')) {
+              return `"${cellStr.replace(/"/g, '""')}"`;
+            }
+            return cellStr;
+          }).join(','))
+        ].join('\n');
+
+        const blob = new Blob(['\ufeff' + csvContent], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        const url = URL.createObjectURL(blob);
+        link.setAttribute('href', url);
+        link.setAttribute('download', `${exportType}_${new Date().toISOString().split('T')[0]}.csv`);
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      } else {
+        // Exportar XLSX
+        const worksheet = XLSX.utils.aoa_to_sheet([headers, ...rows]);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, exportType === 'candidates' ? 'Candidatos' : 'Vagas');
+        XLSX.writeFile(workbook, `${exportType}_${new Date().toISOString().split('T')[0]}.xlsx`);
+      }
+
+      if (onShowToast) {
+        onShowToast(`Exportação concluída! ${data.length} registro(s) exportado(s).`, 'success');
+      } else {
+        alert(`Exportação concluída! ${data.length} registro(s) exportado(s).`);
+      }
+      
+      // TODO: Migrar histórico para Supabase
+      console.log('Export action history:', { collectionName, dataLength: data.length, exportFormat, exportType });
+    } catch (error) {
+      console.error('Erro na exportação:', error);
+      if (onShowToast) {
+        onShowToast(`Erro ao exportar: ${error.message}`, 'error');
+      } else {
+        alert(`Erro ao exportar: ${error.message}`);
+      }
+    } finally {
+      setExporting(false);
+    }
+  };
+
+  return (
+    <div className="max-w-4xl mx-auto animate-in fade-in space-y-6">
+      <div className="grid md:grid-cols-2 gap-6">
+        {/* Importação */}
+     <div className="bg-brand-card p-8 rounded-xl border border-brand-border flex flex-col items-center text-center hover:border-brand-cyan/50 transition-colors">
+        <div className="w-16 h-16 bg-brand-cyan/10 rounded-full flex items-center justify-center mb-4 text-brand-cyan">
+           <UploadCloud size={32}/>
+        </div>
+        <h3 className="text-xl font-bold text-white mb-2">Importar Candidatos</h3>
+        <p className="text-slate-400 text-sm mb-6">Carregue arquivos CSV para adicionar candidatos em massa ao banco de talentos.</p>
+        <button onClick={onOpenCsvModal} className="bg-brand-cyan text-brand-dark px-6 py-3 rounded-lg font-bold hover:bg-cyan-400 w-full">
+           Iniciar Importação
+        </button>
+     </div>
+
+        {/* Exportação */}
+     <div className="bg-brand-card p-8 rounded-xl border border-brand-border flex flex-col items-center text-center hover:border-brand-orange/50 transition-colors">
+        <div className="w-16 h-16 bg-brand-orange/10 rounded-full flex items-center justify-center mb-4 text-brand-orange">
+           <Download size={32}/>
+        </div>
+        <h3 className="text-xl font-bold text-white mb-2">Exportar Dados</h3>
+          <p className="text-slate-400 text-sm mb-6">Baixe relatórios completos de candidatos ou vagas em formato CSV ou Excel.</p>
+          
+          <div className="w-full space-y-3">
+            <select
+              value={exportType}
+              onChange={e => setExportType(e.target.value)}
+              className="w-full bg-brand-dark border border-brand-border rounded px-3 py-2 text-sm text-white outline-none focus:border-brand-orange"
+            >
+              <option value="candidates">Candidatos</option>
+              <option value="jobs">Vagas</option>
+            </select>
+            
+            <div className="flex gap-2">
+        <button
+                onClick={() => setExportFormat('csv')}
+                className={`flex-1 px-3 py-2 rounded text-sm font-bold transition-colors ${
+                  exportFormat === 'csv'
+                    ? 'bg-brand-orange text-white'
+                    : 'bg-brand-dark border border-brand-border text-slate-400 hover:text-white'
+                }`}
+              >
+                CSV
+              </button>
+              <button
+                onClick={() => setExportFormat('xlsx')}
+                className={`flex-1 px-3 py-2 rounded text-sm font-bold transition-colors ${
+                  exportFormat === 'xlsx'
+                    ? 'bg-brand-orange text-white'
+                    : 'bg-brand-dark border border-brand-border text-slate-400 hover:text-white'
+                }`}
+              >
+                Excel
+        </button>
+            </div>
+            
+        <button
+              onClick={exportData}
+              disabled={exporting}
+              className="bg-brand-orange text-white px-6 py-3 rounded-lg font-bold hover:bg-orange-600 w-full disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+            >
+              {exporting ? (
+                <>
+                  <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"></div>
+                  Exportando...
+                </>
+              ) : (
+                <>
+                  <Download size={16}/>
+                  Exportar {exportType === 'candidates' ? 'Candidatos' : 'Vagas'}
+                </>
+              )}
+        </button>
+          </div>
+        </div>
+     </div>
+  </div>
+);
+};
+
+const UserManager = ({ userRoles = [], currentUserRole, onSetUserRole, onRemoveUserRole, onCreateUserWithPassword, currentUserEmail, currentUserName, currentUserPhoto, onShowToast }) => {
+  const [showAddUser, setShowAddUser] = useState(false);
+  const [newUserEmail, setNewUserEmail] = useState('');
+  const [newUserName, setNewUserName] = useState('');
+  const [newUserPassword, setNewUserPassword] = useState('');
+  const [newUserRole, setNewUserRole] = useState('editor');
+  const [addUserMode, setAddUserMode] = useState('google'); // 'google' | 'password'
+
+  const ROLES = [
+    { value: 'admin', label: 'Administrador', color: 'bg-purple-900/30 text-purple-300 border-purple-800', desc: 'Acesso total ao sistema' },
+    { value: 'editor', label: 'Recrutador', color: 'bg-blue-900/30 text-blue-300 border-blue-800', desc: 'Pode editar candidatos, mover no funil, agendar entrevistas' },
+    { value: 'viewer', label: 'Visualizador', color: 'bg-gray-900/30 text-gray-300 border-gray-700', desc: 'Apenas visualização, sem edição' }
+  ];
+
+  const handleAddUser = async () => {
+    if (!newUserEmail.trim() || !newUserEmail.includes('@')) {
+      if (onShowToast) onShowToast('Digite um email válido', 'error');
+      return;
+    }
+
+    if (addUserMode === 'password') {
+      if (!newUserPassword || newUserPassword.length < 6) {
+        if (onShowToast) onShowToast('A senha deve ter pelo menos 6 caracteres', 'error');
+        return;
+      }
+      if (onCreateUserWithPassword) {
+        const ok = await onCreateUserWithPassword(newUserEmail.trim().toLowerCase(), newUserPassword, newUserRole, newUserName.trim());
+        if (ok) {
+          setNewUserEmail('');
+          setNewUserName('');
+          setNewUserPassword('');
+          setShowAddUser(false);
+        }
+      } else {
+        if (onShowToast) onShowToast('Criação com senha requer a Edge Function create-user. Faça o deploy em Supabase.', 'error');
+      }
+      return;
+    }
+
+    if (onSetUserRole) {
+      await onSetUserRole(newUserEmail.trim().toLowerCase(), newUserRole, newUserName.trim());
+      setNewUserEmail('');
+      setNewUserName('');
+      setShowAddUser(false);
+    }
+  };
+
+  const getRoleInfo = (role) => ROLES.find(r => r.value === role) || ROLES[2];
+  
+  const isAdmin = currentUserRole === 'admin';
+
+  return (
+  <div className="max-w-4xl mx-auto animate-in fade-in space-y-6">
+     <div className="flex justify-between items-center">
+        <div>
+          <h3 className="text-lg font-bold text-gray-900 dark:text-white">Usuários do Sistema</h3>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+            Seu perfil: <span className={`px-2 py-0.5 rounded text-xs border ${getRoleInfo(currentUserRole).color}`}>{getRoleInfo(currentUserRole).label}</span>
+          </p>
+     </div>
+        {isAdmin && (
+          <button 
+            onClick={() => setShowAddUser(!showAddUser)}
+            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 transition-colors"
+          >
+            <Plus size={16}/> Adicionar Usuário
+          </button>
+        )}
+      </div>
+
+      {/* Formulário de adicionar usuário */}
+      {showAddUser && isAdmin && (
+        <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-xl p-4 space-y-4">
+          <h4 className="font-medium text-blue-800 dark:text-blue-300">Novo Usuário</h4>
+          <div className="flex gap-2 mb-2">
+            <button
+              type="button"
+              onClick={() => setAddUserMode('google')}
+              className={`px-3 py-1.5 rounded text-sm font-medium ${addUserMode === 'google' ? 'bg-blue-600 text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300'}`}
+            >
+              Login com Google
+            </button>
+            <button
+              type="button"
+              onClick={() => setAddUserMode('password')}
+              className={`px-3 py-1.5 rounded text-sm font-medium ${addUserMode === 'password' ? 'bg-blue-600 text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300'}`}
+            >
+              Email e senha
+            </button>
+          </div>
+          <p className="text-xs text-blue-700 dark:text-blue-400">
+            {addUserMode === 'google'
+              ? 'O usuário deve fazer login com Google usando o email cadastrado. O nome e foto serão atualizados automaticamente no primeiro login.'
+              : 'Cria uma conta com email e senha. O usuário poderá fazer login em /login com essas credenciais.'}
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div className="md:col-span-2">
+              <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">Email *</label>
+              <input
+                type="email"
+                placeholder={addUserMode === 'google' ? 'usuario@gmail.com' : 'usuario@empresa.com'}
+                value={newUserEmail}
+                onChange={e => setNewUserEmail(e.target.value)}
+                className="w-full px-3 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+            {addUserMode === 'password' && (
+              <div>
+                <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">Senha * (mín. 6 caracteres)</label>
+                <input
+                  type="password"
+                  placeholder="••••••••"
+                  value={newUserPassword}
+                  onChange={e => setNewUserPassword(e.target.value)}
+                  className="w-full px-3 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+            )}
+            <div>
+              <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">Nome (opcional)</label>
+              <input
+                type="text"
+                placeholder="João Silva"
+                value={newUserName}
+                onChange={e => setNewUserName(e.target.value)}
+                className="w-full px-3 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">Perfil</label>
+              <select
+                value={newUserRole}
+                onChange={e => setNewUserRole(e.target.value)}
+                className="w-full px-3 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                {ROLES.map(r => (
+                  <option key={r.value} value={r.value}>{r.label}</option>
+                ))}
+              </select>
+            </div>
+          </div>
+          <div className="flex justify-end gap-2">
+            <button onClick={() => { setShowAddUser(false); setNewUserEmail(''); setNewUserName(''); setNewUserPassword(''); }} className="px-4 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white">
+              Cancelar
+            </button>
+            <button onClick={handleAddUser} className="bg-blue-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-blue-700">
+              Adicionar
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Descrição dos perfis */}
+      <div className="grid grid-cols-3 gap-4">
+        {ROLES.map(role => (
+          <div key={role.value} className="bg-gray-50 dark:bg-gray-800/50 rounded-lg p-3 border border-gray-200 dark:border-gray-700">
+            <span className={`inline-block px-2 py-0.5 rounded text-xs border ${role.color} mb-2`}>{role.label}</span>
+            <p className="text-xs text-gray-600 dark:text-gray-400">{role.desc}</p>
+          </div>
+        ))}
+     </div>
+
+      {/* Lista de usuários */}
+      <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden shadow">
+        <table className="w-full text-left text-sm">
+          <thead className="bg-gray-100 dark:bg-gray-900/50 text-gray-700 dark:text-gray-300 uppercase text-xs font-bold">
+            <tr>
+              <th className="p-4">Usuário</th>
+              <th className="p-4">Perfil</th>
+              <th className="p-4">Desde</th>
+              {isAdmin && <th className="p-4 text-right">Ações</th>}
+            </tr>
+           </thead>
+          <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+            {/* Usuário atual (sempre aparece mesmo sem registro) */}
+            {currentUserEmail && !userRoles.find(r => r.email === currentUserEmail) && (
+              <tr className="bg-blue-50/50 dark:bg-blue-900/10">
+                <td className="p-4">
+                  <div className="flex items-center gap-3">
+                    {currentUserPhoto ? (
+                      <img src={currentUserPhoto} alt="" className="w-10 h-10 rounded-full"/>
+                    ) : (
+                      <div className="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
+                        <Users size={20}/>
+                      </div>
+                    )}
+                    <div>
+                      <div className="font-medium text-gray-900 dark:text-white">
+                        {currentUserName || currentUserEmail}
+                        <span className="ml-2 text-xs text-blue-600 dark:text-blue-400">(você)</span>
+                      </div>
+                      {currentUserName && <div className="text-xs text-gray-500">{currentUserEmail}</div>}
+                    </div>
+                  </div>
+                </td>
+                <td className="p-4">
+                  <span className={`px-2 py-1 rounded text-xs border ${getRoleInfo('admin').color}`}>
+                    Administrador
+                  </span>
+                </td>
+                <td className="p-4 text-gray-500 dark:text-gray-400 text-xs">Primeiro acesso</td>
+                {isAdmin && <td className="p-4 text-right text-gray-400 text-xs">-</td>}
+              </tr>
+            )}
+            {userRoles.map(userRole => (
+              <tr key={userRole.id} className={`hover:bg-gray-50 dark:hover:bg-gray-700/50 ${userRole.email === currentUserEmail ? 'bg-blue-50/50 dark:bg-blue-900/10' : ''}`}>
+                <td className="p-4">
+                  <div className="flex items-center gap-3">
+                    {userRole.photo ? (
+                      <img src={userRole.photo} alt="" className="w-10 h-10 rounded-full"/>
+                    ) : (
+                      <div className="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
+                        <Users size={20}/>
+                      </div>
+                    )}
+                    <div>
+                      <div className="font-medium text-gray-900 dark:text-white">
+                        {userRole.name || userRole.email}
+                        {userRole.email === currentUserEmail && <span className="ml-2 text-xs text-blue-600 dark:text-blue-400">(você)</span>}
+                      </div>
+                      {userRole.name && <div className="text-xs text-gray-500">{userRole.email}</div>}
+                    </div>
+                  </div>
+                </td>
+                <td className="p-4">
+                  {isAdmin && userRole.email !== currentUserEmail ? (
+                    <select
+                      value={userRole.role}
+                      onChange={e => onSetUserRole && onSetUserRole(userRole.email, e.target.value)}
+                      className={`px-2 py-1 rounded text-xs border cursor-pointer ${getRoleInfo(userRole.role).color}`}
+                    >
+                      {ROLES.map(r => (
+                        <option key={r.value} value={r.value}>{r.label}</option>
+                      ))}
+                    </select>
+                  ) : (
+                    <span className={`px-2 py-1 rounded text-xs border ${getRoleInfo(userRole.role).color}`}>
+                      {getRoleInfo(userRole.role).label}
+                    </span>
+                  )}
+                </td>
+                <td className="p-4 text-gray-500 dark:text-gray-400 text-xs">
+                  {userRole.createdAt?.toDate ? userRole.createdAt.toDate().toLocaleDateString('pt-BR') : 'N/A'}
+                </td>
+                {isAdmin && (
+                  <td className="p-4 text-right">
+                    {userRole.email !== currentUserEmail && (
+                      <button
+                        onClick={() => onRemoveUserRole && onRemoveUserRole(userRole.id)}
+                        className="text-red-500 hover:text-red-700 p-1"
+                        title="Remover acesso"
+                      >
+                        <Trash2 size={16}/>
+                      </button>
+                    )}
+                  </td>
+                )}
+              </tr>
+            ))}
+            {userRoles.length === 0 && !currentUserEmail && (
+              <tr>
+                <td colSpan={isAdmin ? 4 : 3} className="p-8 text-center text-gray-500 dark:text-gray-400">
+                  Nenhum usuário cadastrado
+                </td>
+              </tr>
+            )}
+           </tbody>
+        </table>
+     </div>
+  </div>
+);
+};
+
+const EmailTemplateManager = () => (
+   <div className="max-w-5xl mx-auto animate-in fade-in space-y-6">
+      <div className="flex justify-between items-center">
+         <h3 className="text-lg font-bold text-white">Modelos de Email Automáticos</h3>
+         <div className="flex items-center gap-2">
+           <button 
+             onClick={() => showToast('Funcionalidade de criar template em desenvolvimento', 'info')}
+             className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 dark:bg-blue-500 dark:hover:bg-blue-600"
+           >
+             <Plus size={16}/> Novo Template
+           </button>
+           <div className="px-3 py-1.5 bg-yellow-100 dark:bg-yellow-900/30 border border-yellow-300 dark:border-yellow-700 rounded-lg text-xs text-yellow-800 dark:text-yellow-300 font-medium">
+             ⚠️ Em desenvolvimento
+           </div>
+         </div>
+      </div>
+      <div className="grid md:grid-cols-2 gap-4">
+         {[
+            { title: 'Boas Vindas (Candidatura)', trigger: 'Ao se inscrever', subject: 'Confirmação de Inscrição - Young Talents' },
+            { title: 'Convite Entrevista', trigger: 'Ao mover para Entrevista I', subject: 'Convite para Entrevista' },
+            { title: 'Feedback Negativo', trigger: 'Ao mover para Reprovado', subject: 'Update sobre sua candidatura' },
+            { title: 'Aprovação Final', trigger: 'Ao mover para Contratado', subject: 'Parabéns! Você foi aprovado' },
+         ].map((t, i) => (
+            <div key={i} className="bg-brand-card p-5 rounded-xl border border-brand-border hover:border-brand-orange transition-colors cursor-pointer group">
+               <div className="flex justify-between items-start mb-3">
+                  <h4 className="font-bold text-white">{t.title}</h4>
+                  <Edit3 size={16} className="text-slate-500 group-hover:text-white"/>
+               </div>
+               <div className="text-xs text-slate-400 mb-2">Gatilho: <span className="text-brand-cyan">{t.trigger}</span></div>
+               <div className="text-sm text-slate-300 bg-brand-dark p-3 rounded border border-brand-border italic">
+                  "{t.subject}"
+               </div>
+            </div>
+         ))}
+      </div>
+   </div>
+);
+
+const CompaniesManager = ({ onShowToast }) => {
+  const [companies, setCompanies] = useState([]);
+  const [cities, setCities] = useState([]);
+  const [interestAreas, setInterestAreas] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [editingCompany, setEditingCompany] = useState(null);
+  const [showAddForm, setShowAddForm] = useState(false);
+  const [formData, setFormData] = useState({ name: '', city: '', interestArea: '', address: '', phone: '', email: '' });
+
+  useEffect(() => {
+    // TODO: Migrar para Supabase
+    setCompanies([]);
+    setLoading(false);
+  }, []);
+
+  useEffect(() => {
+    // TODO: Migrar para Supabase
+    setCities([]);
+    setInterestAreas([]);
+  }, []);
+
+  const handleSave = async () => {
+    if (!formData.name.trim()) {
+      if (onShowToast) onShowToast('Nome da empresa é obrigatório', 'error');
+      return;
+    }
+
+    try {
+      // TODO: Migrar para Supabase
+      console.log('Save company:', { editingCompany, formData });
+      if (onShowToast) onShowToast('Funcionalidade precisa ser migrada para Supabase', 'error');
+
+      setEditingCompany(null);
+      setShowAddForm(false);
+      setFormData({ name: '', city: '', interestArea: '', address: '', phone: '', email: '' });
+    } catch (error) {
+      console.error('Erro ao salvar empresa:', error);
+      if (onShowToast) onShowToast('Erro ao salvar empresa', 'error');
+    }
+  };
+
+  const handleDelete = async (companyId, companyName) => {
+    if (!window.confirm(`Tem certeza que deseja excluir a empresa "${companyName}"?`)) return;
+
+    try {
+      // TODO: Migrar para Supabase
+      console.log('Delete company:', companyId);
+      if (onShowToast) onShowToast('Empresa excluída com sucesso', 'success');
+    } catch (error) {
+      console.error('Erro ao excluir empresa:', error);
+      if (onShowToast) onShowToast('Erro ao excluir empresa', 'error');
+    }
+  };
+
+  const handleEdit = (company) => {
+    setEditingCompany(company);
+    setFormData({
+      name: company.name || '',
+      city: company.city || '',
+      interestArea: company.interestArea || '',
+      address: company.address || '',
+      phone: company.phone || '',
+      email: company.email || ''
+    });
+    setShowAddForm(true);
+  };
+
+  const handleCancel = () => {
+    setEditingCompany(null);
+    setShowAddForm(false);
+    setFormData({ name: '', city: '', interestArea: '', address: '', phone: '', email: '' });
+  };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="animate-spin rounded-full h-8 w-8 border-2 border-blue-500 border-t-transparent"></div>
+      </div>
+    );
+  }
+
+  return (
+   <div className="max-w-5xl mx-auto animate-in fade-in space-y-6">
+      <div className="flex justify-between items-center">
+        <h3 className="text-lg font-bold text-gray-900 dark:text-white">Empresas e Unidades</h3>
+        <button
+          onClick={() => {
+            setEditingCompany(null);
+            setFormData({ name: '', city: '', interestArea: '', address: '', phone: '', email: '' });
+            setShowAddForm(true);
+          }}
+          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium flex items-center gap-2 text-sm dark:bg-blue-500 dark:hover:bg-blue-600"
+        >
+          <Plus size={16}/> Nova Empresa/Unidade
+        </button>
+      </div>
+
+      {showAddForm && (
+        <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-6 space-y-4 shadow-lg">
+          <h4 className="font-bold text-gray-900 dark:text-white text-lg">{editingCompany ? 'Editar' : 'Nova'} Empresa/Unidade</h4>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-xs font-bold text-gray-700 dark:text-gray-300 uppercase mb-1.5">Nome *</label>
+              <input
+                type="text"
+                className="w-full bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 p-2.5 rounded-lg text-sm text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-blue-500"
+                value={formData.name}
+                onChange={e => setFormData({...formData, name: e.target.value})}
+                placeholder="Nome da empresa/unidade"
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-bold text-gray-700 dark:text-gray-300 uppercase mb-1.5">Cidade</label>
+              <select
+                className="w-full bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 p-2.5 rounded-lg text-sm text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-blue-500"
+                value={formData.city}
+                onChange={e => setFormData({...formData, city: e.target.value})}
+              >
+                <option value="">Selecione uma cidade...</option>
+                {cities.map(c => (
+                  <option key={c.id} value={c.name}>{c.name}</option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label className="block text-xs font-bold text-gray-700 dark:text-gray-300 uppercase mb-1.5">Área de Interesse</label>
+              <select
+                className="w-full bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 p-2.5 rounded-lg text-sm text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-blue-500"
+                value={formData.interestArea}
+                onChange={e => setFormData({...formData, interestArea: e.target.value})}
+              >
+                <option value="">Selecione uma área...</option>
+                {interestAreas.map(area => (
+                  <option key={area.id} value={area.name}>{area.name}</option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label className="block text-xs font-bold text-gray-700 dark:text-gray-300 uppercase mb-1.5">Endereço</label>
+              <input
+                type="text"
+                className="w-full bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 p-2.5 rounded-lg text-sm text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-blue-500"
+                value={formData.address}
+                onChange={e => setFormData({...formData, address: e.target.value})}
+                placeholder="Endereço completo"
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-bold text-gray-700 dark:text-gray-300 uppercase mb-1.5">Telefone</label>
+              <input
+                type="text"
+                className="w-full bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 p-2.5 rounded-lg text-sm text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-blue-500"
+                value={formData.phone}
+                onChange={e => setFormData({...formData, phone: e.target.value})}
+                placeholder="(51) 99999-9999"
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-bold text-gray-700 dark:text-gray-300 uppercase mb-1.5">Email</label>
+              <input
+                type="email"
+                className="w-full bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 p-2.5 rounded-lg text-sm text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-blue-500"
+                value={formData.email}
+                onChange={e => setFormData({...formData, email: e.target.value})}
+                placeholder="contato@empresa.com"
+              />
+            </div>
+          </div>
+          <div className="flex justify-end gap-2 pt-2">
+            <button
+              onClick={handleCancel}
+              className="px-4 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
+            >
+              Cancelar
+            </button>
+            <button
+              onClick={handleSave}
+              className="bg-blue-600 text-white px-6 py-2 rounded font-medium hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600"
+            >
+              {editingCompany ? 'Atualizar' : 'Criar'}
+            </button>
+          </div>
+        </div>
+      )}
+
+      <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden shadow-lg">
+         <table className="w-full text-left text-sm">
+          <thead className="bg-gray-100 dark:bg-gray-900 text-gray-700 dark:text-gray-300 font-bold uppercase text-xs">
+            <tr>
+              <th className="p-4">Nome</th>
+              <th className="p-4">Cidade</th>
+              <th className="p-4">Área</th>
+              <th className="p-4">Contato</th>
+              <th className="p-4 text-right">Ações</th>
+            </tr>
+            </thead>
+          <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+            {companies.length > 0 ? (
+              companies.map(company => (
+                <tr key={company.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+                  <td className="p-4 font-bold text-gray-900 dark:text-white">{company.name}</td>
+                  <td className="p-4 text-gray-600 dark:text-gray-400">{company.city || 'N/A'}</td>
+                  <td className="p-4 text-gray-600 dark:text-gray-400">{company.interestArea || 'N/A'}</td>
+                  <td className="p-4 text-gray-600 dark:text-gray-400 text-xs">
+                    {company.phone && <div>{company.phone}</div>}
+                    {company.email && <div>{company.email}</div>}
+                    {!company.phone && !company.email && 'N/A'}
+                  </td>
+                  <td className="p-4 text-right">
+                    <div className="flex gap-2 justify-end">
+                      <button
+                        onClick={() => handleEdit(company)}
+                        className="p-2 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded"
+                        title="Editar"
+                      >
+                        <Edit3 size={16}/>
+                      </button>
+                      <button
+                        onClick={() => handleDelete(company.id, company.name)}
+                        className="p-2 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded"
+                        title="Excluir"
+                      >
+                        <Trash2 size={16}/>
+                      </button>
+                    </div>
+                  </td>
+               </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="5" className="p-8 text-center text-gray-500 dark:text-gray-400">
+                  Nenhuma empresa cadastrada
+                </td>
+               </tr>
+            )}
+            </tbody>
+         </table>
+      </div>
+   </div>
+);
+};
+
+const MassActionHistory = () => {
+  const [history, setHistory] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // TODO: Migrar para Supabase
+    setHistory([]);
+    setLoading(false);
+  }, []);
+
+  const formatDate = (timestamp) => {
+    if (!timestamp) return 'N/A';
+    const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
+    return date.toLocaleString('pt-BR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  };
+
+  const getActionLabel = (action) => {
+    const labels = {
+      'importação_csv': 'Importação CSV',
+      'exclusão': 'Exclusão',
+      'atualização_massa': 'Atualização em Massa',
+      'exportação': 'Exportação'
+    };
+    return labels[action] || action;
+  };
+
+  const getActionColor = (action) => {
+    if (action.includes('importação')) return 'bg-blue-900/30 text-blue-300 border-blue-800';
+    if (action.includes('exclusão')) return 'bg-red-900/30 text-red-300 border-red-800';
+    if (action.includes('atualização')) return 'bg-yellow-900/30 text-yellow-300 border-yellow-800';
+    if (action.includes('exportação')) return 'bg-green-900/30 text-green-300 border-green-800';
+    return 'bg-slate-900/30 text-slate-300 border-slate-800';
+  };
+
+  return (
+    <div className="max-w-5xl mx-auto animate-in fade-in space-y-6">
+      <div className="flex justify-between items-center">
+      <h3 className="text-lg font-bold text-white">Histórico de Ações em Massa</h3>
+        <div className="text-xs text-slate-400">
+          {history.length} registro{history.length !== 1 ? 's' : ''}
+        </div>
+      </div>
+      <div className="bg-brand-card border border-brand-border rounded-xl overflow-hidden">
+        {loading ? (
+          <div className="p-8 text-center text-slate-400">
+            <div className="animate-spin inline-block w-6 h-6 border-2 border-brand-cyan border-t-transparent rounded-full"></div>
+            <p className="mt-2">Carregando histórico...</p>
+          </div>
+        ) : history.length === 0 ? (
+          <div className="p-8 text-center text-slate-400">
+            <History size={48} className="mx-auto mb-4 opacity-50" />
+            <p>Nenhuma ação registrada ainda</p>
+          </div>
+        ) : (
+         <table className="w-full text-left text-sm">
+            <thead className="bg-brand-dark/50 text-slate-400 uppercase text-xs font-bold">
+              <tr>
+                <th className="p-4">Data/Hora</th>
+                <th className="p-4">Usuário</th>
+                <th className="p-4">Ação</th>
+                <th className="p-4">Detalhes</th>
+                <th className="p-4 text-right">Registros Afetados</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-brand-border">
+              {history.map((item) => (
+                <tr key={item.id} className="hover:bg-brand-dark/30">
+                  <td className="p-4 text-slate-400 text-xs">
+                    {formatDate(item.timestamp)}
+                  </td>
+                  <td className="p-4 text-white text-sm">
+                    {item.userName || item.userEmail}
+                  </td>
+                  <td className="p-4">
+                    <span className={`px-2 py-1 rounded text-xs border ${getActionColor(item.action)}`}>
+                      {getActionLabel(item.action)}
+                    </span>
+                  </td>
+                  <td className="p-4 text-xs text-slate-400">
+                    {item.details?.importMode && (
+                      <span className="block">Modo: {item.details.importMode}</span>
+                    )}
+                    {item.details?.imported && (
+                      <span className="block">Novos: {item.details.imported}</span>
+                    )}
+                    {item.details?.updated && (
+                      <span className="block">Atualizados: {item.details.updated}</span>
+                    )}
+                    {item.collection && (
+                      <span className="block">Coleção: {item.collection}</span>
+                    )}
+                  </td>
+                  <td className="p-4 text-right font-mono font-bold text-white">
+                    {item.recordsAffected || 0}
+                  </td>
+               </tr>
+              ))}
+            </tbody>
+         </table>
+        )}
+      </div>
+   </div>
+);
+};
+
+// Log de Atividades completo (apenas para admin)
+const ActivityLog = ({ activityLog = [] }) => {
+  const [filter, setFilter] = useState('all');
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const formatDate = (timestamp) => {
+    if (!timestamp) return 'N/A';
+    let date;
+    if (timestamp.toDate) date = timestamp.toDate();
+    else if (timestamp.seconds) date = new Date(timestamp.seconds * 1000);
+    else if (typeof timestamp === 'string') date = new Date(timestamp);
+    else date = new Date(timestamp);
+    return date.toLocaleString('pt-BR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  };
+
+  const getActivityIcon = (type) => {
+    const icons = {
+      'login': '🔐',
+      'create': '➕',
+      'update': '✏️',
+      'delete': '🗑️',
+      'move': '📦',
+      'import': '📥',
+      'export': '📤',
+      'schedule': '📅',
+      'user_create': '👤',
+      'user_update': '👥',
+      'user_delete': '🚫'
+    };
+    return icons[type] || '📋';
+  };
+
+  const getActivityColor = (type) => {
+    if (type.includes('delete')) return 'border-l-red-500';
+    if (type.includes('create') || type.includes('import')) return 'border-l-green-500';
+    if (type.includes('update') || type.includes('move')) return 'border-l-blue-500';
+    if (type.includes('user')) return 'border-l-purple-500';
+    if (type.includes('schedule')) return 'border-l-yellow-500';
+    return 'border-l-gray-500';
+  };
+
+  const filteredActivities = activityLog.filter(activity => {
+    if (filter !== 'all' && activity.type !== filter) return false;
+    if (searchTerm && !activity.description?.toLowerCase().includes(searchTerm.toLowerCase()) && 
+        !activity.userName?.toLowerCase().includes(searchTerm.toLowerCase())) return false;
+    return true;
+  });
+
+  const activityTypes = [...new Set(activityLog.map(a => a.type))].filter(Boolean);
+
+  return (
+    <div className="max-w-5xl mx-auto animate-in fade-in space-y-6">
+      <div className="flex justify-between items-center flex-wrap gap-4">
+        <div>
+          <h3 className="text-lg font-bold text-white">Log de Atividades do Sistema</h3>
+          <p className="text-sm text-gray-400 mt-1">Todas as ações realizadas no sistema</p>
+        </div>
+        <div className="flex gap-3">
+          <div className="relative">
+            <Search className="absolute left-3 top-2.5 text-gray-500" size={16} />
+            <input
+              type="text"
+              placeholder="Buscar..."
+              value={searchTerm}
+              onChange={e => setSearchTerm(e.target.value)}
+              className="bg-gray-800 border border-gray-700 rounded-lg pl-10 pr-4 py-2 text-sm text-white outline-none focus:border-blue-500 w-48"
+            />
+          </div>
+          <select
+            value={filter}
+            onChange={e => setFilter(e.target.value)}
+            className="bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-sm text-white outline-none focus:border-blue-500"
+          >
+            <option value="all">Todas as ações</option>
+            {activityTypes.map(type => (
+              <option key={type} value={type}>{type}</option>
+            ))}
+          </select>
+        </div>
+      </div>
+
+      <div className="bg-gray-800/50 border border-gray-700 rounded-xl overflow-hidden">
+        {filteredActivities.length === 0 ? (
+          <div className="p-8 text-center text-gray-400">
+            <FileText size={48} className="mx-auto mb-4 opacity-50" />
+            <p>Nenhuma atividade encontrada</p>
+          </div>
+        ) : (
+          <div className="divide-y divide-gray-700/50 max-h-[600px] overflow-y-auto">
+            {filteredActivities.map((activity) => (
+              <div 
+                key={activity.id} 
+                className={`p-4 hover:bg-gray-700/30 transition-colors border-l-4 ${getActivityColor(activity.type)}`}
+              >
+                <div className="flex items-start gap-4">
+                  {/* Avatar */}
+                  <div className="flex-shrink-0">
+                    {activity.userPhoto ? (
+                      <img src={activity.userPhoto} alt="" className="w-10 h-10 rounded-full"/>
+                    ) : (
+                      <div className="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center text-lg">
+                        {getActivityIcon(activity.type)}
+                      </div>
+                    )}
+                  </div>
+                  
+                  {/* Conteúdo */}
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span className="font-medium text-white">{activity.userName || activity.userEmail}</span>
+                      <span className="text-gray-500">•</span>
+                      <span className="text-xs text-gray-400">{formatDate(activity.timestamp)}</span>
+                      {activity.userRole && (
+                        <span className={`text-xs px-2 py-0.5 rounded ${
+                          activity.userRole === 'admin' ? 'bg-purple-900/50 text-purple-300' :
+                          activity.userRole === 'editor' ? 'bg-blue-900/50 text-blue-300' :
+                          'bg-gray-700 text-gray-400'
+                        }`}>
+                          {activity.userRole === 'admin' ? 'Administrador' : activity.userRole === 'editor' ? 'Recrutador' : 'Visualizador'}
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-gray-300 mt-1">{activity.description}</p>
+                    {activity.entityType && (
+                      <div className="text-xs text-gray-500 mt-1">
+                        Entidade: {activity.entityType} {activity.entityId && `(${activity.entityId.substring(0, 8)}...)`}
+                      </div>
+                    )}
+                  </div>
+                  
+                  {/* Badge do tipo */}
+                  <div className="flex-shrink-0">
+                    <span className="text-xs bg-gray-700 text-gray-300 px-2 py-1 rounded">
+                      {activity.type}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+      
+      <div className="text-xs text-gray-500 text-center">
+        Mostrando {filteredActivities.length} de {activityLog.length} atividades
+      </div>
+    </div>
+  );
+};

@@ -1,0 +1,105 @@
+# Backup semanal do schema young_talents (Supabase)
+# Inclui: estrutura + dados do tenant; commit no repo; cópia no Storage do projeto destino; email para múltiplos.
+# Secrets: SUPABASE_DB_URL, RESEND_API_KEY, BACKUP_NOTIFY_EMAIL (vírgula para vários),
+#   RESEND_FROM_EMAIL (opcional), DESTINATION_SUPABASE_URL, DESTINATION_SUPABASE_SERVICE_ROLE_KEY
+
+name: Backup young_talents
+
+on:
+  schedule:
+    - cron: '0 0 * * 0'
+  workflow_dispatch:
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
+
+      - name: Setup Supabase CLI
+        uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Criar pasta de backup
+        run: mkdir -p backups/young_talents
+
+      - name: Backup schema young_talents (estrutura)
+        run: |
+          supabase db dump --db-url "$SUPABASE_DB_URL" -f backups/young_talents/young_talents_schema.sql -s young_talents
+
+      - name: Backup schema young_talents (dados)
+        run: |
+          supabase db dump --db-url "$SUPABASE_DB_URL" -f backups/young_talents/young_talents_data.sql --data-only --use-copy -s young_talents
+
+      - name: Commit backup
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore: backup semanal schema young_talents"
+          file_pattern: "backups/young_talents/*.sql"
+          branch: ${{ github.ref_name }}
+
+      - name: Criar bucket e enviar cópia para projeto destino
+        if: success()
+        env:
+          DEST_URL: ${{ secrets.DESTINATION_SUPABASE_URL }}
+          DEST_KEY: ${{ secrets.DESTINATION_SUPABASE_SERVICE_ROLE_KEY }}
+        run: |
+          if [ -z "$DEST_URL" ] || [ -z "$DEST_KEY" ]; then echo "Destino não configurado; pulando upload para Storage."; exit 0; fi
+          BUCKET="backups"
+          DATE=$(date -u '+%Y-%m-%d')
+          PREFIX="young_talents/$DATE"
+          BASE="${DEST_URL%/}/storage/v1"
+          AUTH="Authorization: Bearer $DEST_KEY"
+          APIKEY="apikey: $DEST_KEY"
+          curl -s -X POST "$BASE/bucket" -H "$AUTH" -H "$APIKEY" -H "Content-Type: application/json" -d "{\"name\":\"$BUCKET\",\"public\":false}" || true
+          for f in young_talents_schema.sql young_talents_data.sql; do
+            curl -s -X POST "$BASE/object/$BUCKET/$PREFIX/$f" \
+              -H "$AUTH" -H "$APIKEY" \
+              -H "Content-Type: application/sql" \
+              --data-binary "@backups/young_talents/$f" || true
+          done
+          echo "Cópia enviada para $BASE/object/$BUCKET/$PREFIX/"
+
+      - name: Notificar sucesso por email
+        if: success()
+        env:
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          BACKUP_NOTIFY_EMAIL: ${{ secrets.BACKUP_NOTIFY_EMAIL }}
+          RESEND_FROM: ${{ secrets.RESEND_FROM_EMAIL }}
+        run: |
+          FROM="${RESEND_FROM:?Defina o secret RESEND_FROM_EMAIL no repositório (remetente verificado no Resend)}"
+          IFS=','; read -ra EMAILS <<< "$BACKUP_NOTIFY_EMAIL"
+          TO_JSON=$(for e in "${EMAILS[@]}"; do echo -n "\"$(echo "$e" | xargs)\","; done | sed 's/,$//')
+          TO_ARR="[$TO_JSON]"
+          SUBJECT="Backup young_talents – concluído"
+          BODY="Backup do schema young_talents finalizado.<br><br>Data/hora: $(date -u '+%Y-%m-%d %H:%M UTC')<br>Commit: ${{ github.sha }}<br>Run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          curl -s -X POST "https://api.resend.com/emails" \
+            -H "Authorization: Bearer $RESEND_API_KEY" \
+            -H "Content-Type: application/json" \
+            -d "{\"from\": \"$FROM\", \"to\": $TO_ARR, \"subject\": \"$SUBJECT\", \"html\": \"$BODY\"}" || true
+
+      - name: Notificar falha por email
+        if: failure()
+        env:
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          BACKUP_NOTIFY_EMAIL: ${{ secrets.BACKUP_NOTIFY_EMAIL }}
+          RESEND_FROM: ${{ secrets.RESEND_FROM_EMAIL }}
+        run: |
+          FROM="${RESEND_FROM:?Defina o secret RESEND_FROM_EMAIL no repositório (remetente verificado no Resend)}"
+          IFS=','; read -ra EMAILS <<< "$BACKUP_NOTIFY_EMAIL"
+          TO_JSON=$(for e in "${EMAILS[@]}"; do echo -n "\"$(echo "$e" | xargs)\","; done | sed 's/,$//')
+          TO_ARR="[$TO_JSON]"
+          SUBJECT="Backup young_talents – falhou"
+          BODY="O backup do schema young_talents falhou.<br><br>Data/hora: $(date -u '+%Y-%m-%d %H:%M UTC')<br>Run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}<br><br>Verifique os logs do workflow."
+          curl -s -X POST "https://api.resend.com/emails" \
+            -H "Authorization: Bearer $RESEND_API_KEY" \
+            -H "Content-Type: application/json" \
+            -d "{\"from\": \"$FROM\", \"to\": $TO_ARR, \"subject\": \"$SUBJECT\", \"html\": \"$BODY\"}" || true

@@ -1,0 +1,340 @@
+'use server'
+
+import { revalidatePath } from 'next/cache'
+import { createClient } from '@/utils/supabase/server'
+
+export type Program = {
+  id: string
+  title: string
+  description: string | null
+  created_at: string
+  updated_at: string
+}
+
+export type CreateProgramResult = { error?: string; success?: boolean }
+
+export type Module = {
+  id: string
+  program_id: string
+  title: string
+  order: number
+  created_at: string
+  updated_at: string
+}
+
+export type Lesson = {
+  id: string
+  module_id: string
+  title: string
+  video_url: string | null
+  material_url: string | null
+  order: number
+  created_at: string
+  updated_at: string
+}
+
+export type CreateModuleResult = { error?: string; success?: boolean }
+export type CreateLessonResult = { error?: string; success?: boolean }
+
+async function requireAdmin() {
+  const supabase = await createClient()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+  if (!user) return { supabase: null, error: 'Não autenticado' }
+
+  const { data: profile } = await supabase
+    .from('space_users')
+    .select('role')
+    .eq('id', user.id)
+    .single()
+
+  if (profile?.role !== 'admin') {
+    return { supabase: null, error: 'Acesso negado. Apenas administradores.' }
+  }
+
+  return { supabase, error: null }
+}
+
+export type UserProfile = {
+  id: string
+  email: string
+  role: string
+  created_at: string
+}
+
+export type UpdateRoleResult = { error?: string; success?: boolean }
+
+/**
+ * Lista todos os usuários do sistema. Retorna [] se não for admin.
+ */
+export async function getUsers(): Promise<UserProfile[]> {
+  const { supabase, error } = await requireAdmin()
+  if (error || !supabase) return []
+
+  const { data, error: queryError } = await supabase
+    .from('space_users')
+    .select('id, email, role, created_at')
+    .order('created_at', { ascending: false })
+
+  if (queryError) return []
+  return (data ?? []) as UserProfile[]
+}
+
+/**
+ * Atualiza a role de um usuário. Verifica role admin antes.
+ */
+export async function updateUserRole(
+  userId: string,
+  newRole: 'admin' | 'aluno'
+): Promise<UpdateRoleResult> {
+  const { supabase, error } = await requireAdmin()
+  if (error || !supabase) return { error: error ?? 'Acesso negado.' }
+
+  // Segurança: Não deixar o admin remover o próprio acesso se for o único, 
+  // mas como o Supabase lida com a requisição usando a role atual, ele pode.
+  const { error: updateError } = await supabase
+    .from('space_users')
+    .update({ role: newRole })
+    .eq('id', userId)
+
+  if (updateError) return { error: updateError.message }
+
+  revalidatePath('/dashboard/admin/users')
+  return { success: true }
+}
+
+/**
+ * Lista todos os programas. Retorna [] se o usuário não for admin.
+ */
+export async function getPrograms(): Promise<Program[]> {
+  const { supabase, error } = await requireAdmin()
+  if (error || !supabase) return []
+
+  const { data, error: queryError } = await supabase
+    .from('space_programs')
+    .select('id, title, description, created_at, updated_at')
+    .order('created_at', { ascending: false })
+
+  if (queryError) return []
+  return (data ?? []) as Program[]
+}
+
+/**
+ * Cria um programa. Verifica role admin antes. Para uso com useActionState: (prev, formData) => ...
+ */
+export async function createProgram(
+  _prev: CreateProgramResult | null,
+  formData: FormData
+): Promise<CreateProgramResult> {
+  const { supabase, error } = await requireAdmin()
+  if (error || !supabase) {
+    return { error: error ?? 'Acesso negado.' }
+  }
+
+  const title = (formData.get('title') as string)?.trim()
+  const description = (formData.get('description') as string)?.trim() || null
+
+  if (!title) {
+    return { error: 'Título é obrigatório.' }
+  }
+
+  const { error: insertError } = await supabase.from('space_programs').insert({
+    title,
+    description: description || null,
+  })
+
+  if (insertError) {
+    return { error: insertError.message }
+  }
+
+  revalidatePath('/dashboard')
+  return { success: true }
+}
+
+/**
+ * Busca um programa por ID. Retorna null se não for admin ou não existir.
+ */
+export async function getProgramById(id: string): Promise<Program | null> {
+  const { supabase, error } = await requireAdmin()
+  if (error || !supabase) return null
+
+  const { data, error: queryError } = await supabase
+    .from('space_programs')
+    .select('id, title, description, created_at, updated_at')
+    .eq('id', id)
+    .single()
+
+  if (queryError || !data) return null
+  return data as Program
+}
+
+/**
+ * Lista módulos de um programa. Retorna [] se não for admin.
+ */
+export async function getModulesByProgram(programId: string): Promise<Module[]> {
+  const { supabase, error } = await requireAdmin()
+  if (error || !supabase) return []
+
+  const { data, error: queryError } = await supabase
+    .from('space_modules')
+    .select('id, program_id, title, order, created_at, updated_at')
+    .eq('program_id', programId)
+    .order('order', { ascending: true })
+
+  if (queryError) return []
+  return (data ?? []) as Module[]
+}
+
+/**
+ * Lista aulas de um módulo. Retorna [] se não for admin.
+ */
+export async function getLessonsByModule(moduleId: string): Promise<Lesson[]> {
+  const { supabase, error } = await requireAdmin()
+  if (error || !supabase) return []
+
+  const { data, error: queryError } = await supabase
+    .from('space_lessons')
+    .select('id, module_id, title, video_url, material_url, order, created_at, updated_at')
+    .eq('module_id', moduleId)
+    .order('order', { ascending: true })
+
+  if (queryError) return []
+  return (data ?? []) as Lesson[]
+}
+
+/**
+ * Cria um módulo. programId deve vir em formData. Para useActionState: (prev, formData) => ...
+ */
+export async function createModule(
+  _prev: CreateModuleResult | null,
+  formData: FormData
+): Promise<CreateModuleResult> {
+  const { supabase, error } = await requireAdmin()
+  if (error || !supabase) return { error: error ?? 'Acesso negado.' }
+
+  const programId = formData.get('programId') as string | null
+  const title = (formData.get('title') as string)?.trim()
+
+  if (!programId || !title) {
+    return { error: 'Programa e título são obrigatórios.' }
+  }
+
+  const { data: maxOrderRows } = await supabase
+    .from('space_modules')
+    .select('order')
+    .eq('program_id', programId)
+    .order('order', { ascending: false })
+    .limit(1)
+  const nextOrder =
+    maxOrderRows?.length && typeof maxOrderRows[0]?.order === 'number'
+      ? (maxOrderRows[0] as { order: number }).order + 1
+      : 0
+
+  const { error: insertError } = await supabase.from('space_modules').insert({
+    program_id: programId,
+    title,
+    order: nextOrder,
+  })
+
+  if (insertError) return { error: insertError.message }
+
+  revalidatePath(`/dashboard/programs/${programId}`)
+  return { success: true }
+}
+
+/**
+ * Cria uma aula. moduleId e programId (para revalidate) devem vir em formData. Para useActionState: (prev, formData) => ...
+ */
+export async function createLesson(
+  _prev: CreateLessonResult | null,
+  formData: FormData
+): Promise<CreateLessonResult> {
+  const { supabase, error } = await requireAdmin()
+  if (error || !supabase) return { error: error ?? 'Acesso negado.' }
+
+  const moduleId = formData.get('moduleId') as string | null
+  const programId = formData.get('programId') as string | null
+  const title = (formData.get('title') as string)?.trim()
+  const video_url = (formData.get('video_url') as string)?.trim() || null
+  const material_url = (formData.get('material_url') as string)?.trim() || null
+
+  if (!moduleId || !title) {
+    return { error: 'Módulo e título são obrigatórios.' }
+  }
+
+  const { data: maxOrderRows } = await supabase
+    .from('space_lessons')
+    .select('order')
+    .eq('module_id', moduleId)
+    .order('order', { ascending: false })
+    .limit(1)
+  const nextOrder =
+    maxOrderRows?.length && typeof maxOrderRows[0]?.order === 'number'
+      ? (maxOrderRows[0] as { order: number }).order + 1
+      : 0
+
+  const { error: insertError } = await supabase.from('space_lessons').insert({
+    module_id: moduleId,
+    title,
+    video_url: video_url || null,
+    material_url: material_url || null,
+    order: nextOrder,
+  })
+
+  if (insertError) return { error: insertError.message }
+
+  if (programId) {
+    revalidatePath(`/dashboard/programs/${programId}`)
+  }
+  return { success: true }
+}
+
+export type UpdateOrderResult = { error?: string; success?: boolean }
+
+/**
+ * Reordena módulos de um programa. moduleIds deve ser a lista de IDs na nova ordem.
+ */
+export async function updateModuleOrder(
+  programId: string,
+  moduleIds: string[]
+): Promise<UpdateOrderResult> {
+  const { supabase, error } = await requireAdmin()
+  if (error || !supabase) return { error: error ?? 'Acesso negado.' }
+
+  for (let i = 0; i < moduleIds.length; i++) {
+    const { error: updateError } = await supabase
+      .from('space_modules')
+      .update({ order: i })
+      .eq('id', moduleIds[i])
+      .eq('program_id', programId)
+    if (updateError) return { error: updateError.message }
+  }
+
+  revalidatePath(`/dashboard/programs/${programId}`)
+  return { success: true }
+}
+
+/**
+ * Reordena aulas de um módulo. lessonIds deve ser a lista de IDs na nova ordem.
+ */
+export async function updateLessonOrder(
+  moduleId: string,
+  lessonIds: string[],
+  programId: string
+): Promise<UpdateOrderResult> {
+  const { supabase, error } = await requireAdmin()
+  if (error || !supabase) return { error: error ?? 'Acesso negado.' }
+
+  for (let i = 0; i < lessonIds.length; i++) {
+    const { error: updateError } = await supabase
+      .from('space_lessons')
+      .update({ order: i })
+      .eq('id', lessonIds[i])
+      .eq('module_id', moduleId)
+    if (updateError) return { error: updateError.message }
+  }
+
+  revalidatePath(`/dashboard/programs/${programId}`)
+  return { success: true }
+}

@@ -1,0 +1,11 @@
+{
+  "users": [
+    {
+      "email": "seu-email@exemplo.com",
+      "password": "senha-forte-aqui",
+      "role": "admin",
+      "name": "Seu Nome"
+    }
+  ],
+  "_instrucoes": "Copie este arquivo para users-setup.local.json e preencha com os usuários desejados. O arquivo .local não é versionado."
+}
