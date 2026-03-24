@@ -1,0 +1,425 @@
+2026-02-04T14:43:23.5731630Z Current runner version: '2.331.0'
+2026-02-04T14:43:23.5756839Z ##[group]Runner Image Provisioner
+2026-02-04T14:43:23.5757847Z Hosted Compute Agent
+2026-02-04T14:43:23.5758378Z Version: 20260123.484
+2026-02-04T14:43:23.5758988Z Commit: 6bd6555ca37d84114959e1c76d2c01448ff61c5d
+2026-02-04T14:43:23.5759647Z Build Date: 2026-01-23T19:41:17Z
+2026-02-04T14:43:23.5760271Z Worker ID: {4460ecc2-08ed-4aff-95c0-2787bd5b6339}
+2026-02-04T14:43:23.5760940Z Azure Region: westus3
+2026-02-04T14:43:23.5761457Z ##[endgroup]
+2026-02-04T14:43:23.5762899Z ##[group]Operating System
+2026-02-04T14:43:23.5763488Z Ubuntu
+2026-02-04T14:43:23.5763979Z 24.04.3
+2026-02-04T14:43:23.5764485Z LTS
+2026-02-04T14:43:23.5764953Z ##[endgroup]
+2026-02-04T14:43:23.5765414Z ##[group]Runner Image
+2026-02-04T14:43:23.5765987Z Image: ubuntu-24.04
+2026-02-04T14:43:23.5766530Z Version: 20260126.10.1
+2026-02-04T14:43:23.5767910Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20260126.10/images/ubuntu/Ubuntu2404-Readme.md
+2026-02-04T14:43:23.5769244Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20260126.10
+2026-02-04T14:43:23.5770105Z ##[endgroup]
+2026-02-04T14:43:23.5771093Z ##[group]GITHUB_TOKEN Permissions
+2026-02-04T14:43:23.5773424Z Contents: write
+2026-02-04T14:43:23.5773978Z Metadata: read
+2026-02-04T14:43:23.5774474Z ##[endgroup]
+2026-02-04T14:43:23.5776761Z Secret source: Actions
+2026-02-04T14:43:23.5777827Z Prepare workflow directory
+2026-02-04T14:43:23.6284925Z Prepare all required actions
+2026-02-04T14:43:23.6324683Z Getting action download info
+2026-02-04T14:43:24.0538201Z Download action repository 'actions/checkout@v4' (SHA:34e114876b0b11c390a56381ad16ebd13914f8d5)
+2026-02-04T14:43:24.1301683Z Download action repository 'supabase/setup-cli@v1' (SHA:b60b5899c73b63a2d2d651b1e90db8d4c9392f51)
+2026-02-04T14:43:24.9073537Z Download action repository 'stefanzweifel/git-auto-commit-action@v5' (SHA:b863ae1933cb653a53c021fe36dbb774e1fb9403)
+2026-02-04T14:43:25.5345509Z Complete job name: backup
+2026-02-04T14:43:25.6200704Z ##[group]Run actions/checkout@v4
+2026-02-04T14:43:25.6202020Z with:
+2026-02-04T14:43:25.6202782Z   ref: refs/heads/main
+2026-02-04T14:43:25.6203769Z   repository: adventurelabsbrasil/young-talents
+2026-02-04T14:43:25.6205260Z   token: ***
+2026-02-04T14:43:25.6206025Z   ssh-strict: true
+2026-02-04T14:43:25.6206804Z   ssh-user: git
+2026-02-04T14:43:25.6207882Z   persist-credentials: true
+2026-02-04T14:43:25.6208784Z   clean: true
+2026-02-04T14:43:25.6209594Z   sparse-checkout-cone-mode: true
+2026-02-04T14:43:25.6210549Z   fetch-depth: 1
+2026-02-04T14:43:25.6211357Z   fetch-tags: false
+2026-02-04T14:43:25.6212159Z   show-progress: true
+2026-02-04T14:43:25.6212992Z   lfs: false
+2026-02-04T14:43:25.6213776Z   submodules: false
+2026-02-04T14:43:25.6214598Z   set-safe-directory: true
+2026-02-04T14:43:25.6215744Z env:
+2026-02-04T14:43:25.6217611Z   SUPABASE_DB_URL: ***
+2026-02-04T14:43:25.6218463Z ##[endgroup]
+2026-02-04T14:43:25.7280521Z Syncing repository: adventurelabsbrasil/young-talents
+2026-02-04T14:43:25.7283290Z ##[group]Getting Git version info
+2026-02-04T14:43:25.7284646Z Working directory is '/home/runner/work/young-talents/young-talents'
+2026-02-04T14:43:25.7286643Z [command]/usr/bin/git version
+2026-02-04T14:43:25.7329374Z git version 2.52.0
+2026-02-04T14:43:25.7356181Z ##[endgroup]
+2026-02-04T14:43:25.7373401Z Temporarily overriding HOME='/home/runner/work/_temp/7dc27cec-03cb-45b9-b1bf-c637a13dde52' before making global git config changes
+2026-02-04T14:43:25.7378930Z Adding repository directory to the temporary git global config as a safe directory
+2026-02-04T14:43:25.7390109Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/young-talents/young-talents
+2026-02-04T14:43:25.7426654Z Deleting the contents of '/home/runner/work/young-talents/young-talents'
+2026-02-04T14:43:25.7430429Z ##[group]Initializing the repository
+2026-02-04T14:43:25.7435755Z [command]/usr/bin/git init /home/runner/work/young-talents/young-talents
+2026-02-04T14:43:25.7518636Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-02-04T14:43:25.7521996Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-02-04T14:43:25.7523754Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-02-04T14:43:25.7525303Z hint: call:
+2026-02-04T14:43:25.7526181Z hint:
+2026-02-04T14:43:25.7527405Z hint: 	git config --global init.defaultBranch <name>
+2026-02-04T14:43:25.7528511Z hint:
+2026-02-04T14:43:25.7529546Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-02-04T14:43:25.7531514Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-02-04T14:43:25.7532844Z hint:
+2026-02-04T14:43:25.7533581Z hint: 	git branch -m <name>
+2026-02-04T14:43:25.7534453Z hint:
+2026-02-04T14:43:25.7535578Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-02-04T14:43:25.7537641Z Initialized empty Git repository in /home/runner/work/young-talents/young-talents/.git/
+2026-02-04T14:43:25.7540899Z [command]/usr/bin/git remote add origin https://github.com/adventurelabsbrasil/young-talents
+2026-02-04T14:43:25.7564811Z ##[endgroup]
+2026-02-04T14:43:25.7566208Z ##[group]Disabling automatic garbage collection
+2026-02-04T14:43:25.7568304Z [command]/usr/bin/git config --local gc.auto 0
+2026-02-04T14:43:25.7593766Z ##[endgroup]
+2026-02-04T14:43:25.7595092Z ##[group]Setting up auth
+2026-02-04T14:43:25.7598856Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-02-04T14:43:25.7625374Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-02-04T14:43:25.7905106Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-02-04T14:43:25.7934100Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-02-04T14:43:25.8111069Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-02-04T14:43:25.8141506Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-02-04T14:43:25.8334985Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-02-04T14:43:25.8366041Z ##[endgroup]
+2026-02-04T14:43:25.8368807Z ##[group]Fetching the repository
+2026-02-04T14:43:25.8377860Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +refs/heads/main:refs/remotes/origin/main
+2026-02-04T14:43:27.1698215Z From https://github.com/adventurelabsbrasil/young-talents
+2026-02-04T14:43:27.1699129Z  * [new branch]      main       -> origin/main
+2026-02-04T14:43:27.1727079Z ##[endgroup]
+2026-02-04T14:43:27.1728038Z ##[group]Determining the checkout info
+2026-02-04T14:43:27.1728950Z ##[endgroup]
+2026-02-04T14:43:27.1734554Z [command]/usr/bin/git sparse-checkout disable
+2026-02-04T14:43:27.1767735Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-02-04T14:43:27.1789137Z ##[group]Checking out the ref
+2026-02-04T14:43:27.1793665Z [command]/usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
+2026-02-04T14:43:27.2355220Z Switched to a new branch 'main'
+2026-02-04T14:43:27.2355822Z branch 'main' set up to track 'origin/main'.
+2026-02-04T14:43:27.2363528Z ##[endgroup]
+2026-02-04T14:43:27.2397031Z [command]/usr/bin/git log -1 --format=%H
+2026-02-04T14:43:27.2415273Z 27dedc244419c3c0af449a0fb8ed9f9b86b269c7
+2026-02-04T14:43:27.2569425Z ##[group]Run supabase/setup-cli@v1
+2026-02-04T14:43:27.2569776Z with:
+2026-02-04T14:43:27.2570029Z   version: latest
+2026-02-04T14:43:27.2570290Z env:
+2026-02-04T14:43:27.2571094Z   SUPABASE_DB_URL: ***
+2026-02-04T14:43:27.2571394Z ##[endgroup]
+2026-02-04T14:43:27.9581601Z [command]/usr/bin/tar xz --warning=no-unknown-keyword --overwrite -C /home/runner/work/_temp/138c77fe-8aed-434a-bd5a-6c36695a5fcb -f /home/runner/work/_temp/e0a5ff49-485c-4c1e-abdf-b3b713866f53
+2026-02-04T14:43:28.8236819Z ##[group]Run mkdir -p backups/young_talents
+2026-02-04T14:43:28.8237978Z [36;1mmkdir -p backups/young_talents[0m
+2026-02-04T14:43:28.8264259Z shell: /usr/bin/bash -e {0}
+2026-02-04T14:43:28.8264535Z env:
+2026-02-04T14:43:28.8265190Z   SUPABASE_DB_URL: ***
+2026-02-04T14:43:28.8265444Z   SUPABASE_INTERNAL_IMAGE_REGISTRY: ghcr.io
+2026-02-04T14:43:28.8265713Z ##[endgroup]
+2026-02-04T14:43:28.8361274Z ##[group]Run supabase db dump --db-url "$SUPABASE_DB_URL" -f backups/young_talents/young_talents_schema.sql -s young_talents
+2026-02-04T14:43:28.8362059Z [36;1msupabase db dump --db-url "$SUPABASE_DB_URL" -f backups/young_talents/young_talents_schema.sql -s young_talents[0m
+2026-02-04T14:43:28.8380656Z shell: /usr/bin/bash -e {0}
+2026-02-04T14:43:28.8380925Z env:
+2026-02-04T14:43:28.8381515Z   SUPABASE_DB_URL: ***
+2026-02-04T14:43:28.8381762Z   SUPABASE_INTERNAL_IMAGE_REGISTRY: ghcr.io
+2026-02-04T14:43:28.8382046Z ##[endgroup]
+2026-02-04T14:43:28.8786131Z Dumping schemas from remote database...
+2026-02-04T14:43:29.7140116Z 17.6.1.075: Pulling from supabase/postgres
+2026-02-04T14:43:29.9340239Z a3629ac5b9f4: Pulling fs layer
+2026-02-04T14:43:29.9341529Z 012e1d6d846b: Pulling fs layer
+2026-02-04T14:43:29.9341922Z 9ea66645b4e8: Pulling fs layer
+2026-02-04T14:43:29.9342299Z 22c9d21b5c2a: Pulling fs layer
+2026-02-04T14:43:29.9342704Z d4b0af236033: Pulling fs layer
+2026-02-04T14:43:29.9343194Z 7d9bc1a002b9: Pulling fs layer
+2026-02-04T14:43:29.9343586Z c7ec864e5236: Pulling fs layer
+2026-02-04T14:43:29.9343960Z 1103bfe337dc: Pulling fs layer
+2026-02-04T14:43:29.9344331Z 4f4fb700ef54: Pulling fs layer
+2026-02-04T14:43:29.9344694Z 8a9b27e64369: Pulling fs layer
+2026-02-04T14:43:29.9345052Z 2bd33109b353: Pulling fs layer
+2026-02-04T14:43:29.9345471Z aed7e9102ca4: Pulling fs layer
+2026-02-04T14:43:29.9345923Z 977f891f15ff: Pulling fs layer
+2026-02-04T14:43:29.9346331Z 3bf45fb32bc9: Pulling fs layer
+2026-02-04T14:43:29.9346686Z fe59d54f5864: Pulling fs layer
+2026-02-04T14:43:29.9347104Z 2f324cd58c2d: Pulling fs layer
+2026-02-04T14:43:29.9347369Z f75e820b3cf1: Pulling fs layer
+2026-02-04T14:43:29.9347598Z 10f3db1893c5: Pulling fs layer
+2026-02-04T14:43:29.9347870Z 606656244ade: Pulling fs layer
+2026-02-04T14:43:29.9348147Z dfa3f1cc179a: Pulling fs layer
+2026-02-04T14:43:29.9348379Z 39e54f3acaeb: Pulling fs layer
+2026-02-04T14:43:29.9348647Z 8a2fb51d07db: Pulling fs layer
+2026-02-04T14:43:29.9348911Z 098d77a8dcf6: Pulling fs layer
+2026-02-04T14:43:29.9349156Z aed7e9102ca4: Waiting
+2026-02-04T14:43:29.9349384Z 71331f105ee6: Pulling fs layer
+2026-02-04T14:43:29.9349664Z 81ccbc6da89f: Pulling fs layer
+2026-02-04T14:43:29.9349883Z 977f891f15ff: Waiting
+2026-02-04T14:43:29.9350095Z 9d2be4974c1c: Pulling fs layer
+2026-02-04T14:43:29.9350395Z 1900d9bb66aa: Pulling fs layer
+2026-02-04T14:43:29.9350624Z 3bf45fb32bc9: Waiting
+2026-02-04T14:43:29.9350820Z fe59d54f5864: Waiting
+2026-02-04T14:43:29.9351074Z 31725fc03139: Pulling fs layer
+2026-02-04T14:43:29.9351414Z 7aade9a3ec2a: Pulling fs layer
+2026-02-04T14:43:29.9351766Z 5fd6ef76dcdd: Pulling fs layer
+2026-02-04T14:43:29.9352121Z 2f324cd58c2d: Waiting
+2026-02-04T14:43:29.9352426Z f75e820b3cf1: Waiting
+2026-02-04T14:43:29.9352741Z 07d009e62b1a: Pulling fs layer
+2026-02-04T14:43:29.9353076Z 9d8712e27169: Pulling fs layer
+2026-02-04T14:43:29.9353380Z 10f3db1893c5: Waiting
+2026-02-04T14:43:29.9353680Z 32fc04fdabc1: Pulling fs layer
+2026-02-04T14:43:29.9354069Z 3ee17ccedb3d: Pulling fs layer
+2026-02-04T14:43:29.9354404Z 098d77a8dcf6: Waiting
+2026-02-04T14:43:29.9354599Z 34376e5a4dc6: Pulling fs layer
+2026-02-04T14:43:29.9354808Z 606656244ade: Waiting
+2026-02-04T14:43:29.9355065Z 71331f105ee6: Waiting
+2026-02-04T14:43:29.9355258Z 609727e96913: Pulling fs layer
+2026-02-04T14:43:29.9355473Z 75e265165c7f: Pulling fs layer
+2026-02-04T14:43:29.9355915Z 7204ebb6ffbd: Pulling fs layer
+2026-02-04T14:43:29.9356138Z 81ccbc6da89f: Waiting
+2026-02-04T14:43:29.9356332Z 22c9d21b5c2a: Waiting
+2026-02-04T14:43:29.9356560Z b4b48d9daecc: Pulling fs layer
+2026-02-04T14:43:29.9356782Z f8b515770fb5: Pulling fs layer
+2026-02-04T14:43:29.9357200Z 9d2be4974c1c: Waiting
+2026-02-04T14:43:29.9357399Z 73ff333ee97d: Pulling fs layer
+2026-02-04T14:43:29.9357614Z 1900d9bb66aa: Waiting
+2026-02-04T14:43:29.9357812Z d4b0af236033: Waiting
+2026-02-04T14:43:29.9358013Z a534d90bbac4: Pulling fs layer
+2026-02-04T14:43:29.9358240Z 01c546d2a648: Pulling fs layer
+2026-02-04T14:43:29.9358603Z f8956af6903d: Pulling fs layer
+2026-02-04T14:43:29.9358821Z 7d9bc1a002b9: Waiting
+2026-02-04T14:43:29.9359028Z aa527bff7f26: Pulling fs layer
+2026-02-04T14:43:29.9359253Z dfa3f1cc179a: Waiting
+2026-02-04T14:43:29.9359459Z 267bc00b83f1: Pulling fs layer
+2026-02-04T14:43:29.9359677Z 39e54f3acaeb: Waiting
+2026-02-04T14:43:29.9359881Z c2027370843f: Pulling fs layer
+2026-02-04T14:43:29.9360119Z c7ec864e5236: Waiting
+2026-02-04T14:43:29.9360391Z 8a2fb51d07db: Waiting
+2026-02-04T14:43:29.9360592Z adb1ac2b4a99: Pulling fs layer
+2026-02-04T14:43:29.9360811Z 1103bfe337dc: Waiting
+2026-02-04T14:43:29.9361016Z 9bf3399e3041: Pulling fs layer
+2026-02-04T14:43:29.9361237Z 4f4fb700ef54: Waiting
+2026-02-04T14:43:29.9361441Z b5e41aec4821: Pulling fs layer
+2026-02-04T14:43:29.9361663Z 2bd33109b353: Waiting
+2026-02-04T14:43:29.9361869Z ec168567e880: Pulling fs layer
+2026-02-04T14:43:29.9362086Z 8a9b27e64369: Waiting
+2026-02-04T14:43:29.9362288Z 9b6a811c69a0: Pulling fs layer
+2026-02-04T14:43:29.9362499Z 31725fc03139: Waiting
+2026-02-04T14:43:29.9362776Z f8b515770fb5: Waiting
+2026-02-04T14:43:29.9362976Z 73ff333ee97d: Waiting
+2026-02-04T14:43:29.9363176Z a534d90bbac4: Waiting
+2026-02-04T14:43:29.9363389Z adb1ac2b4a99: Waiting
+2026-02-04T14:43:29.9363591Z 9bf3399e3041: Waiting
+2026-02-04T14:43:29.9363789Z 01c546d2a648: Waiting
+2026-02-04T14:43:29.9363976Z f8956af6903d: Waiting
+2026-02-04T14:43:29.9364163Z b5e41aec4821: Waiting
+2026-02-04T14:43:29.9364355Z ec168567e880: Waiting
+2026-02-04T14:43:29.9364543Z aa527bff7f26: Waiting
+2026-02-04T14:43:29.9364774Z 32fc04fdabc1: Waiting
+2026-02-04T14:43:29.9364977Z 9b6a811c69a0: Waiting
+2026-02-04T14:43:29.9365169Z 267bc00b83f1: Waiting
+2026-02-04T14:43:29.9365353Z c2027370843f: Waiting
+2026-02-04T14:43:29.9365538Z 3ee17ccedb3d: Waiting
+2026-02-04T14:43:29.9365725Z 75e265165c7f: Waiting
+2026-02-04T14:43:29.9365914Z 5fd6ef76dcdd: Waiting
+2026-02-04T14:43:29.9366104Z 34376e5a4dc6: Waiting
+2026-02-04T14:43:29.9366290Z 609727e96913: Waiting
+2026-02-04T14:43:29.9366467Z 7204ebb6ffbd: Waiting
+2026-02-04T14:43:29.9366663Z b4b48d9daecc: Waiting
+2026-02-04T14:43:29.9366853Z 07d009e62b1a: Waiting
+2026-02-04T14:43:29.9367297Z 9d8712e27169: Waiting
+2026-02-04T14:43:29.9367489Z 7aade9a3ec2a: Waiting
+2026-02-04T14:43:30.1925826Z 012e1d6d846b: Verifying Checksum
+2026-02-04T14:43:30.1926640Z 012e1d6d846b: Download complete
+2026-02-04T14:43:30.2758313Z a3629ac5b9f4: Verifying Checksum
+2026-02-04T14:43:30.2759575Z a3629ac5b9f4: Download complete
+2026-02-04T14:43:30.4336277Z 22c9d21b5c2a: Verifying Checksum
+2026-02-04T14:43:30.4338548Z 22c9d21b5c2a: Download complete
+2026-02-04T14:43:30.4668870Z 9ea66645b4e8: Verifying Checksum
+2026-02-04T14:43:30.4669391Z 9ea66645b4e8: Download complete
+2026-02-04T14:43:30.5219101Z d4b0af236033: Verifying Checksum
+2026-02-04T14:43:30.5223488Z d4b0af236033: Download complete
+2026-02-04T14:43:30.6644645Z 7d9bc1a002b9: Verifying Checksum
+2026-02-04T14:43:30.6645227Z 7d9bc1a002b9: Download complete
+2026-02-04T14:43:30.8259509Z 1103bfe337dc: Verifying Checksum
+2026-02-04T14:43:30.8266611Z 1103bfe337dc: Download complete
+2026-02-04T14:43:30.8638536Z c7ec864e5236: Verifying Checksum
+2026-02-04T14:43:30.8641110Z c7ec864e5236: Download complete
+2026-02-04T14:43:30.9077996Z 4f4fb700ef54: Verifying Checksum
+2026-02-04T14:43:30.9078469Z 4f4fb700ef54: Download complete
+2026-02-04T14:43:31.1286282Z a3629ac5b9f4: Pull complete
+2026-02-04T14:43:31.1337161Z aed7e9102ca4: Verifying Checksum
+2026-02-04T14:43:31.1338681Z aed7e9102ca4: Download complete
+2026-02-04T14:43:31.1608429Z 2bd33109b353: Verifying Checksum
+2026-02-04T14:43:31.1609086Z 2bd33109b353: Download complete
+2026-02-04T14:43:31.4649219Z 3bf45fb32bc9: Verifying Checksum
+2026-02-04T14:43:31.4658414Z 3bf45fb32bc9: Download complete
+2026-02-04T14:43:31.5475512Z 977f891f15ff: Verifying Checksum
+2026-02-04T14:43:31.5476440Z 977f891f15ff: Download complete
+2026-02-04T14:43:31.7048933Z fe59d54f5864: Download complete
+2026-02-04T14:43:31.7532895Z 2f324cd58c2d: Verifying Checksum
+2026-02-04T14:43:31.7533451Z 2f324cd58c2d: Download complete
+2026-02-04T14:43:31.7690707Z 012e1d6d846b: Pull complete
+2026-02-04T14:43:31.9552293Z f75e820b3cf1: Verifying Checksum
+2026-02-04T14:43:31.9552730Z f75e820b3cf1: Download complete
+2026-02-04T14:43:32.0359755Z 10f3db1893c5: Verifying Checksum
+2026-02-04T14:43:32.0360262Z 10f3db1893c5: Download complete
+2026-02-04T14:43:32.2893942Z dfa3f1cc179a: Download complete
+2026-02-04T14:43:32.5279411Z 606656244ade: Verifying Checksum
+2026-02-04T14:43:32.5279993Z 606656244ade: Download complete
+2026-02-04T14:43:32.5799832Z 39e54f3acaeb: Verifying Checksum
+2026-02-04T14:43:32.5802794Z 39e54f3acaeb: Download complete
+2026-02-04T14:43:32.8093678Z 8a2fb51d07db: Download complete
+2026-02-04T14:43:33.0770512Z 71331f105ee6: Verifying Checksum
+2026-02-04T14:43:33.0773810Z 71331f105ee6: Download complete
+2026-02-04T14:43:33.1991759Z 098d77a8dcf6: Verifying Checksum
+2026-02-04T14:43:33.1992254Z 098d77a8dcf6: Download complete
+2026-02-04T14:43:33.3631918Z 81ccbc6da89f: Verifying Checksum
+2026-02-04T14:43:33.3632793Z 81ccbc6da89f: Download complete
+2026-02-04T14:43:33.5248556Z 8a9b27e64369: Verifying Checksum
+2026-02-04T14:43:33.5249061Z 8a9b27e64369: Download complete
+2026-02-04T14:43:33.6243868Z 1900d9bb66aa: Verifying Checksum
+2026-02-04T14:43:33.6244328Z 1900d9bb66aa: Download complete
+2026-02-04T14:43:33.8120657Z 9d2be4974c1c: Verifying Checksum
+2026-02-04T14:43:33.8121158Z 9d2be4974c1c: Download complete
+2026-02-04T14:43:33.8581683Z 7aade9a3ec2a: Verifying Checksum
+2026-02-04T14:43:33.8582318Z 7aade9a3ec2a: Download complete
+2026-02-04T14:43:34.0349991Z 5fd6ef76dcdd: Verifying Checksum
+2026-02-04T14:43:34.0350580Z 5fd6ef76dcdd: Download complete
+2026-02-04T14:43:34.1068921Z 07d009e62b1a: Verifying Checksum
+2026-02-04T14:43:34.1069381Z 07d009e62b1a: Download complete
+2026-02-04T14:43:34.1313953Z 31725fc03139: Verifying Checksum
+2026-02-04T14:43:34.1316368Z 31725fc03139: Download complete
+2026-02-04T14:43:34.2579085Z 9d8712e27169: Verifying Checksum
+2026-02-04T14:43:34.2579842Z 9d8712e27169: Download complete
+2026-02-04T14:43:34.3289348Z 32fc04fdabc1: Verifying Checksum
+2026-02-04T14:43:34.3289887Z 32fc04fdabc1: Download complete
+2026-02-04T14:43:34.3987628Z 3ee17ccedb3d: Verifying Checksum
+2026-02-04T14:43:34.3988162Z 3ee17ccedb3d: Download complete
+2026-02-04T14:43:34.4886581Z 34376e5a4dc6: Download complete
+2026-02-04T14:43:34.5810808Z 609727e96913: Verifying Checksum
+2026-02-04T14:43:34.5811947Z 609727e96913: Download complete
+2026-02-04T14:43:34.6320140Z 75e265165c7f: Verifying Checksum
+2026-02-04T14:43:34.6320708Z 75e265165c7f: Download complete
+2026-02-04T14:43:34.7197927Z 7204ebb6ffbd: Verifying Checksum
+2026-02-04T14:43:34.7198550Z 7204ebb6ffbd: Download complete
+2026-02-04T14:43:34.8298415Z b4b48d9daecc: Verifying Checksum
+2026-02-04T14:43:34.8299117Z b4b48d9daecc: Download complete
+2026-02-04T14:43:34.8512402Z f8b515770fb5: Verifying Checksum
+2026-02-04T14:43:34.8512999Z f8b515770fb5: Download complete
+2026-02-04T14:43:34.9499611Z 73ff333ee97d: Verifying Checksum
+2026-02-04T14:43:34.9500223Z 73ff333ee97d: Download complete
+2026-02-04T14:43:35.0577266Z a534d90bbac4: Verifying Checksum
+2026-02-04T14:43:35.0577752Z a534d90bbac4: Download complete
+2026-02-04T14:43:35.0773002Z 01c546d2a648: Verifying Checksum
+2026-02-04T14:43:35.0773462Z 01c546d2a648: Download complete
+2026-02-04T14:43:35.1673590Z f8956af6903d: Verifying Checksum
+2026-02-04T14:43:35.1674169Z f8956af6903d: Download complete
+2026-02-04T14:43:35.2838686Z aa527bff7f26: Verifying Checksum
+2026-02-04T14:43:35.2839530Z aa527bff7f26: Download complete
+2026-02-04T14:43:35.3267648Z 267bc00b83f1: Verifying Checksum
+2026-02-04T14:43:35.3268282Z 267bc00b83f1: Download complete
+2026-02-04T14:43:35.4237510Z c2027370843f: Verifying Checksum
+2026-02-04T14:43:35.4238086Z c2027370843f: Download complete
+2026-02-04T14:43:35.6177579Z adb1ac2b4a99: Verifying Checksum
+2026-02-04T14:43:35.6180169Z adb1ac2b4a99: Download complete
+2026-02-04T14:43:35.6180757Z 9bf3399e3041: Verifying Checksum
+2026-02-04T14:43:35.6181228Z 9bf3399e3041: Download complete
+2026-02-04T14:43:35.7313770Z b5e41aec4821: Verifying Checksum
+2026-02-04T14:43:35.7314312Z b5e41aec4821: Download complete
+2026-02-04T14:43:35.8481302Z 9b6a811c69a0: Verifying Checksum
+2026-02-04T14:43:35.8481680Z 9b6a811c69a0: Download complete
+2026-02-04T14:43:36.2026569Z ec168567e880: Verifying Checksum
+2026-02-04T14:43:36.2027134Z ec168567e880: Download complete
+2026-02-04T14:43:36.7243708Z 9ea66645b4e8: Pull complete
+2026-02-04T14:43:36.7388828Z 22c9d21b5c2a: Pull complete
+2026-02-04T14:43:36.7527858Z d4b0af236033: Pull complete
+2026-02-04T14:43:36.7600812Z 7d9bc1a002b9: Pull complete
+2026-02-04T14:43:37.5634520Z c7ec864e5236: Pull complete
+2026-02-04T14:43:37.8550058Z 1103bfe337dc: Pull complete
+2026-02-04T14:43:37.8656648Z 4f4fb700ef54: Pull complete
+2026-02-04T14:44:19.3717786Z 8a9b27e64369: Pull complete
+2026-02-04T14:44:42.2331691Z 2bd33109b353: Pull complete
+2026-02-04T14:44:42.2425095Z aed7e9102ca4: Pull complete
+2026-02-04T14:44:42.5272004Z 977f891f15ff: Pull complete
+2026-02-04T14:44:42.5365769Z 3bf45fb32bc9: Pull complete
+2026-02-04T14:44:42.5468997Z fe59d54f5864: Pull complete
+2026-02-04T14:44:42.5563757Z 2f324cd58c2d: Pull complete
+2026-02-04T14:44:42.5657283Z f75e820b3cf1: Pull complete
+2026-02-04T14:44:42.5819444Z 10f3db1893c5: Pull complete
+2026-02-04T14:44:42.5954108Z 606656244ade: Pull complete
+2026-02-04T14:44:42.6032930Z dfa3f1cc179a: Pull complete
+2026-02-04T14:44:42.6755094Z 39e54f3acaeb: Pull complete
+2026-02-04T14:44:42.6919347Z 8a2fb51d07db: Pull complete
+2026-02-04T14:44:46.0750273Z 098d77a8dcf6: Pull complete
+2026-02-04T14:44:46.0883274Z 71331f105ee6: Pull complete
+2026-02-04T14:44:46.1105650Z 81ccbc6da89f: Pull complete
+2026-02-04T14:44:46.1207359Z 9d2be4974c1c: Pull complete
+2026-02-04T14:44:46.1415514Z 1900d9bb66aa: Pull complete
+2026-02-04T14:44:46.1619957Z 31725fc03139: Pull complete
+2026-02-04T14:44:46.1700080Z 7aade9a3ec2a: Pull complete
+2026-02-04T14:44:46.1774477Z 5fd6ef76dcdd: Pull complete
+2026-02-04T14:44:46.1867584Z 07d009e62b1a: Pull complete
+2026-02-04T14:44:46.1945664Z 9d8712e27169: Pull complete
+2026-02-04T14:44:46.2018751Z 32fc04fdabc1: Pull complete
+2026-02-04T14:44:46.2094686Z 3ee17ccedb3d: Pull complete
+2026-02-04T14:44:46.2222369Z 34376e5a4dc6: Pull complete
+2026-02-04T14:44:46.2304200Z 609727e96913: Pull complete
+2026-02-04T14:44:46.2377883Z 75e265165c7f: Pull complete
+2026-02-04T14:44:46.2449592Z 7204ebb6ffbd: Pull complete
+2026-02-04T14:44:46.2541755Z b4b48d9daecc: Pull complete
+2026-02-04T14:44:46.2611974Z f8b515770fb5: Pull complete
+2026-02-04T14:44:46.2699859Z 73ff333ee97d: Pull complete
+2026-02-04T14:44:46.2798556Z a534d90bbac4: Pull complete
+2026-02-04T14:44:46.2880390Z 01c546d2a648: Pull complete
+2026-02-04T14:44:46.2961544Z f8956af6903d: Pull complete
+2026-02-04T14:44:46.3148721Z aa527bff7f26: Pull complete
+2026-02-04T14:44:46.3230543Z 267bc00b83f1: Pull complete
+2026-02-04T14:44:46.3311425Z c2027370843f: Pull complete
+2026-02-04T14:44:46.3469517Z adb1ac2b4a99: Pull complete
+2026-02-04T14:44:46.3541578Z 9bf3399e3041: Pull complete
+2026-02-04T14:44:46.5955204Z b5e41aec4821: Pull complete
+2026-02-04T14:44:46.6160223Z ec168567e880: Pull complete
+2026-02-04T14:44:46.6288710Z 9b6a811c69a0: Pull complete
+2026-02-04T14:44:46.6325363Z Digest: sha256:82a04ba6c05f60950a74ae46be3726abb18d06ee44da936276fd782e72e36855
+2026-02-04T14:44:46.6338611Z Status: Downloaded newer image for ghcr.io/supabase/postgres:17.6.1.075
+2026-02-04T14:44:46.7966030Z pg_dump: error: connection to server at "db.<REDACTED_PROJECT_REF>.supabase.co" (<REDACTED_IPv6>), port 5432 failed: Network is unreachable
+2026-02-04T14:44:46.7967992Z 	Is the server running on that host and accepting TCP/IP connections?
+2026-02-04T14:44:46.8375511Z error running container: exit 1
+2026-02-04T14:44:46.8376128Z Try rerunning the command with --debug to troubleshoot the error.
+2026-02-04T14:44:46.8401776Z ##[error]Process completed with exit code 1.
+2026-02-04T14:44:46.8483280Z ##[group]Run FROM="${RESEND_FROM:-***}"
+2026-02-04T14:44:46.8483692Z [36;1mFROM="${RESEND_FROM:-***}"[0m
+2026-02-04T14:44:46.8483997Z [36;1mIFS=','; read -ra EMAILS <<< "$BACKUP_NOTIFY_EMAIL"[0m
+2026-02-04T14:44:46.8484443Z [36;1mTO_JSON=$(for e in "${EMAILS[@]}"; do echo -n "\"$(echo "$e" | xargs)\","; done | sed 's/,$//')[0m
+2026-02-04T14:44:46.8484835Z [36;1mTO_ARR="[$TO_JSON]"[0m
+2026-02-04T14:44:46.8485098Z [36;1mSUBJECT="Backup young_talents – falhou"[0m
+2026-02-04T14:44:46.8485981Z [36;1mBODY="O backup do schema young_talents falhou.<br><br>Data/hora: $(date -u '+%Y-%m-%d %H:%M UTC')<br>Run: https://github.com/adventurelabsbrasil/young-talents/actions/runs/21675839948<br><br>Verifique os logs do workflow."[0m
+2026-02-04T14:44:46.8487047Z [36;1mcurl -s -X POST "https://api.resend.com/emails" \[0m
+2026-02-04T14:44:46.8487480Z [36;1m  -H "Authorization: ***" \[0m
+2026-02-04T14:44:46.8487763Z [36;1m  -H "Content-Type: application/json" \[0m
+2026-02-04T14:44:46.8488232Z [36;1m  -d "{\"from\": \"$FROM\", \"to\": $TO_ARR, \"subject\": \"$SUBJECT\", \"html\": \"$BODY\"}" || true[0m
+2026-02-04T14:44:46.8506553Z shell: /usr/bin/bash -e {0}
+2026-02-04T14:44:46.8506794Z env:
+2026-02-04T14:44:46.8507511Z   SUPABASE_DB_URL: ***
+2026-02-04T14:44:46.8507757Z   SUPABASE_INTERNAL_IMAGE_REGISTRY: ghcr.io
+2026-02-04T14:44:46.8508101Z   RESEND_API_KEY: ***
+2026-02-04T14:44:46.8508485Z   BACKUP_NOTIFY_EMAIL: ***
+2026-02-04T14:44:46.8508758Z   RESEND_FROM: ***
+2026-02-04T14:44:46.8508949Z ##[endgroup]
+2026-02-04T14:44:47.2252862Z {"statusCode":403,"message":"The adventurelabs.com.br domain is not verified. Please, add and verify your domain on https://resend.com/domains","name":"validation_error"}
+2026-02-04T14:44:47.2333407Z Post job cleanup.
+2026-02-04T14:44:47.3231564Z [command]/usr/bin/git version
+2026-02-04T14:44:47.3265044Z git version 2.52.0
+2026-02-04T14:44:47.3304102Z Temporarily overriding HOME='/home/runner/work/_temp/67566d2f-62f0-475a-816d-51e305ca9101' before making global git config changes
+2026-02-04T14:44:47.3305408Z Adding repository directory to the temporary git global config as a safe directory
+2026-02-04T14:44:47.3310728Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/young-talents/young-talents
+2026-02-04T14:44:47.3344342Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-02-04T14:44:47.3374129Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-02-04T14:44:47.3555450Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-02-04T14:44:47.3574535Z http.https://github.com/.extraheader
+2026-02-04T14:44:47.3585605Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-02-04T14:44:47.3614506Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-02-04T14:44:47.3791578Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-02-04T14:44:47.3818953Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-02-04T14:44:47.4164957Z Cleaning up orphan processes

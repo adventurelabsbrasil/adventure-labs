@@ -1,0 +1,57 @@
+mutation CreateJobSeekerProfile(
+  $userId: UUID!
+  $contactEmail: String!
+  $firstName: String!
+  $headline: String!
+  $lastName: String!
+) @auth(level: USER) {
+  jobSeekerProfile_insert(
+    data: {
+      userId: $userId
+      contactEmail: $contactEmail
+      firstName: $firstName
+      headline: $headline
+      lastName: $lastName
+    }
+  )
+}
+
+query GetJobPostings @auth(level: PUBLIC, insecureReason: "This operation is safe to expose to the public") {
+  jobPostings {
+    id
+    title
+    description
+    location
+  }
+}
+
+mutation ApplyToJob(
+  $jobPostingId: UUID!
+  $jobSeekerProfileId: UUID!
+  $coverLetter: String
+  $resumeUrl: String
+) @auth(level: USER) {
+  application_insert(
+    data: {
+      jobPostingId: $jobPostingId
+      jobSeekerProfileId: $jobSeekerProfileId
+      appliedAt_expr: "request.time"
+      coverLetter: $coverLetter
+      resumeUrl: $resumeUrl
+      status: "Applied"
+    }
+  )
+}
+
+query GetMyApplications @auth(level: USER) {
+  applications(where: { jobSeekerProfile: { userId: { eq_expr: "auth.uid" } } }) {
+    id
+    jobPosting {
+      title
+      description
+      location
+    }
+    appliedAt
+    status
+  }
+}

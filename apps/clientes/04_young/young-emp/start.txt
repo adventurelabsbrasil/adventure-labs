@@ -1,0 +1,99 @@
+Vite
+React
+Tailwind CSS
+Lucid react
+Supabase=database,auth
+Github commit
+Vercel Deploy
+
+--
+
+Objetvivo:
+Criar um painel profissional com tabelas e gr[aficos Martech voltado para  atender incorporadoras, loteadoras e urbanizadoras
+para controlar métricas de Marketing e Vendas
+
+a primeira etapa deste app será desenvolver uma tabela que receba dados diários de Marketing e Vendas
+
+Marketing: Meta Ads, Google Ads, Google Analytics
+Vendas: RD Station CRM
+Estoque, Custos, Disponibilidade: Sienge
+
+RD Station CRM tem API; Sienge tem API; Meta e Google Ads precisa ter algum conector para receber dados porque o token tem durabilidade (pensar melhor como fazer sem custo ou baixo custo), Google Analytics nao sei como implementar
+
+---
+
+Funil de Marketing:
+  Impressoes
+  Cliques
+  Cliques no link
+  Visualizacoes de pagina
+  Conversas iniciadas
+  Formularios enviados
+  Leads
+  --
+  FUnil de Vendas:
+  Contato realizado
+  Visita agendada
+  Visita realizada
+  Proposta enviada
+  Vendas
+  Perdas
+  --
+
+Categorias iniciais
+
+  Motivos de compra
+  Motivmos de perda
+  Resonsaveis pela venda
+  Empreendimentos
+  Valor da venda a vista
+  Valor da venda a prazo
+  Valor de entrada
+  Numero de parcelas
+
+  --
+Dados de primeira conversao
+  Canais de origem (utm)
+  Campanhas (utm)
+  Anuncios (utm)
+
+Dados de ultima conversao
+  Origem
+  Campanha
+
+--
+  Métricas interessantes
+
+  Custo:
+  CPM
+  CPL
+  CPMQL
+  CPSQL
+  CPA
+Retorno:
+  ROAS
+
+
+  --
+
+
+  A plataforma precisa ser inteligente ao ponto de fazer conexcoes entre dados para poder trazer os calculos nos graficos ou tabelas
+  porque ela precisa ter filtros avançados de periodo ou qualquer outro campo - os filtros serao a parte mais importante para conseguir visualizar os dados de forma personalizada
+
+  ---
+
+  idealmente temos que fazer ocm que tenha rotas claras de uso e carregamento de dados por etapas ou paginacao, para nao consumir dados o tempo todo
+
+  ---
+
+
+  penso que conectar com alguma plataforma que traga graficos direto do looker seja mais facil que criar graficos, mas vc ve o que fica melhor
+
+
+  ---
+
+
+  vamos montar um prototipo com estas informacoes e depois partimos para novas features.
+
+
+  

@@ -1,0 +1,52 @@
+mutation CreateDemoData @transaction @auth(level: PUBLIC, insecureReason: "This mutation is intended for seeding the database with initial demo data and does not require authentication.") {
+  user_insertMany(data: [
+    {
+      id: "550e8400-e29b-41d4-a716-446655440000",
+      createdAt: "2024-04-26T12:00:00Z",
+      displayName: "demouser1",
+      email: "demouser1@example.com",
+      passwordHash: "hashed_password_1",
+      role: "jobSeeker"
+    },
+    {
+      id: "550e8400-e29b-41d4-a716-446655440001",
+      createdAt: "2024-04-26T13:00:00Z",
+      displayName: "demouser2",
+      email: "demouser2@example.com",
+      passwordHash: "hashed_password_2",
+      role: "employer"
+    }
+  ])
+  jobSeekerProfile_insertMany(data: [
+    {
+      id: "660e8400-e29b-41d4-a716-446655440000",
+      userId: "550e8400-e29b-41d4-a716-446655440000",
+      contactEmail: "demouser1@example.com",
+      firstName: "Demo",
+      headline: "Aspiring Software Engineer",
+      lastName: "User1"
+    },
+  ])
+  employerProfile_insertMany(data: [
+    {
+      id: "770e8400-e29b-41d4-a716-446655440000",
+      userId: "550e8400-e29b-41d4-a716-446655440001",
+      companyName: "Demo Company",
+      companySize: "100-200",
+      industry: "Technology",
+      website: "https://democompany.example.com"
+    }
+  ])
+    jobPosting_insertMany(data: [
+    {
+      id: "880e8400-e29b-41d4-a716-446655440000",
+      employerProfileId: "770e8400-e29b-41d4-a716-446655440000",
+      applicationDeadline: "2024-05-30",
+      description: "Exciting job opportunity at Demo Company!",
+      jobType: "Full-time",
+      location: "Remote",
+      postedAt: "2024-04-26T14:00:00Z",
+      title: "Software Engineer"
+    }
+  ])
+}

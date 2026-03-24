@@ -1,0 +1,1510 @@
+// ============================================================================
+// CONFIGURAÇÃO DO FIREBASE
+// ============================================================================
+// IMPORTANTE: Use as credenciais do Service Account do Firebase
+// Arquivo JSON: talents-c856d-firebase-adminsdk-fbsvc-36a7b79743.json
+const FIREBASE_CONFIG = {
+  email: "firebase-adminsdk-fbsvc@talents-c856d.iam.gserviceaccount.com",
+  key: "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCNRvTVgSfW5iDd\na+g7kxkKIL8dxCj/DJ05mcioq/nICieQx0pqxy2fKUD6gFl81Pv4k2sNGPkZ2lX5\nr5ZVZ0W2wB4GQB9a74skxfqsPKPNx/U/blg911och6EWVozPpshWQfkE2HfhaGWm\n5b0vLxMlToMSkmG27Sfm/W8XSLM8xNPPkvPrDXvUvolNMfmTF0tSl7Ydl3K7xifZ\nnKbgoCukbMVSLi1yEnlzhHyPxKb4rbAKjo4YCoQuS3qDZi3Cnpi9EF1uL9cVjjnS\n6cJrtPPF8rQErjc/6cCQVHDyqAni5kY6MUH+8TmbJognqjOTmiBsey8drLU8rhSx\n2Ej/rIQbAgMBAAECggEAAOMWq3aFpQRJ5YoFacZZLGabPJkcNsnB/PgZufFmfpqN\nuAuATJ5Wi37LUSdYKH//2wY18F2dRsvHqWswUvX0ipq3NYvWhpAlfAQgOE+jKaod\nQJo1RKIjBzXUzZqahL1D2cLNSPoA+rHYnY0ovHCbuqq9CPNRWMAxdXJW7br/oRyK\n4oUjYnuRD78efHxTn517JfF23LnALLU9zhUoZ68BWswCN/1IyrpOJE9XIpnu2W68\noyqZ4622czH2GOnKWLlDDnQF+ww8Rd31XDOd9dwHS1+MPFePaxhCIwv+rBZV3GSW\n+IQBNxWJ7LHgOn4m+aSI7vnKPsZ2TAd3fXsAUoDytQKBgQC/uyto4aVT9ElQK7/e\nb2Szxg4LeGK+TLcsFwQHIowkln43SVradCNFvTgc9El5J/Yl7pps+shuhWt6DqKS\nJfgn1QFbyoBu6NX5afdrjBTxD6Jy/imvyE1yuFbOgzR7cG/iTBEJQcj1eJuKCc1P\nqIZDmiQFyjG415gSgs3z4TeMjwKBgQC8ojtup8Pj3xnwRzM0Xwtj9eqGwXEcqeaJ\nti1RJMhqtztgT279IfTh1RqjdD7dVcu29irXOEGxjn2GmYnmkWJ00P2g2zrfPu2c\nsb+JR4ZofS1ZC58eO8cV+YDDqtvK9hIA8s6UwapIWCs8GUVs6TR55hvsUXwvaeYX\n/ZZuT78ttQKBgEOZt6WEIamnMQ4uTrkbp3LnOt56dL5KCC9ocggd+zGPSjMuDvWF\nC0a0f4td6mXoXBZluVcBWRf2vL1NWa6T6poItTDrBjuUppUI8q6dtmiELa/Dw2jy\nA7SWIC0x/5giPaCZV0xfQH6kJpsV96jFb4l4WIkeEEfu4/Rq4DjDyLUrAoGAdcVA\nH+0kU1/WXPrHEFqKzQUbQLkDeubkpXQVRQUXD/GIY7AUVnxd3KVlNUn9ecj4ICn/\nQ1G/SjDxVBkGTOrWMqLMxyI41mr+hQdA01/RnekRZ/fmh0TBHoohB4jkIwqQ4QC3\nU466VuKdU69fdgj/l1/AbUHOq/eNDctooUSu0sUCgYEAnAc8AYDZrlKoaBi7t0+v\nTXHbbB9x0j1TgzW1kyfKYp2T+FGpT8sMsvcvu75a6/tQY8m9xAJGJwY+C97DWLTR\nYuvA5PLt4WCoMRBpg5ibxdp7Z2/+xLbkRhuaTypa07B7+cdARcSiMVX/bFX82q6i\ngnKX4qEqQa2PeX1T5gHPDOU=\n-----END PRIVATE KEY-----\n",
+  projectId: "talents-c856d"
+};
+
+const FIRESTORE_BATCH_URL = `https://firestore.googleapis.com/v1/projects/${FIREBASE_CONFIG.projectId}/databases/(default)/documents:commit`;
+const FIRESTORE_DOCS_URL = `https://firestore.googleapis.com/v1/projects/${FIREBASE_CONFIG.projectId}/databases/(default)/documents/candidates`;
+const FIRESTORE_RUN_QUERY_URL = `https://firestore.googleapis.com/v1/projects/${FIREBASE_CONFIG.projectId}/databases/(default)/documents:runQuery`;
+
+// ID da Planilha de Dados (para importação histórica - opcional)
+const SPREADSHEET_ID = "1DKJSelwLZkBag-1ORe-IXT2TVI0XpRpj-CIgR0oaIf0";
+
+// ============================================================================
+// GATILHO PRINCIPAL - EXECUTA QUANDO FORMULÁRIO É ENVIADO
+// ============================================================================
+/**
+ * Função acionada automaticamente quando um formulário do Google Forms é enviado
+ * NÃO modifica a planilha - envia diretamente para o Firebase
+ */
+function onFormSubmit(e) {
+  Logger.log("🔍 DEBUG: onFormSubmit chamado");
+  Logger.log(`   Tipo do evento: ${typeof e}`);
+  Logger.log(`   Evento existe: ${!!e}`);
+  
+  if (e) {
+    Logger.log(`   Propriedades do evento: ${Object.keys(e).join(', ')}`);
+    Logger.log(`   e.namedValues existe: ${!!e.namedValues}`);
+    Logger.log(`   e.values existe: ${!!e.values}`);
+    Logger.log(`   e.range existe: ${!!e.range}`);
+    Logger.log(`   e.response existe: ${!!e.response}`);
+    Logger.log(`   e.source existe: ${!!e.source}`);
+  }
+  
+  if (!e) {
+    Logger.log("⚠️  ERRO: Evento não recebido (null ou undefined)");
+    Logger.log("   Verifique se o gatilho está configurado corretamente.");
+    return;
+  }
+  
+  // Tenta obter dados do formulário de diferentes formas
+  var responses = null;
+  
+  // Formato 1: e.namedValues (formato tradicional do Forms)
+  if (e.namedValues) {
+    Logger.log("✅ Usando formato e.namedValues");
+    responses = e.namedValues;
+  }
+  // Formato 2: e.response (novo formato do Forms)
+  else if (e.response) {
+    Logger.log("✅ Usando formato e.response");
+    try {
+      var formResponse = e.response;
+      responses = {};
+      var itemResponses = formResponse.getItemResponses();
+      
+      Logger.log(`   Total de respostas encontradas: ${itemResponses.length}`);
+      
+      for (var i = 0; i < itemResponses.length; i++) {
+        try {
+          var itemResponse = itemResponses[i];
+          var item = itemResponse.getItem();
+          var title = item.getTitle();
+          var response = itemResponse.getResponse();
+          
+          // Converte resposta para array (formato esperado)
+          if (Array.isArray(response)) {
+            responses[title] = response;
+          } else if (response !== null && response !== undefined) {
+            responses[title] = [String(response)];
+          } else {
+            responses[title] = [""];
+          }
+          
+          Logger.log(`   Campo ${i + 1}: "${title}" = ${responses[title].join(', ')}`);
+        } catch (itemErr) {
+          Logger.log(`   ⚠️  Erro ao processar item ${i + 1}: ${itemErr.message}`);
+        }
+      }
+      
+      // Adiciona Carimbo de data/hora se não estiver presente
+      if (!responses['Carimbo de data/hora']) {
+        try {
+          var timestamp = formResponse.getTimestamp();
+          responses['Carimbo de data/hora'] = [timestamp ? timestamp.toISOString() : new Date().toISOString()];
+          Logger.log(`   Carimbo de data/hora adicionado: ${responses['Carimbo de data/hora'][0]}`);
+        } catch (tsErr) {
+          Logger.log(`   ⚠️  Erro ao obter timestamp: ${tsErr.message}`);
+          responses['Carimbo de data/hora'] = [new Date().toISOString()];
+        }
+      }
+      
+      Logger.log(`   ✅ Total de campos extraídos: ${Object.keys(responses).length}`);
+    } catch (err) {
+      Logger.log(`❌ Erro ao extrair dados de e.response: ${err.message}`);
+      Logger.log(`   Stack: ${err.stack}`);
+      Logger.log(`   Tipo de e.response: ${typeof e.response}`);
+      if (e.response && e.response.toString) {
+        Logger.log(`   e.response.toString(): ${e.response.toString()}`);
+      }
+      return;
+    }
+  }
+  // Formato 3: e.source (se script está vinculado à planilha)
+  else if (e.source) {
+    Logger.log("⚠️  Script parece estar vinculado à planilha, não ao formulário.");
+    Logger.log("   Para funcionar corretamente, o script deve estar vinculado ao Google Forms.");
+    Logger.log("   Solução:");
+    Logger.log("   1. Abra o Google Forms");
+    Logger.log("   2. Clique em Extensões → Apps Script");
+    Logger.log("   3. Cole o código neste projeto vinculado ao Forms");
+    Logger.log("   4. Configure o gatilho: onFormSubmit → Do formulário → Ao enviar o formulário");
+    return;
+  }
+  else {
+    Logger.log("❌ ERRO: Evento não contém namedValues, response nem source.");
+    Logger.log("   Propriedades disponíveis: " + Object.keys(e).join(', '));
+    Logger.log("   Verifique se o gatilho está configurado corretamente:");
+    Logger.log("   - Função: onFormSubmit");
+    Logger.log("   - Origem: Do formulário (NÃO da planilha)");
+    Logger.log("   - Tipo: Ao enviar o formulário");
+    return;
+  }
+
+  try {
+    Logger.log("📝 Novo formulário recebido - Processando...");
+    Logger.log(`   Total de campos recebidos: ${Object.keys(responses).length}`);
+    
+    const candidato = mapearFormularioParaCandidato(responses);
+    
+    if (!candidato || !candidato.fullName) {
+      Logger.log("❌ Erro: Dados do formulário inválidos ou nome não encontrado.");
+      Logger.log(`   Candidato mapeado: ${JSON.stringify(candidato)}`);
+      return;
+    }
+    
+    Logger.log(`✅ Candidato mapeado: ${candidato.fullName}`);
+    
+    // Verifica se candidato já existe no Firebase (duplicata)
+    if (candidato.email) {
+      Logger.log(`🔍 Verificando se candidato já existe (email: ${candidato.email})...`);
+      const existe = verificarCandidatoExistente(candidato.email);
+      
+      if (existe) {
+        Logger.log(`⚠️  Candidato já existe no Firebase! ID: ${existe.docId}`);
+        Logger.log(`   Nome existente: ${existe.fullName || 'N/A'}`);
+        Logger.log(`   Email: ${existe.email}`);
+        Logger.log(`   ⏭️  Pulando envio para evitar duplicata.`);
+        return;
+      }
+      Logger.log(`✅ Candidato não encontrado - pode enviar com segurança.`);
+    } else {
+      Logger.log(`⚠️  Candidato sem email - enviando mesmo assim.`);
+    }
+    
+    // Envia para o Firebase
+    Logger.log(`📤 Enviando candidato: ${candidato.fullName} (${candidato.email || 'sem email'})`);
+    const resultado = enviarCandidatoParaFirebase(candidato);
+    
+    if (resultado.sucesso) {
+      Logger.log(`✅ Candidato enviado com sucesso! ID: ${resultado.docId}`);
+      Logger.log(`   Status HTTP: ${resultado.statusCode}`);
+    } else {
+      Logger.log(`❌ Erro ao enviar candidato: ${resultado.erro}`);
+      Logger.log(`   Status HTTP: ${resultado.statusCode || 'N/A'}`);
+    }
+    
+  } catch (error) {
+    Logger.log(`❌ Erro ao processar formulário: ${error.message}`);
+    Logger.log(`   Stack: ${error.stack}`);
+  }
+}
+
+// ============================================================================
+// MAPEAMENTO DE DADOS DO FORMULÁRIO
+// ============================================================================
+/**
+ * Mapeia os dados do Google Forms para o formato do Firebase
+ */
+function mapearFormularioParaCandidato(responses) {
+  const candidato = {};
+  
+  // Helper para pegar valor do form de forma segura
+  const get = (key) => {
+    if (!responses[key]) return "";
+    return Array.isArray(responses[key]) ? responses[key][0].trim() : String(responses[key]).trim();
+  };
+  
+  // TIMESTAMPS - NÃO CONFUNDIR:
+  // - original_timestamp = "Carimbo de data/hora" do Forms = quando a pessoa se inscreveu no formulário.
+  // - createdAt = quando o registro foi criado/gravado no Firebase (agora = execução deste script).
+  const agora = new Date();
+  const timestampOriginal = get('Carimbo de data/hora');
+  
+  let originalDate = agora;
+  if (timestampOriginal) {
+    try {
+      originalDate = new Date(timestampOriginal);
+      if (isNaN(originalDate.getTime())) originalDate = agora;
+      // Se Carimbo vier no futuro (relógio do usuário), limita a agora
+      if (originalDate.getTime() > agora.getTime()) originalDate = agora;
+    } catch (e) {
+      originalDate = agora;
+    }
+  }
+  
+  // Formato Firestore: { timestampValue: "2024-01-19T10:30:00.000Z" }
+  candidato.original_timestamp = { timestampValue: originalDate.toISOString() };
+  candidato.createdAt = { timestampValue: agora.toISOString() };
+  
+  // Metadados adicionais
+  candidato.origin = "forms_automation";
+  candidato.createdBy = "Google Forms Automation";
+  
+  // Identificação e Contato
+  candidato.fullName = get('Nome completo:');
+  candidato.email = get('E-mail principal:') || get('Endereço de e-mail');
+  candidato.email_secondary = get('Endereço de e-mail') || "";
+  candidato.phone = get('Nº telefone celular / Whatsapp:');
+  
+  // Dados Pessoais
+  candidato.birthDate = formatarData(get('Data de Nascimento:'));
+  candidato.age = parseInt(get('Idade')) || 0;
+  candidato.photoUrl = get('Nos envie uma foto atual que você goste:');
+  candidato.maritalStatus = get('Estado civil:') || "";
+  candidato.childrenCount = parseInt(get('Se tem filhos, quantos?')) || 0;
+  candidato.hasLicense = get('Você possui CNH tipo B?') || "";
+  
+  // Localização (normalizada)
+  const cidadeRaw = get('Cidade onde reside:');
+  candidato.city = cidadeRaw ? normalizarCidade(cidadeRaw) : "";
+  
+  // Profissional e Acadêmico
+  candidato.education = get('Formação:');
+  candidato.schoolingLevel = get('Nível de escolaridade:');
+  candidato.institution = get('Instituição de ensino:');
+  candidato.graduationDate = formatarData(get('Data de formatura:'));
+  candidato.isStudying = get('Em caso de curso superior, está cursando neste momento?') || "";
+  candidato.experience = get('Experiências anteriores:');
+  candidato.courses = get('Cursos e certificações profissionais.') || "";
+  candidato.certifications = get('Certificações profissionais:') || "";
+  
+  // Áreas de interesse (normalizada)
+  const areasRaw = get('Áreas de interesse profissional');
+  candidato.interestAreas = normalizeInterests(areasRaw);
+  
+  // Links
+  candidato.cvUrl = get('Anexar currículo:');
+  candidato.portfolioUrl = get('Portfólio de trabalho:');
+  
+  // Processo e Fit Cultural
+  candidato.source = normalizarSource(get('Onde você nos encontrou?') || "Google Forms");
+  candidato.referral = get('Você foi indicado por algum colaborador da Young? Se sim, quem?') || "";
+  candidato.salaryExpectation = get('Qual seria sua expectativa salarial?') || "";
+  candidato.canRelocate = get('Teria disponibilidade para mudança de cidade?') || "";
+  candidato.references = get('Referências profissionais:') || "";
+  candidato.typeOfApp = get('Você está se candidatando a uma vaga específica ou apenas quer se inscrever no banco de talentos?') || get('Você está se candidatando a uma vaga específica...?') || "";
+  candidato.freeField = get('Campo Livre, SEJA VOCÊ!') || "";
+  
+  // Status do Pipeline
+  candidato.status = "Inscrito";
+  
+  // Tags
+  candidato.tags = ["Novo Inscrito"];
+  
+  // Metadados de origem e criação (já definidos acima, mas garantindo que estão corretos)
+  // origin e createdBy já foram definidos acima na linha 120-121
+  
+  return candidato;
+}
+
+// ============================================================================
+// VERIFICAÇÃO DE DUPLICATAS
+// ============================================================================
+/**
+ * Verifica se um candidato já existe no Firebase consultando por email
+ * Retorna dados do candidato se existir, null se não existir
+ */
+function verificarCandidatoExistente(email) {
+  if (!email || email.trim() === "") return null;
+  
+  try {
+    const token = getServiceAccountToken();
+    
+    // Query Firestore para buscar por email
+    // Nota: Isso requer um índice no Firestore se o email não for único
+    // Alternativa: usar o docId baseado em email + timestamp (mais eficiente)
+    const query = {
+      structuredQuery: {
+        from: [{ collectionId: "candidates" }],
+        where: {
+          fieldFilter: {
+            field: { fieldPath: "email" },
+            op: "EQUAL",
+            value: { stringValue: email.trim() }
+          }
+        },
+        limit: 1
+      }
+    };
+    
+    const options = {
+      method: "post",
+      contentType: "application/json",
+      headers: { 
+        Authorization: "Bearer " + token,
+        "Content-Type": "application/json"
+      },
+      payload: JSON.stringify(query),
+      muteHttpExceptions: true
+    };
+    
+    const response = UrlFetchApp.fetch(FIRESTORE_RUN_QUERY_URL, options);
+    const statusCode = response.getResponseCode();
+    
+    if (statusCode !== 200) {
+      Logger.log(`  ⚠️  Erro ao consultar Firebase: Status ${statusCode}`);
+      return null;
+    }
+    
+    const responseData = JSON.parse(response.getContentText());
+    
+    // Se encontrou resultados
+    if (responseData && responseData.length > 0 && responseData[0].document) {
+      const doc = responseData[0].document;
+      const fields = doc.fields || {};
+      
+      // Extrai dados do documento
+      const dados = {};
+      for (const key in fields) {
+        const field = fields[key];
+        if (field.stringValue) dados[key] = field.stringValue;
+        else if (field.integerValue) dados[key] = parseInt(field.integerValue);
+        else if (field.booleanValue) dados[key] = field.booleanValue === true || field.booleanValue === 'true';
+        else if (field.arrayValue) dados[key] = field.arrayValue.values.map(v => v.stringValue || v);
+      }
+      
+      return {
+        docId: doc.name.split('/').pop(),
+        ...dados
+      };
+    }
+    
+    return null;
+    
+  } catch (error) {
+    Logger.log(`  ⚠️  Erro ao verificar duplicata: ${error.message}`);
+    return null;
+  }
+}
+
+// ============================================================================
+// ENVIO PARA FIREBASE
+// ============================================================================
+/**
+ * Envia um candidato para o Firebase Firestore
+ * Usa ID único baseado em email + timestamp para evitar duplicatas
+ */
+function enviarCandidatoParaFirebase(candidato) {
+  try {
+    // Gera ID único baseado em email + timestamp para evitar duplicatas
+    // Extrai string do timestamp para gerar ID único
+    const timestampStr = candidato.original_timestamp?.timestampValue || candidato.createdAt?.timestampValue || new Date().toISOString();
+    const uniqueString = (candidato.email || "sem_email") + "_" + timestampStr;
+    const docId = Utilities.base64EncodeWebSafe(Utilities.computeDigest(Utilities.DigestAlgorithm.MD5, uniqueString));
+    
+    // Converte dados para formato Firestore
+    const fields = {};
+    for (const key in candidato) {
+      const value = candidato[key];
+      if (value === null || value === undefined || value === "") continue;
+      
+      // Converte para tipo correto do Firestore
+      if (key === 'original_timestamp' || key === 'createdAt') {
+        // Timestamp do Firestore - já está no formato correto
+        if (value.timestampValue) {
+          fields[key] = { timestampValue: value.timestampValue };
+        } else if (typeof value === 'string') {
+          // Se ainda for string, converte
+          fields[key] = { timestampValue: value };
+        } else {
+          fields[key] = { timestampValue: new Date().toISOString() };
+        }
+      } else if (Array.isArray(value)) {
+        fields[key] = { 
+          arrayValue: { 
+            values: value.map(v => ({ stringValue: String(v) })) 
+          } 
+        };
+      } else if (typeof value === 'number') {
+        fields[key] = { integerValue: value };
+      } else if (typeof value === 'boolean') {
+        fields[key] = { booleanValue: value };
+      } else if (typeof value === 'object' && value.timestampValue) {
+        // Objeto timestamp já formatado
+        fields[key] = { timestampValue: value.timestampValue };
+      } else {
+        fields[key] = { stringValue: String(value) };
+      }
+    }
+    
+    // Prepara operação de escrita (usando update para fazer upsert - criar ou atualizar)
+    const docPath = `${FIRESTORE_DOCS_URL}/${docId}`;
+    const payload = {
+      fields: fields
+    };
+    
+    const token = getServiceAccountToken();
+    const options = {
+      method: "patch",
+      contentType: "application/json",
+      headers: { Authorization: "Bearer " + token, "Content-Type": "application/json" },
+      payload: JSON.stringify(payload),
+      muteHttpExceptions: true
+    };
+
+    var response;
+    var statusCode;
+    var responseText;
+    var lastError = null;
+    var maxTentativas = 3;
+
+    for (var tentativa = 1; tentativa <= maxTentativas; tentativa++) {
+      try {
+        response = UrlFetchApp.fetch(docPath, options);
+        statusCode = response.getResponseCode();
+        responseText = response.getContentText();
+
+        if (statusCode === 200 || statusCode === 201) {
+          return { sucesso: true, docId: docId, statusCode: statusCode };
+        }
+
+        // Não faz retry em erros 4xx (exceto 429)
+        if (statusCode >= 400 && statusCode < 500 && statusCode !== 429) {
+          break;
+        }
+        lastError = "HTTP " + statusCode + ": " + (responseText || "").substring(0, 300);
+        if (tentativa < maxTentativas) {
+          Logger.log("  ⚠️  Tentativa " + tentativa + " falhou. Nova tentativa em 2s...");
+          Utilities.sleep(2000);
+        }
+      } catch (e) {
+        lastError = e.message || String(e);
+        if (tentativa < maxTentativas) {
+          Logger.log("  ⚠️  Tentativa " + tentativa + " exceção: " + lastError + ". Nova tentativa em 2s...");
+          Utilities.sleep(2000);
+        } else {
+          return { sucesso: false, erro: "Exceção após " + maxTentativas + " tentativas: " + lastError };
+        }
+      }
+    }
+
+    // Mensagem de erro mais clara por tipo de status
+    var msg = "Erro Firebase (" + statusCode + "): " + (responseText || "").substring(0, 200);
+    if (statusCode === 403) msg += " Sugestão: verifique as permissões do Service Account no projeto Firebase (Firebase Admin / Cloud Datastore User).";
+    if (statusCode === 401) msg += " Sugestão: credenciais (FIREBASE_CONFIG.key ou .email) podem estar incorretas ou expiradas.";
+    if (statusCode === 404) msg += " Sugestão: confira FIRESTORE_DOCS_URL e se a coleção 'candidates' existe.";
+    Logger.log("  ⚠️  " + msg);
+    return { sucesso: false, erro: msg, statusCode: statusCode };
+
+  } catch (error) {
+    var errMsg = error.message || String(error);
+    Logger.log("  ⚠️  Exceção em enviarCandidatoParaFirebase: " + errMsg);
+    if (error.stack) Logger.log("  Stack: " + (error.stack || "").substring(0, 500));
+    return { sucesso: false, erro: "Exceção: " + errMsg };
+  }
+}
+
+// ============================================================================
+// AUTENTICAÇÃO E TOKENS
+// ============================================================================
+function getServiceAccountToken() {
+  const privateKey = FIREBASE_CONFIG.key.replace(/\\n/g, '\n');
+  const clientEmail = FIREBASE_CONFIG.email;
+  const header = { alg: "RS256", typ: "JWT" };
+  const now = Math.floor(Date.now() / 1000);
+  const claim = { 
+    iss: clientEmail, 
+    scope: "https://www.googleapis.com/auth/datastore", 
+    aud: "https://oauth2.googleapis.com/token", 
+    exp: now + 3600, 
+    iat: now 
+  };
+  const toSign = Utilities.base64EncodeWebSafe(JSON.stringify(header)) + "." + Utilities.base64EncodeWebSafe(JSON.stringify(claim));
+  const signature = Utilities.base64EncodeWebSafe(Utilities.computeRsaSha256Signature(toSign, privateKey));
+  const jwt = toSign + "." + signature;
+  const params = { 
+    method: "post", 
+    payload: { 
+      grant_type: "urn:ietf:params:oauth:grant-type:jwt-bearer", 
+      assertion: jwt 
+    }, 
+    muteHttpExceptions: true 
+  };
+  const response = UrlFetchApp.fetch("https://oauth2.googleapis.com/token", params);
+  const json = JSON.parse(response.getContentText());
+  if (json.error) throw new Error("Erro Token: " + json.error_description);
+  return json.access_token;
+}
+
+// ============================================================================
+// NORMALIZAÇÃO DE DADOS
+// ============================================================================
+function formatarData(valor) {
+  if (!valor) return "";
+  if (!isNaN(valor) && valor > 20000) { 
+    // Formato serial do Excel/Sheets
+    const date = new Date((valor - 25569) * 86400 * 1000);
+    return date.toISOString().split('T')[0];
+  }
+  // Tenta parsear como data
+  const date = new Date(valor);
+  if (!isNaN(date.getTime())) {
+    return date.toISOString().split('T')[0];
+  }
+  return String(valor).trim();
+}
+
+function normalizarCidade(city) {
+  if (!city || typeof city !== 'string') return "";
+  
+  const normalized = city.trim();
+  const lowerCity = normalized.toLowerCase();
+  
+  // Remove acentos para comparação mais flexível
+  const removeAccents = function(str) {
+    return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  };
+  
+  const lowerCityNoAccents = removeAccents(lowerCity);
+  
+  // Cidades principais com suas variações
+  const mainCities = {
+    'Porto Alegre/RS': ['porto alegre', 'porto alegre/rs', 'poa', 'poa/rs', 'portoalegre', 'porto alegre rs', 'p. alegre', 'p. alegre/rs'],
+    'Canoas/RS': ['canoas', 'canoas/rs', 'canoas rs'],
+    'Bagé/RS': ['bagé', 'bage', 'bagé/rs', 'bage/rs', 'bagé rs', 'bage rs'],
+    'Santo Antônio da Patrulha/RS': ['santo antônio da patrulha', 'santo antonio da patrulha', 'sto antônio da patrulha', 'sto antonio da patrulha', 'santo ant patrulha', 'sto ant patrulha', 'sap', 'sap/rs', 'sap rs', 'santo antônio da patrulha/rs', 'santo antonio da patrulha/rs', 'sto antônio da patrulha/rs', 'sto antonio da patrulha/rs', 'santo ant patrulha/rs', 'sto ant patrulha/rs'],
+    'Guaíba/RS': ['guaíba', 'guaiba', 'guaíba/rs', 'guaiba/rs', 'guaíba rs', 'guaiba rs'],
+    'Osório/RS': ['osório', 'osorio', 'osório/rs', 'osorio/rs', 'osório rs', 'osorio rs'],
+    'Tramandaí/RS': ['tramandaí', 'tramandai', 'tramandaí/rs', 'tramandai/rs', 'tramandaí rs', 'tramandai rs', 'tramandai/rs'],
+    'São Borja/RS': ['são borja', 'sao borja', 'são borja/rs', 'sao borja/rs', 'são borja rs', 'sao borja rs', 's borja', 's borja/rs'],
+    "Sant'Ana do Livramento/RS": ["sant'ana do livramento", "santana do livramento", "sant'ana do livramento/rs", "santana do livramento/rs", "sant'ana do livramento rs", "santana do livramento rs", "sant ana do livramento", "sant ana do livramento/rs", "livramento", "livramento/rs", "livramento rs"],
+    'Cruz Alta/RS': ['cruz alta', 'cruz alta/rs', 'cruz alta rs', 'cruzalta', 'cruzalta/rs'],
+    'Itaqui/RS': ['itaqui', 'itaqui/rs', 'itaqui rs'],
+    'Alegrete/RS': ['alegrete', 'alegrete/rs', 'alegrete rs'],
+    'Arroio do Sal/RS': ['arroio do sal', 'arroio do sal/rs', 'arroio do sal rs', 'arroio sal', 'arroio sal/rs', 'arroio sal rs'],
+    'Torres/RS': ['torres', 'torres/rs', 'torres rs']
+  };
+  
+  // Procura nas cidades principais
+  for (const [standardName, variations] of Object.entries(mainCities)) {
+    if (lowerCity === standardName.toLowerCase()) {
+      return standardName;
+    }
+    
+    for (let i = 0; i < variations.length; i++) {
+      const variation = variations[i];
+      const lowerVariation = variation.toLowerCase();
+      const lowerVariationNoAccents = removeAccents(lowerVariation);
+      
+      if (lowerCity === lowerVariation || lowerCityNoAccents === lowerVariationNoAccents) {
+        return standardName;
+      }
+      
+      if (lowerCity.indexOf(lowerVariation) !== -1 || lowerVariation.indexOf(lowerCity) !== -1) {
+        if (lowerVariation.length > 2 && lowerCity.length > 2) {
+          return standardName;
+        }
+      }
+    }
+    
+    const lowerStandard = standardName.toLowerCase();
+    const lowerStandardNoAccents = removeAccents(lowerStandard);
+    
+    if (lowerCity.indexOf(lowerStandardNoAccents) !== -1 || lowerStandardNoAccents.indexOf(lowerCity) !== -1) {
+      if (lowerStandard.length > 5 && lowerCity.length > 5) {
+        return standardName;
+      }
+    }
+  }
+  
+  // Se não encontrou, padroniza formato básico
+  const words = normalized.split(/\s+/);
+  const cleaned = words.map(function(word) {
+    if (word.length === 0) return '';
+    return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+  }).join(' ');
+  
+  // Adiciona /RS se não tiver estado
+  if (cleaned.indexOf('/') === -1 && !cleaned.match(/\b(RS|SC|PR|SP|RJ|MG|ES|BA|SE|AL|PE|PB|RN|CE|PI|MA|PA|AP|AM|AC|RO|RR|TO|GO|MT|MS|DF)\b/i)) {
+    return cleaned + '/RS';
+  }
+  
+  return cleaned;
+}
+
+function normalizeInterests(rawString) {
+  if (!rawString) return "";
+  // Converte array para string separada por vírgula (compatível com frontend)
+  if (Array.isArray(rawString)) {
+    return rawString.join(', ');
+  }
+  // Se já for string, retorna como está (normalizada)
+  return String(rawString).trim();
+}
+
+function normalizarSource(source) {
+  if (!source) return "Google Forms";
+  const normalized = String(source).trim().toLowerCase();
+  
+  // Normaliza variações comuns de origem
+  const sources = {
+    'google': 'Google',
+    'google forms': 'Google Forms',
+    'facebook': 'Facebook',
+    'instagram': 'Instagram',
+    'linkedin': 'LinkedIn',
+    'indicação': 'Indicação',
+    'indicacao': 'Indicação',
+    'site': 'Site',
+    'outro': 'Outro'
+  };
+  
+  for (const [key, value] of Object.entries(sources)) {
+    if (normalized.includes(key)) {
+      return value;
+    }
+  }
+  
+  // Retorna com primeira letra maiúscula
+  return source.charAt(0).toUpperCase() + source.slice(1).toLowerCase();
+}
+
+// ============================================================================
+// CONFIGURAÇÃO DE GATILHOS
+// ============================================================================
+/**
+ * Configura gatilho automático no Google Forms
+ * Execute esta função UMA VEZ para configurar
+ */
+function setupTriggers() {
+  // Remove TODOS os gatilhos existentes que chamam onFormSubmit (incluindo time-based)
+  const triggers = ScriptApp.getProjectTriggers();
+  let removidos = 0;
+  
+  triggers.forEach(function(trigger) {
+    const handlerFunction = trigger.getHandlerFunction();
+    const eventType = trigger.getEventType();
+    
+    // Remove qualquer gatilho que chame onFormSubmit, especialmente time-based
+    if (handlerFunction === 'onFormSubmit') {
+      Logger.log(`🗑️  Removendo gatilho incorreto: ${handlerFunction} (Tipo: ${eventType})`);
+      ScriptApp.deleteTrigger(trigger);
+      removidos++;
+    }
+  });
+  
+  if (removidos > 0) {
+    Logger.log(`✅ ${removidos} gatilho(s) incorreto(s) removido(s).`);
+  }
+  
+  // IMPORTANTE: O gatilho precisa ser criado no contexto do Formulário
+  // Se o script está vinculado ao Form, isso funcionará:
+  try {
+    const form = FormApp.getActiveForm();
+    ScriptApp.newTrigger('onFormSubmit')
+      .onFormSubmit()
+      .create();
+    
+    Logger.log("✅ Gatilho CORRETO configurado com sucesso!");
+    Logger.log("   - Função: onFormSubmit");
+    Logger.log("   - Tipo: Evento de envio do formulário");
+    Logger.log("   - Executa automaticamente quando formulário é enviado");
+    Logger.log("   - Cada novo envio será enviado automaticamente para o Firebase");
+  } catch (e) {
+    Logger.log("⚠️  ATENÇÃO: Não foi possível criar gatilho automaticamente.");
+    Logger.log("   Instruções manuais:");
+    Logger.log("   1. No editor do Apps Script, vá em: Editar → Gatilhos do projeto atual");
+    Logger.log("   2. Clique em 'Adicionar gatilho'");
+    Logger.log("   3. Selecione:");
+    Logger.log("      - Função: onFormSubmit");
+    Logger.log("      - Origem do evento: Do formulário");
+    Logger.log("      - Tipo de evento: Ao enviar o formulário");
+    Logger.log("   4. Salve");
+    Logger.log(`   Erro: ${e.message}`);
+  }
+}
+
+/**
+ * Função para listar TODOS os gatilhos configurados
+ * Útil para debug e verificação
+ */
+function listarTodosGatilhos() {
+  const triggers = ScriptApp.getProjectTriggers();
+  
+  Logger.log("=".repeat(60));
+  Logger.log("📋 LISTA DE TODOS OS GATILHOS CONFIGURADOS");
+  Logger.log("=".repeat(60));
+  
+  if (triggers.length === 0) {
+    Logger.log("⚠️  Nenhum gatilho configurado.");
+    return;
+  }
+  
+  triggers.forEach(function(trigger, index) {
+    const handlerFunction = trigger.getHandlerFunction();
+    const eventType = trigger.getEventType();
+    const uniqueId = trigger.getUniqueId();
+    
+    Logger.log(`\n${index + 1}. Gatilho ID: ${uniqueId}`);
+    Logger.log(`   Função: ${handlerFunction}`);
+    Logger.log(`   Tipo de evento: ${eventType}`);
+    
+    // Informações específicas por tipo
+    if (eventType === ScriptApp.EventType.ON_FORM_SUBMIT) {
+      Logger.log(`   ✅ CORRETO: Gatilho de envio de formulário`);
+    } else if (eventType === ScriptApp.EventType.CLOCK) {
+      Logger.log(`   ⚠️  ATENÇÃO: Gatilho baseado em tempo`);
+      try {
+        const source = trigger.getTriggerSource();
+        Logger.log(`   Origem: ${source}`);
+      } catch (e) {
+        Logger.log(`   Origem: Não disponível`);
+      }
+    } else {
+      Logger.log(`   Tipo: ${eventType}`);
+    }
+  });
+  
+  Logger.log("\n" + "=".repeat(60));
+  Logger.log(`Total: ${triggers.length} gatilho(s) configurado(s)`);
+  Logger.log("=".repeat(60));
+  
+  // Verifica se há problemas
+  const formSubmitTriggers = triggers.filter(t => 
+    t.getHandlerFunction() === 'onFormSubmit' && t.getEventType() === ScriptApp.EventType.ON_FORM_SUBMIT
+  );
+  const timeBasedTriggers = triggers.filter(t => 
+    t.getHandlerFunction() === 'onFormSubmit' && t.getEventType() === ScriptApp.EventType.CLOCK
+  );
+  
+  if (timeBasedTriggers.length > 0) {
+    Logger.log("\n⚠️  PROBLEMA ENCONTRADO:");
+    Logger.log(`   Há ${timeBasedTriggers.length} gatilho(s) time-based chamando onFormSubmit`);
+    Logger.log("   Execute limparGatilhosIncorretos() para remover.");
+  }
+  
+  if (formSubmitTriggers.length === 0) {
+    Logger.log("\n⚠️  PROBLEMA ENCONTRADO:");
+    Logger.log("   Nenhum gatilho correto (ON_FORM_SUBMIT) configurado!");
+    Logger.log("   Execute setupTriggers() para configurar.");
+  } else if (formSubmitTriggers.length === 1) {
+    Logger.log("\n✅ Configuração correta:");
+    Logger.log("   Há 1 gatilho correto configurado.");
+  } else {
+    Logger.log("\n⚠️  ATENÇÃO:");
+    Logger.log(`   Há ${formSubmitTriggers.length} gatilhos ON_FORM_SUBMIT configurados.`);
+    Logger.log("   Pode haver duplicatas. Considere executar setupTriggers() para limpar.");
+  }
+}
+
+/**
+ * Função para limpar gatilhos incorretos manualmente
+ * Execute esta função se houver gatilhos time-based chamando onFormSubmit
+ */
+function limparGatilhosIncorretos() {
+  const triggers = ScriptApp.getProjectTriggers();
+  let removidos = 0;
+  
+  Logger.log("🔍 Verificando gatilhos existentes...");
+  
+  triggers.forEach(function(trigger) {
+    const handlerFunction = trigger.getHandlerFunction();
+    const eventType = trigger.getEventType();
+    
+    Logger.log(`   - Função: ${handlerFunction}, Tipo: ${eventType}`);
+    
+    // Remove qualquer gatilho time-based que chame onFormSubmit
+    if (handlerFunction === 'onFormSubmit' && eventType === ScriptApp.EventType.CLOCK) {
+      Logger.log(`   ❌ Gatilho INCORRETO encontrado (time-based chamando onFormSubmit) - Removendo...`);
+      ScriptApp.deleteTrigger(trigger);
+      removidos++;
+    }
+  });
+  
+  if (removidos > 0) {
+    Logger.log(`✅ ${removidos} gatilho(s) incorreto(s) removido(s).`);
+    Logger.log("   Agora execute setupTriggers() para configurar o gatilho correto.");
+  } else {
+    Logger.log("✅ Nenhum gatilho incorreto encontrado.");
+  }
+}
+
+// ============================================================================
+// IMPORTAÇÃO EM MASSA (PARA HISTÓRICO DA PLANILHA - OPCIONAL)
+// ============================================================================
+/**
+ * Importa dados históricos da planilha do Google Sheets em lotes
+ * Útil para importar dados antigos que já estavam na planilha
+ * IMPORTANTE: Só funciona se você tiver acesso à planilha vinculada
+ */
+function importarEmLotes() {
+  try {
+    const BATCH_SIZE = 400; // Limite seguro por requisição
+
+    // Abre a planilha pelo ID específico
+    const spreadsheet = SpreadsheetApp.openById(SPREADSHEET_ID);
+    const sheet = spreadsheet.getSheets()[0];
+    
+    const data = sheet.getDataRange().getValues();
+    const headers = data[0];
+    const rows = data.slice(1); // Remove cabeçalho
+
+    Logger.log(`📊 Iniciando importação histórica de ${rows.length} linhas da planilha...`);
+
+    let totalEnviado = 0;
+    let totalErros = 0;
+    let totalIgnorados = 0; // Linhas vazias ou inválidas
+    const totalLotes = Math.ceil(rows.length / BATCH_SIZE);
+
+    // Loop principal: Processa em blocos de 400
+    for (let i = 0; i < rows.length; i += BATCH_SIZE) {
+      const loteNum = Math.floor(i / BATCH_SIZE) + 1;
+      const chunk = rows.slice(i, i + BATCH_SIZE);
+      const writes = [];
+      const inicioLote = new Date();
+
+      Logger.log(`⏳ Processando lote ${loteNum}/${totalLotes} (linhas ${i + 1} a ${Math.min(i + BATCH_SIZE, rows.length)})...`);
+      Logger.log(`   📋 Preparando ${chunk.length} registros para envio...`);
+
+      chunk.forEach((row, index) => {
+        // Pula linhas vazias se houver
+        if (!row[0] && !row[2]) return;
+
+        const candidato = rowToCandidateObject(row, headers);
+        
+        if (!candidato || !candidato.fullName) return;
+        
+        // NOTA: Removida verificação de duplicata durante importação em massa
+        // O Firebase faz upsert automaticamente (cria ou atualiza) com base no docId único
+        // Isso torna a importação muito mais rápida
+        
+        // Gera ID único para o documento (baseado em email + timestamp)
+        const timestampStr = candidato.original_timestamp?.timestampValue || candidato.createdAt?.timestampValue || new Date().toISOString();
+        const uniqueString = (candidato.email || "sem_email") + "_" + timestampStr;
+        const docId = Utilities.base64EncodeWebSafe(Utilities.computeDigest(Utilities.DigestAlgorithm.MD5, uniqueString));
+        
+        // Converte para formato Firestore
+        const fields = {};
+        for (const key in candidato) {
+          const value = candidato[key];
+          if (value === null || value === undefined || value === "") continue;
+          
+          // Trata timestamps do Firestore
+          if (key === 'original_timestamp' || key === 'createdAt') {
+            if (value.timestampValue) {
+              fields[key] = { timestampValue: value.timestampValue };
+            } else if (typeof value === 'string') {
+              fields[key] = { timestampValue: value };
+            } else {
+              fields[key] = { timestampValue: new Date().toISOString() };
+            }
+          } else if (Array.isArray(value)) {
+            fields[key] = { arrayValue: { values: value.map(v => ({ stringValue: String(v) })) } };
+          } else if (typeof value === 'number') {
+            fields[key] = { integerValue: value };
+          } else if (typeof value === 'boolean') {
+            fields[key] = { booleanValue: value };
+          } else if (typeof value === 'object' && value.timestampValue) {
+            fields[key] = { timestampValue: value.timestampValue };
+          } else {
+            fields[key] = { stringValue: String(value) };
+          }
+        }
+
+        const docPath = `projects/${FIREBASE_CONFIG.projectId}/databases/(default)/documents/candidates/${docId}`;
+
+        writes.push({
+          update: {
+            name: docPath,
+            fields: fields
+          }
+        });
+      });
+
+      Logger.log(`   📦 ${writes.length} documento(s) preparado(s) para envio...`);
+
+      if (writes.length > 0) {
+        try {
+          Logger.log(`   🚀 Enviando lote ${loteNum} para Firebase...`);
+          enviarBatchFirestore(writes);
+          totalEnviado += writes.length;
+          const tempoLote = ((new Date() - inicioLote) / 1000).toFixed(2);
+          Logger.log(`  ✅ Lote ${loteNum} enviado com sucesso! (${writes.length} registro(s) em ${tempoLote}s)`);
+        } catch (e) {
+          totalErros += writes.length;
+          Logger.log(`  ❌ Erro ao enviar lote ${loteNum}: ${e.message}`);
+          Logger.log(`     Stack: ${e.stack}`);
+        }
+      } else {
+        totalIgnorados += chunk.length;
+        Logger.log(`  ⚠️  Lote ${loteNum} vazio - nenhum registro válido encontrado.`);
+      }
+      
+      // Pausa para evitar limite de taxa (apenas entre lotes, não no último)
+      if (loteNum < totalLotes) {
+        Logger.log(`   ⏸️  Pausa de 1 segundo antes do próximo lote...`);
+        Utilities.sleep(1000);
+      }
+    }
+    
+    // Resumo final
+    Logger.log("=".repeat(50));
+    Logger.log(`📈 RESUMO DA IMPORTAÇÃO HISTÓRICA:`);
+    Logger.log(`  ✅ Total enviado para Firebase: ${totalEnviado}`);
+    Logger.log(`  ⚠️  Total ignorados (vazios/inválidos): ${totalIgnorados}`);
+    Logger.log(`  ❌ Total com erro: ${totalErros}`);
+    Logger.log(`  📊 Total processado: ${totalEnviado + totalIgnorados + totalErros} de ${rows.length}`);
+    Logger.log(`  📦 Total de lotes processados: ${totalLotes}`);
+    Logger.log("=".repeat(50));
+    Logger.log(`✅ Importação concluída! Verifique o Firebase para confirmar os dados.`);
+    
+  } catch (e) {
+    Logger.log(`❌ Erro na importação em lotes: ${e.message}`);
+    Logger.log(`   Stack: ${e.stack}`);
+  }
+}
+
+/**
+ * Mapeia uma linha da planilha para objeto candidato
+ */
+function rowToCandidateObject(row, headers) {
+  const get = (headerName) => {
+    const index = headers.indexOf(headerName);
+    return (index > -1 && row[index]) ? String(row[index]).trim() : "";
+  };
+
+  // original_timestamp = Carimbo da planilha (quando a pessoa se inscreveu). createdAt = quando o registro foi importado (agora).
+  const agora = new Date();
+  const timestampOriginal = get('Carimbo de data/hora');
+  let originalDate = agora;
+  if (timestampOriginal) {
+    try {
+      originalDate = new Date(timestampOriginal);
+      if (isNaN(originalDate.getTime())) originalDate = agora;
+      if (originalDate.getTime() > agora.getTime()) originalDate = agora; // evita data futura
+    } catch (e) { originalDate = agora; }
+  }
+  
+  const candidato = {
+    external_id: get('COD') || "",
+    createdAt: { timestampValue: agora.toISOString() },
+    original_timestamp: { timestampValue: originalDate.toISOString() },
+    origin: "batch_script",
+    createdBy: "Batch Import Script",
+    
+    // Identificação e Contato
+    fullName: get('Nome completo:'),
+    email: get('E-mail principal:') || get('Endereço de e-mail'),
+    email_secondary: get('Endereço de e-mail') || "",
+    phone: get('Nº telefone celular / Whatsapp:'),
+    
+    // Dados Pessoais
+    birthDate: formatarData(get('Data de Nascimento:')),
+    age: parseInt(get('Idade')) || 0,
+    photoUrl: get('Nos envie uma foto atual que você goste:'),
+    maritalStatus: get('Estado civil:') || "",
+    childrenCount: parseInt(get('Se tem filhos, quantos?')) || 0,
+    hasLicense: get('Você possui CNH tipo B?') || "",
+    
+    // Localização
+    city: normalizarCidade(get('Cidade onde reside:')),
+    
+    // Profissional e Acadêmico
+    education: get('Formação:'),
+    schoolingLevel: get('Nível de escolaridade:'),
+    institution: get('Instituição de ensino:'),
+    graduationDate: formatarData(get('Data de formatura:')),
+    isStudying: get('Em caso de curso superior, está cursando neste momento?') || "",
+    experience: get('Experiências anteriores:'),
+    courses: get('Cursos e certificações profissionais.') || "",
+    certifications: get('Certificações profissionais:') || "",
+    interestAreas: normalizeInterests(get('Áreas de interesse profissional')),
+    
+    // Links
+    cvUrl: get('Anexar currículo:'),
+    portfolioUrl: get('Portfólio de trabalho:'),
+    
+    // Processo e Fit Cultural
+    source: normalizarSource(get('Onde você nos encontrou?') || "Legado"),
+    referral: get('Você foi indicado por algum colaborador da Young? Se sim, quem?') || "",
+    salaryExpectation: get('Qual seria sua expectativa salarial?') || "",
+    canRelocate: get('Teria disponibilidade para mudança de cidade?') || "",
+    references: get('Referências profissionais:') || "",
+    typeOfApp: get('Você está se candidatando a uma vaga específica ou apenas quer se inscrever no banco de talentos?') || get('Você está se candidatando a uma vaga específica...?') || "",
+    freeField: get('Campo Livre, SEJA VOCÊ!') || "",
+    
+    // Status do Pipeline
+    status: "Inscrito",
+    
+    // Tags
+    tags: ["Importado CSV"],
+    
+    // Metadados de origem e criação
+    origin: "batch_script", // Origem: script de importação em lote (appscript)
+    createdBy: "system", // Sistema (script)
+    responsibleUser: "", // Vazio para importação em lote
+    imported: true
+  };
+
+  return candidato;
+}
+
+/**
+ * Envia lote de operações para o Firebase (para importação em massa)
+ */
+function enviarBatchFirestore(writesArray) {
+  const token = getServiceAccountToken();
+  const payload = { writes: writesArray };
+  const options = {
+    method: "post",
+    contentType: "application/json",
+    headers: { Authorization: "Bearer " + token },
+    payload: JSON.stringify(payload),
+    muteHttpExceptions: true
+  };
+  
+  const response = UrlFetchApp.fetch(FIRESTORE_BATCH_URL, options);
+  const statusCode = response.getResponseCode();
+  
+  if (statusCode !== 200) {
+    const errorText = response.getContentText();
+    Logger.log(`  ⚠️  Resposta do Firebase: Status ${statusCode}`);
+    Logger.log(`  ⚠️  Erro: ${errorText}`);
+    throw new Error(`Erro Firebase (${statusCode}): ${errorText}`);
+  }
+}
+
+// ============================================================================
+// FUNÇÃO DE TESTE
+// ============================================================================
+/**
+ * Função para testar o envio manualmente
+ * Simula o envio de um formulário completo
+ * Esta função cria um evento simulado igual ao que o Google Forms envia
+ */
+function testeEnvio() {
+  try {
+    Logger.log("🧪 TESTE: Simulando envio de formulário completo...");
+    
+    // Cria um evento simulado igual ao que o Google Forms envia
+    // O evento do Google Forms tem a estrutura: { namedValues: {...}, values: [...], range: {...} }
+    const eventoSimulado = {
+      namedValues: {
+        'Carimbo de data/hora': [new Date().toISOString()],
+        'Nome completo:': ['João Silva Teste'],
+        'E-mail principal:': ['teste.' + Date.now() + '@exemplo.com'], // Email único para evitar duplicatas
+        'Endereço de e-mail': ['teste.' + Date.now() + '@exemplo.com'],
+        'Nº telefone celular / Whatsapp:': ['(51) 99999-9999'],
+        'Data de Nascimento:': ['15/03/1995'],
+        'Idade': ['29'],
+        'Nos envie uma foto atual que você goste:': ['https://exemplo.com/foto.jpg'],
+        'Estado civil:': ['Solteiro'],
+        'Se tem filhos, quantos?': ['0'],
+        'Você possui CNH tipo B?': ['Sim'],
+        'Cidade onde reside:': ['porto alegre'],
+        'Formação:': ['Engenharia de Software'],
+        'Nível de escolaridade:': ['Superior Completo'],
+        'Instituição de ensino:': ['Universidade Federal do Rio Grande do Sul'],
+        'Data de formatura:': ['15/12/2020'],
+        'Em caso de curso superior, está cursando neste momento?': ['Não'],
+        'Experiências anteriores:': ['Desenvolvedor Full Stack na Empresa XYZ por 3 anos. Trabalhei com React, Node.js e Firebase.'],
+        'Cursos e certificações profissionais.': ['Certificação AWS Cloud Practitioner, Curso de React Avançado'],
+        'Certificações profissionais:': ['AWS Certified Cloud Practitioner'],
+        'Áreas de interesse profissional': ['Desenvolvimento Web, Cloud Computing, DevOps'],
+        'Anexar currículo:': ['https://exemplo.com/curriculo.pdf'],
+        'Portfólio de trabalho:': ['https://github.com/joaosilva'],
+        'Onde você nos encontrou?': ['LinkedIn'],
+        'Você foi indicado por algum colaborador da Young? Se sim, quem?': ['Não'],
+        'Qual seria sua expectativa salarial?': ['R$ 8.000,00'],
+        'Teria disponibilidade para mudança de cidade?': ['Sim'],
+        'Referências profissionais:': ['Maria Santos - Gerente de Projetos - maria@empresa.com'],
+        'Você está se candidatando a uma vaga específica...?': ['Não, quero fazer parte do banco de talentos'],
+        'Campo Livre, SEJA VOCÊ!': ['Sou apaixonado por tecnologia e sempre busco aprender coisas novas. Adoro trabalhar em equipe e contribuir para projetos desafiadores.']
+      },
+      values: [
+        new Date().toISOString(), // Timestamp
+        'João Silva Teste',
+        'teste.' + Date.now() + '@exemplo.com',
+        '(51) 99999-9999',
+        '15/03/1995',
+        '29',
+        'https://exemplo.com/foto.jpg',
+        'Solteiro',
+        '0',
+        'Sim',
+        'porto alegre',
+        'Engenharia de Software',
+        'Superior Completo',
+        'Universidade Federal do Rio Grande do Sul',
+        '15/12/2020',
+        'Não',
+        'Desenvolvedor Full Stack na Empresa XYZ por 3 anos.',
+        'Certificação AWS Cloud Practitioner',
+        'AWS Certified Cloud Practitioner',
+        'Desenvolvimento Web, Cloud Computing',
+        'https://exemplo.com/curriculo.pdf',
+        'https://github.com/joaosilva',
+        'LinkedIn',
+        'Não',
+        'R$ 8.000,00',
+        'Sim',
+        'Maria Santos - maria@empresa.com',
+        'Não, quero fazer parte do banco de talentos',
+        'Sou apaixonado por tecnologia...'
+      ],
+      range: {
+        getRow: function() { return 2; },
+        getColumn: function() { return 1; },
+        getSheet: function() { return null; }
+      }
+    };
+    
+    Logger.log("📝 Evento simulado criado com sucesso!");
+    Logger.log(`   Total de campos: ${Object.keys(eventoSimulado.namedValues).length}`);
+    
+    // Chama a função onFormSubmit com o evento simulado
+    Logger.log("\n" + "=".repeat(60));
+    Logger.log("🚀 Chamando onFormSubmit com evento simulado...");
+    Logger.log("=".repeat(60) + "\n");
+    
+    onFormSubmit(eventoSimulado);
+    
+    Logger.log("\n" + "=".repeat(60));
+    Logger.log("✅ TESTE CONCLUÍDO");
+    Logger.log("=".repeat(60));
+    
+  } catch (e) {
+    Logger.log("\n" + "=".repeat(60));
+    Logger.log("❌ ERRO NO TESTE");
+    Logger.log("=".repeat(60));
+    Logger.log("Erro: " + e.message);
+    Logger.log("Stack: " + e.stack);
+  }
+}
+
+/**
+ * Função de teste simplificada (versão antiga mantida para compatibilidade)
+ * Simula apenas alguns campos básicos
+ */
+function testeEnvioSimples() {
+  try {
+    // Simula dados de um formulário
+    const testResponses = {
+      'Carimbo de data/hora': [new Date().toISOString()],
+      'Nome completo:': ['Teste Candidato'],
+      'E-mail principal:': ['teste@exemplo.com'],
+      'Nº telefone celular / Whatsapp:': ['(51) 99999-9999'],
+      'Cidade onde reside:': ['porto alegre'],
+      'Experiências anteriores:': ['Teste de experiência profissional']
+    };
+    
+    const candidato = mapearFormularioParaCandidato(testResponses);
+    Logger.log("📝 Dados mapeados:");
+    Logger.log(JSON.stringify(candidato, null, 2));
+    
+    // Testa verificação de duplicata
+    if (candidato.email) {
+      Logger.log(`🔍 Verificando se já existe: ${candidato.email}`);
+      const existe = verificarCandidatoExistente(candidato.email);
+      if (existe) {
+        Logger.log(`⚠️  Já existe! ID: ${existe.docId}`);
+        return;
+      }
+    }
+    
+    const resultado = enviarCandidatoParaFirebase(candidato);
+    
+    if (resultado.sucesso) {
+      Logger.log("✅ Teste enviado com sucesso!");
+      Logger.log(`   ID do documento: ${resultado.docId}`);
+    } else {
+      Logger.log("❌ Erro no teste:");
+      Logger.log(`   ${resultado.erro}`);
+    }
+    
+  } catch (e) {
+    Logger.log("❌ Erro no teste: " + e.message);
+    Logger.log("Stack: " + e.stack);
+  }
+}
+
+// ============================================================================
+// DIAGNÓSTICO DO SISTEMA
+// ============================================================================
+/**
+ * Executa diagnóstico completo do sistema: gatilhos, Firebase e credenciais.
+ * Execute esta função para identificar onde está falhando a integração.
+ */
+function diagnosticarSistema() {
+  Logger.log("=".repeat(70));
+  Logger.log("🔧 DIAGNÓSTICO DO SISTEMA - Forms → AppScript → Firebase");
+  Logger.log("=".repeat(70));
+  Logger.log("");
+
+  // 1. Verificação de gatilhos
+  Logger.log("📋 1. GATILHOS CONFIGURADOS");
+  Logger.log("-".repeat(50));
+  const triggers = ScriptApp.getProjectTriggers();
+  const formSubmitTriggers = triggers.filter(function(t) {
+    return t.getHandlerFunction() === 'onFormSubmit' && t.getEventType() === ScriptApp.EventType.ON_FORM_SUBMIT;
+  });
+  const timeBasedTriggers = triggers.filter(function(t) {
+    return t.getHandlerFunction() === 'onFormSubmit' && t.getEventType() === ScriptApp.EventType.CLOCK;
+  });
+
+  if (triggers.length === 0) {
+    Logger.log("❌ Nenhum gatilho configurado. Execute setupTriggers() para configurar.");
+  } else {
+    triggers.forEach(function(t, i) {
+      Logger.log("   " + (i+1) + ". " + t.getHandlerFunction() + " | Tipo: " + t.getEventType());
+    });
+    if (formSubmitTriggers.length === 0) {
+      Logger.log("❌ Nenhum gatilho ON_FORM_SUBMIT. O acionador do Forms não está correto.");
+      if (timeBasedTriggers.length > 0) {
+        Logger.log("   ⚠️  Há gatilhos time-based chamando onFormSubmit (incorreto). Execute limparGatilhosIncorretos() e setupTriggers().");
+      }
+    } else {
+      Logger.log("✅ Gatilho ON_FORM_SUBMIT encontrado: " + formSubmitTriggers.length);
+    }
+  }
+  Logger.log("");
+
+  // 2. Verificação de credenciais Firebase
+  Logger.log("🔑 2. CREDENCIAIS FIREBASE (Service Account)");
+  Logger.log("-".repeat(50));
+  var configOk = true;
+  if (!FIREBASE_CONFIG || !FIREBASE_CONFIG.email) {
+    Logger.log("❌ FIREBASE_CONFIG.email não configurado");
+    configOk = false;
+  } else {
+    Logger.log("   Email: " + FIREBASE_CONFIG.email);
+  }
+  if (!FIREBASE_CONFIG || !FIREBASE_CONFIG.key || FIREBASE_CONFIG.key.length < 100) {
+    Logger.log("❌ FIREBASE_CONFIG.key inválido ou ausente");
+    configOk = false;
+  } else {
+    Logger.log("   Chave privada: " + (FIREBASE_CONFIG.key.indexOf("-----BEGIN") === 0 ? "✅ Presente" : "❌ Formato inválido"));
+  }
+  if (!FIREBASE_CONFIG || !FIREBASE_CONFIG.projectId) {
+    Logger.log("❌ FIREBASE_CONFIG.projectId não configurado");
+    configOk = false;
+  } else {
+    Logger.log("   Project ID: " + FIREBASE_CONFIG.projectId);
+  }
+  if (configOk) Logger.log("✅ Configuração do Firebase OK");
+  Logger.log("");
+
+  // 3. Teste de token (autenticação)
+  Logger.log("🔐 3. TESTE DE AUTENTICAÇÃO (Token OAuth)");
+  Logger.log("-".repeat(50));
+  try {
+    const token = getServiceAccountToken();
+    if (token && token.length > 50) {
+      Logger.log("✅ Token obtido com sucesso (length: " + token.length + ")");
+    } else {
+      Logger.log("❌ Token vazio ou inválido");
+    }
+  } catch (e) {
+    Logger.log("❌ Erro ao obter token: " + e.message);
+    Logger.log("   Stack: " + (e.stack || ""));
+  }
+  Logger.log("");
+
+  // 4. Teste de conexão com Firestore (leitura)
+  Logger.log("📡 4. TESTE DE CONEXÃO COM FIRESTORE");
+  Logger.log("-".repeat(50));
+  try {
+    const token = getServiceAccountToken();
+    const query = {
+      structuredQuery: {
+        from: [{ collectionId: "candidates" }],
+        limit: 1
+      }
+    };
+    const options = {
+      method: "post",
+      contentType: "application/json",
+      headers: { Authorization: "Bearer " + token, "Content-Type": "application/json" },
+      payload: JSON.stringify(query),
+      muteHttpExceptions: true
+    };
+    const response = UrlFetchApp.fetch(FIRESTORE_RUN_QUERY_URL, options);
+    const statusCode = response.getResponseCode();
+    if (statusCode === 200) {
+      const data = JSON.parse(response.getContentText());
+      Logger.log("✅ Conexão Firestore OK (status " + statusCode + ")");
+      if (data && data[0] && data[0].document) {
+        Logger.log("   Exemplo doc em candidates: " + (data[0].document.name || "").split("/").pop());
+      } else {
+        Logger.log("   (Coleção candidates vazia ou sem documentos)");
+      }
+    } else {
+      Logger.log("❌ Firestore retornou status " + statusCode + ": " + response.getContentText().substring(0, 200));
+    }
+  } catch (e) {
+    Logger.log("❌ Erro ao conectar Firestore: " + e.message);
+    Logger.log("   Stack: " + (e.stack || ""));
+  }
+  Logger.log("");
+
+  // 5. Verificação de Form/Planilha vinculada
+  Logger.log("📄 5. FORMULÁRIO / PLANILHA VINCULADA");
+  Logger.log("-".repeat(50));
+  try {
+    const form = FormApp.getActiveForm();
+    Logger.log("✅ Formulário ativo: " + form.getTitle());
+    Logger.log("   ID: " + form.getId());
+  } catch (e) {
+    Logger.log("⚠️  " + e.message + " (script pode estar vinculado à planilha de respostas)");
+  }
+  Logger.log("");
+
+  Logger.log("=".repeat(70));
+  Logger.log("📌 RESUMO: Execute listarTodosGatilhos() para detalhes dos gatilhos.");
+  Logger.log("   Execute testeEnvio() para simular um envio completo.");
+  Logger.log("=".repeat(70));
+}
+
+/**
+ * Mapeamento esperado: rótulo do Forms (exatamente como em e.namedValues) -> campo Firebase.
+ * Deve estar alinhado com mapearFormularioParaCandidato e rowToCandidateObject.
+ */
+var FORM_TO_FIREBASE = {
+  'Carimbo de data/hora': 'original_timestamp', // Campo automático do Forms (sempre presente)
+  'Nome completo:': 'fullName',
+  'E-mail principal:': 'email',
+  'Endereço de e-mail': 'email_secondary', // Pode não existir se só houver "E-mail principal:"
+  'Nº telefone celular / Whatsapp:': 'phone',
+  'Data de Nascimento:': 'birthDate',
+  'Idade': 'age', // Pode não existir no formulário
+  'Nos envie uma foto atual que você goste:': 'photoUrl',
+  'Estado civil:': 'maritalStatus',
+  'Se tem filhos, quantos?': 'childrenCount',
+  'Você possui CNH tipo B?': 'hasLicense',
+  'Cidade onde reside:': 'city',
+  'Formação:': 'education',
+  'Nível de escolaridade:': 'schoolingLevel',
+  'Instituição de ensino:': 'institution',
+  'Data de formatura:': 'graduationDate',
+  'Em caso de curso superior, está cursando neste momento?': 'isStudying',
+  'Experiências anteriores:': 'experience',
+  'Cursos e certificações profissionais.': 'courses',
+  'Certificações profissionais:': 'certifications', // Pode ter nome diferente no Form
+  'Áreas de interesse profissional': 'interestAreas',
+  'Anexar currículo:': 'cvUrl', // Pode ter nome diferente no Form
+  'Portfólio de trabalho:': 'portfolioUrl',
+  'Onde você nos encontrou?': 'source',
+  'Você foi indicado por algum colaborador da Young? Se sim, quem?': 'referral',
+  'Qual seria sua expectativa salarial?': 'salaryExpectation',
+  'Teria disponibilidade para mudança de cidade?': 'canRelocate',
+  'Referências profissionais:': 'references',
+  'Você está se candidatando a uma vaga específica...?': 'typeOfApp', // Pode ter nome diferente no Form
+  'Você está se candidatando a uma vaga específica ou apenas quer se inscrever no banco de talentos?': 'typeOfApp', // Nome alternativo encontrado no Form
+  'Campo Livre, SEJA VOCÊ!': 'freeField'
+};
+
+/**
+ * Valida o mapeamento Forms -> Firebase.
+ * Compara os campos que o script espera (FORM_TO_FIREBASE) com os itens do formulário ativo (se disponível).
+ * Identifica: campos do Form não mapeados; campos mapeados que não existem no Form.
+ */
+function validarMapeamentoCampos() {
+  Logger.log("=".repeat(60));
+  Logger.log("📋 VALIDAÇÃO DE MAPEAMENTO: Forms -> Firebase");
+  Logger.log("=".repeat(60));
+
+  var formLabels = Object.keys(FORM_TO_FIREBASE);
+  var firebaseKeys = [];
+  for (var i = 0; i < formLabels.length; i++) {
+    var k = FORM_TO_FIREBASE[formLabels[i]];
+    if (firebaseKeys.indexOf(k) === -1) firebaseKeys.push(k);
+  }
+
+  Logger.log("Campos que o script mapeia (Forms -> Firebase): " + formLabels.length);
+  Logger.log("Campos Firebase únicos: " + firebaseKeys.length);
+
+  var noForm = [];
+  var formTitles = [];
+  var sectionHeaders = []; // Títulos de seção (não são campos de dados)
+  try {
+    var form = FormApp.getActiveForm();
+    var items = form.getItems();
+    for (var i = 0; i < items.length; i++) {
+      var item = items[i];
+      var t = item.getTitle();
+      var itemType = item.getType();
+      
+      // Ignora títulos de seção (SectionHeaderItem) - não são campos de dados
+      if (itemType === FormApp.ItemType.SECTION_HEADER || itemType === FormApp.ItemType.PAGE_BREAK) {
+        sectionHeaders.push(t);
+        continue;
+      }
+      
+      formTitles.push(t);
+      if (FORM_TO_FIREBASE[t] === undefined) noForm.push(t);
+    }
+    Logger.log("Itens no formulário ativo: " + formTitles.length + " (campos de dados)");
+    if (sectionHeaders.length > 0) {
+      Logger.log("   Títulos de seção ignorados: " + sectionHeaders.length + " (não são campos de dados)");
+    }
+    if (noForm.length > 0) {
+      Logger.log("⚠️  Campos no Form NÃO mapeados no script: " + noForm.length);
+      noForm.forEach(function(t) { Logger.log("   - " + t); });
+      Logger.log("   💡 Dica: Se algum desses campos contém dados importantes, adicione ao FORM_TO_FIREBASE.");
+    } else {
+      Logger.log("✅ Todos os campos de dados do Form estão mapeados.");
+    }
+    var mappedNotInForm = formLabels.filter(function(l) {
+      // Ignora "Carimbo de data/hora" - é automático do Forms, não aparece como item
+      if (l === 'Carimbo de data/hora') return false;
+      return formTitles.indexOf(l) === -1;
+    });
+    if (mappedNotInForm.length > 0) {
+      Logger.log("⚠️  Campos mapeados no script que NÃO existem no Form: " + mappedNotInForm.length);
+      mappedNotInForm.forEach(function(l) { 
+        Logger.log("   - " + l + " -> " + FORM_TO_FIREBASE[l]);
+      });
+      Logger.log("   💡 Dica: Esses campos podem ter nomes diferentes no Form ou podem ser opcionais.");
+    } else {
+      Logger.log("✅ Todos os campos mapeados existem no Form (ou são automáticos como 'Carimbo de data/hora').");
+    }
+  } catch (e) {
+    Logger.log("⚠️  Formulário ativo não disponível: " + e.message);
+    Logger.log("   Lista de rótulos esperados pelo script (e.namedValues):");
+    formLabels.slice(0, 10).forEach(function(l) { Logger.log("   - " + l); });
+    Logger.log("   ... e mais " + (formLabels.length - 10) + " campos. Consulte FORM_TO_FIREBASE no código.");
+  }
+
+  Logger.log("=".repeat(60));
+}
+
+/**
+ * Função auxiliar para diagnosticar o formato do evento recebido.
+ * Execute esta função manualmente passando um evento simulado ou use nos logs.
+ */
+function diagnosticarEvento(e) {
+  Logger.log("=".repeat(60));
+  Logger.log("🔍 DIAGNÓSTICO DO EVENTO");
+  Logger.log("=".repeat(60));
+  
+  if (!e) {
+    Logger.log("❌ Evento é null ou undefined");
+    return;
+  }
+  
+  Logger.log("Tipo: " + typeof e);
+  Logger.log("Propriedades: " + Object.keys(e).join(', '));
+  
+  if (e.namedValues) {
+    Logger.log("✅ e.namedValues existe");
+    Logger.log("   Chaves: " + Object.keys(e.namedValues).slice(0, 5).join(', ') + "...");
+  } else {
+    Logger.log("❌ e.namedValues não existe");
+  }
+  
+  if (e.response) {
+    Logger.log("✅ e.response existe");
+    try {
+      Logger.log("   Tipo: " + typeof e.response);
+      if (e.response.getItemResponses) {
+        Logger.log("   ✅ É FormResponse (tem getItemResponses)");
+        var itemResponses = e.response.getItemResponses();
+        Logger.log("   Total de respostas: " + itemResponses.length);
+        if (itemResponses.length > 0) {
+          var first = itemResponses[0];
+          Logger.log("   Primeira resposta - Item: " + first.getItem().getTitle());
+          Logger.log("   Primeira resposta - Resposta: " + first.getResponse());
+        }
+      } else {
+        Logger.log("   ⚠️  Não é FormResponse (não tem getItemResponses)");
+      }
+    } catch (err) {
+      Logger.log("   ❌ Erro ao acessar e.response: " + err.message);
+    }
+  } else {
+    Logger.log("❌ e.response não existe");
+  }
+  
+  if (e.source) {
+    Logger.log("✅ e.source existe");
+    try {
+      Logger.log("   Tipo: " + typeof e.source);
+      if (e.source.getActiveSheet) {
+        Logger.log("   ⚠️  É Spreadsheet (script vinculado à planilha)");
+      } else if (e.source.getItems) {
+        Logger.log("   ✅ É Form (script vinculado ao formulário)");
+      }
+    } catch (err) {
+      Logger.log("   Erro ao verificar source: " + err.message);
+    }
+  }
+  
+  Logger.log("=".repeat(60));
+}

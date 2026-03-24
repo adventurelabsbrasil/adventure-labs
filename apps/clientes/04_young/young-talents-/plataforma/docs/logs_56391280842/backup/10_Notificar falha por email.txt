@@ -1,0 +1,20 @@
+﻿2026-02-04T14:44:46.8483267Z ##[group]Run FROM="${RESEND_FROM:-***}"
+2026-02-04T14:44:46.8483689Z [36;1mFROM="${RESEND_FROM:-***}"[0m
+2026-02-04T14:44:46.8483994Z [36;1mIFS=','; read -ra EMAILS <<< "$BACKUP_NOTIFY_EMAIL"[0m
+2026-02-04T14:44:46.8484440Z [36;1mTO_JSON=$(for e in "${EMAILS[@]}"; do echo -n "\"$(echo "$e" | xargs)\","; done | sed 's/,$//')[0m
+2026-02-04T14:44:46.8484833Z [36;1mTO_ARR="[$TO_JSON]"[0m
+2026-02-04T14:44:46.8485095Z [36;1mSUBJECT="Backup young_talents – falhou"[0m
+2026-02-04T14:44:46.8485967Z [36;1mBODY="O backup do schema young_talents falhou.<br><br>Data/hora: $(date -u '+%Y-%m-%d %H:%M UTC')<br>Run: https://github.com/adventurelabsbrasil/young-talents/actions/runs/21675839948<br><br>Verifique os logs do workflow."[0m
+2026-02-04T14:44:46.8487042Z [36;1mcurl -s -X POST "https://api.resend.com/emails" \[0m
+2026-02-04T14:44:46.8487478Z [36;1m  -H "Authorization: ***" \[0m
+2026-02-04T14:44:46.8487760Z [36;1m  -H "Content-Type: application/json" \[0m
+2026-02-04T14:44:46.8488173Z [36;1m  -d "{\"from\": \"$FROM\", \"to\": $TO_ARR, \"subject\": \"$SUBJECT\", \"html\": \"$BODY\"}" || true[0m
+2026-02-04T14:44:46.8506540Z shell: /usr/bin/bash -e {0}
+2026-02-04T14:44:46.8506791Z env:
+2026-02-04T14:44:46.8507508Z   SUPABASE_DB_URL: ***
+2026-02-04T14:44:46.8507754Z   SUPABASE_INTERNAL_IMAGE_REGISTRY: ghcr.io
+2026-02-04T14:44:46.8508098Z   RESEND_API_KEY: ***
+2026-02-04T14:44:46.8508483Z   BACKUP_NOTIFY_EMAIL: ***
+2026-02-04T14:44:46.8508756Z   RESEND_FROM: ***
+2026-02-04T14:44:46.8508947Z ##[endgroup]
+2026-02-04T14:44:47.2252835Z {"statusCode":403,"message":"The adventurelabs.com.br domain is not verified. Please, add and verify your domain on https://resend.com/domains","name":"validation_error"}

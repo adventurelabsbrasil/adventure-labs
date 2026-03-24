@@ -1,0 +1,7 @@
+﻿2026-02-04T14:43:28.8236794Z ##[group]Run mkdir -p backups/young_talents
+2026-02-04T14:43:28.8237971Z [36;1mmkdir -p backups/young_talents[0m
+2026-02-04T14:43:28.8264241Z shell: /usr/bin/bash -e {0}
+2026-02-04T14:43:28.8264532Z env:
+2026-02-04T14:43:28.8265186Z   SUPABASE_DB_URL: ***
+2026-02-04T14:43:28.8265439Z   SUPABASE_INTERNAL_IMAGE_REGISTRY: ghcr.io
+2026-02-04T14:43:28.8265708Z ##[endgroup]
