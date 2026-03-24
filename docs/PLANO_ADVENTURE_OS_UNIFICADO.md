@@ -85,7 +85,7 @@ Quando executar o plano, devem existir (além do `os-registry/`):
 | OS Registry (INDEX) | [knowledge/06_CONHECIMENTO/os-registry/INDEX.md](../knowledge/06_CONHECIMENTO/os-registry/INDEX.md) |
 | ADRs (decisões estruturais) | [adr/README.md](adr/README.md) (0001 tarefas, 0002 `clients/` × `apps/clientes/`) |
 | Wiki (mapa da pasta) | [wiki/README.md](../wiki/README.md) |
-| Young Talents → produto interno / SSOT Git | [YOUNG_TALENTS_PRODUTO_INTERNO.md](YOUNG_TALENTS_PRODUTO_INTERNO.md) |
+| Young Talents → projeto entregue / histórico técnico | [YOUNG_TALENTS_PROJETO_ENTREGUE.md](YOUNG_TALENTS_PROJETO_ENTREGUE.md) |
 
 ---
 

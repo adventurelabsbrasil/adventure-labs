@@ -4,6 +4,8 @@
 
 Este arquivo reúne a documentação (README e, quando relevante, PLANO/roadmap) de **apps, sites, workflows, tools, skills e agentes** do monorepo 01_ADVENTURE_LABS. Use-o para entender **em que ponto estamos e onde queremos chegar** (implementado e pendente/futuro).
 
+> **Adventure OS:** para *cadastrar* novo MCP, workflow, app ou runbook, a fonte de descoberta é [`knowledge/06_CONHECIMENTO/os-registry/INDEX.md`](../knowledge/06_CONHECIMENTO/os-registry/INDEX.md). Esta coleção é **derivada** e pode sofrer drift — alinhar com o registry ao promover mudanças estruturais.
+
 ---
 
 ## Índice
@@ -59,6 +61,7 @@ Este arquivo reúne a documentação (README e, quando relevante, PLANO/roadmap)
 - `clients/04_young/young-talents/README.md`
 - `clients/04_young/young-talents/docs/README.md`
 - `clients/05_benditta/README.md`
+- `knowledge/04_PROJETOS_DE_CLIENTES/benditta/INDICE.md`
 - `clients/06_capclear/README.md`
 - `packages/config/README.md`
 - `packages/db/README.md`

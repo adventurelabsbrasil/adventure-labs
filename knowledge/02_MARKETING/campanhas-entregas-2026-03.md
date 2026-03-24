@@ -2,7 +2,7 @@
 title: Campanhas e entregas — Março 2026
 domain: marketing
 tags: [campanhas, entregas, kpis]
-updated: 2026-03-19
+updated: 2026-03-24
 ---
 
 # Campanhas e entregas — Março 2026
@@ -24,6 +24,7 @@ Resumo de campanhas, criativos e entregas de marketing extraído do Brain Dump (
 
 ### Rose (Google Ads + LP)
 
+- **Status contratual:** sem contrato formal (cliente do Grupo Young).
 - **Pedido:** Campanha Google Ads com foco em **auxílio maternidade**.
 - **Entregas em débito:** (1) Alteração da LP; (2) Relatório de performance de fevereiro.
 - **Campanha:** Número no banner: **51 99780-5667**. Incluir texto: áreas do escritório — **Direito Bancário / Previdência / Trabalhista**.
@@ -32,12 +33,17 @@ Resumo de campanhas, criativos e entregas de marketing extraído do Brain Dump (
 
 ### Benditta (Linha Essencial)
 
+- **Status contratual:** contrato assinado.
+- **Origem da conta:** indicação de Guilherme Emerim e Charles Simon (com relação prévia entre Founder e cliente).
+- **Modelo comercial ativo:** fee de **R$ 2.000/mês**.
+- **Escopo contratado:** **teste de 3 meses** com tráfego pago em **Meta Ads + Google Ads**.
 - Cronograma editorial analisado por ela; sugeriu edições.
 - **Pendência:** Rodrigo validar e dar retorno para ela produzir conteúdo e subir criativos no Drive.
 - Depois: programar gestão de tráfego da campanha.
 
 ### Young
 
+- **Status contratual:** sem contrato formal (empresa do Grupo Young, do qual a Adventure também faz parte).
 - Apresentar **plano de mídia**.
 - Cobrança R$ 800 (Young Talents Módulo I) já enviada com uma das notas (Procor).
 

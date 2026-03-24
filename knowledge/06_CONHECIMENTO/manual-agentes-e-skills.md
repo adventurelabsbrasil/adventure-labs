@@ -2,20 +2,23 @@
 title: Manual — Onde fica a documentação de agentes e skills
 domain: conhecimento
 tags: [agentes, skills, c-suite, documentação, grove, manual]
-updated: 2026-03-20
+updated: 2026-03-21
 ---
 
 # Manual — Onde fica a documentação de agentes e skills
 
 Este arquivo é o **índice canônico** no monorepo: não existe um único PDF “manual de agentes”; a visão está distribuída entre a raiz, `knowledge/` e o submodule **apps/core/admin**. Use-o para onboarding (humanos, Founder, C-Suite) e para orientar IAs no Cursor.
 
+**Adventure OS (descoberta ampla):** [`os-registry/INDEX.md`](os-registry/INDEX.md) + manuais [`docs/MANUAL_IA_ADVENTURE_OS.md`](../../docs/MANUAL_IA_ADVENTURE_OS.md) / [`docs/MANUAL_HUMANO_ADVENTURE_OS.md`](../../docs/MANUAL_HUMANO_ADVENTURE_OS.md).
+
 ---
 
 ## Ordem de leitura sugerida
 
-1. **[AGENTS.md](../../AGENTS.md)** (raiz) — diretrizes e estrutura.
-2. **[arquitetura-agentic-csuite-skills.md](arquitetura-agentic-csuite-skills.md)** — arquitetura e fluxo.
-3. **[apps/core/admin/agents/skills/README.md](../../apps/core/admin/agents/skills/README.md)** — catálogo de skills e como criar novas.
+1. **[os-registry/INDEX.md](os-registry/INDEX.md)** — mapa operacional do Adventure OS (MCPs, crons, storage, clientes…).
+2. **[AGENTS.md](../../AGENTS.md)** (raiz) — diretrizes e estrutura.
+3. **[arquitetura-agentic-csuite-skills.md](arquitetura-agentic-csuite-skills.md)** — arquitetura e fluxo.
+4. **[apps/core/admin/agents/skills/README.md](../../apps/core/admin/agents/skills/README.md)** — catálogo de skills e como criar novas.
 
 Complementos: manual da empresa, WorkOS, compilado para IA (abaixo).
 

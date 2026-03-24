@@ -54,6 +54,7 @@ Documentos em `docs/` que fazem parte da base de conhecimento para operação e 
 | Documento | Descrição |
 |-----------|-----------|
 | [00_GESTAO_CORPORATIVA/processos/email-html-cliente-adventure-labs.md](00_GESTAO_CORPORATIVA/processos/email-html-cliente-adventure-labs.md) | **Email em HTML para cliente (padrão Adventure Labs)** — Processo para criar, editar e enviar emails em HTML (novas features, entregas) via Google Apps Script; padrão visual; link do projeto Apps Script; uso interno (futuro: automação por feature). |
+| [00_GESTAO_CORPORATIVA/operacao/cursor-contas-e-limites.md](00_GESTAO_CORPORATIVA/operacao/cursor-contas-e-limites.md) | **Controle de contas Cursor AI** — ciclos de renovação, consumo por conta e regra operacional de troca preventiva ao aproximar de esgotamento. |
 
 ## Relatórios Tech (C-Suite)
 

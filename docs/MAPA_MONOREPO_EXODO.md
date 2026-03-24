@@ -10,7 +10,7 @@ Atualizado em **2026-03**: clientes em `apps/clientes/`, apps internos em **`app
 | `apps/labs/*` | Finfeed, xpostr, WhatsApp worker (submódulos oficiais) |
 | `apps/clientes/**/*` | Apps de clientes (`@cliente/*`) |
 | `packages/*` | Libs compartilhadas (`@adventure-labs/*`, etc.) |
-| `tools/*`, `agents/*` | Ferramentas e agentes |
+| `tools/*` | Ferramentas e CLIs |
 
 ## `apps/core/` (canônico)
 

@@ -2,7 +2,7 @@
 title: OS Registry — INDEX mestre
 domain: conhecimento
 tags: [registry, index, ssot]
-updated: 2026-03-22
+updated: 2026-03-24
 ---
 
 # OS Registry — INDEX mestre
@@ -33,6 +33,8 @@ updated: 2026-03-22
 | Roadmap fases 0–5 | [`docs/ACORE_ROADMAP.md`](../../../docs/ACORE_ROADMAP.md) |
 | Backlog técnico | [`docs/BACKLOG.md`](../../../docs/BACKLOG.md) |
 | Session log | [`docs/ACORE_SESSION_LOG.md`](../../../docs/ACORE_SESSION_LOG.md) |
+| Ritual semanal Comando Estelar (check-deadlines + BACKLOG + SESSION_LOG + registry) | [`knowledge/00_GESTAO_CORPORATIVA/operacao/asana/ritual-semanal-comando-estelar-acore.md`](../../00_GESTAO_CORPORATIVA/operacao/asana/ritual-semanal-comando-estelar-acore.md) |
+| Martech MVP — war room go-live 01/04/2026 | [`knowledge/00_GESTAO_CORPORATIVA/operacao/asana/martech-mvp-war-room-2026-04.md`](../../00_GESTAO_CORPORATIVA/operacao/asana/martech-mvp-war-room-2026-04.md) |
 
 ---
 
@@ -106,6 +108,7 @@ updated: 2026-03-22
 |---------|---------|
 | Config MCP (local, não commitar secrets) | [`.cursor/mcp.json`](../../../.cursor/mcp.json) |
 | Doc MCP | [`docs/MCP_CONFIG.md`](../../../docs/MCP_CONFIG.md) |
+| Controle operacional de contas Cursor AI | [`knowledge/00_GESTAO_CORPORATIVA/operacao/cursor-contas-e-limites.md`](../../00_GESTAO_CORPORATIVA/operacao/cursor-contas-e-limites.md) |
 | Scripts raiz / tools | [`tools/scripts/`](../../../tools/scripts/), [`tools/`](../../../tools/) |
 | pnpm workspaces | [`pnpm-workspace.yaml`](../../../pnpm-workspace.yaml) |
 | Typecheck/lint/test monorepo | `./tools/scripts/typecheck-workspaces.sh`, `lint-workspaces.sh`, `test-workspaces.sh` |
@@ -131,9 +134,10 @@ Mapa **aspiracional** (estratégia / braindump) → onde o código está hoje. R
 |--------------|------------------|-------|
 | WorkOS / Admin (omni interno) | [`apps/core/admin/`](../../../apps/core/admin/) | `adv_*`, C-Suite, multitenant |
 | Adventure Sales (CRM) | `apps/core/adventure` (submodule) | Produto comercial; detalhe no Roadmap |
-| Adventure Talents (ATS) | App: [`apps/clientes/young-talents/plataforma/`](../../../apps/clientes/young-talents/plataforma/) · espelho: [`clients/04_young/young-talents/`](../../../clients/04_young/young-talents/) | **Produto interno** Adventure (ativo comercializável); SSOT código no monorepo — [`docs/YOUNG_TALENTS_PRODUTO_INTERNO.md`](../../../docs/YOUNG_TALENTS_PRODUTO_INTERNO.md), [`docs/young-talents/CHANGELOG.md`](../../../docs/young-talents/CHANGELOG.md) |
+| Adventure Talents (ATS) | App: [`apps/clientes/young-talents/plataforma/`](../../../apps/clientes/young-talents/plataforma/) · espelho: [`clients/04_young/young-talents/`](../../../clients/04_young/young-talents/) | **Projeto entregue** (propriedade Young Empreendimentos); monorepo mantém histórico técnico/handoff — [`docs/YOUNG_TALENTS_PROJETO_ENTREGUE.md`](../../../docs/YOUNG_TALENTS_PROJETO_ENTREGUE.md), [`docs/young-talents/CHANGELOG.md`](../../../docs/young-talents/CHANGELOG.md) |
 | Adventure Compass (dashboards mkt) | *roadmap / a definir* | **stub** — não confundir com módulos atuais do Admin |
 | Programa ELITE | `apps/core/elite` (submodule) | Produto interno |
+| Benditta — dashboard Meta (CSV / roadmap API) | Pacote [`packages/benditta-meta-dashboard`](../../../packages/benditta-meta-dashboard/) · Admin [`/dashboard/benditta`](../../../apps/core/admin/src/app/dashboard/benditta/) · app [`@cliente/benditta-app`](../../../apps/clientes/benditta/app/) | **Hub SSOT:** [`knowledge/04_PROJETOS_DE_CLIENTES/benditta/INDICE.md`](../../04_PROJETOS_DE_CLIENTES/benditta/INDICE.md); issues pós-MVP: [`benditta-github-project-e-issues.md`](../../04_PROJETOS_DE_CLIENTES/benditta-github-project-e-issues.md) |
 
 ---
 
@@ -168,6 +172,10 @@ Antes de scripts ou agentes cruzarem pastas: confirmar nomes atuais no Drive. Pr
 ## 10. Clientes / tenants (procedimento)
 
 - Mapa humano: [`clients/`](../../../clients/) + README por pasta cliente.
+- **POP onboarding de cliente novo (humano/agente):** [`knowledge/00_GESTAO_CORPORATIVA/processos/pop-onboarding-cliente-novo.md`](../../00_GESTAO_CORPORATIVA/processos/pop-onboarding-cliente-novo.md).
+- **Template operacional padrão de cliente:** [`clients/_template/CLIENT_OPERACIONAL.md`](../../../clients/_template/CLIENT_OPERACIONAL.md).
+- **Hub de projetos de clientes (índice):** [`knowledge/04_PROJETOS_DE_CLIENTES/README.md`](../../04_PROJETOS_DE_CLIENTES/README.md).
+- **Benditta (índice canónico repo + ops):** [`knowledge/04_PROJETOS_DE_CLIENTES/benditta/INDICE.md`](../../04_PROJETOS_DE_CLIENTES/benditta/INDICE.md) — código, Infisical, Asana, Vercel, checklist novas apps, docs relacionados.
 - **`tenant_id` / RLS:** documentar **procedimento** nos runbooks do produto (ex. [`wiki/Young-Talents-ATS-Seguranca.md`](../../../wiki/Young-Talents-ATS-Seguranca.md)); **nunca** valores reais neste INDEX.
 
 ---
@@ -212,6 +220,7 @@ Brainstorms: preferir [`docs/braindump/`](../../../docs/braindump/) ou `knowledg
 |--------|------|
 | **Taxonomia** | Pastas `00_`…`06_`, `99_` alinhadas a [`knowledge/README.md`](../../README.md); pasta operacional **`Adventure/`** complementa (benchmark, clientes, financeiro, mídia, planejamento, RH…). |
 | **Acesso** | Tipicamente **rclone** com remote local (ex. `mydrive:`) — config **não** no Git. |
+| **Exemplo (Benditta — export WhatsApp)** | Remote `mydrive:` → `04_PROJETOS_DE_CLIENTES/05_BENDITTA/Wapp_Export/` (subpasta export WhatsApp; `_chat.txt`). Síntese versionada: [`CONTEXTO_LINHA_ESSENCIAL.md`](../../04_PROJETOS_DE_CLIENTES/benditta/CONTEXTO_LINHA_ESSENCIAL.md) |
 | **Sensível** | Contratos, financeiro, PII: **só Drive** com permissões por squad; registry e Git têm **ponteiros**, não cópias. |
 | **Crosswalk clientes** | Ver §9 acima. |
 
@@ -222,6 +231,7 @@ Brainstorms: preferir [`docs/braindump/`](../../../docs/braindump/) ou `knowledg
 | Recurso | Caminho / nota |
 |---------|----------------|
 | **Asana — projeto Tasks** | [Abrir no Asana](https://app.asana.com/1/1213725900473628/project/1213744799182607) — captura e priorização; **não** SSOT técnica |
+| **Asana — roadmap (futuro)** | [WhatsApp → código: RAG & contexto operacional](https://app.asana.com/1/1213725900473628/project/1213788734243886) — projeto `1213788734243886`; 8 tarefas (RFC/LGPD/fontes/RLS/RAG/pipeline/superfície/piloto Benditta); **sem due** até priorizar |
 | **ADR-0001** (Asana × BACKLOG × `adv_tasks`) | [`0001-fonte-verdade-tarefas-asana-backlog-adv-tasks.md`](../../../docs/adr/0001-fonte-verdade-tarefas-asana-backlog-adv-tasks.md) |
 | Backlog engenharia | [`docs/BACKLOG.md`](../../../docs/BACKLOG.md) |
 | **contato@** política | Secção 14.1 abaixo |

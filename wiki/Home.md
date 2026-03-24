@@ -1,5 +1,15 @@
 ## Adventure Labs — Wiki de agentes, C-Suite e skills
 
+### Entrada Adventure OS
+
+- **Mapa desta pasta wiki:** [README.md](README.md) (backlog de páginas + links)
+- **Índice operacional (onde está tudo):** `knowledge/06_CONHECIMENTO/os-registry/INDEX.md`
+- **Protocolo Grove (GTD, WorkOS, C-Suite):** `knowledge/06_CONHECIMENTO/protocolo-grove-roteamento.md`
+- **Manuais:** `docs/MANUAL_HUMANO_ADVENTURE_OS.md` · `docs/MANUAL_IA_ADVENTURE_OS.md`
+- **Plano resumido:** `docs/PLANO_ADVENTURE_OS_UNIFICADO.md` · **ACORE:** `ACORE_CONSTITUTION.md` · `docs/ACORE_ROADMAP.md`
+
+---
+
 Bem-vindo à Wiki do repositório **adventure-labs**. Aqui fica o **manual navegável** da arquitetura agêntica:
 
 - Como funciona o fluxo **Founder → Grove → C-Suite → Skills/Agentes de apoio**.
@@ -21,6 +31,7 @@ Bem-vindo à Wiki do repositório **adventure-labs**. Aqui fica o **manual naveg
 
 ### Onde fica a documentação “full”
 
+- **OS Registry (descoberta):** `knowledge/06_CONHECIMENTO/os-registry/README.md` e `INDEX.md`
 - Manual canônico: `knowledge/06_CONHECIMENTO/manual-agentes-e-skills.md`
 - Diretrizes multi-agentes: `AGENTS.md` na raiz do monorepo
 - Arquitetura agêntica detalhada: `knowledge/06_CONHECIMENTO/arquitetura-agentic-csuite-skills.md`

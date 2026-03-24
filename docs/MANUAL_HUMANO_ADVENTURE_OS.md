@@ -37,11 +37,14 @@ Usar taxonomia [`knowledge/`](../knowledge/README.md) (00–99). Referência: [`
 - Preferir [`docs/`](./) com nome claro.  
 - **Atualizar** [`os-registry/INDEX.md`](../knowledge/06_CONHECIMENTO/os-registry/INDEX.md) se o artefato for novo (MCP, workflow, app, etc.).  
 - Avisar CTO em mudanças sensíveis.
+- Para snapshots de segurança/RLS no Supabase, usar como referência:
+  - [`RELATORIO_ROLES_E_SECURITY_ADVISOR_ADVENTURELABSBRASIL.md`](RELATORIO_ROLES_E_SECURITY_ADVISOR_ADVENTURELABSBRASIL.md)
+  - `apps/clientes/young-talents/plataforma/docs/RELATORIO_ROLES_E_SECURITY_ADVISOR.md`
 
 ## Young Talents / Adventure Talents (ATS)
 
-- **Produto interno** da Adventure (comercializável após ajustes), com código canónico em `apps/clientes/young-talents/plataforma`.  
-- Governança, SSOT e fim do fluxo emergencial no repo externo: [`YOUNG_TALENTS_PRODUTO_INTERNO.md`](YOUNG_TALENTS_PRODUTO_INTERNO.md) e [`young-talents/CHANGELOG.md`](young-talents/CHANGELOG.md).
+- **Projeto de cliente entregue** (propriedade Young Empreendimentos), com código histórico em `apps/clientes/young-talents/plataforma`.  
+- Referência de governança e handoff: [`YOUNG_TALENTS_PROJETO_ENTREGUE.md`](YOUNG_TALENTS_PROJETO_ENTREGUE.md) e [`young-talents/CHANGELOG.md`](young-talents/CHANGELOG.md).
 
 ## Drive vs Git
 

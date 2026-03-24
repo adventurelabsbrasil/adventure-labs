@@ -1,6 +1,6 @@
 # Adventure Labs — Estrutura + Submodules
 
-Repositório que versiona a estrutura (knowledge, docs, .cursor) e referencia apps/clientes como **submodules**.
+Repositório principal da Adventure Labs (governança, conhecimento, automações e apps/workspaces). Parte dos apps é mantida como **submodules** em `apps/core/*`, enquanto apps de cliente em `apps/clientes/*` podem viver no próprio workspace pnpm.
 
 ## Clone e setup
 
@@ -23,8 +23,8 @@ O script inicializa os submodules e cria o symlink `apps/core/admin/context -> .
 ```
 01_ADVENTURE_LABS/
 ├── _internal/      # Vault (refs), archive (clones temp)
-├── apps/           # Submodules: admin, adventure, elite, finfeed
-├── clients/        # Submodules: lidera-space, lidera-skills, roseportaladvocacia, young-emp, etc.
+├── apps/           # Core/labs/clientes (misto: submodules + workspaces locais)
+├── clients/        # Submodules de clientes por pasta NN_nome (quando aplicável)
 ├── knowledge/      # Base de conhecimento (taxonomia 00–99)
 ├── packages/       # Pacotes compartilhados
 ├── tools/          # Ferramentas internas
@@ -32,11 +32,11 @@ O script inicializa os submodules e cria o symlink `apps/core/admin/context -> .
 └── AGENTS.md       # Diretrizes para multi-agentes
 ```
 
-**Submodules:** Cada app mantém seu próprio repo — funções específicas, deploy e histórico independentes.
+**Submodules:** Alguns apps mantêm repo próprio (ex.: `apps/core/admin`, `apps/core/adventure`, `apps/core/elite`).
 
 ## Dependências
 
-O monorepo usa **pnpm** (workspaces em `apps/*`, `packages/*`, `tools/*`). Na raiz:
+O monorepo usa **pnpm** (workspaces em `apps/core/*`, `apps/labs/*`, `apps/clientes/**/*`, `packages/*`, `tools/*`). Na raiz:
 
 ```bash
 pnpm install
@@ -57,6 +57,18 @@ cd apps/core/admin && npm install
   pnpm install
   ```
   Ou instale o pnpm: `npm install -g pnpm` (após corrigir o nvm/npmrc) e rode `pnpm install` na raiz do monorepo.
+
+## Adventure OS (ACORE + registry + canal único)
+
+- **Índice mestre:** `knowledge/06_CONHECIMENTO/os-registry/INDEX.md`
+- **Manuais:** `docs/MANUAL_HUMANO_ADVENTURE_OS.md` · `docs/MANUAL_IA_ADVENTURE_OS.md`
+- **Resumo do programa:** `docs/PLANO_ADVENTURE_OS_UNIFICADO.md`
+- **Governança:** `ACORE_CONSTITUTION.md` · `docs/ACORE_ROADMAP.md` · `docs/BACKLOG.md`
+
+### Nota de governança (Young Talents)
+
+- O app `apps/clientes/young-talents/plataforma` é um projeto de cliente entregue (propriedade Young Empreendimentos), mantido no monorepo para histórico técnico e handoff.
+- O projeto Supabase do Young Talents está compartilhado com a Adventure Labs para suporte e diagnóstico quando necessário.
 
 ## Início rápido
 
