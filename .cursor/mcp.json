@@ -3,6 +3,12 @@
     "Railway": {
       "command": "npx",
       "args": ["-y", "@railway/mcp-server"]
+    },
+    "asana": {
+      "type": "stdio",
+      "command": "bash",
+      "args": ["${workspaceFolder}/tools/scripts/mcp-asana-bridge.sh"],
+      "envFile": "${workspaceFolder}/.cursor/asana-mcp.env"
     }
   }
 }
