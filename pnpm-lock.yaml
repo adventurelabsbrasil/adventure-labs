@@ -55,9 +55,9 @@ importers:
         specifier: ^5.3.3
         version: 5.9.3
 
-  apps/clientes/lidera/flow: {}
+  apps/clientes/01_lidera/lidera/flow: {}
 
-  apps/clientes/lidera/skills:
+  apps/clientes/01_lidera/lidera/skills:
     dependencies:
       '@hookform/resolvers':
         specifier: ^3.3.0
@@ -157,7 +157,7 @@ importers:
         specifier: ^5.2.0
         version: 5.4.21(@types/node@20.19.37)(lightningcss@1.31.1)(terser@5.46.1)
 
-  apps/clientes/lidera/space:
+  apps/clientes/01_lidera/lidera/space:
     dependencies:
       '@dnd-kit/core':
         specifier: ^6.3.1
@@ -242,14 +242,14 @@ importers:
         specifier: ^5
         version: 5.9.3
 
-  apps/clientes/young-talents/plataforma:
+  apps/clientes/04_young/young-talents:
     dependencies:
       '@dataconnect/admin-generated':
         specifier: file:src/dataconnect-admin-generated
         version: link:src/dataconnect-admin-generated
       '@dataconnect/generated':
         specifier: file:src/dataconnect-generated
-        version: file:apps/clientes/young-talents/plataforma/src/dataconnect-generated(@tanstack-query-firebase/react@2.1.1(@tanstack/react-query@5.91.2(react@18.3.1))(firebase@12.11.0))(firebase@12.11.0)
+        version: file:apps/clientes/04_young/young-talents/src/dataconnect-generated(@tanstack-query-firebase/react@2.1.1(@tanstack/react-query@5.91.2(react@18.3.1))(firebase@12.11.0))(firebase@12.11.0)
       '@supabase/supabase-js':
         specifier: ^2.39.3
         version: 2.99.3
@@ -336,15 +336,15 @@ importers:
         specifier: ^4.0.18
         version: 4.1.0(@edge-runtime/vm@3.2.0)(@opentelemetry/api@1.9.0)(@types/node@22.19.15)(jsdom@28.1.0(@noble/hashes@1.8.0))(msw@2.12.13(@types/node@22.19.15)(typescript@5.9.3))(vite@5.4.21(@types/node@22.19.15)(lightningcss@1.31.1)(terser@5.46.1))
 
-  apps/clientes/young-talents/plataforma/src/dataconnect-admin-generated:
+  apps/clientes/04_young/young-talents/src/dataconnect-admin-generated:
     dependencies:
       firebase-admin:
         specifier: ^13.4.0
         version: 13.7.0(encoding@0.1.13)
 
-  apps/clientes/young-talents/plataforma/src/dataconnect-admin-generated/esm: {}
+  apps/clientes/04_young/young-talents/src/dataconnect-admin-generated/esm: {}
 
-  apps/clientes/young-talents/plataforma/src/dataconnect-generated:
+  apps/clientes/04_young/young-talents/src/dataconnect-generated:
     dependencies:
       '@tanstack-query-firebase/react':
         specifier: ^2.0.0
@@ -353,15 +353,15 @@ importers:
         specifier: ^11.3.0 || ^12.0.0
         version: 12.11.0
 
-  apps/clientes/young-talents/plataforma/src/dataconnect-generated/esm: {}
+  apps/clientes/04_young/young-talents/src/dataconnect-generated/esm: {}
 
-  apps/clientes/young-talents/plataforma/src/dataconnect-generated/react:
+  apps/clientes/04_young/young-talents/src/dataconnect-generated/react:
     dependencies:
       '@tanstack-query-firebase/react':
         specifier: ^2.0.0
         version: 2.1.1(@tanstack/react-query@5.91.2(react@19.2.3))(firebase@12.11.0)
 
-  apps/clientes/young-talents/plataforma/src/dataconnect-generated/react/esm: {}
+  apps/clientes/04_young/young-talents/src/dataconnect-generated/react/esm: {}
 
   apps/core/admin:
     dependencies:
@@ -2565,8 +2565,8 @@ packages:
   '@dabh/diagnostics@2.0.8':
     resolution: {integrity: sha512-R4MSXTVnuMzGD7bzHdW2ZhhdPC/igELENcq5IjEverBvq5hn1SXCWcsi6eSsdWP0/Ur+SItRRjAktmdoX/8R/Q==}
 
-  '@dataconnect/generated@file:apps/clientes/young-talents/plataforma/src/dataconnect-generated':
-    resolution: {directory: apps/clientes/young-talents/plataforma/src/dataconnect-generated, type: directory}
+  '@dataconnect/generated@file:apps/clientes/04_young/young-talents/src/dataconnect-generated':
+    resolution: {directory: apps/clientes/04_young/young-talents/src/dataconnect-generated, type: directory}
     engines: {node: ' >=18.0'}
     peerDependencies:
       '@tanstack-query-firebase/react': ^2.0.0
@@ -21109,7 +21109,7 @@ snapshots:
       enabled: 2.0.0
       kuler: 2.0.0
 
-  '@dataconnect/generated@file:apps/clientes/young-talents/plataforma/src/dataconnect-generated(@tanstack-query-firebase/react@2.1.1(@tanstack/react-query@5.91.2(react@18.3.1))(firebase@12.11.0))(firebase@12.11.0)':
+  '@dataconnect/generated@file:apps/clientes/04_young/young-talents/src/dataconnect-generated(@tanstack-query-firebase/react@2.1.1(@tanstack/react-query@5.91.2(react@18.3.1))(firebase@12.11.0))(firebase@12.11.0)':
     dependencies:
       '@tanstack-query-firebase/react': 2.1.1(@tanstack/react-query@5.91.2(react@18.3.1))(firebase@12.11.0)
       firebase: 12.11.0

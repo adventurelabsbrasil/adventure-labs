@@ -40,8 +40,8 @@ Scan: raiz do repo + `apps/core`, `apps/labs`, `apps/clientes`, legado `apps/adm
 | `apps/core/elite/.env.local` ou `apps/elite/.env.local` | `/core/elite` |
 | `apps/labs/<lab>/.env.local` | `/labs/<lab>` |
 | `apps/clientes/benditta/app/.env.local` | `/clientes/benditta` |
-| `apps/clientes/young-talents/plataforma/.env.local` | `/clientes/young-talents` |
-| `apps/clientes/lidera/flow/.env.local` | `/clientes/lidera` |
+| `apps/clientes/04_young/young-talents/.env.local` | `/clientes/young-talents` |
+| `apps/clientes/01_lidera/lidera/flow/.env.local` | `/clientes/lidera` |
 | `apps/clientes/<c>/<app>/.env.local` (demais) | `/clientes/<c>/<app>` |
 | `clients/<slug>/admin/.env.local` | `/clients/<slug>/admin` |
 | `clients/<a>/<b>/.env.local` | `/clients/<a>/<b>` |

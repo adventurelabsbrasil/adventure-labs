@@ -2,7 +2,7 @@
 
 Projeto compartilhado entre **Admin**, **CRM (Adventure)** e **site adventurelabs.com.br**. Classificação das tabelas em `public` (snapshot do banco).
 
-**App Space (LMS):** O schema do Space (`space_*` ou tabelas sem prefixo) **não** está aplicado neste projeto. Ele vive no repositório (`apps/clientes/lidera/space/supabase/migrations/`) e é aplicado **apenas no Supabase do cliente** que compra o app (ex.: Lidera — projeto deles). Nosso Supabase não armazena dados do Space; a “configuração” do Space é só código e documentação no repo.
+**App Space (LMS):** O schema do Space (`space_*` ou tabelas sem prefixo) **não** está aplicado neste projeto. Ele vive no repositório (`apps/clientes/01_lidera/lidera/space/supabase/migrations/`) e é aplicado **apenas no Supabase do cliente** que compra o app (ex.: Lidera — projeto deles). Nosso Supabase não armazena dados do Space; a “configuração” do Space é só código e documentação no repo.
 
 ---
 
@@ -153,6 +153,6 @@ Tabelas a confirmar em código antes de remover. **Não dropar sem backup.**
 ## Referências
 
 - CRM (tabelas e RLS): `apps/core/adventure/docs/CRM_TABELAS_E_ROLES_VERIFICACAO.md`
-- Space (LMS): schema e RLS no repo — migração `apps/clientes/lidera/space/supabase/migrations/20260311100000_space_tables_prefix.sql`; doc completa `apps/clientes/lidera/space/docs/COMO_FUNCIONA_BANCO_E_ROLES.md`. Aplicado apenas no Supabase do cliente, não neste projeto.
+- Space (LMS): schema e RLS no repo — migração `apps/clientes/01_lidera/lidera/space/supabase/migrations/20260311100000_space_tables_prefix.sql`; doc completa `apps/clientes/01_lidera/lidera/space/docs/COMO_FUNCIONA_BANCO_E_ROLES.md`. Aplicado apenas no Supabase do cliente, não neste projeto.
 - Script para listar tabelas: `apps/core/adventure/supabase/scripts/listar_todas_tabelas_public.sql`
 - Diagnóstico CRM: `apps/core/adventure/supabase/scripts/diagnostico_crm_tables_rls.sql`

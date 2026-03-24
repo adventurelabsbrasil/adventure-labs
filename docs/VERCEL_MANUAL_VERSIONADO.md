@@ -42,7 +42,7 @@ Manual operacional e de governança do Vercel para a stack da Adventure Labs, al
 
 **Monorepo (raiz):** `adventurelabsbrasil/adventure-labs` — origem `https://github.com/adventurelabsbrasil/adventure-labs.git`.
 
-Vários apps em `apps/core/*` e `apps/clientes/young-talents/plataforma` são **submódulos** com repositório próprio. Para Vercel, a decisão típica é:
+Vários apps em `apps/core/*` e `apps/clientes/04_young/young-talents` são **submódulos** com repositório próprio. Para Vercel, a decisão típica é:
 
 | Estratégia | Quando usar |
 |------------|-------------|
@@ -58,10 +58,10 @@ Decisão de taxonomia `clients/` vs `apps/clientes/`: [ADR-0002 — clients subm
 | `apps/core/admin` | `adventurelabsbrasil/admin` |
 | `apps/core/elite` | `adventurelabsbrasil/elite` |
 | `apps/core/adventure` | `adventurelabsbrasil/adventure` |
-| `apps/clientes/young-talents/plataforma` | `adventurelabsbrasil/young-talents` |
-| `apps/clientes/lidera/space` | `adventurelabsbrasil/lidera-space` |
-| `apps/clientes/lidera/skills` | `adventurelabsbrasil/lidera-skills` |
-| `apps/clientes/lidera/flow` | **Repo distinto** (ex. `adventurelabsbrasil/lidera-flow`) — alinhar em `.gitmodules` quando existir |
+| `apps/clientes/04_young/young-talents` | `adventurelabsbrasil/young-talents` |
+| `apps/clientes/01_lidera/lidera/space` | `adventurelabsbrasil/lidera-space` |
+| `apps/clientes/01_lidera/lidera/skills` | `adventurelabsbrasil/lidera-skills` |
+| `apps/clientes/01_lidera/lidera/flow` | **Repo distinto** (ex. `adventurelabsbrasil/lidera-flow`) — alinhar em `.gitmodules` quando existir |
 | `apps/clientes/benditta/app` | *(sem submódulo)* — código no **monorepo** `adventurelabsbrasil/adventure-labs` |
 
 ### Decisão Founder — Vercel para Core (Admin, site Adventure, Elite como LP)
@@ -256,11 +256,11 @@ Interpretação do momento:
 | P0 | `admin` | `apps/core/admin` | **`apps/core/admin`** | **`adventurelabsbrasil/adventure-labs`** (decisão Founder) | `admin.adventurelabs.com.br` | Pendente |
 | P0 | `adventure` (site + LPs) | `apps/core/adventure` | **`apps/core/adventure`** (futuro: `apps/core/sites/adventure`) | **`adventurelabsbrasil/adventure-labs`** | `adventurelabs.com.br/` + **`/landing`**, **`/landingpage`** (martech) + Elite por rotas/slugs | Pendente |
 | — | `elite` (LP) | `apps/core/elite` | *incluído no deploy `adventure`* | *idem `adventure`* | *rotas/slugs no site* | Ver nota Elite |
-| P1 | `young-talents` | `apps/clientes/young-talents/plataforma` | **`.`** (repo `young-talents`) | **`adventurelabsbrasil/young-talents`** (submódulo) | **`young.adventurelabs.com.br`** (padrão tenant) | Pendente |
+| P1 | `young-talents` | `apps/clientes/04_young/young-talents` | **`.`** (repo `young-talents`) | **`adventurelabsbrasil/young-talents`** (submódulo) | **`young.adventurelabs.com.br`** (padrão tenant) | Pendente |
 | P2 | `benditta` | `apps/clientes/benditta/app` | `apps/clientes/benditta/app` | **`adventurelabsbrasil/adventure-labs`** (sem submódulo) | **`benditta.adventurelabs.com.br`** (padrão tenant) | Pendente |
-| P2 | `lidera-space` | `apps/clientes/lidera/space` | **`.`** (repo `lidera-space`) | **`adventurelabsbrasil/lidera-space`** (submódulo) | **`lidera.adventurelabs.com.br/space`** (LMS) | Pendente |
-| P2 | `lidera-skills` | `apps/clientes/lidera/skills` | **`.`** (repo `lidera-skills`) | **`adventurelabsbrasil/lidera-skills`** (submódulo) | **`lidera.adventurelabs.com.br/skills`** (RH) | Pendente |
-| P2 | `lidera-flow` | `apps/clientes/lidera/flow` *(ou só repo remoto)* | **`.`** no repo **lidera-flow** | **`adventurelabsbrasil/lidera-flow`** *(URL exata a confirmar)* | **`lidera.adventurelabs.com.br/flow`** (finanças, entregue) | Pendente |
+| P2 | `lidera-space` | `apps/clientes/01_lidera/lidera/space` | **`.`** (repo `lidera-space`) | **`adventurelabsbrasil/lidera-space`** (submódulo) | **`lidera.adventurelabs.com.br/space`** (LMS) | Pendente |
+| P2 | `lidera-skills` | `apps/clientes/01_lidera/lidera/skills` | **`.`** (repo `lidera-skills`) | **`adventurelabsbrasil/lidera-skills`** (submódulo) | **`lidera.adventurelabs.com.br/skills`** (RH) | Pendente |
+| P2 | `lidera-flow` | `apps/clientes/01_lidera/lidera/flow` *(ou só repo remoto)* | **`.`** no repo **lidera-flow** | **`adventurelabsbrasil/lidera-flow`** *(URL exata a confirmar)* | **`lidera.adventurelabs.com.br/flow`** (finanças, entregue) | Pendente |
 
 Observações de governança:
 
@@ -457,13 +457,13 @@ Clientes canônicos (Founder): **Lidera**, **Rose**, **Benditta**, **Capclear**,
 
 | Projeto lógico | Caminho no monorepo | Faixa sugerida |
 |---|---|---|
-| young-talents | `apps/clientes/young-talents/plataforma` | P1 |
+| young-talents | `apps/clientes/04_young/young-talents` | P1 |
 | benditta | `apps/clientes/benditta/app` | P2 |
-| lidera-space | `apps/clientes/lidera/space` | P2 |
-| lidera-skills | `apps/clientes/lidera/skills` | P2 |
-| lidera-flow | `apps/clientes/lidera/flow` | P2 |
+| lidera-space | `apps/clientes/01_lidera/lidera/space` | P2 |
+| lidera-skills | `apps/clientes/01_lidera/lidera/skills` | P2 |
+| lidera-flow | `apps/clientes/01_lidera/lidera/flow` | P2 |
 
-Nota: **lidera-flow** é projeto **entregue** (gestão financeira), **repo separado** de Space e Skills; URL alvo `lidera.adventurelabs.com.br/flow`. Pasta `apps/clientes/lidera/flow` no monorepo pode ser stub até submódulo/repo alinhado.
+Nota: **lidera-flow** é projeto **entregue** (gestão financeira), **repo separado** de Space e Skills; URL alvo `lidera.adventurelabs.com.br/flow`. Pasta `apps/clientes/01_lidera/lidera/flow` no monorepo pode ser stub até submódulo/repo alinhado.
 
 ### Labs (experimentação → possível promoção a Core)
 
@@ -498,10 +498,10 @@ Atualizar esta tabela como painel vivo de operação:
 | P0 | admin | core (interno) | `apps/core/admin` — **WorkOS**; não é subdomínio tenant | Founder / Operações internas | CTO | **`adventurelabsbrasil/adventure-labs`** | **`apps/core/admin`**; branch **`main`** | `admin.adventurelabs.com.br` | Planejado |
 | P0 | adventure | core (site) | `apps/core/adventure` — home + **`/landing`**, **`/landingpage`** (martech) + Elite e outras LPs por rotas | Founder / Operações internas | CTO | **`adventurelabsbrasil/adventure-labs`** | **`apps/core/adventure`**; branch **`main`** | `adventurelabs.com.br/` (apex + rotas) | Planejado |
 | — | elite (LP) | core | `apps/core/elite` *(até consolidar)* | — | — | *mesmo deploy que `adventure`* | *rotas/slugs no site* | *sem projeto Vercel dedicado* | Ver Q&A |
-| P1 | young-talents | cliente | `apps/clientes/young-talents/plataforma` | Young Empreendimentos | Dev Young / CTO | **`adventurelabsbrasil/young-talents`** (submódulo) | **`.`** no repo do submódulo | **`young.adventurelabs.com.br`** | Planejado |
+| P1 | young-talents | cliente | `apps/clientes/04_young/young-talents` | Young Empreendimentos | Dev Young / CTO | **`adventurelabsbrasil/young-talents`** (submódulo) | **`.`** no repo do submódulo | **`young.adventurelabs.com.br`** | Planejado |
 | P2 | benditta | cliente | `apps/clientes/benditta/app` | Benditta / Founder | CTO | **`adventurelabsbrasil/adventure-labs`** | **`apps/clientes/benditta/app`** (sem submódulo) | **`benditta.adventurelabs.com.br`** | Planejado |
-| P2 | lidera-space | cliente (LMS) | `apps/clientes/lidera/space` | Lidera | Squad cliente / CTO | **`adventurelabsbrasil/lidera-space`** (submódulo) | **`.`** no repo do submódulo | **`lidera.adventurelabs.com.br/space`** | Planejado |
-| P2 | lidera-skills | cliente (RH) | `apps/clientes/lidera/skills` — entregue | Lidera | Squad cliente / CTO | **`adventurelabsbrasil/lidera-skills`** (submódulo) | **`.`** no repo do submódulo | **`lidera.adventurelabs.com.br/skills`** | Planejado |
+| P2 | lidera-space | cliente (LMS) | `apps/clientes/01_lidera/lidera/space` | Lidera | Squad cliente / CTO | **`adventurelabsbrasil/lidera-space`** (submódulo) | **`.`** no repo do submódulo | **`lidera.adventurelabs.com.br/space`** | Planejado |
+| P2 | lidera-skills | cliente (RH) | `apps/clientes/01_lidera/lidera/skills` — entregue | Lidera | Squad cliente / CTO | **`adventurelabsbrasil/lidera-skills`** (submódulo) | **`.`** no repo do submódulo | **`lidera.adventurelabs.com.br/skills`** | Planejado |
 | P2 | lidera-flow | cliente (finanças) | repo **lidera-flow** (distinto de space/skills) — entregue | Lidera | Squad cliente / CTO | **`adventurelabsbrasil/lidera-flow`** *(confirmar slug no GitHub)* | **`.`** no repo | **`lidera.adventurelabs.com.br/flow`** | Planejado |
 | P2 | lidera-gateway | cliente (roteamento) | repo mínimo com `vercel.json` (projeto **porta**) — sem app de negócio | Lidera | Squad cliente / CTO | repo dedicado ou stub no monorepo *(a definir)* | **`.`** | **`lidera.adventurelabs.com.br`** (rewrites → space/skills/flow) | Planejado |
 | P3 | xpostr | labs | `apps/labs/xpostr` | Labs | Squad Labs | `adventurelabsbrasil/adventure-labs` | `apps/labs/xpostr` | sob demanda | Backlog |
