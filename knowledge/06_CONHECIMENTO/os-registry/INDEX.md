@@ -49,6 +49,7 @@ updated: 2026-03-24
 | **wiki/** | Condensado + onboarding navegável | [`wiki/Home.md`](../../../wiki/Home.md), [`wiki/README.md`](../../../wiki/README.md) (mapa + backlog árvore) |
 | **COLEÇÃO_DOCS_PARA_IA** | Compilado pesado; pode derivar drift | [`docs/COLEÇÃO_DOCS_PARA_IA.md`](../../../docs/COLEÇÃO_DOCS_PARA_IA.md) |
 | **OS Registry** | Índice máquina-humano; **primeiro cadastro** de novo artefato | aqui |
+| **Wiki Corporativa v2 (hub)** | Inventário modular SSOT M01–M12 | [`docs/WIKI_CORPORATIVO_INDEX.md`](../../../docs/WIKI_CORPORATIVO_INDEX.md) |
 
 **Anti-drift:** ao promover conteúdo novo, atualizar **este INDEX**; depois opcionalmente wiki/COLEÇÃO.
 
