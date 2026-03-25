@@ -101,6 +101,19 @@
     }
     .resumo-item .label { font-size: 0.8rem; color: var(--muted); margin-bottom: 0.25rem; }
     .resumo-item .value { font-family: 'JetBrains Mono', monospace; font-size: 1.1rem; font-weight: 600; }
+    .pendentes-banner {
+      display: none;
+      background: rgba(210, 153, 34, 0.12);
+      border: 1px solid rgba(210, 153, 34, 0.45);
+      border-radius: 10px;
+      padding: 0.9rem 1.1rem;
+      margin-bottom: 1.25rem;
+      font-size: 0.9rem;
+      line-height: 1.45;
+    }
+    .pendentes-banner strong.heading { color: #e3b341; }
+    .pendentes-banner ul { margin: 0.45rem 0 0 1rem; padding: 0; }
+    .pendentes-banner .muted { color: var(--muted); font-size: 0.85rem; }
     /* Analítico: rodapé totalizador e acordeão */
     tfoot td { font-weight: 700; background: rgba(255,255,255,0.06); border-top: 2px solid var(--border); padding: 0.6rem 0.75rem; }
     .row-parent { cursor: pointer; }
@@ -137,6 +150,7 @@
   <div class="container">
     <h1>DRE — Jan a Mar 2026</h1>
     <p class="subtitle">Adventure Labs · Demonstração do Resultado (3 primeiros meses)</p>
+    <div id="pendentes-banner" class="pendentes-banner" aria-live="polite"></div>
 
     <div class="tabs" role="tablist">
       <button type="button" role="tab" data-tab="jan" aria-selected="false">Janeiro</button>
@@ -297,11 +311,31 @@
 
   <script>
     (function() {
-    const DRE = {"titulo":"DRE — Jan a Mar 2026","empresa":"Adventure Labs","periodo":{"inicio":"2026-01","fim":"2026-03"},"moeda":"BRL","meses":[{"id":"jan","nome":"Janeiro 2026","receitas":[{"conta":"Receitas diretas - Clientes - Serviços Pontuais","valor":940},{"conta":"Devoluções de Compra de Serviços","valor":64.9},{"conta":"Outras Entradas","valor":50500}],"despesas":[{"conta":"Despesas Administrativas","valor":880.2},{"conta":"Despesas Financeiras","valor":64.9},{"conta":"Despesas com Vendas e Marketing","valor":275},{"conta":"Outras Despesas","valor":501}],"totais":{"receitas":51504.9,"despesas":1721.1,"resultado":49783.8}},{"id":"fev","nome":"Fevereiro 2026","receitas":[{"conta":"Receitas diretas - Clientes - Serviços Pontuais","valor":550},{"conta":"Receitas diretas - Clientes - Variáveis","valor":4508.33},{"conta":"Receitas diretas - Clientes - Serviços Recorrentes","valor":1300},{"conta":"Outras Entradas","valor":40000}],"despesas":[{"conta":"Investimento","valor":40000},{"conta":"Despesas Administrativas","valor":3450.22},{"conta":"Despesas com Vendas e Marketing","valor":1662.5},{"conta":"Despesas com Pessoal","valor":6000},{"conta":"Impostos e Taxas","valor":197.5},{"conta":"Despesas Financeiras","valor":8},{"conta":"Outras Despesas","valor":40000}],"totais":{"receitas":46358.33,"despesas":91310.22,"resultado":-44951.89}},{"id":"mar","nome":"Março 2026","receitas":[{"conta":"Receitas diretas - Clientes - Serviços Pontuais","valor":1250},{"conta":"Receitas diretas - Clientes - Serviços Recorrentes","valor":5500}],"despesas":[{"conta":"Despesas Administrativas","valor":269.16},{"conta":"Despesas com Vendas e Marketing","valor":1062.5},{"conta":"Despesas com Pessoal","valor":3000}],"totais":{"receitas":6750,"despesas":4331.66,"resultado":2418.34}}],"consolidado":{"receitas":104613.23,"despesas":97362.98,"resultado":7250.25}};
+    const DRE = {"titulo":"DRE — Jan a Mar 2026","empresa":"Adventure Labs","periodo":{"inicio":"2026-01","fim":"2026-03"},"moeda":"BRL","meses":[{"id":"jan","nome":"Janeiro 2026","receitas":[{"conta":"Receitas diretas - Clientes - Serviços Pontuais","valor":940},{"conta":"Devoluções de Compra de Serviços","valor":64.9},{"conta":"Outras Entradas","valor":50500}],"despesas":[{"conta":"Despesas Administrativas","valor":880.2},{"conta":"Despesas Financeiras","valor":64.9},{"conta":"Despesas com Vendas e Marketing","valor":275},{"conta":"Outras Despesas","valor":501}],"totais":{"receitas":51504.9,"despesas":1721.1,"resultado":49783.8}},{"id":"fev","nome":"Fevereiro 2026","receitas":[{"conta":"Receitas diretas - Clientes - Serviços Pontuais","valor":550},{"conta":"Receitas diretas - Clientes - Variáveis","valor":4508.33},{"conta":"Receitas diretas - Clientes - Serviços Recorrentes","valor":1300},{"conta":"Outras Entradas","valor":40000}],"despesas":[{"conta":"Investimento","valor":40000},{"conta":"Despesas Administrativas","valor":3250.22},{"conta":"Despesas com Vendas e Marketing","valor":1862.5},{"conta":"Despesas com Pessoal","valor":6000},{"conta":"Impostos e Taxas","valor":197.5},{"conta":"Despesas Financeiras","valor":8},{"conta":"Outras Despesas","valor":40000}],"totais":{"receitas":46358.33,"despesas":91310.22,"resultado":-44951.89}},{"id":"mar","nome":"Março 2026","receitas":[{"conta":"Receitas diretas - Clientes - Serviços Pontuais","valor":1250},{"conta":"Receitas diretas - Clientes - Serviços Recorrentes","valor":5500}],"despesas":[{"conta":"Despesas Administrativas","valor":3222.15},{"conta":"Despesas com Vendas e Marketing","valor":1062.5},{"conta":"Despesas com Pessoal","valor":3000}],"totais":{"receitas":6750,"despesas":7284.65,"resultado":-534.65}}],"consolidado":{"receitas":104613.23,"despesas":100315.97,"resultado":4297.26},"pendentes_lancamento":{"resumo":"Cartão Nubank PF — despesas Adventure já classificadas, ainda sem lançamento no controle","total":730.7,"por_mes":[{"mes":"Fevereiro 2026","valor":516.63,"detalhe":"Cursor + IOF; Google Ads Rose (reembolso via NF)"},{"mes":"Março 2026","valor":214.07,"detalhe":"Cursor + IOF; Adobe Illustrator (1 mês)"}],"por_categoria":[{"conta":"Despesas Administrativas","valor":322.84},{"conta":"Despesas com Vendas e Marketing","valor":400},{"conta":"Despesas Financeiras","valor":7.86}]}};
 
     if (!DRE || !DRE.consolidado || !DRE.meses || DRE.meses.length === 0) {
       document.body.insertAdjacentHTML('beforeend', '<p style="color:#f85149;padding:1rem;">Dados do DRE não disponíveis. Verifique o arquivo.</p>');
       return;
+    }
+
+    function renderPendentesBanner() {
+      const p = DRE.pendentes_lancamento;
+      const el = document.getElementById('pendentes-banner');
+      if (!p || !el) return;
+      el.style.display = 'block';
+      const mesLines = (p.por_mes || []).map(function(x) {
+        return '<li><strong>' + x.mes + '</strong> — ' + fmt(x.valor) + ' <span class="muted">(' + x.detalhe + ')</span></li>';
+      }).join('');
+      const catLines = (p.por_categoria || []).map(function(x) {
+        return '<li>' + x.conta + ': ' + fmt(x.valor) + '</li>';
+      }).join('');
+      el.innerHTML =
+        '<strong class="heading">' + p.resumo + '</strong><br/>' +
+        '<span class="muted">Total ainda fora dos números do DRE abaixo (até lançar no controle/Omie):</span> ' +
+        '<strong class="despesa-num">' + fmt(p.total) + '</strong>' +
+        '<ul>' + mesLines + '</ul>' +
+        '<div class="muted">Quando efetivar, use estas categorias:</div>' +
+        '<ul style="margin-top:0.35rem;">' + catLines + '</ul>';
     }
 
     function fmt(v) {
@@ -336,6 +370,8 @@
       resEl.textContent = fmt(c.resultado);
       resEl.classList.add(c.resultado >= 0 ? 'resultado-pos' : 'resultado-neg');
     }
+
+    renderPendentesBanner();
 
     const tbodyCons = document.getElementById('tbody-consolidado');
     if (tbodyCons) tbodyCons.innerHTML = DRE.meses.map(m => {

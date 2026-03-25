@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="520" height="120" viewBox="0 0 520 120" role="img" aria-labelledby="title desc">
+  <title id="title">Adventure Labs</title>
+  <desc id="desc">Wordmark da Adventure Labs para relatórios claros.</desc>
+  <rect width="520" height="120" rx="14" fill="#ffffff"/>
+  <text
+    x="24"
+    y="52"
+    font-family="Segoe UI, Arial, sans-serif"
+    font-size="22"
+    letter-spacing="1.6"
+    fill="#1b1f24"
+    font-weight="700"
+  >
+    ADVENTURE LABS
+  </text>
+  <text
+    x="24"
+    y="84"
+    font-family="Segoe UI, Arial, sans-serif"
+    font-size="14"
+    letter-spacing="0.8"
+    fill="#57606a"
+    font-weight="500"
+  >
+    Bold Moves. Smart Growth.
+  </text>
+  <circle cx="478" cy="36" r="10" fill="#da0028"/>
+  <circle cx="452" cy="36" r="10" fill="#0d1b2a"/>
+</svg>

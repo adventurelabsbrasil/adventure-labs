@@ -1,0 +1,366 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Benditta - Relatório de Campanha (Fase 1)</title>
+    <style>
+      :root {
+        --bg: #f7f8fa;
+        --card: #ffffff;
+        --ink: #1b1f24;
+        --muted: #57606a;
+        --line: #d0d7de;
+        --accent: #8b5e3c;
+        --accent-soft: #f2ece7;
+        --ok: #1a7f37;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--ink);
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        line-height: 1.45;
+      }
+
+      .page {
+        width: 210mm;
+        margin: 0 auto;
+        padding: 14mm 14mm 16mm;
+      }
+
+      .sheet {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: 20px 22px;
+      }
+
+      .header {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 14px;
+        align-items: start;
+        margin-bottom: 18px;
+      }
+
+      .brand-stack {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        align-items: flex-end;
+      }
+
+      h1 {
+        margin: 0;
+        font-size: 25px;
+        line-height: 1.15;
+      }
+
+      .subtitle {
+        margin-top: 8px;
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      .logo-mask {
+        background: #16181d;
+        border-radius: 14px;
+        padding: 10px 14px;
+        border: 1px solid #2d333b;
+      }
+
+      .logo-mask img {
+        width: 180px;
+        height: auto;
+        display: block;
+      }
+
+      .meta {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-bottom: 14px;
+      }
+
+      .badge {
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        padding: 4px 10px;
+        font-size: 12px;
+        color: var(--muted);
+      }
+
+      h2 {
+        margin: 20px 0 10px;
+        font-size: 17px;
+      }
+
+      p {
+        margin: 0 0 10px;
+      }
+
+      ul {
+        margin: 8px 0 10px 20px;
+        padding: 0;
+      }
+
+      li {
+        margin: 5px 0;
+      }
+
+      .cards {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 8px;
+        margin: 12px 0;
+      }
+
+      .card {
+        background: var(--accent-soft);
+        border: 1px solid #e2d6ca;
+        border-radius: 10px;
+        padding: 10px;
+      }
+
+      .card-label {
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .card-value {
+        margin-top: 4px;
+        font-size: 18px;
+        font-weight: 700;
+        color: var(--ink);
+      }
+
+      .grid-two {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+
+      .panel {
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        padding: 10px 12px;
+      }
+
+      .panel h3 {
+        margin: 0 0 6px;
+        font-size: 14px;
+      }
+
+      .panel ul {
+        margin-top: 0;
+      }
+
+      .ok {
+        color: var(--ok);
+        font-weight: 600;
+      }
+
+      .footer {
+        margin-top: 14px;
+        border-top: 1px dashed var(--line);
+        padding-top: 10px;
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      @media print {
+        body {
+          background: #fff;
+        }
+        .page {
+          padding: 0;
+        }
+        .sheet {
+          border: none;
+          border-radius: 0;
+          padding: 0;
+        }
+        .meta,
+        .cards,
+        .card,
+        .grid-two,
+        .panel,
+        h2,
+        h3,
+        p,
+        ul,
+        li,
+        .footer {
+          page-break-inside: avoid;
+          break-inside: avoid-page;
+        }
+        h2,
+        h3 {
+          page-break-after: avoid;
+          break-after: avoid-page;
+        }
+        p,
+        li {
+          orphans: 3;
+          widows: 3;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <article class="sheet">
+        <header class="header">
+          <div>
+            <h1>Benditta - Relatório de Campanha (Fase 1)</h1>
+            <p class="subtitle">
+              Consolidado para apresentação ao cliente e registro da primeira rodada de anúncios no sistema Adventure Labs.
+            </p>
+          </div>
+          <div class="brand-stack">
+            <div class="logo-mask">
+              <img src="file:///Users/ribasrodrigo91/Documents/GitHub/01_ADVENTURE_LABS/apps/clientes/05_benditta/benditta/app/public/benditta/logo.png" alt="Logo Benditta" />
+            </div>
+          </div>
+        </header>
+
+        <div class="meta">
+          <span class="badge">Período analisado: 09/03/2026 a 18/03/2026</span>
+          <span class="badge">Janela com registros: 7 dias</span>
+          <span class="badge">Atualizado em: 24/03/2026</span>
+        </div>
+
+        <h2>1) Resumo executivo</h2>
+        <p>
+          A primeira rodada validou capacidade de gerar alcance e iniciar conversas no WhatsApp. O principal aprendizado foi a necessidade de
+          reforçar a qualificação na entrada (criativo, copy e mensagem inicial), para aumentar aderência ao ICP de projetos completos.
+        </p>
+
+        <div class="cards">
+          <div class="card">
+            <div class="card-label">Investimento total</div>
+            <div class="card-value">R$ 439,20</div>
+          </div>
+          <div class="card">
+            <div class="card-label">Impressões</div>
+            <div class="card-value">35.766</div>
+          </div>
+          <div class="card">
+            <div class="card-label">Alcance</div>
+            <div class="card-value">31.797</div>
+          </div>
+          <div class="card">
+            <div class="card-label">Cliques (todos)</div>
+            <div class="card-value">222</div>
+          </div>
+        </div>
+
+        <h2>2) Resultado por objetivo</h2>
+        <div class="grid-two">
+          <section class="panel">
+            <h3>OUTCOME_LEADS (Mensagens)</h3>
+            <ul>
+              <li>Investimento: <strong>R$ 415,98</strong></li>
+              <li>Impressões: <strong>15.606</strong></li>
+              <li>Alcance: <strong>11.837</strong></li>
+              <li>Cliques (todos): <strong>208</strong></li>
+              <li>Conversas iniciadas: <strong>10</strong></li>
+              <li>Custo por conversa: <strong>R$ 41,60</strong></li>
+              <li>CTR: <strong>1,33%</strong></li>
+            </ul>
+          </section>
+          <section class="panel">
+            <h3>OUTCOME_AWARENESS (Alcance)</h3>
+            <ul>
+              <li>Investimento: <strong>R$ 23,22</strong></li>
+              <li>Impressões: <strong>20.160</strong></li>
+              <li>Alcance (resultado): <strong>19.960</strong></li>
+              <li>Cliques (todos): <strong>14</strong></li>
+              <li>CTR: <strong>0,07%</strong></li>
+              <li>Leitura: cumpriu papel de cobertura, com baixa interação esperada para awareness.</li>
+            </ul>
+          </section>
+        </div>
+
+        <h2>3) Feedback comercial (organizado)</h2>
+        <div class="grid-two">
+          <section class="panel">
+            <h3>Evolução no funil</h3>
+            <ul>
+              <li>Dos <strong>10 leads</strong>, <strong>2 evoluíram no funil</strong>.</li>
+              <li>Um dos leads pediu orçamento sem responder às perguntas qualificadoras.</li>
+              <li>O outro lead pode evoluir como potencial <strong>MQL</strong>.</li>
+            </ul>
+          </section>
+          <section class="panel">
+            <h3>Qualidade dos leads</h3>
+            <ul>
+              <li>A maioria dos leads buscava itens específicos de reforma, e não projeto completo de ambiente.</li>
+              <li>Necessidade de elevar o filtro já na entrada para reduzir ruído comercial.</li>
+            </ul>
+          </section>
+        </div>
+
+        <h2>4) Consolidação no sistema (primeira rodada)</h2>
+        <p>
+          Registro oficial da <strong>rodada 1</strong> efetuado como baseline de performance para comparação com as próximas ondas de teste e
+          otimização.
+        </p>
+        <ul>
+          <li><strong>Status da rodada:</strong> concluída e consolidada.</li>
+          <li><strong>Canal:</strong> Meta Ads (Linha Essencial).</li>
+          <li><strong>Objetivos ativos:</strong> Leads (mensagens) + Awareness.</li>
+          <li><strong>Aprendizado-chave:</strong> aumentar filtro de qualificação para foco em projeto completo.</li>
+          <li><strong>Decisão para próxima etapa:</strong> manter testes com controle semanal de qualidade e custo.</li>
+        </ul>
+
+        <h2>5) Próximos passos sugeridos</h2>
+        <ul>
+          <li>Criar formulário qualificador para os próximos anúncios Meta (Adventure).</li>
+          <li>Finalizar a Landing Page (Adventure).</li>
+          <li>Rodar Google Ads (Adventure).</li>
+          <li>Adicionar saldo nas plataformas.</li>
+          <li>Solicitar novos materiais para as próximas rodadas.</li>
+          <li>Aguardar materiais (reels) pendentes do primeiro cronograma (Benditta).</li>
+          <li>Gerar mais material conforme novo cronograma (Benditta).</li>
+          <li>Benditta ajustará e enviará o playbook comercial para análise da Adventure.</li>
+        </ul>
+
+        <h2>6) Funil e qualificação recomendados daqui para frente</h2>
+        <p>
+          Sugestão estratégica: além de CPL e conversa iniciada, mapear o funil completo para decisões de mídia e vendas mais precisas.
+        </p>
+        <ul>
+          <li>Etapas mínimas de acompanhamento: <strong>conversa iniciada → reunião → orçamento → proposta</strong>.</li>
+          <li>Manter leitura semanal por etapa para identificar gargalos comerciais e de qualificação.</li>
+        </ul>
+
+        <h2>7) Perguntas qualificadoras iniciais sugeridas</h2>
+        <ul>
+          <li>Nome</li>
+          <li>E-mail</li>
+          <li>Telefone</li>
+          <li>Quantidade de ambientes</li>
+          <li>Tem projeto?</li>
+          <li>Quanto pretende investir? (faixas de abaixo de R$ 15 mil até acima de R$ 250 mil)</li>
+        </ul>
+        <p>
+          Cidade e status de projeto podem ser segmentados no próprio anúncio. Na Landing Page, a recomendação é manter todas as perguntas.
+          Se for formulário nativo da plataforma, não é obrigatório repetir todos os campos na LP.
+        </p>
+
+        <p class="ok">Conclusão: fase 1 validou tração inicial e gerou base consistente para fase 2 com foco em qualificação e escala sustentável.</p>
+
+        <div class="footer">
+          Este relatório foi gerado com base nos dados do Meta Ads vinculados ao sistema <strong>Adventure Compass</strong> da Adventure Labs.
+        </div>
+      </article>
+    </div>
+  </body>
+</html>

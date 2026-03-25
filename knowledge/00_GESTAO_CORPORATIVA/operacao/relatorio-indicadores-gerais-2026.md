@@ -31,7 +31,7 @@ Legenda: 🔴 não disponível / não definido | 🟡 parcial ou qualitativo | �
 | Área | O que avançou | O que falta |
 |------|----------------|-------------|
 | **Operação** | Admin em uso (clientes, projetos, tarefas, Kanbans, relatório founder); ciclo de vida documentado; registro do dia. | Adventrack com Igor/Mateus; Trello interno com roles; conciliação bancária; SLA formalizado por tipo. |
-| **Financeiro** | Blueprint de KPIs; plano de contas em checklist; extratos jan/fev disponíveis para análise. | One-pager com números; meta semestral de receita/resultado; conciliação concluída. |
+| **Financeiro** | Blueprint de KPIs; plano de contas em checklist; OFX Sicredi jan–mar conciliados na skill Sueli + DRE atualizado (`relatorio-dre-jan-mar-2026`, `dre-jan-mar-2026.html`). | One-pager com números; meta semestral de receita/resultado; Omie; fechar dúvidas Zoop/Demerge (março). |
 | **Marketing** | Decisão de foco (clientes ativos + SaaS); plano de mídia SaaS em elaboração (Igor); pausa ELITE documentada. | Metas por canal; calendário editorial; orçamento de mídia definido. |
 | **Clientes** | Rose (Google Ads, GTM); Benditta (criativos/linha essencial); Young (plano de mídia, cobrança Módulo I); Lidera (Lidera-space em dev). | Lista oficial fixo/pontual; receita por cliente; pipeline com estágios e expectativa de fechamento. |
 | **Produto/Tech** | Admin go-live; roadmap único Admin+CRM; integração GitHub (issues no dashboard). | Integrações Omie/Ads; KPIs no dashboard; transcrição áudios (CRM). |
@@ -77,4 +77,4 @@ Responder por bloco quando possível; usar [questionario-guia-sigilo.md](../ques
 
 ---
 
-*Elaborado pelo Grove com contribuições do C-Suite. Última atualização: 05/03/2026.*
+*Elaborado pelo Grove com contribuições do C-Suite. Última atualização: 24/03/2026 (bloco financeiro / DRE Sicredi).*

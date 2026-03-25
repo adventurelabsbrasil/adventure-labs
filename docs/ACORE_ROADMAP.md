@@ -93,3 +93,4 @@ Documento único de **etapas numeradas** espelhando a [ACORE_CONSTITUTION.md](..
 1. Após marcos grandes, atualizar coluna **Estado** e notas.  
 2. Não duplicar o quadro completo do BACKLOG — apenas orientar fases.  
 3. Mudanças de arquitetura que contradizem a Constituição exigem **RFC ao CTO** (ver Constituição).
+4. Em P0 aberto, manter convergência diária entre `BACKLOG` + `ACORE_SESSION_LOG` (mesma data-base de status e bloqueios).

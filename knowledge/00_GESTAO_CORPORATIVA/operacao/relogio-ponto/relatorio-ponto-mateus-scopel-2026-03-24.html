@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <title>Relatório de ponto — Mateus Scopel</title>
+  <style>
+    @page { size: A4; margin: 18mm; }
+    body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; font-size: 10pt; color: #111; line-height: 1.35; }
+    h1 { font-size: 16pt; margin: 0 0 12px; }
+    h2 { font-size: 11pt; margin: 18px 0 8px; border-bottom: 1px solid #ccc; padding-bottom: 4px; }
+    .meta p { margin: 2px 0; }
+    .note { font-size: 9pt; color: #444; font-style: italic; margin: 10px 0; }
+    table { width: 100%; border-collapse: collapse; margin: 8px 0 14px; font-size: 8.5pt; }
+    th, td { border: 1px solid #bbb; padding: 4px 5px; text-align: left; vertical-align: top; }
+    th { background: #f3f4f6; font-weight: 600; }
+    .footer { font-size: 8pt; color: #666; margin-top: 20px; }
+  </style>
+</head>
+<body>
+  <h1>Relatório de registro de ponto (espelho)</h1>
+  <div class="meta">
+    <p><strong>Empresa:</strong> Adventure Labs</p>
+    <p><strong>Colaborador:</strong> Mateus Scopel</p>
+    <p><strong>E-mail (cadastro):</strong> mateuslepocs@gmail.com</p>
+    <p><strong>Período das marcações:</strong> 06/03/2026 a 23/03/2026 (America/Sao_Paulo)</p>
+    <p><strong>Emitido em:</strong> 25/03/2026 <em>(atualizado: legado + adv, ajustes 22–23/03)</em></p>
+    <p><strong>Fuso:</strong> America/Sao_Paulo (horário de Brasília)</p>
+    <p><strong>Fonte:</strong> time_bank_entries (legado) + adv_time_bank_entries (unificado / ajustes manuais)</p>
+  </div>
+  <p class="note">Local aproximado: geocodificação reversa OSM/Nominatim onde há GPS; ajustes manuais sem coordenadas.</p>
+
+  <h2>1. Marcações detalhadas</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Data (SP)</th><th>Tipo</th><th>Horário</th><th>Fonte</th><th>Lat</th><th>Long</th><th>Local</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>06/03/2026</td><td>Entrada</td><td>20:13:00</td><td>legado</td><td>-30,006459</td><td>-51,154577</td><td>Cristo Redentor — POA/RS</td></tr>
+      <tr><td>06/03/2026</td><td>Saída</td><td>21:51:00</td><td>legado</td><td>-30,006482</td><td>-51,154562</td><td>Cristo Redentor — POA/RS</td></tr>
+      <tr><td>07/03/2026</td><td>Entrada</td><td>23:21:00</td><td>legado</td><td>-30,006459</td><td>-51,154577</td><td>Cristo Redentor — POA/RS</td></tr>
+      <tr><td>08/03/2026</td><td>Saída</td><td>00:45:00</td><td>legado</td><td>-30,006471</td><td>-51,154568</td><td>Cristo Redentor — POA/RS</td></tr>
+      <tr><td>11/03/2026</td><td>Entrada</td><td>10:57:09</td><td>legado</td><td>—</td><td>—</td><td>Sem geo</td></tr>
+      <tr><td>11/03/2026</td><td>Saída</td><td>13:57:41</td><td>legado</td><td>—</td><td>—</td><td>Sem geo</td></tr>
+      <tr><td>11/03/2026</td><td>Saída</td><td>13:57:42</td><td>legado</td><td>-30,028300</td><td>-51,197700</td><td>Moinhos de Vento — POA/RS</td></tr>
+      <tr><td>22/03/2026</td><td>Entrada</td><td>09:00:00</td><td>adv</td><td>—</td><td>—</td><td>Ajuste manual (sem GPS)</td></tr>
+      <tr><td>22/03/2026</td><td>Saída</td><td>10:00:00</td><td>adv</td><td>—</td><td>—</td><td>Ajuste manual (sem GPS)</td></tr>
+      <tr><td>23/03/2026</td><td>Entrada</td><td>09:00:00</td><td>adv</td><td>—</td><td>—</td><td>Ajuste manual (sem GPS)</td></tr>
+      <tr><td>23/03/2026</td><td>Saída</td><td>10:00:00</td><td>adv</td><td>—</td><td>—</td><td>Ajuste manual (sem GPS)</td></tr>
+    </tbody>
+  </table>
+  <p class="note"><strong>Obs.:</strong> saída duplicada em 11/03 (~1 s) — espelho bruto. 22–23/03: 1 h/dia por indisponibilidade do sistema (migração <code>20260325121500</code>).</p>
+
+  <h2>2. Apuração por jornada</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>#</th><th>Entrada (SP)</th><th>Saída (SP)</th><th>Horas (dec.)</th><th>Duração</th><th>Obs.</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>1</td><td>06/03/2026 20:13</td><td>06/03/2026 21:51</td><td>1,6333</td><td>1 h 38 min</td><td>Benditta (legado)</td></tr>
+      <tr><td>2</td><td>07/03/2026 23:21</td><td>08/03/2026 00:45</td><td>1,4000</td><td>1 h 24 min</td><td>Benditta (legado)</td></tr>
+      <tr><td>3</td><td>11/03/2026 10:57:09</td><td>11/03/2026 13:57:41</td><td>3,0090</td><td>3 h 0 min 32 s</td><td>Legado</td></tr>
+      <tr><td>4</td><td>22/03/2026 09:00</td><td>22/03/2026 10:00</td><td>1,0000</td><td>1 h</td><td>Ajuste manual (adv)</td></tr>
+      <tr><td>5</td><td>23/03/2026 09:00</td><td>23/03/2026 10:00</td><td>1,0000</td><td>1 h</td><td>Ajuste manual (adv)</td></tr>
+    </tbody>
+  </table>
+
+  <h2>3. Totais</h2>
+  <table>
+    <tbody>
+      <tr><th>Jornadas apuradas</th><td><strong>5</strong></td></tr>
+      <tr><th>Total (decimal)</th><td><strong>8,0423 h</strong></td></tr>
+      <tr><th>Total (hh:mm:ss)</th><td><strong>8 h 02 min 32 s</strong></td></tr>
+    </tbody>
+  </table>
+
+  <h2>4. Conferência</h2>
+  <table>
+    <thead><tr><th>Papel</th><th>Nome</th><th>Data</th><th>Assinatura</th></tr></thead>
+    <tbody>
+      <tr><td>Colaborador</td><td>Mateus Scopel</td><td>___/___/______</td><td></td></tr>
+      <tr><td>Responsável / RH</td><td></td><td>___/___/______</td><td></td></tr>
+    </tbody>
+  </table>
+
+  <p class="footer">© OpenStreetMap contributors — dados de endereço via Nominatim (onde aplicável).</p>
+</body>
+</html>

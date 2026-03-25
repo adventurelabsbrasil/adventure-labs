@@ -4,6 +4,12 @@
 
 **Tarefa criada no Asana (2026-03-23):** GID **`1213786808148845`** — [abrir no Asana](https://app.asana.com/1/1213725900473628/project/1213744799182607/task/1213786808148845). Projeto **Inbox**, secção **Entrada**; **due** 2026-03-30; campos: **Nível de Projeto** = Core, **C-Suite** = Founder, **Departamento** = Tecnologia; **assignee** Adventure Labs (`contato@`); **follower** Comando Estelar (`ceo@`).
 
+## Status de execução (checkpoint 2026-03-25)
+
+- Estado do card pai no BACKLOG: `todo` (bloqueio operacional em painel Vercel/DNS).
+- Critério de evidência mantido: output de `projects ls`, status `Ready` dos 2 projetos, domínios HTTPS e smoke.
+- Próxima atualização obrigatória: ao concluir subtarefas de 2026-03-26 a 2026-03-30 (import, env, DNS e smoke).
+
 ---
 
 ## Como criar no Asana (2 minutos) — legado / duplicar

@@ -10,6 +10,13 @@ Fila e contexto operacional: [projeto **Tasks** no Asana](https://app.asana.com/
 
 Para **novas** integracoes agendadas (n8n Schedule, Vercel Cron, webhooks) ou fluxos que disparam sozinhos: primeiro **runbook ou linha no** [`os-registry/INDEX.md`](../knowledge/06_CONHECIMENTO/os-registry/INDEX.md) + alinhamento a [`n8n-schedule.md`](../knowledge/00_GESTAO_CORPORATIVA/processos/n8n-schedule.md). Ver [`PLANO_ADVENTURE_OS_UNIFICADO.md`](PLANO_ADVENTURE_OS_UNIFICADO.md) (*Ordem de prioridade*). **Excecao:** `P0` seguranca ou producao que exija hotfix imediato — documentar em seguida no mesmo sprint.
 
+## Snapshot operacional ACORE (2026-03-25)
+
+- **P0 Vercel/Core (`1213786808148845`)**: continua `todo`, com execução humana em painel/DNS como caminho crítico.
+- **Gate legal (`1213710771598087`)**: continua `todo`; bloqueio formal de go-live de mídia.
+- **SDR Wizard (função + migrations)**: backend pronto e pendente de validação E2E com evidência anexada (roteiro em `knowledge/00_GESTAO_CORPORATIVA/operacao/asana/validacao-e2e-sdr-wizard-acore-2026-03.md`).
+- **Critério de convergência da semana:** qualquer mudança de status P0 precisa refletir no mesmo dia em `BACKLOG`, `ACORE_ROADMAP` e `ACORE_SESSION_LOG`.
+
 ## Regra obrigatoria de execucao
 
 Antes de iniciar qualquer implementacao, registrar:
@@ -45,7 +52,7 @@ Colunas **Due (Asana)** e **Atualizado em** usam `AAAA-MM-DD`. A coluna **Agenda
 | 1213757581639410 | Asana | Vercel — preencher owners/domínios/repo canônico da matriz executiva | P2 | em_progresso | Founder / CTO | | — | 2026-03-23 | Matriz alinhada a repos reais (monorepo `adventurelabsbrasil/adventure-labs` + submódulos em `.gitmodules`); incluído **benditta**, mapa repo/root, checklist **Revisão periódica da carteira**. **Pendente:** domínios finais + coluna “Aprovado por” + tabela de revisão CLI (nomes projetos Vercel). Ver `docs/VERCEL_MANUAL_VERSIONADO.md`. |
 | 1213775007158205 | Asana | Young Talents → correção de status para projeto entregue (propriedade Young Empreendimentos) | P2 | feito | Founder | | — | 2026-03-23 | Atualização documental: `docs/YOUNG_TALENTS_PROJETO_ENTREGUE.md`; CHANGELOG `docs/young-talents/CHANGELOG.md`; manuais + INDEX. Monorepo mantém histórico técnico/handoff. |
 | 1213744799182607 | Asana | Inbox Zero via router por campos (Nível/Cliente/C-Suite/Departamento) | P1 | feito | Comando Estelar | 2026-03-23 | — | 2026-03-23 | `pnpm asana:router:apply` com `moved: 31`, `failed: 0`; pós-validação `pnpm asana:router:dry` com Inbox `0` tarefas abertas. Playbook atualizado em `knowledge/00_GESTAO_CORPORATIVA/operacao/asana/playbook-operacional-gtd-lite-comando-estelar.md`. |
-| 1213710771598087 | Asana | Legal approval of campaign details (lote) | P0 | todo | Adventure Labs | 2026-03-26 | — | 2026-03-24 | Milestone no fluxo de vídeo; notas atualizadas (escalação Comando Estelar) para gate go-live 01/04 — designar aprovador + estado explícito. **Triagem 2026-03-24:** carimbo ACORE + ligação DOD war room `1213787130286682`. |
+| 1213710771598087 | Asana | Legal approval of campaign details (lote) | P0 | todo | Adventure Labs | 2026-03-26 | — | 2026-03-25 | Milestone no fluxo de vídeo; notas atualizadas (escalação Comando Estelar) para gate go-live 01/04 — designar aprovador + estado explícito. **Triagem 2026-03-24:** carimbo ACORE + ligação DOD war room `1213787130286682`. **Checkpoint 2026-03-25:** pendente registrar decisão final (`aprovado`/`ajustes`) no card para destravar mídia. |
 | 1213709221981242 | Asana | Cronograma Editorial [Planejamento] (MVP Martech) | P1 | todo | Igor Ribas | 2026-03-20 | — | 2026-03-20 | Vista no Asana; Igor. |
 | 1213709221981253 | Asana | Ficha tecnica do produto (MVP Martech) | P1 | todo | Adventure Labs | 2026-03-20 | — | 2026-03-20 | Vista no Asana. |
 | 1213709221981331 | Asana | Esboco (Copy/Wireframes) (MVP Martech) | P1 | todo | Igor Ribas | 2026-03-20 | — | 2026-03-20 | Vista no Asana. |

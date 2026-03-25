@@ -1,0 +1,56 @@
+variavel,origem,path_infisical,env,prioridade,status,observacoes
+N8N_API_URL,apps/core/admin/.env.local,/admin,prod,P0,migrated,Atualizar para dominio VPS/Coolify (nao Railway)
+N8N_API_TOKEN,apps/core/admin/.env.local,/admin,prod,P0,migrated,Token da Public API do n8n
+CRON_SECRET,apps/core/admin/.env.local,/admin,prod,P0,migrated,Usado em rotas /api/cron e integracoes
+GEMINI_API_KEY,apps/core/admin/.env.local,/admin,prod,P1,migrated,IA resumo diario
+ADMIN_ALLOWED_EMAILS,apps/core/admin/.env.local,/admin,prod,P1,migrated,Sem duplicidade; uma linha
+WHATSAPP_WORKER_URL,apps/core/admin/.env.local,/admin,prod,P1,migrated,Validar se continua Railway ou migrar
+GITHUB_REPO_OWNER,apps/core/admin/.env.local,/admin,prod,P1,migrated,Backlog e criacao de issues
+GITHUB_REPO_NAME,apps/core/admin/.env.local,/admin,prod,P1,migrated,Backlog e criacao de issues
+GITHUB_TOKEN,apps/core/admin/.env.local,/admin,prod,P0,migrated,Token com escopos minimos
+NEXT_PUBLIC_SUPABASE_URL,apps/core/admin/.env.local,/admin,prod,P0,migrated,App admin
+NEXT_PUBLIC_SUPABASE_ANON_KEY,apps/core/admin/.env.local,/admin,prod,P0,migrated,App admin
+SUPABASE_SERVICE_ROLE_KEY,apps/core/admin/.env.local,/admin,prod,P0,migrated,Somente server-side
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY,apps/core/admin/.env.local,/admin,prod,P0,migrated,Auth admin
+CLERK_SECRET_KEY,apps/core/admin/.env.local,/admin,prod,P0,migrated,Auth admin server
+NEXT_PUBLIC_CLERK_SIGN_IN_FALLBACK_REDIRECT_URL,apps/core/admin/.env.local,/admin,prod,P1,migrated,Padrao /dashboard
+ANTHROPIC_API_KEY,apps/core/admin/.env.local,/admin,prod,P2,migrated,Somente se fluxos ativos usarem
+OMIE_APP_KEY,apps/core/admin/.env.local,/admin,prod,P1,migrated,Sueli conciliacao
+OMIE_APP_SECRET,apps/core/admin/.env.local,/admin,prod,P1,migrated,Sueli conciliacao
+SETUP_PASSWORD,apps/core/admin/.env.local,/admin,prod,P1,migrated,OpenClaw setup interno
+OPENCLAW_GATEWAY_TOKEN,apps/core/admin/.env.local,/admin,prod,P1,migrated,OpenClaw gateway
+OPENCLAW_STATE_DIR,apps/core/admin/.env.local,/admin,prod,P2,migrated,Caminho operacional
+ELEVEN_LABS_API_KEY,apps/core/admin/.env.local,/admin,prod,P2,migrated,TTS Andon
+TELEGRAM_BOT_TOKEN_SUELI,apps/core/admin/.env.local,/admin,prod,P2,migrated,Bot Sueli
+OPENAI_API_KEY,apps/core/admin/.env.local,/admin,prod,P1,pending,Nao importada: valor vazio no .env.local
+ASANA_ACCESS_TOKEN,apps/core/admin/.env.local,/admin,prod,P0,migrated,Comando Estelar Asana
+ASANA_INBOX_PROJECT_ID,apps/core/admin/.env.local,/admin,prod,P0,migrated,Roteamento Inbox
+ASANA_CORE_PROJECT_ID,apps/core/admin/.env.local,/admin,prod,P0,migrated,Roteamento Core
+ASANA_LABS_PROJECT_ID,apps/core/admin/.env.local,/admin,prod,P0,migrated,Roteamento Labs
+ASANA_CLIENT_ROSE_PROJECT_ID,apps/core/admin/.env.local,/admin,prod,P0,migrated,Roteamento cliente Rose
+ASANA_CLIENT_YOUNG_PROJECT_ID,apps/core/admin/.env.local,/admin,prod,P0,migrated,Roteamento cliente Young
+ASANA_CLIENT_LIDERA_PROJECT_ID,apps/core/admin/.env.local,/admin,prod,P0,migrated,Roteamento cliente Lidera
+ASANA_CLIENT_BENDITTA_PROJECT_ID,apps/core/admin/.env.local,/admin,prod,P0,migrated,Roteamento cliente Benditta
+ASANA_WORKSPACE_GID,apps/core/admin/.env.local,/admin,prod,P0,migrated,Workspace Asana
+VITE_SDR_WIZARD_TENANT_ID,apps/core/admin/.env.local,/admin,prod,P1,migrated,Fluxo SDR wizard
+VITE_LINKEDIN_PARTNER_ID,apps/core/admin/.env.local,/admin,prod,P1,pending,Nao importada: valor vazio no .env.local
+VITE_LINKEDIN_PARTNER_ID,apps/core/adventure/.env.example,/core/adventure,prod,P1,pending,LP Martech no app adventure
+N8N_ENCRYPTION_KEY,Coolify service env,/n8n-prod,prod,P0,migrated,Obrigatorio e fixo; nao rotacionar sem plano
+N8N_HOST,Coolify service env,/n8n-prod,prod,P0,migrated,Hostname do n8n
+N8N_PROTOCOL,Coolify service env,/n8n-prod,prod,P0,migrated,Normalmente https
+WEBHOOK_URL,Coolify service env,/n8n-prod,prod,P0,migrated,URL publica de webhooks
+N8N_EDITOR_BASE_URL,Coolify service env,/n8n-prod,prod,P0,migrated,URL editor
+N8N_BASIC_AUTH_ACTIVE,Coolify service env,/n8n-prod,prod,P1,migrated,Se habilitado
+N8N_BASIC_AUTH_USER,Coolify service env,/n8n-prod,prod,P1,migrated,Se habilitado
+N8N_BASIC_AUTH_PASSWORD,Coolify service env,/n8n-prod,prod,P1,migrated,Se habilitado
+N8N_SMTP_HOST,Coolify service env,/n8n-prod,prod,P2,migrated,Se envio de email estiver ativo
+N8N_SMTP_PORT,Coolify service env,/n8n-prod,prod,P2,migrated,Se envio de email estiver ativo
+N8N_SMTP_USER,Coolify service env,/n8n-prod,prod,P2,migrated,Se envio de email estiver ativo
+N8N_SMTP_PASS,Coolify service env,/n8n-prod,prod,P2,migrated,Se envio de email estiver ativo
+N8N_SMTP_SENDER,Coolify service env,/n8n-prod,prod,P2,migrated,Se envio de email estiver ativo
+VPS_IP,Hostinger VPS details,/ops,prod,P1,migrated,Ex 187.77.251.199
+VPS_USER,Hostinger VPS details,/ops,prod,P1,migrated,Ex root
+COOLIFY_URL,Coolify dashboard domain,/ops,prod,P1,migrated,Health check HTTP
+N8N_URL,Coolify n8n public domain,/ops,prod,P1,migrated,Health check n8n
+N8N_CONTAINER,docker ps no VPS,/ops,prod,P1,migrated,Ex cmn582yth000jl2aervhqp08x
+
