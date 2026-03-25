@@ -4,7 +4,7 @@ const config: Config = {
   darkMode: ["class"],
   content: [
     "./src/**/*.{js,ts,jsx,tsx,mdx}",
-    "../../packages/benditta-meta-dashboard/src/**/*.{js,ts,jsx,tsx}",
+    "../../../../../packages/benditta-meta-dashboard/src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
     extend: {
