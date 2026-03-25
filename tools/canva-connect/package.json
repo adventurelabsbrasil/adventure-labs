@@ -1,0 +1,12 @@
+{
+  "name": "@adventure/canva-connect-tools",
+  "private": true,
+  "description": "Scripts auxiliares Canva Connect (criar designs vazios nas medidas de anúncio).",
+  "type": "module",
+  "scripts": {
+    "tofu:create-designs": "node scripts/create-adventure-tofu-designs.mjs"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
