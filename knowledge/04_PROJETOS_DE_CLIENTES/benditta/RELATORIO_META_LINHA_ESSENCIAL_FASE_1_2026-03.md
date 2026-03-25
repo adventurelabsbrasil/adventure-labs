@@ -121,3 +121,55 @@ Base: CSV de campanha em `clients/05_benditta/BM-202603-MetaReport.csv` + contex
 - Dados sensiveis, credenciais e anexos ficam fora do Git.
 - A fonte narrativa de contexto permanece em [CONTEXTO_LINHA_ESSENCIAL.md](./CONTEXTO_LINHA_ESSENCIAL.md).
 
+## 11) Consolidacao no sistema (rodada 1)
+
+- Rodada marcada como **consolidada** no historico interno da conta Benditta (fase 1 Meta Ads).
+- Baseline oficial da rodada 1:
+  - Periodo: **2026-03-09 a 2026-03-18**.
+  - Investimento total: **R$ 439,20**.
+  - Impressoes: **35.766**.
+  - Alcance: **31.797**.
+  - Cliques (todos): **222**.
+  - Conversas iniciadas (OUTCOME_LEADS): **10**.
+- Entregavel para cliente em tema claro:
+  - HTML: `docs/clientes/benditta/relatorio-meta-fase1-2026-03-cliente.html`
+  - PDF: `docs/clientes/benditta/RELATORIO_CLIENTE_BENDITTA_META_FASE1_2026-03.pdf`
+
+## 12) Feedback comercial consolidado
+
+- Dos **10 leads**, **2** evoluiram no funil.
+- Qualidade geral: maioria dos leads buscava itens especificos de reforma, e nao projeto completo de ambiente.
+- Um lead solicitou orcamento sem responder perguntas qualificadoras.
+- O segundo lead pode evoluir como potencial **MQL**.
+
+## 13) Proximos passos sugeridos
+
+1. Criar formulario qualificador para proximos anuncios Meta (Adventure).
+2. Finalizar a Landing Page (Adventure).
+3. Rodar Google Ads (Adventure).
+4. Adicionar saldo nas plataformas.
+5. Solicitar novos materiais para as proximas rodadas.
+6. Aguardar materiais (reels) pendentes do primeiro cronograma (Benditta).
+7. Gerar mais material conforme novo cronograma (Benditta).
+8. Receber playbook comercial ajustado da Benditta para analise da Adventure.
+
+## 14) Observacao de funil (recomendacao)
+
+- Alem de CPL e conversa iniciada, mapear o funil completo para decisoes melhores:
+  - conversa iniciada -> reuniao -> orcamento -> proposta.
+
+## 15) Perguntas qualificadoras sugeridas (inicio)
+
+- Nome
+- E-mail
+- Telefone
+- Quantidade de ambientes
+- Tem projeto?
+- Quanto pretende investir? (faixas de abaixo de R$ 15 mil ate acima de R$ 250 mil)
+- Cidade (quando aplicavel)
+
+## 16) Observacao do entregavel ao cliente
+
+- PDF final em tema claro com logos de **Benditta** e **Adventure Labs**.
+- Rodape do documento: gerado com base nos dados do Meta Ads vinculados ao sistema **Adventure Compass** da Adventure Labs.
+

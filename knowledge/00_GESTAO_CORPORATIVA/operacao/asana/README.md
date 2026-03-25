@@ -11,6 +11,7 @@ Ficheiros `triagem-projeto-tasks-YYYY-MM-DD.md`: snapshot de leitura do projeto 
 Para operação diária de gestão de projetos no Asana (Inbox, Core, Clientes, Labs), usar:
 
 - [`playbook-operacional-gtd-lite-comando-estelar.md`](./playbook-operacional-gtd-lite-comando-estelar.md)
+- [`manual-inventario-asana-projetos-campos-agentes-2026-03.md`](./manual-inventario-asana-projetos-campos-agentes-2026-03.md)
 - Seções de referência rápida:
   - `Campos oficiais do Inbox (snapshot atual)`
   - `Padrao de preenchimento (humano + IA)`

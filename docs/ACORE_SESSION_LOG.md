@@ -4,6 +4,30 @@ Registro operacional para handoff entre Human, CTO (Torvalds) e agentes. Atualiz
 
 ---
 
+## 2026-03-25 — Diagnóstico consolidado ACORE + próximos passos (execução)
+
+### Feito
+
+- **Sincronização documental ACORE:** `ACORE_ROADMAP`, `BACKLOG` e este `ACORE_SESSION_LOG` alinhados em um checkpoint único de execução.
+- **Plano de ação por prioridade fechado:** P0 (Vercel Core + legal + validação SDR), P1 (runbook Martech/cadência), P2 (infra Fase 4 e stage-gate).
+- **Asana governança:** manual de inventário atualizado com diretrizes explícitas de **redundância de projetos/campos** para reduzir retrabalho em triagem.
+- **Martech operação:** runbook unificado Canva/Figma atualizado com comando oficial e checklist de publicação.
+- **SDR Wizard:** critério E2E documentado com roteiro de evidências para cenários `anon` e `authenticated`.
+
+### Próximos
+
+- **P0 Vercel Core (`1213786808148845`):** executar subtarefas humanas (import + env + DNS + smoke) e publicar snapshot final no manual Vercel.
+- **Gate legal (`1213710771598087`):** registrar aprovador e estado final no Asana para remover bloqueio de go-live.
+- **SDR E2E:** anexar evidências de payload/insert/consulta no Asana + atualizar linha no BACKLOG.
+- **Cadência semanal:** repetir checkpoint de convergência (`ROADMAP/BACKLOG/SESSION_LOG`) no ritual do Comando Estelar.
+
+### Bloqueios
+
+- **Execução de painel Vercel e DNS** continua dependente de ação humana da conta `contato@`.
+- **Gate legal** segue como bloqueio formal para publicação de mídia enquanto status Asana estiver `todo`.
+
+---
+
 ## 2026-03-24 — Execução plano «Prioridades Asana ACORE» (triagem P0, Martech hub, ritual)
 
 ### Feito

@@ -31,8 +31,8 @@
       ],
       "despesas": [
         { "conta": "Investimento", "valor": 40000 },
-        { "conta": "Despesas Administrativas", "valor": 3450.22 },
-        { "conta": "Despesas com Vendas e Marketing", "valor": 1662.50 },
+        { "conta": "Despesas Administrativas", "valor": 3250.22 },
+        { "conta": "Despesas com Vendas e Marketing", "valor": 1862.50 },
         { "conta": "Despesas com Pessoal", "valor": 6000 },
         { "conta": "Impostos e Taxas", "valor": 197.50 },
         { "conta": "Despesas Financeiras", "valor": 8 },
@@ -48,16 +48,37 @@
         { "conta": "Receitas diretas - Clientes - Serviços Recorrentes", "valor": 5500 }
       ],
       "despesas": [
-        { "conta": "Despesas Administrativas", "valor": 269.16 },
+        { "conta": "Despesas Administrativas", "valor": 3222.15 },
         { "conta": "Despesas com Vendas e Marketing", "valor": 1062.50 },
         { "conta": "Despesas com Pessoal", "valor": 3000 }
       ],
-      "totais": { "receitas": 6750, "despesas": 4331.66, "resultado": 2418.34 }
+      "totais": { "receitas": 6750, "despesas": 7284.65, "resultado": -534.65 }
     }
   ],
   "consolidado": {
     "receitas": 104613.23,
-    "despesas": 97362.98,
-    "resultado": 7250.25
+    "despesas": 100315.97,
+    "resultado": 4297.26
+  },
+  "pendentes_lancamento": {
+    "resumo": "Cartão Nubank PF — despesas Adventure já classificadas, ainda sem lançamento no controle",
+    "total": 730.70,
+    "por_mes": [
+      {
+        "mes": "Fevereiro 2026",
+        "valor": 516.63,
+        "detalhe": "Cursor + IOF; Google Ads Rose (reembolso via NF)"
+      },
+      {
+        "mes": "Março 2026",
+        "valor": 214.07,
+        "detalhe": "Cursor + IOF; Adobe Illustrator (1 mês)"
+      }
+    ],
+    "por_categoria": [
+      { "conta": "Despesas Administrativas", "valor": 322.84 },
+      { "conta": "Despesas com Vendas e Marketing", "valor": 400.00 },
+      { "conta": "Despesas Financeiras", "valor": 7.86 }
+    ]
   }
 }
