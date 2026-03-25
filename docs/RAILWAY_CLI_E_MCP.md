@@ -112,4 +112,4 @@ Depois de alterar `.cursor/mcp.json`, reinicie o Cursor para o MCP ser recarrega
 - [Railway CLI](https://docs.railway.com/cli)
 - [Railway MCP Server](https://docs.railway.com/ai/mcp-server)
 - Zazu / worker: `knowledge/00_GESTAO_CORPORATIVA/operacao/zazu-status-e-proximos-passos.md`
-- n8n no Railway: `knowledge/00_GESTAO_CORPORATIVA/processos/n8n-railway-e-admin.md`
+- n8n (produção na VPS/Coolify; doc inclui arquivo Railway): `knowledge/00_GESTAO_CORPORATIVA/processos/n8n-railway-e-admin.md`
