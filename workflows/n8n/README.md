@@ -1,6 +1,6 @@
 # Workflows n8n — Admin Adventure Labs
 
-Workflows do **n8n** (Railway) usados pelo App Admin: C-Suite Autonomous Loop, **Lara (Meta Ads Sync)**, **Sueli (Conciliação Bancária)**, **Zazu (WhatsApp Grupos — Cagan/CPO)** e Account Manager AI.
+Workflows do **n8n** usados pela Adventure. **Produção (2026):** instância na **VPS Hostinger** via **Coolify** (Comando Estelar — ex.: `n8n.adventurelabs.com.br`), onde correm integrações operacionais e novos fluxos. Os JSON em `workflows/n8n/` (C-Suite, Lara, Sueli, Zazu, etc.) são a **fonte versionada**; importação para essa instância faz-se via **Public API** (`N8N_API_URL` + `N8N_API_TOKEN` no Admin). A pasta **`ce-n8n/`** guarda exports explícitos do Comando Estelar.
 
 ## Versão em produção (manutenção)
 
@@ -12,6 +12,7 @@ Workflows do **n8n** (Railway) usados pelo App Admin: C-Suite Autonomous Loop, *
 | **`meta_ads_agent/production/lara-meta-ads-agent-v1.json`** | **Lara** — Sync diário Meta Ads (clientes + Adventure), `adv_meta_ads_daily`, relatório após N dias em `adv_founder_reports`. Ver [meta_ads_agent/README.md](meta_ads_agent/README.md). |
 | **`sueli/sueli-conciliacao-bancaria-v1.json`** | **Sueli** — Agente de IA Financeira para conciliação bancária (comprovantes/OFX x Omie). Tools: Omie API, Google Sheets, Google Chat, OFX Parser. Ver [sueli/README.md](sueli/README.md) e skill [agents/skills/sueli-conciliacao-bancaria/SKILL.md](../agents/skills/sueli-conciliacao-bancaria/SKILL.md). |
 | **`whatsapp_groups_agent/whatsapp-groups-daily-v1.json`** | **Zazu** — Resumo diário dos grupos de WhatsApp de clientes (worker WhatsApp Web + n8n). Publica em `adv_founder_reports` para o Cagan (CPO) e C-Suite. Ver [whatsapp_groups_agent/README.md](whatsapp_groups_agent/README.md) e worker [apps/labs/whatsapp-worker/README.md](../../whatsapp-worker/README.md). |
+| **`ce-n8n/*.json`** | **Comando Estelar (Renato)** — workflows na VPS (Coolify). Versionar aqui cada export estável. Ver [ce-n8n/README.md](ce-n8n/README.md). |
 
 Para manutenções futuras, edite o JSON do V11 (ou exporte do n8n após alterações), valide e reimporte com o script de import (ver abaixo). Mantenha este README e o [CHANGELOG em `csuite/`](csuite/CHANGELOG.md) atualizados ao criar novas versões.
 
@@ -41,30 +42,32 @@ n8n_workflows/
 ├── whatsapp_groups_agent/       # Zazu — resumo diário WhatsApp para Cagan/CPO
 │   ├── README.md
 │   └── whatsapp-groups-daily-v1.json
+├── ce-n8n/                      # Comando Estelar — exports n8n self-hosted (VPS/Coolify)
+│   └── README.md
 └── account_manager_ai/
 ```
 
 ## Importar no n8n (CLI)
 
-O script carrega credenciais de `apps/core/admin/.env.local` ou de **`GEMINI_CLI/.env`** (repositório irmão). Variáveis: `N8N_API_URL` e `N8N_API_TOKEN` (ou no GEMINI_CLI: `N8N_HOST_URL` e `N8N_API_KEY`).
+O script (**nome legado** `import-to-railway.sh`) envia o JSON para **qualquer** instância n8n cuja URL está em `N8N_API_URL`. Carrega credenciais de `apps/core/admin/.env.local` (ou `GEMINI_CLI/.env`). Variáveis: `N8N_API_URL` (base HTTPS do n8n, ex. `https://n8n.adventurelabs.com.br`) e `N8N_API_TOKEN`.
 
 **Executar a partir da raiz do repositório `01_ADVENTURE_LABS`:**
 
 ```bash
-# C-Suite
-./apps/core/admin/scripts/n8n/import-to-railway.sh "n8n_workflows/C-Suite Autonomous Loop - V11 (Fase 4_ Paralelização + Histórico + Founder Reports).json"
+# C-Suite (ajustar caminho se o JSON estiver só em workflows/n8n/)
+./apps/core/admin/scripts/n8n/import-to-railway.sh "workflows/n8n/C-Suite Autonomous Loop - V11 (Fase 4_ Paralelização + Histórico + Founder Reports).json"
 
 # Lara (Meta Ads)
-./apps/core/admin/scripts/n8n/import-to-railway.sh "apps/core/admin/n8n_workflows/meta_ads_agent/production/lara-meta-ads-agent-v1.json"
+./apps/core/admin/scripts/n8n/import-to-railway.sh "workflows/n8n/meta_ads_agent/production/lara-meta-ads-agent-v1.json"
 
 # Sueli (Conciliação bancária)
-./apps/core/admin/scripts/n8n/import-to-railway.sh "apps/core/admin/n8n_workflows/sueli/sueli-conciliacao-bancaria-v1.json"
+./apps/core/admin/scripts/n8n/import-to-railway.sh "workflows/n8n/sueli/sueli-conciliacao-bancaria-v1.json"
 
 # Zazu (WhatsApp Grupos — resumo diário para Cagan/CPO)
-./apps/core/admin/scripts/n8n/import-to-railway.sh "apps/core/admin/n8n_workflows/whatsapp_groups_agent/whatsapp-groups-daily-v1.json"
+./apps/core/admin/scripts/n8n/import-to-railway.sh "workflows/n8n/whatsapp_groups_agent/whatsapp-groups-daily-v1.json"
 ```
 
-Ver: [apps/core/admin/scripts/n8n/import-to-railway.sh](../scripts/n8n/import-to-railway.sh).
+Ver: [apps/core/admin/scripts/n8n/import-to-railway.sh](../../apps/core/admin/scripts/n8n/import-to-railway.sh).
 
 ## Documentação
 
@@ -77,5 +80,6 @@ Ver: [apps/core/admin/scripts/n8n/import-to-railway.sh](../scripts/n8n/import-to
 | [meta_ads_agent/README.md](meta_ads_agent/README.md) | Lara — Meta Ads sync, mapeamento, owner_type, relatório C-Suite |
 | [sueli/README.md](sueli/README.md) | Sueli — Conciliação bancária (OFX/Omie), Tools, variáveis de ambiente |
 | [whatsapp_groups_agent/README.md](whatsapp_groups_agent/README.md) | Zazu — resumo diário WhatsApp para Cagan/CPO, worker, founder report |
+| [ce-n8n/README.md](ce-n8n/README.md) | Comando Estelar — versionação de workflows n8n self-hosted (ACORE Fase 4) |
 | [agents/skills/sueli-conciliacao-bancaria/SKILL.md](../agents/skills/sueli-conciliacao-bancaria/SKILL.md) | Skill da Sueli — quando acionar, input/output |
-| [knowledge/00_GESTAO_CORPORATIVA/processos/n8n-railway-e-admin.md](../../../knowledge/00_GESTAO_CORPORATIVA/processos/n8n-railway-e-admin.md) | Setup n8n no Railway e integração com o Admin |
+| [knowledge/00_GESTAO_CORPORATIVA/processos/n8n-railway-e-admin.md](../../../knowledge/00_GESTAO_CORPORATIVA/processos/n8n-railway-e-admin.md) | n8n: produção VPS/Coolify + integração Admin (Railway = arquivo legado no doc) |

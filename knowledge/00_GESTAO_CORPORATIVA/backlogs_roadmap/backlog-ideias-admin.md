@@ -40,7 +40,7 @@ Ref.: [roadmap-admin-crm.md](roadmap-admin-crm.md), [github-project-e-integracao
 
 | Item | Status | Observação |
 |------|--------|------------|
-| **Workflows n8n conectados ao Admin** | Backlog | Inteligências do n8n (Railway) integradas ao Admin para facilitar rotinas diárias; após n8n em produção funcionando |
+| **Workflows n8n conectados ao Admin** | Backlog | Inteligências do n8n (VPS / Coolify) integradas ao Admin para facilitar rotinas diárias; após n8n em produção funcionando |
 | Fase básica: Drive, Gmail, Sheets, Google Chat, Skills | Backlog | Ver [backlog-automacoes.md](backlog-automacoes.md); priorizar 1–2 fluxos concretos |
 | Fase avançada: Meta Ads, Google Ads, GA, WhatsApp | Backlog | Módulos avançados; revisar trimestralmente |
 | WhatsApp (QR, grupos, disparos) | Backlog | Requisitos API Business; alto valor; complexidade regulatória |

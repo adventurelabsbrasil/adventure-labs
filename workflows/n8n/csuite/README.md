@@ -31,7 +31,7 @@ csuite/
 
 ## Importar no n8n
 
-### Via CLI (API REST — n8n no Railway)
+### Via CLI (API REST — instância n8n em produção, ex. VPS/Coolify)
 
 Com `N8N_API_URL` e `N8N_API_TOKEN` em `apps/core/admin/.env.local`:
 

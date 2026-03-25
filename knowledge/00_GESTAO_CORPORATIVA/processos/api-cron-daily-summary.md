@@ -1,6 +1,6 @@
 # API Cron: Resumo diário
 
-Contrato e uso das rotas de resumo diário para automação (n8n no Railway, etc.).
+Contrato e uso das rotas de resumo diário para automação (n8n na VPS / Coolify, etc.).
 
 Ref.: [decisao-resumo-diario-ia-e-n8n.md](../decisao-resumo-diario-ia-e-n8n.md), [processo-relatorio-founder.md](processo-relatorio-founder.md).
 
@@ -63,7 +63,7 @@ Body: `{ "date": "YYYY-MM-DD", "summaryText": "...", "agentSummaryText": "..." }
 O resumo diário pode ser gerado de duas formas:
 
 1. **Manual:** No painel, em **Relatório / Brain dump**, usar o formulário “Gerar resumo diário” (data + opcional “O que os agentes fizeram”).
-2. **Automático:** Job (ex.: n8n no Railway) chama `POST /api/cron/daily-summary` com a data (e opcionalmente com o texto já gerado). O app exibe o resumo na home até “marcar como lido” e na página de relatórios.
+2. **Automático:** Job (ex.: n8n na VPS) chama `POST /api/cron/daily-summary` com a data (e opcionalmente com o texto já gerado). O app exibe o resumo na home até “marcar como lido” e na página de relatórios.
 
 ---
 
