@@ -1,5 +1,6 @@
 Referência de versão:
 - v2: `docs/inventario/_raw/RAW_DATA_v2.md`
+- status_v2: preenchida com revarredura completa em 2026-03-25
 
 ---
 
