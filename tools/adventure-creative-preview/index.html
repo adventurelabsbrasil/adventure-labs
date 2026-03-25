@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Preview hierarquia — Adventure TOFU</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --adv-blue: #031445;
+        --adv-blue-mid: #0a1a3a;
+        --adv-red: #da0028;
+        --adv-text: #f5f7fa;
+        --adv-muted: #b0bac4;
+        --card-bg: rgba(12, 20, 40, 0.92);
+        --card-border: rgba(255, 255, 255, 0.12);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: "Space Grotesk", system-ui, sans-serif;
+        background: #0c1118;
+        color: var(--adv-text);
+        min-height: 100vh;
+        padding: 1rem 1.25rem 2rem;
+      }
+
+      h1.page-title {
+        font-size: 1.1rem;
+        font-weight: 700;
+        margin: 0 0 0.25rem;
+      }
+
+      .hint {
+        font-size: 0.8rem;
+        color: var(--adv-muted);
+        margin: 0 0 1rem;
+        max-width: 52rem;
+        line-height: 1.45;
+      }
+
+      .controls {
+        display: grid;
+        gap: 0.65rem;
+        max-width: 52rem;
+        margin-bottom: 1.25rem;
+      }
+
+      .controls label {
+        display: block;
+        font-size: 0.72rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: var(--adv-muted);
+        margin-bottom: 0.2rem;
+      }
+
+      .controls input,
+      .controls textarea {
+        width: 100%;
+        padding: 0.5rem 0.65rem;
+        border-radius: 8px;
+        border: 1px solid var(--card-border);
+        background: rgba(255, 255, 255, 0.06);
+        color: var(--adv-text);
+        font-family: inherit;
+        font-size: 0.95rem;
+      }
+
+      .controls textarea {
+        min-height: 4.5rem;
+        resize: vertical;
+      }
+
+      .row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        align-items: flex-end;
+      }
+
+      .row .field {
+        flex: 1 1 12rem;
+      }
+
+      .previews {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1.5rem;
+        align-items: flex-start;
+      }
+
+      .preview-block {
+        flex: 0 0 auto;
+      }
+
+      .preview-block h2 {
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--adv-muted);
+        margin: 0 0 0.5rem;
+      }
+
+      /* Logical canvas; escala definida no .scale-wrap (herda no .artboard) */
+      .scale-wrap {
+        --preview-scale: 0.32;
+        --canvas-h: 1035px;
+        width: calc(1080px * var(--preview-scale));
+        height: calc(var(--canvas-h) * var(--preview-scale));
+        overflow: hidden;
+        border-radius: 10px;
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
+      }
+
+      .artboard {
+        width: 1080px;
+        height: var(--canvas-h);
+        transform: scale(var(--preview-scale));
+        transform-origin: top left;
+        position: relative;
+        background: linear-gradient(165deg, var(--adv-blue) 0%, var(--adv-blue-mid) 45%, #040a0f 100%);
+        overflow: hidden;
+      }
+
+      .artboard::before,
+      .artboard::after {
+        content: "";
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(60px);
+        opacity: 0.45;
+        pointer-events: none;
+      }
+
+      .artboard::before {
+        width: 420px;
+        height: 420px;
+        background: var(--adv-red);
+        top: -80px;
+        right: -100px;
+      }
+
+      .artboard::after {
+        width: 380px;
+        height: 380px;
+        background: #1976d2;
+        bottom: -120px;
+        left: -80px;
+      }
+
+      .square-1-1 {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 900px;
+        height: 900px;
+        margin-left: -450px;
+        margin-top: -450px;
+        background: var(--card-bg);
+        border: 1px solid var(--card-border);
+        border-radius: 28px;
+        box-shadow: 0 24px 80px rgba(0, 0, 0, 0.35);
+        padding: 2.75rem 2.25rem 2.25rem;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        backdrop-filter: blur(12px);
+      }
+
+      /* Tamanhos em px = leitura no canvas lógico 1080px */
+      .headline {
+        font-size: 48px;
+        font-weight: 700;
+        line-height: 1.12;
+        margin: 0 0 1rem;
+        letter-spacing: -0.02em;
+      }
+
+      .sub {
+        font-size: 26px;
+        font-weight: 500;
+        line-height: 1.35;
+        color: var(--adv-muted);
+        margin: 0 0 auto;
+        flex: 1;
+      }
+
+      .cta {
+        align-self: center;
+        margin-top: 1.75rem;
+        padding: 0.85rem 1.75rem;
+        background: var(--adv-red);
+        color: #fff;
+        font-weight: 700;
+        font-size: 22px;
+        border: none;
+        border-radius: 14px;
+        cursor: default;
+        letter-spacing: 0.01em;
+      }
+
+      .footer {
+        margin-top: 1rem;
+        text-align: right;
+        font-size: 0.8rem;
+        color: var(--adv-muted);
+      }
+
+      @media (max-width: 900px) {
+        .scale-wrap {
+          --preview-scale: 0.22;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <h1 class="page-title">Rascunho de hierarquia (não é export final)</h1>
+    <p class="hint">
+      Edita os textos à esquerda. Os painéis usam <strong>1080×1035</strong> e <strong>1080×1920</strong> com
+      <strong>quadro central 1:1</strong> (900×900). Serve para validar tamanho relativo headline → sub → CTA antes
+      de o designer aplicar no Figma. Tipografia: Space Grotesk (CDN Google).
+    </p>
+
+    <div class="controls">
+      <div class="field">
+        <label for="headline">Headline</label>
+        <textarea id="headline" rows="2"></textarea>
+      </div>
+      <div class="field">
+        <label for="sub">Subheadline</label>
+        <textarea id="sub" rows="3"></textarea>
+      </div>
+      <div class="row">
+        <div class="field">
+          <label for="cta">CTA</label>
+          <input type="text" id="cta" />
+        </div>
+        <div class="field">
+          <label for="dest">Destino (ródape)</label>
+          <input type="text" id="dest" placeholder="/martech ou Instagram" />
+        </div>
+      </div>
+    </div>
+
+    <div class="previews">
+      <div class="preview-block">
+        <h2>Feed 1080 × 1035</h2>
+        <div class="scale-wrap" style="--canvas-h: 1035px">
+          <div class="artboard" id="board-feed" aria-label="Preview feed">
+            <div class="square-1-1">
+              <p class="headline" data-field="headline"></p>
+              <p class="sub" data-field="sub"></p>
+              <div class="cta" data-field="cta"></div>
+              <div class="footer">Adventure Labs · <span data-field="dest"></span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="preview-block">
+        <h2>Stories 1080 × 1920</h2>
+        <div class="scale-wrap" style="--canvas-h: 1920px">
+          <div class="artboard stories" id="board-stories" aria-label="Preview stories">
+            <div class="square-1-1">
+              <p class="headline" data-field="headline"></p>
+              <p class="sub" data-field="sub"></p>
+              <div class="cta" data-field="cta"></div>
+              <div class="footer">Adventure Labs · <span data-field="dest"></span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const defaults = {
+        headline: "Seu marketing cresce ou só gira?",
+        sub: "Identifique os gargalos que travam o funil e destrave receita com método — antes de escalar investimento.",
+        cta: "Quero meu diagnóstico",
+        dest: "/martech",
+      };
+
+      const headlineEl = document.getElementById("headline");
+      const subEl = document.getElementById("sub");
+      const ctaEl = document.getElementById("cta");
+      const destEl = document.getElementById("dest");
+
+      headlineEl.value = defaults.headline;
+      subEl.value = defaults.sub;
+      ctaEl.value = defaults.cta;
+      destEl.value = defaults.dest;
+
+      function sync() {
+        const data = {
+          headline: headlineEl.value.trim() || "…",
+          sub: subEl.value.trim() || "…",
+          cta: ctaEl.value.trim() || "…",
+          dest: destEl.value.trim() || "…",
+        };
+        document.querySelectorAll("[data-field]").forEach((node) => {
+          const key = node.getAttribute("data-field");
+          if (key === "headline" || key === "sub") {
+            node.textContent = data[key];
+          } else {
+            node.textContent = data[key];
+          }
+        });
+      }
+
+      ["input", "change"].forEach((ev) => {
+        headlineEl.addEventListener(ev, sync);
+        subEl.addEventListener(ev, sync);
+        ctaEl.addEventListener(ev, sync);
+        destEl.addEventListener(ev, sync);
+      });
+      sync();
+    </script>
+  </body>
+</html>
