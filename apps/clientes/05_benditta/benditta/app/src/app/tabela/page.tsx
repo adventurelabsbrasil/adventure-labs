@@ -1,17 +1,4 @@
-import Link from "next/link";
 import { BendittaTablePage } from "@adventure-labs/benditta-meta-dashboard";
-
-function NavLink(props: {
-  href: string;
-  className?: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <Link href={props.href} className={props.className}>
-      {props.children}
-    </Link>
-  );
-}
 
 export default function TabelaPage() {
   return (
@@ -19,7 +6,6 @@ export default function TabelaPage() {
       <BendittaTablePage
         csvUrl="/BM-202603-MetaReport.csv"
         dashboardHref="/"
-        NavLinkComponent={NavLink}
       />
     </main>
   );
