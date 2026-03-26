@@ -7,6 +7,7 @@ on:
       - "docs/inventario/**"
       - "docs/adr/**"
       - "tools/scripts/validate-wiki-corporativo.sh"
+      - "tools/scripts/validate-wiki-semantic.sh"
       - ".github/workflows/wiki-corporativo-validation.yml"
   workflow_dispatch:
 
@@ -22,8 +23,10 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Run wiki validator
-        run: bash ./tools/scripts/validate-wiki-corporativo.sh
+      - name: Run wiki structural and semantic validator
+        run: |
+          bash ./tools/scripts/validate-wiki-corporativo.sh
+          bash ./tools/scripts/validate-wiki-semantic.sh
 
       - name: Upload validation report artifact
         uses: actions/upload-artifact@v4

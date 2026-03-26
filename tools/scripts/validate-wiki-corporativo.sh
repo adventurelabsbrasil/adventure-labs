@@ -27,6 +27,9 @@ modules = [
 index_file = root / "docs/WIKI_CORPORATIVO_INDEX.md"
 raw_file = root / "docs/inventario/_raw/RAW_DATA.md"
 report_file = root / "docs/inventario/_raw/VALIDATION_REPORT.md"
+m02_file = root / "docs/inventario/M02-apps-rotas-scripts-deploy.md"
+m03_file = root / "docs/inventario/M03-dados-banco-rls-migrations.md"
+m06_file = root / "docs/inventario/M06-workflows-automacoes-cronjobs.md"
 
 required_headers = ["module","title","ssot","owner","updated","version","apps_scope","review_sla","sources"]
 checks_pass = 0
@@ -120,6 +123,93 @@ for sec in raw_sections:
     else:
         missing_raw_coverage.append(sec)
 
+# V09 validação semântica (M02/M03/M06)
+semantic_checks = []
+
+def add_semantic_check(name: str, ok: bool, details_ok: str, details_fail: str):
+    global checks_total, checks_pass
+    checks_total += 1
+    if ok:
+        checks_pass += 1
+        semantic_checks.append((name, "OK", details_ok))
+    else:
+        semantic_checks.append((name, "FALHA", details_fail))
+
+# M02/M06 endpoint coverage mínimo
+required_endpoints = [
+    "/api/csuite/andon-asana-run",
+    "/api/csuite/andon-tts",
+    "/api/csuite/context-docs",
+    "/api/csuite/daily-memory",
+    "/api/csuite/founder-report",
+    "/api/csuite/google-workspace-advisor-inspect",
+    "/api/meta/accounts",
+    "/api/meta/accounts/[id]/campaigns",
+    "/api/meta/accounts/[id]/insights",
+    "/api/meta/daily",
+    "/api/meta/mapping",
+    "/api/meta/topics",
+    "/api/cron/daily-summary",
+    "/api/cron/whatsapp-daily",
+    "/api/n8n/sueli-config",
+]
+m02_text = read(m02_file)
+m06_text = read(m06_file)
+def covered_in_m02(ep: str) -> bool:
+    if ep in m02_text:
+        return True
+    if ep.startswith("/api/meta/") and "/api/meta/*" in m02_text:
+        return True
+    if ep.startswith("/api/cron/") and "/api/cron/*" in m02_text:
+        return True
+    if ep.startswith("/api/csuite/") and "/api/csuite/*" in m02_text:
+        return True
+    if ep.startswith("/api/n8n/") and "/api/n8n/*" in m02_text:
+        return True
+    return False
+
+m02_missing = [ep for ep in required_endpoints if not covered_in_m02(ep)]
+m06_missing = [ep for ep in required_endpoints if ep not in m06_text]
+add_semantic_check(
+    "V09.1 endpoint coverage M02",
+    len(m02_missing) == 0,
+    "Todos endpoints mínimos estão documentados em M02.",
+    "Endpoints ausentes em M02: " + ", ".join(m02_missing),
+)
+add_semantic_check(
+    "V09.2 endpoint coverage M06",
+    len(m06_missing) == 0,
+    "Todos endpoints mínimos estão documentados em M06.",
+    "Endpoints ausentes em M06: " + ", ".join(m06_missing),
+)
+
+# M03 admin migrations não deve ficar "a mapear" quando a pasta existe
+admin_migrations_dir = root / "apps/core/admin/supabase/migrations"
+admin_migrations_exist = admin_migrations_dir.exists()
+m03_text = read(m03_file)
+admin_migrations_marked_active = "| `admin migrations` |" in m03_text and "| alta | ativo" in m03_text.lower()
+add_semantic_check(
+    "V09.3 status admin migrations M03",
+    (not admin_migrations_exist) or admin_migrations_marked_active,
+    "Status de migrations admin coerente com evidência de diretório.",
+    "M03 deve refletir status ativo para admin migrations (diretório existente).",
+)
+
+# updated/version mudaram nos módulos alvo (sanity check)
+def has_frontmatter_key(text: str, key: str, expected_value: str) -> bool:
+    pattern = rf"^{re.escape(key)}:\s*{re.escape(expected_value)}\s*$"
+    return re.search(pattern, text, re.M) is not None
+
+m02_ok_version = has_frontmatter_key(m02_text, "version", "1.2.0")
+m03_ok_version = has_frontmatter_key(m03_text, "version", "1.2.0")
+m06_ok_version = has_frontmatter_key(m06_text, "version", "1.2.0")
+add_semantic_check(
+    "V09.4 version bump M02/M03/M06",
+    m02_ok_version and m03_ok_version and m06_ok_version,
+    "Versionamento semântico atualizado em M02/M03/M06.",
+    "Versionamento esperado (1.2.0) não encontrado em todos os módulos alvo.",
+)
+
 score = (checks_pass / checks_total * 100) if checks_total else 0
 status = "APROVADO para merge" if score >= 80 else "BLOQUEADO para merge"
 
@@ -173,17 +263,27 @@ if missing_update_section:
 else:
     lines.append("- OK")
 lines.append("")
+lines.append("## V09 — Validação semântica (M02/M03/M06)")
+lines.append("")
+lines.append("| check | status | detalhe |")
+lines.append("|---|---|---|")
+for name, st, detail in semantic_checks:
+    lines.append(f"| {name} | {st} | {detail} |")
+lines.append("")
 lines.append("## Correções prioritárias")
 lines.append("")
-if broken_links or bad_env_lines or missing_update_section:
+semantic_failures = [c for c in semantic_checks if c[1] != "OK"]
+if broken_links or bad_env_lines or missing_update_section or semantic_failures:
     lines.append("- Corrigir itens críticos de link, env e seção obrigatória antes do merge.")
+    if semantic_failures:
+        lines.append("- Corrigir falhas semânticas dos checks V09 antes do merge.")
 else:
     lines.append("- Sem bloqueios críticos detectados por esta validação automatizada.")
 lines.append("")
 lines.append("## Melhorias opcionais MVP+1")
 lines.append("")
 lines.append("- Aprofundar V02 e V05 com validação semântica por entidade.")
-lines.append("- Integrar este script ao CI para execução por PR.")
+lines.append("- Expandir V09 para checks semânticos de M07/M08 e consistência de owners por módulo.")
 
 report_file.parent.mkdir(parents=True, exist_ok=True)
 report_file.write_text("\n".join(lines) + "\n", encoding="utf-8")
