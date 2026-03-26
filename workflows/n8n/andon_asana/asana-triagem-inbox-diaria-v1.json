@@ -1,0 +1,73 @@
+{
+  "name": "Asana — Triagem diária Inbox (auto task)",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "30 11 * * 1-5"
+            }
+          ]
+        }
+      },
+      "id": "7f2a9c41-8e3b-4d1a-9f2c-6b8e4a1d0c3e",
+      "name": "Schedule 08h30 BRT (dias úteis)",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [240, 300],
+      "notes": "08:30 America/Sao_Paulo ~= 11:30 UTC (ajustar se timezone do servidor n8n for diferente)."
+    },
+    {
+      "parameters": {
+        "authentication": "none",
+        "method": "POST",
+        "url": "https://app.asana.com/api/1.0/tasks",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "={{ 'Bearer ' + $env.ASANA_ACCESS_TOKEN }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ data: { name: '[RECORRENTE] Triagem diária Asana (5 min)', notes: 'Ritual diário de triagem (5 minutos).\\n\\nChecklist:\\n1) Abrir Inbox e filtrar tarefas abertas.\\n2) Deduplicar (manter canônica, arquivar duplicata com comentário).\\n3) Classificar no projeto correto (ACORE, Marketing, Labs, Cliente, 06, 07, 08).\\n4) Definir responsável e prazo mínimo.\\n5) Preencher campos (Nível de Projeto, C-Suite, Departamento).\\n6) Remover da Inbox após mover.\\n7) Confirmar Inbox sem pendências sem destino.\\n\\nRegra:\\n- Não iniciar execução de tarefa sem projeto definido.\\n- Se faltar contexto, comentar pergunta objetiva e manter em Inbox até decisão.\\n\\nReferência: knowledge/00_GESTAO_CORPORATIVA/operacao/asana/README.md', assignee: '1213725900473615', projects: ['1213827205107127'], due_on: $now.toFormat('yyyy-MM-dd') } }) }}",
+        "options": {}
+      },
+      "id": "91c4e5d2-8a1f-4b3c-9e7d-2f5a8c3b1d0e",
+      "name": "Criar task diária no Asana",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [500, 300],
+      "notes": "Usa ASANA_ACCESS_TOKEN via env no n8n (idealmente vindo do Infisical no runtime)."
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule 08h30 BRT (dias úteis)": {
+      "main": [
+        [
+          {
+            "node": "Criar task diária no Asana",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "versionId": "1",
+  "meta": {
+    "templateCredsSetupCompleted": false
+  }
+}
