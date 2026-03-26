@@ -3,8 +3,8 @@ module: M04
 title: Auth, segurança, envs e tenants
 ssot: true
 owner: Torvalds (CTO)
-updated: 2026-03-25
-version: 1.0.0
+updated: 2026-03-26
+version: 1.1.0
 apps_scope: [admin, adventure, monorepo]
 review_sla: por PR + quinzenal
 sources:
@@ -23,7 +23,7 @@ sources:
 |---|---|---|---|---|---|---|
 | Security sensitives | regra | `.cursor/rules/security-sensitives.mdc` | Torvalds (CTO) | alta | ativo | 2026-03-25 |
 | RLS multi-tenant | banco | `supabase/migrations` | Torvalds (CTO) | alta | ativo | 2026-03-25 |
-| Auth por app | implementação | `apps/core/admin`, `apps/core/adventure` | Torvalds (CTO) | alta | a mapear (checkout parcial) | 2026-03-25 |
+| Auth por app | implementação | `apps/core/admin`, `apps/core/adventure` | Torvalds (CTO) | alta | ativo (com observações por app) | 2026-03-26 |
 
 ## Envs (nunca expor valor real)
 
@@ -56,10 +56,18 @@ sources:
 
 | app | auth | fonte | status |
 |---|---|---|---|
-| `apps/core/admin` | Supabase auth + controles internos [INFERIDO] | envs + migrations | a mapear (checkout parcial) |
-| `apps/core/adventure` | Supabase auth [INFERIDO] | `.env.example` + supabase | a mapear (checkout parcial) |
+| `apps/core/admin` | Supabase SSR session + allowlist + chave técnica para APIs | `apps/core/admin/src/middleware.ts` | ativo |
+| `apps/core/adventure` | Supabase client auth (OAuth/email) + callback SPA | `src/lib/supabase/auth.ts`, `src/features/auth/pages/SupabaseAuthCallbackPage.tsx` | ativo com ressalva de enforcement |
 | `apps/labs/xpostr` | Clerk + Supabase | `.env.example` | ativo |
 | `apps/clientes/**` | variável por projeto | `RAW_DATA_v2` | a mapear |
+
+## Fluxos de auth por app (detalhado)
+
+| app | entrada | validação de sessão | guarda de rota | falha/negação |
+|---|---|---|---|---|
+| `core/admin` | `/login` e `/auth/callback` | `supabase.auth.getSession()` no middleware | matcher em `/dashboard`, `/c`, `/api/ads`, `/api/meta`, `/api/lara` | `401/403` em APIs protegidas; redirect para `/login` ou `/acesso-negado` |
+| `core/adventure` | `/login` + OAuth (`signInWithOAuth`) + `/auth/callback` | `supabase.auth.getSession()` no callback | `PrivateRoute` aplica layout sem bloqueio explícito de sessão | callback envia para `/login?error=*` quando falha |
+| `labs/xpostr` | fluxo via Clerk | provider externo + chaves públicas/privadas | definido pelo app lab | conforme provider |
 
 ## Guardrails de segurança
 

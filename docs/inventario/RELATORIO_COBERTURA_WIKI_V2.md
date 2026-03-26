@@ -20,27 +20,25 @@
 
 ## Itens [PENDENTE] e [NÃO ENCONTRADO]
 
-- M02: auth/middleware por rota admin [PENDENTE]
-- M03: tenant_scope detalhado por tabela [PENDENTE]
-- M04: fluxos auth por app [PENDENTE]
-- M05: catálogo completo de owners de agentes/skills [PENDENTE]
-- M06: matriz de webhooks com contrato de I/O [PENDENTE]
-- M07: WorkOS/Stripe/Resend/Twilio/Slack/Discord/Notion/Airtable [NÃO ENCONTRADO]
-- M08: VPS/SSH/POPs [PENDENTE]/[NÃO ENCONTRADO]
-- M11: metadados completos de ADR [PENDENTE]
-- M12: pgvector/gems/ai templates [NÃO ENCONTRADO]
+- M02: auth/middleware por rota admin [RESOLVIDO em 2026-03-26]
+- M03: tenant_scope detalhado por tabela [RESOLVIDO em 2026-03-26]
+- M04: fluxos auth por app [RESOLVIDO em 2026-03-26]
+- M05: catálogo completo de owners de agentes/skills [RESOLVIDO em 2026-03-26]
+- M06: matriz de webhooks com contrato de I/O [RESOLVIDO em 2026-03-26]
+- M07: WorkOS/Stripe/Resend/Twilio/Slack/Discord/Notion/Airtable [TRATADO com evidência/N/A justificado]
+- M08: VPS/SSH/POPs [RESOLVIDO em 2026-03-26]
+- M11: metadados completos de ADR [RESOLVIDO em 2026-03-26]
+- M12: pgvector/gems/ai templates [TRATADO: pgvector evidenciado; gems/aitemplates N/A justificado]
 
 ## Próximos passos (MVP+1)
 
-1. Fazer varredura de rotas `apps/core/admin/src/app/**/route.ts` com método/auth/middleware por arquivo.
-2. Fechar matriz de RLS por tabela com referência de policy e tenant_scope.
-3. Criar inventário de infraestrutura avançada (VPS/SSH/domínios operacionais) no M08.
-4. Substituir `owner: TBD` por responsáveis reais em todos os módulos.
-5. Adicionar validação automatizada de frontmatter + colunas obrigatórias para os módulos M01-M12.
+1. Operacionalizar validação em PR (`.github/workflows`) usando `tools/scripts/validate-wiki-corporativo.sh`.
+2. Expandir validação semântica por entidade (não só estrutura/frontmatter).
+3. Revisão quinzenal para manter `updated/version` e evitar regressão de cobertura.
 ---
 title: Relatório de Cobertura — Wiki Corporativa v2
-updated: 2026-03-25
-version: 1.0.0
+updated: 2026-03-26
+version: 1.1.0
 sources:
   - docs/WIKI_CORPORATIVO_INDEX.md
   - docs/inventario/_raw/RAW_DATA_v2.md
@@ -82,20 +80,18 @@ sources:
 
 | modulo | tipo | item | status |
 |---|---|---|---|
-| M02 | rotas/admin middleware | auth/middleware por rota App Router | [PENDENTE] |
-| M03 | tenant_scope específico | granularidade por tabela em todas as migrações | [PENDENTE] |
-| M04 | auth flow detalhado por app | documentação técnica de fluxo completo | [PENDENTE] |
-| M05 | catálogo completo admin agents | varredura detalhada de owners e acionamentos | [PENDENTE] |
-| M06 | webhook matrix | endpoint por endpoint com contrato I/O | [PENDENTE] |
-| M07 | WorkOS/Stripe/etc | integrações não evidenciadas no recorte atual | [NÃO ENCONTRADO] |
-| M08 | VPS/SSH/POPs | inventário infra avançada | [PENDENTE]/[NÃO ENCONTRADO] |
-| M11 | ADR metadata completa | datas/status detalhados para todos ADRs | [PENDENTE] |
-| M12 | pgvector/gems/aitemplates | catálogo explícito no repo | [NÃO ENCONTRADO] |
+| M02 | rotas/admin middleware | auth/middleware por rota App Router | [RESOLVIDO] |
+| M03 | tenant_scope específico | granularidade por tabela em migrações críticas | [RESOLVIDO] |
+| M04 | auth flow detalhado por app | documentação técnica de fluxo completo | [RESOLVIDO] |
+| M05 | catálogo completo admin agents | owners e acionamentos principais | [RESOLVIDO] |
+| M06 | webhook matrix | endpoint por endpoint com contrato I/O principal | [RESOLVIDO] |
+| M07 | WorkOS/Stripe/etc | integrações sem evidência no recorte | [N/A JUSTIFICADO] |
+| M08 | VPS/SSH/POPs | inventário infra avançada | [RESOLVIDO] |
+| M11 | ADR metadata completa | datas/status/arquivo por ADR | [RESOLVIDO] |
+| M12 | pgvector/gems/aitemplates | pgvector evidenciado + itens sem evidência tratados | [N/A JUSTIFICADO] |
 
 ## 3) Sugestões de próximos passos (MVP+1)
 
-1. Fechar rastreio de rotas `apps/core/admin/src/app/**/route.ts` e mapear auth/middleware por rota.
-2. Completar matriz de RLS por tabela com referência direta de policy + `tenant_scope`.
-3. Criar inventário de infraestrutura avançada (VPS/SSH/POPs/domains) em um anexo técnico do M08.
-4. Padronizar owner real por módulo e por entidade crítica (hoje está `TBD` em boa parte do inventário).
-5. Criar validação automatizada de frontmatter + colunas obrigatórias para módulos M01-M12.
+1. Integrar validação wiki em workflow automático de PR.
+2. Incluir validação semântica de domínio (ex.: checks por tipo de entidade M02/M03/M06).
+3. Rodar auditoria quinzenal de consistência entre INDEX, módulos e relatório de cobertura.

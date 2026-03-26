@@ -3,8 +3,8 @@ module: M02
 title: Apps, rotas, scripts e deploy
 ssot: true
 owner: Torvalds (CTO)
-updated: 2026-03-25
-version: 1.0.0
+updated: 2026-03-26
+version: 1.1.0
 apps_scope: [admin, adventure, monorepo]
 review_sla: por PR + quinzenal
 sources:
@@ -25,11 +25,25 @@ sources:
 
 ## Rotas/APIs (core)
 
-| rota | método | app | finalidade | auth | middleware | origem |
+| rota/prefixo | método | app | finalidade | auth | middleware | origem |
 |---|---|---|---|---|---|---|
-| `src/app/**/route.ts` | `GET/POST/...` | admin | APIs App Router | a mapear (checkout parcial) | a mapear (checkout parcial) | estrutura Next App Router |
-| `supabase/functions/*` | HTTP endpoint | adventure | edge functions/serviços | a mapear (checkout parcial) | N/A | `apps/core/adventure/supabase/functions` |
-| `createBrowserRouter` e `Route path` | client routes | adventure | rotas SPA | a mapear (checkout parcial) | N/A | `apps/core/adventure/src` |
+| `/api/admin/crm/*` | `GET/POST/PATCH` | admin | CRM interno (companies/contacts/deals/products/chats) | sessão Supabase via middleware de rota protegida | `src/middleware.ts` (`/dashboard`, `/c`, `/api/ads`, `/api/meta`, `/api/lara`) | `apps/core/admin/src/app/api/admin/**/route.ts` |
+| `/api/meta/*` | `GET/POST/PATCH` | admin | coleta/meta ads e mapeamentos | `x-admin-key = CRON_SECRET` ou sessão + allowlist | `src/middleware.ts` protege `/api/meta/:path*` | `apps/core/admin/src/app/api/meta/**/route.ts` |
+| `/api/ads/*` | `GET/PATCH` | admin | campanhas Google Ads | `x-admin-key = CRON_SECRET` ou sessão + allowlist | `src/middleware.ts` protege `/api/ads/:path*` | `apps/core/admin/src/app/api/ads/**/route.ts` |
+| `/api/lara/*` | `GET/POST` | admin | agente Lara e memória operacional | `x-admin-key = CRON_SECRET` ou sessão + allowlist | `src/middleware.ts` protege `/api/lara/:path*` | `apps/core/admin/src/app/api/lara/**/route.ts` |
+| `/api/cron/*` | `GET/POST` | admin | jobs diários e relatórios | token/header (`authorization`/`x-admin-key`) por handler | middleware não obrigatório no matcher global | `apps/core/admin/src/app/api/cron/**/route.ts` |
+| `/auth/callback|/auth/logout|/auth/signout` | `GET/POST` | admin | ciclo de autenticação e sessão | callback liberado; logout/signout por sessão/cookies | `src/middleware.ts` (`/auth/callback`) | `apps/core/admin/src/app/auth/**/route.ts` |
+| `createBrowserRouter` + `path:*` | client routes | adventure | roteamento SPA público + áreas internas | sem bloqueio de rota em `PrivateRoute` (layout only) | N/A (Vite/SPA) | `apps/core/adventure/src/routes/index.tsx` |
+| `supabase/functions/*` | HTTP endpoint | adventure | edge functions e serviços auxiliares | depende de policy por função/tabela | N/A | `apps/core/adventure/supabase/functions` |
+
+## Matriz de proteção no Admin (middleware)
+
+| item | regra aplicada | evidência |
+|---|---|---|
+| Rotas protegidas | `/dashboard(.*)`, `/c/(.*)`, `/api/ads/(.*)`, `/api/meta/(.*)`, `/api/lara/(.*)` | `apps/core/admin/src/middleware.ts` |
+| Sessão obrigatória | para rotas protegidas, redireciona para `/login` ou retorna `401` em API | `apps/core/admin/src/middleware.ts` |
+| Allowlist de e-mail | usa `ADMIN_ALLOWED_EMAILS` + owner fixo `contato@adventurelabs.com.br` | `apps/core/admin/src/middleware.ts` |
+| Chave técnica para APIs | bypass com `x-admin-key == CRON_SECRET` em Ads/Meta/Lara | `apps/core/admin/src/middleware.ts` |
 
 ## Scripts registrados (core)
 

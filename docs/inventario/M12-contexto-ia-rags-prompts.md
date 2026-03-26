@@ -3,8 +3,8 @@ module: M12
 title: Contexto IA, RAGs e prompts
 ssot: true
 owner: Torvalds (CTO)
-updated: 2026-03-25
-version: 1.0.0
+updated: 2026-03-26
+version: 1.1.0
 apps_scope: [admin, adventure, monorepo]
 review_sla: por PR + quinzenal
 sources:
@@ -31,16 +31,16 @@ sources:
 | `knowledge/` | base RAG corporativa | corpus principal da operação | `knowledge/**` | M09 |
 | `docs/` | base técnica complementar | runbooks e guias | `docs/**` | M09/M11 |
 | `os-registry` | índice de roteamento | descoberta de contexto por agentes | `knowledge/06_CONHECIMENTO/os-registry/INDEX.md` | M01 |
-| `pgvector` | armazenamento vetorial | não evidenciado no escopo atual | N/A | a mapear |
+| `pgvector` | armazenamento vetorial | evidenciado em workflow de teste e SQL `::vector` | `workflows/n8n/n8n-teste-001.json` | uso experimental |
 
 ## Models, engines e templates
 
 | item | tipo | status | observacao |
 |---|---|---|---|
 | modelos por provider (OpenAI/Anthropic/Gemini) | engine IA | ativo | inferido por envs e pacotes |
-| `AITemplates` | template IA | não evidenciado no escopo atual | sem catálogo formal explícito |
-| `Gems` | artefato IA | não evidenciado no escopo atual | sem ocorrência explícita consolidada |
-| `FigJams` | artefato colaborativo | a mapear | integração Figma existe no ecossistema, catálogo local pendente |
+| `AITemplates` | template IA | não evidenciado no código do recorte atual | sem catálogo formal explícito no monorepo |
+| `Gems` | artefato IA | não evidenciado no código do recorte atual | sem ocorrência técnica consolidada |
+| `FigJams` | artefato colaborativo | evidência documental | `knowledge/02_MARKETING/figjam-plano-midia-lancamento-assessoria-martech.md` |
 
 ## Guardrails de uso IA
 

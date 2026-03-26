@@ -3,8 +3,8 @@ module: M11
 title: Glossário, runbooks e ADRs
 ssot: true
 owner: Torvalds (CTO)
-updated: 2026-03-25
-version: 1.0.0
+updated: 2026-03-26
+version: 1.1.0
 apps_scope: [monorepo]
 review_sla: por PR + quinzenal
 sources:
@@ -17,11 +17,11 @@ sources:
 
 ## ADRs
 
-| id | titulo | data | status | contexto_resumo | decisao_resumo |
-|---|---|---|---|---|---|
-| `ADR-0001` | fonte de verdade tarefas | 2026-03-22 | ativo | disputa Asana/BACKLOG/adv_tasks | definir papel de cada superfície |
-| `ADR-0002` | `clients/` vs `apps/clientes/` | 2026-03-22 | ativo | coexistência de modelos de projeto | manter ambos por desenho canônico |
-| `ADR-0003+` | catálogo futuro | N/A | a mapear | sem novos ADRs evidenciados no escopo atual | registrar quando criado |
+| id | titulo | data_aceite | status | arquivo_ref | contexto_resumo | decisao_resumo |
+|---|---|---|---|---|---|---|
+| `ADR-0001` | fonte de verdade tarefas | 2026-03-22 | aceite | `docs/adr/0001-fonte-verdade-tarefas-asana-backlog-adv-tasks.md` | disputa Asana/BACKLOG/adv_tasks | separar SSOT de captura, engenharia Git e estado WorkOS |
+| `ADR-0002` | `clients/` vs `apps/clientes/` | 2026-03-22 | aceite | `docs/adr/0002-clients-submodule-vs-apps-clientes-workspace.md` | coexistência de modelos de projeto | manter ambos por desenho canônico com regra de fronteira |
+| `ADR-0003+` | catálogo futuro | N/A | não evidenciado no escopo atual | N/A | sem novos ADRs no diretório `docs/adr` | criar quando houver decisão arquitetural irreversível |
 
 ## Runbooks (inventário inicial)
 
