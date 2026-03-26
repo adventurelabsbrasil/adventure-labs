@@ -7,6 +7,7 @@ REPORT_PATH="$ROOT_DIR/docs/inventario/_raw/VALIDATION_REPORT.md"
 python3 - <<'PY'
 from pathlib import Path
 import re
+import glob
 from datetime import date
 
 root = Path.cwd()
@@ -255,6 +256,43 @@ add_semantic_check(
     "Inconsistências de owner: " + ", ".join(owner_issues),
 )
 
+# V10 drift checks (código vs documentação)
+drift_checks = []
+def add_drift_check(name: str, status: str, detail: str):
+    drift_checks.append((name, status, detail))
+
+api_base = root / "apps/core/admin/src/app/api"
+actual_endpoints = set()
+for route_file in glob.glob(str(api_base / "**/route.ts"), recursive=True):
+    p = Path(route_file)
+    endpoint = "/" + str(p.relative_to(root / "apps/core/admin/src/app")).replace("/route.ts", "").replace("\\", "/")
+    if endpoint.startswith("/api/csuite/") or endpoint.startswith("/api/meta/") or endpoint.startswith("/api/cron/") or endpoint.startswith("/api/n8n/"):
+        actual_endpoints.add(endpoint)
+
+doc_endpoints = set()
+for line in m06_text.splitlines():
+    line = line.strip()
+    if line.startswith("| `/api"):
+        ep = line.split("`")[1]
+        doc_endpoints.add(ep)
+
+missing_in_docs = sorted(actual_endpoints - doc_endpoints)
+extra_in_docs = sorted(doc_endpoints - actual_endpoints)
+drift_count = len(missing_in_docs) + len(extra_in_docs)
+DRIFT_THRESHOLD = 3
+if drift_count <= DRIFT_THRESHOLD:
+    add_drift_check(
+        "V10.1 endpoint drift M06",
+        "OK",
+        f"Drift={drift_count} (limiar<={DRIFT_THRESHOLD})."
+    )
+else:
+    add_drift_check(
+        "V10.1 endpoint drift M06",
+        "ALERTA",
+        f"Drift={drift_count} (limiar<={DRIFT_THRESHOLD}); faltando na doc: {missing_in_docs[:6]}; extras na doc: {extra_in_docs[:6]}"
+    )
+
 score = (checks_pass / checks_total * 100) if checks_total else 0
 status = "APROVADO para merge" if score >= 80 else "BLOQUEADO para merge"
 
@@ -315,6 +353,13 @@ lines.append("|---|---|---|")
 for name, st, detail in semantic_checks:
     lines.append(f"| {name} | {st} | {detail} |")
 lines.append("")
+lines.append("## V10 — Drift check (código x wiki)")
+lines.append("")
+lines.append("| check | status | detalhe |")
+lines.append("|---|---|---|")
+for name, st, detail in drift_checks:
+    lines.append(f"| {name} | {st} | {detail} |")
+lines.append("")
 lines.append("## Correções prioritárias")
 lines.append("")
 semantic_failures = [c for c in semantic_checks if c[1] != "OK"]
@@ -324,11 +369,13 @@ if broken_links or bad_env_lines or missing_update_section or semantic_failures:
         lines.append("- Corrigir falhas semânticas dos checks V09 antes do merge.")
 else:
     lines.append("- Sem bloqueios críticos detectados por esta validação automatizada.")
+if any(c[1] == "ALERTA" for c in drift_checks):
+    lines.append("- Existe alerta de drift em V10; revisar documentação operacional antes do merge final.")
 lines.append("")
 lines.append("## Melhorias opcionais MVP+1")
 lines.append("")
 lines.append("- Aprofundar V02 e V05 com validação semântica por entidade.")
-lines.append("- Incluir checks de drift para tabelas de inventário (contagem de endpoints e migrations por release).")
+lines.append("- Incluir checks de drift para migrations (último arquivo por app evidenciado no M03).")
 
 report_file.parent.mkdir(parents=True, exist_ok=True)
 report_file.write_text("\n".join(lines) + "\n", encoding="utf-8")

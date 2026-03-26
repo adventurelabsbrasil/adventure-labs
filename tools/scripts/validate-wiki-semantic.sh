@@ -5,6 +5,7 @@ ROOT_DIR="$(cd "$(dirname "$0")/../.." && pwd)"
 
 python3 - <<'PY'
 from pathlib import Path
+import glob
 import sys
 
 root = Path.cwd()
@@ -90,6 +91,32 @@ for mf in module_files:
         errors.append(f"{mf.name} sem owner no frontmatter")
     elif "tbd" in owner_line.lower():
         errors.append(f"{mf.name} com owner TBD")
+
+# V10.1 Drift de endpoints (código vs M06)
+api_base = root / "apps/core/admin/src/app/api"
+actual_endpoints = set()
+for route_file in glob.glob(str(api_base / "**/route.ts"), recursive=True):
+    p = Path(route_file)
+    endpoint = "/" + str(p.relative_to(root / "apps/core/admin/src/app")).replace("/route.ts", "").replace("\\", "/")
+    if endpoint.startswith("/api/csuite/") or endpoint.startswith("/api/meta/") or endpoint.startswith("/api/cron/") or endpoint.startswith("/api/n8n/"):
+        actual_endpoints.add(endpoint)
+
+doc_endpoints = set()
+for line in m06.splitlines():
+    line = line.strip()
+    if line.startswith("| `/api"):
+        ep = line.split("`")[1]
+        doc_endpoints.add(ep)
+
+missing_in_docs = sorted(actual_endpoints - doc_endpoints)
+extra_in_docs = sorted(doc_endpoints - actual_endpoints)
+drift_count = len(missing_in_docs) + len(extra_in_docs)
+DRIFT_THRESHOLD = 3
+if drift_count > DRIFT_THRESHOLD:
+    errors.append(
+        f"V10 endpoint drift acima do limiar ({drift_count}>{DRIFT_THRESHOLD}). "
+        f"Faltando na doc: {missing_in_docs[:6]}; extras na doc: {extra_in_docs[:6]}"
+    )
 
 if errors:
     print("VALIDACAO SEMANTICA: FALHA")
