@@ -293,6 +293,37 @@ else:
         f"Drift={drift_count} (limiar<={DRIFT_THRESHOLD}); faltando na doc: {missing_in_docs[:6]}; extras na doc: {extra_in_docs[:6]}"
     )
 
+# V10.2 migration drift (arquivos recentes vs M03)
+def latest_migrations(directory: Path, limit: int = 3):
+    if not directory.exists():
+        return []
+    files = sorted(directory.glob("*.sql"), key=lambda p: p.name, reverse=True)
+    return [p.name for p in files[:limit]]
+
+migration_dirs = [
+    root / "supabase/migrations",
+    root / "apps/core/admin/supabase/migrations",
+    root / "apps/core/adventure/supabase/migrations",
+]
+recent_migrations = []
+for d in migration_dirs:
+    recent_migrations.extend(latest_migrations(d, 3))
+recent_migrations = sorted(set(recent_migrations))
+missing_migration_refs = [m for m in recent_migrations if m not in m03_text]
+MIGRATION_DRIFT_THRESHOLD = 2
+if len(missing_migration_refs) <= MIGRATION_DRIFT_THRESHOLD:
+    add_drift_check(
+        "V10.2 migration drift M03",
+        "OK",
+        f"Drift={len(missing_migration_refs)} (limiar<={MIGRATION_DRIFT_THRESHOLD})."
+    )
+else:
+    add_drift_check(
+        "V10.2 migration drift M03",
+        "ALERTA",
+        f"Drift={len(missing_migration_refs)} (limiar<={MIGRATION_DRIFT_THRESHOLD}); sem referência em M03: {missing_migration_refs[:8]}"
+    )
+
 score = (checks_pass / checks_total * 100) if checks_total else 0
 status = "APROVADO para merge" if score >= 80 else "BLOQUEADO para merge"
 
@@ -375,7 +406,7 @@ lines.append("")
 lines.append("## Melhorias opcionais MVP+1")
 lines.append("")
 lines.append("- Aprofundar V02 e V05 com validação semântica por entidade.")
-lines.append("- Incluir checks de drift para migrations (último arquivo por app evidenciado no M03).")
+lines.append("- Ajustar limiares V10 por release para reduzir falsos positivos em semanas de alta cadência.")
 
 report_file.parent.mkdir(parents=True, exist_ok=True)
 report_file.write_text("\n".join(lines) + "\n", encoding="utf-8")

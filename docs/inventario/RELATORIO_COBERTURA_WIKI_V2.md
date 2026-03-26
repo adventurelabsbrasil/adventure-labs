@@ -32,9 +32,9 @@
 
 ## Próximos passos (MVP+1)
 
-1. Operacionalizar validação em PR (`.github/workflows`) usando `tools/scripts/validate-wiki-corporativo.sh`.
-2. Expandir validação semântica por entidade (não só estrutura/frontmatter).
-3. Revisão quinzenal para manter `updated/version` e evitar regressão de cobertura.
+1. Executar revisão quinzenal para manter `updated/version` e evitar regressão de cobertura.
+2. Ajustar limiares de drift (V10.1/V10.2) por release conforme volume de mudanças.
+3. Evoluir checks semânticos para M05/M09 com validação de cobertura por entidade.
 ---
 title: Relatório de Cobertura — Wiki Corporativa v2
 updated: 2026-03-26
@@ -101,3 +101,9 @@ sources:
 - M02: cobertura expandida para endpoints operacionais de `csuite` e `meta`.
 - M03: status de `admin migrations` atualizado para evidência real (`ativo`).
 - M06: matriz I/O ampliada com endpoints faltantes (`csuite`, `meta/accounts`, `meta/topics`).
+
+## 5) Encerramento formal desta fase
+
+- Plano de modulação da Wiki v2 **concluído** em 2026-03-26.
+- Critérios de pronto atendidos: pendências tratadas (`evidenciado` ou `N/A justificado`), owners sem `TBD`, validação estrutural+semântica automatizada e workflow de PR ativo.
+- Próxima revisão quinzenal sugerida: 2026-04-09.

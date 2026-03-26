@@ -118,6 +118,32 @@ if drift_count > DRIFT_THRESHOLD:
         f"Faltando na doc: {missing_in_docs[:6]}; extras na doc: {extra_in_docs[:6]}"
     )
 
+# V10.2 Drift de migrations (arquivos recentes vs M03)
+def latest_migrations(directory: Path, limit: int = 3):
+    if not directory.exists():
+        return []
+    files = sorted(directory.glob("*.sql"), key=lambda p: p.name, reverse=True)
+    return [p.name for p in files[:limit]]
+
+migration_dirs = [
+    root / "supabase/migrations",
+    root / "apps/core/admin/supabase/migrations",
+    root / "apps/core/adventure/supabase/migrations",
+]
+
+recent_migrations = []
+for d in migration_dirs:
+    recent_migrations.extend(latest_migrations(d, 3))
+recent_migrations = sorted(set(recent_migrations))
+
+missing_migration_refs = [m for m in recent_migrations if m not in m03]
+MIGRATION_DRIFT_THRESHOLD = 2
+if len(missing_migration_refs) > MIGRATION_DRIFT_THRESHOLD:
+    errors.append(
+        f"V10 migration drift acima do limiar ({len(missing_migration_refs)}>{MIGRATION_DRIFT_THRESHOLD}). "
+        f"Migrations recentes sem referência em M03: {missing_migration_refs[:8]}"
+    )
+
 if errors:
     print("VALIDACAO SEMANTICA: FALHA")
     for e in errors:
