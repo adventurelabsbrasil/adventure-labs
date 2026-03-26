@@ -30,6 +30,8 @@ report_file = root / "docs/inventario/_raw/VALIDATION_REPORT.md"
 m02_file = root / "docs/inventario/M02-apps-rotas-scripts-deploy.md"
 m03_file = root / "docs/inventario/M03-dados-banco-rls-migrations.md"
 m06_file = root / "docs/inventario/M06-workflows-automacoes-cronjobs.md"
+m07_file = root / "docs/inventario/M07-integracoes-terceiros-apis.md"
+m08_file = root / "docs/inventario/M08-infra-servidores-ci-cd.md"
 
 required_headers = ["module","title","ssot","owner","updated","version","apps_scope","review_sla","sources"]
 checks_pass = 0
@@ -210,6 +212,49 @@ add_semantic_check(
     "Versionamento esperado (1.2.0) não encontrado em todos os módulos alvo.",
 )
 
+# M07 checks (evidência + N/A justificado)
+m07_text = read(m07_file)
+m07_tokens = ["WorkOS", "evidência documental", "Stripe", "N/A justificado"]
+m07_missing = [tk for tk in m07_tokens if tk not in m07_text]
+add_semantic_check(
+    "V09.5 integracoes M07 (evidencia + N/A)",
+    len(m07_missing) == 0,
+    "M07 com evidência documental e N/A justificado para lacunas.",
+    "Tokens ausentes em M07: " + ", ".join(m07_missing),
+)
+
+# M08 checks (baseline infra)
+m08_text = read(m08_file)
+m08_tokens = [
+    "srv1526292.hstgr.cloud",
+    "openclaw.adventurelabs.com.br",
+    "n8n.adventurelabs.com.br",
+    "coolify.adventurelabs.com.br",
+]
+m08_missing = [tk for tk in m08_tokens if tk not in m08_text]
+add_semantic_check(
+    "V09.6 baseline infra M08",
+    len(m08_missing) == 0,
+    "M08 cobre baseline de infraestrutura e domínios operacionais.",
+    "Referências ausentes em M08: " + ", ".join(m08_missing),
+)
+
+# Owner consistency sem TBD em M01..M12
+owner_issues = []
+for mp in modules:
+    txt = read(root / mp)
+    owner_line = next((ln for ln in txt.splitlines() if ln.startswith("owner:")), "")
+    if not owner_line:
+        owner_issues.append(f"{Path(mp).name} sem owner")
+    elif "tbd" in owner_line.lower():
+        owner_issues.append(f"{Path(mp).name} com owner TBD")
+add_semantic_check(
+    "V09.7 owner consistency M01-M12",
+    len(owner_issues) == 0,
+    "Todos módulos M01-M12 têm owner definido sem TBD.",
+    "Inconsistências de owner: " + ", ".join(owner_issues),
+)
+
 score = (checks_pass / checks_total * 100) if checks_total else 0
 status = "APROVADO para merge" if score >= 80 else "BLOQUEADO para merge"
 
@@ -263,7 +308,7 @@ if missing_update_section:
 else:
     lines.append("- OK")
 lines.append("")
-lines.append("## V09 — Validação semântica (M02/M03/M06)")
+lines.append("## V09 — Validação semântica (M02/M03/M06/M07/M08)")
 lines.append("")
 lines.append("| check | status | detalhe |")
 lines.append("|---|---|---|")
@@ -283,7 +328,7 @@ lines.append("")
 lines.append("## Melhorias opcionais MVP+1")
 lines.append("")
 lines.append("- Aprofundar V02 e V05 com validação semântica por entidade.")
-lines.append("- Expandir V09 para checks semânticos de M07/M08 e consistência de owners por módulo.")
+lines.append("- Incluir checks de drift para tabelas de inventário (contagem de endpoints e migrations por release).")
 
 report_file.parent.mkdir(parents=True, exist_ok=True)
 report_file.write_text("\n".join(lines) + "\n", encoding="utf-8")

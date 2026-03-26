@@ -11,6 +11,9 @@ root = Path.cwd()
 m02 = (root / "docs/inventario/M02-apps-rotas-scripts-deploy.md").read_text(encoding="utf-8")
 m03 = (root / "docs/inventario/M03-dados-banco-rls-migrations.md").read_text(encoding="utf-8")
 m06 = (root / "docs/inventario/M06-workflows-automacoes-cronjobs.md").read_text(encoding="utf-8")
+m07 = (root / "docs/inventario/M07-integracoes-terceiros-apis.md").read_text(encoding="utf-8")
+m08 = (root / "docs/inventario/M08-infra-servidores-ci-cd.md").read_text(encoding="utf-8")
+module_files = sorted((root / "docs/inventario").glob("M*.md"))
 
 required_endpoints = [
     "/api/csuite/andon-asana-run",
@@ -58,6 +61,35 @@ if "| `admin migrations` |" in m03 and "| alta | a mapear" in m03.lower():
 for module_name, text in [("M02", m02), ("M03", m03), ("M06", m06)]:
     if "version: 1.2.0" not in text:
         errors.append(f"{module_name} sem version: 1.2.0")
+
+# M07: integrações documentais e N/A justificado para lacunas
+for token in [
+    "WorkOS",
+    "evidência documental",
+    "Stripe",
+    "N/A justificado",
+]:
+    if token not in m07:
+        errors.append(f"M07 sem evidência esperada: '{token}'")
+
+# M08: baseline de infra operacional mínima
+for token in [
+    "srv1526292.hstgr.cloud",
+    "openclaw.adventurelabs.com.br",
+    "n8n.adventurelabs.com.br",
+    "coolify.adventurelabs.com.br",
+]:
+    if token not in m08:
+        errors.append(f"M08 sem referência de infra: '{token}'")
+
+# Owner consistency: sem TBD no frontmatter de módulos M01..M12
+for mf in module_files:
+    txt = mf.read_text(encoding="utf-8")
+    owner_line = next((ln for ln in txt.splitlines() if ln.startswith("owner:")), "")
+    if not owner_line:
+        errors.append(f"{mf.name} sem owner no frontmatter")
+    elif "tbd" in owner_line.lower():
+        errors.append(f"{mf.name} com owner TBD")
 
 if errors:
     print("VALIDACAO SEMANTICA: FALHA")
