@@ -66,6 +66,12 @@ Status: **APROVADO para merge**
 | V09.6 baseline infra M08 | OK | M08 cobre baseline de infraestrutura e domínios operacionais. |
 | V09.7 owner consistency M01-M12 | OK | Todos módulos M01-M12 têm owner definido sem TBD. |
 
+## V10 — Drift check (código x wiki)
+
+| check | status | detalhe |
+|---|---|---|
+| V10.1 endpoint drift M06 | OK | Drift=1 (limiar<=3). |
+
 ## Correções prioritárias
 
 - Sem bloqueios críticos detectados por esta validação automatizada.
@@ -73,4 +79,4 @@ Status: **APROVADO para merge**
 ## Melhorias opcionais MVP+1
 
 - Aprofundar V02 e V05 com validação semântica por entidade.
-- Incluir checks de drift para tabelas de inventário (contagem de endpoints e migrations por release).
+- Incluir checks de drift para migrations (último arquivo por app evidenciado no M03).
