@@ -1,0 +1,32 @@
+name: Wiki Corporativo Validation
+
+on:
+  pull_request:
+    paths:
+      - "docs/WIKI_CORPORATIVO_INDEX.md"
+      - "docs/inventario/**"
+      - "docs/adr/**"
+      - "tools/scripts/validate-wiki-corporativo.sh"
+      - ".github/workflows/wiki-corporativo-validation.yml"
+  workflow_dispatch:
+
+jobs:
+  validate-wiki:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Run wiki validator
+        run: bash ./tools/scripts/validate-wiki-corporativo.sh
+
+      - name: Upload validation report artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: wiki-validation-report
+          path: docs/inventario/_raw/VALIDATION_REPORT.md

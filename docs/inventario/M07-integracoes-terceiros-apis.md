@@ -3,8 +3,8 @@ module: M07
 title: Integrações terceiras e APIs
 ssot: true
 owner: Torvalds (CTO)
-updated: 2026-03-25
-version: 1.0.0
+updated: 2026-03-26
+version: 1.1.0
 apps_scope: [admin, adventure, monorepo]
 review_sla: por PR + quinzenal
 sources:
@@ -38,10 +38,10 @@ sources:
 | Omie | integração ERP/financeiro | tools/omie-cli | `OMIE_APP_KEY`, `OMIE_APP_SECRET` | ativo | M09 |
 | Wix | diagnóstico externo | tools/dbgr | `WIX_API_KEY`, `WIX_SITE_ID` | ativo | M08 |
 | n8n API | orquestração workflows | workflows/tools | `N8N_API_URL`, `N8N_API_TOKEN` | ativo | M06 |
-| WorkOS | SSO/identidade corporativa | monorepo | N/A | não evidenciado no escopo atual | a mapear |
-| Stripe | billing/pagamento | monorepo | N/A | não evidenciado no escopo atual | a mapear |
-| Resend/Sendgrid/Twilio | comunicação | monorepo | N/A | não evidenciado no escopo atual | a mapear |
-| Slack/Discord/Notion/Airtable | colaboração/integração | monorepo | N/A | não evidenciado no escopo atual | a mapear |
+| WorkOS | contexto de identidade/agentes (documental) | knowledge/admin-contexto | N/A | evidência documental (sem SDK ativo no recorte) | `knowledge/06_CONHECIMENTO/workos-admin-contexto-agentes.md` |
+| Stripe | billing/pagamento | monorepo | N/A | não evidenciado no código/env do recorte atual | N/A justificado |
+| Resend/Sendgrid/Twilio | comunicação | monorepo | N/A | não evidenciado no código/env do recorte atual | N/A justificado |
+| Slack/Discord/Notion/Airtable | colaboração/integração | monorepo | N/A | não evidenciado no código/env do recorte atual | N/A justificado |
 
 ## Packages de evidência (amostra)
 

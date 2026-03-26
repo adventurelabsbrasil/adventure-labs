@@ -3,8 +3,8 @@ module: M05
 title: IA, agentes, skills, tools e MCPs
 ssot: true
 owner: Torvalds (CTO)
-updated: 2026-03-25
-version: 1.0.0
+updated: 2026-03-26
+version: 1.1.0
 apps_scope: [admin, adventure, monorepo]
 review_sla: por PR + quinzenal
 sources:
@@ -24,6 +24,25 @@ sources:
 | `ogilvy` | marketing/conteúdo | `apps/labs/xpostr/src/lib/agents/ogilvy.ts` | geração de conteúdo | stack app xpostr | Torvalds (CTO) |
 | `zazu` | operações/comando | `apps/labs/xpostr/src/lib/agents/zazu.ts` | operação assistida | stack app xpostr | Torvalds (CTO) |
 | `skills em admin` | catálogo corporativo | `apps/core/admin/agents/skills/` | workflows e agentes internos | skills markdown | Torvalds (CTO) |
+
+## Owners reais de agentes (admin)
+
+| agente | owner | path | status |
+|---|---|---|---|
+| `grove_ceo` | Grove (CEO Agent) | `apps/core/admin/agents/grove_ceo.md` | ativo |
+| `ohno_coo` | Ohno (COO) | `apps/core/admin/agents/ohno_coo.md` | ativo |
+| `torvalds_cto` | Torvalds (CTO) | `apps/core/admin/agents/torvalds_cto.md` | ativo |
+| `ogilvy_cmo` | Ogilvy (CMO) | `apps/core/admin/agents/ogilvy_cmo.md` | ativo |
+| `buffett_cfo` | Buffett (CFO) | `apps/core/admin/agents/buffett_cfo.md` | ativo |
+| `cagan_cpo` | Cagan (CPO) | `apps/core/admin/agents/cagan_cpo.md` | ativo |
+| `gerente_rose` | Cagan (CPO) | `apps/core/admin/agents/gerente_rose/` | ativo |
+| `gerente_benditta` | Cagan (CPO) | `apps/core/admin/agents/gerente_benditta/` | ativo |
+| `gerente_young` | Cagan (CPO) | `apps/core/admin/agents/gerente_young/` | ativo |
+| `benchmark_adventure` | Ogilvy (CMO) | `apps/core/admin/agents/benchmark_adventure/` | ativo |
+| `benchmark_clientes` | Cagan (CPO) | `apps/core/admin/agents/benchmark_clientes/` | ativo |
+| `benchmark_conteudo` | Ogilvy (CMO) | `apps/core/admin/agents/benchmark_conteudo/` | ativo |
+| `andon_asana` | Ohno (COO) | `apps/core/admin/agents/andon_asana/` | ativo |
+| `google_workspace_advisor` | Torvalds (CTO) | `apps/core/admin/agents/google_workspace_advisor/` | ativo |
 
 ## MCPs/CLIs/tools
 

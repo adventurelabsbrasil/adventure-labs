@@ -1,6 +1,6 @@
 # VALIDATION_REPORT — Auditoria Wiki Corporativa
 
-Data da auditoria: 2026-03-25
+Data da auditoria: 2026-03-26
 Score final: **93.23%** (124/133)
 Status: **APROVADO para merge**
 
@@ -61,4 +61,4 @@ Status: **APROVADO para merge**
 ## Melhorias opcionais MVP+1
 
 - Aprofundar V02 e V05 com validação semântica por entidade.
-- Integrar este script ao CI para execução por PR.
+- Expandir o workflow `.github/workflows/wiki-corporativo-validation.yml` com checks de domínio (M02/M03/M06), além do estrutural.
