@@ -1,7 +1,7 @@
 # VALIDATION_REPORT — Auditoria Wiki Corporativa
 
 Data da auditoria: 2026-03-26
-Score final: **93.43%** (128/137)
+Score final: **93.57%** (131/140)
 Status: **APROVADO para merge**
 
 ## V01 — Cabeçalhos obrigatórios
@@ -54,7 +54,7 @@ Status: **APROVADO para merge**
 
 - OK
 
-## V09 — Validação semântica (M02/M03/M06)
+## V09 — Validação semântica (M02/M03/M06/M07/M08)
 
 | check | status | detalhe |
 |---|---|---|
@@ -62,6 +62,9 @@ Status: **APROVADO para merge**
 | V09.2 endpoint coverage M06 | OK | Todos endpoints mínimos estão documentados em M06. |
 | V09.3 status admin migrations M03 | OK | Status de migrations admin coerente com evidência de diretório. |
 | V09.4 version bump M02/M03/M06 | OK | Versionamento semântico atualizado em M02/M03/M06. |
+| V09.5 integracoes M07 (evidencia + N/A) | OK | M07 com evidência documental e N/A justificado para lacunas. |
+| V09.6 baseline infra M08 | OK | M08 cobre baseline de infraestrutura e domínios operacionais. |
+| V09.7 owner consistency M01-M12 | OK | Todos módulos M01-M12 têm owner definido sem TBD. |
 
 ## Correções prioritárias
 
@@ -70,4 +73,4 @@ Status: **APROVADO para merge**
 ## Melhorias opcionais MVP+1
 
 - Aprofundar V02 e V05 com validação semântica por entidade.
-- Expandir V09 para checks semânticos de M07/M08 e consistência de owners por módulo.
+- Incluir checks de drift para tabelas de inventário (contagem de endpoints e migrations por release).
