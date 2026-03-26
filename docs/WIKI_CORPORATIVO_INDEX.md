@@ -47,6 +47,15 @@ status: ativo
 - `knowledge/00_GESTAO_CORPORATIVA/MANUAL_TAXONOMIA_REPOSITORIO.md`
 - `docs/SUPABASE_INVENTARIO_TABELAS.md`
 - `docs/inventario/_raw/RAW_DATA_v2.md`
+- `docs/adr/0001-fonte-verdade-tarefas-asana-backlog-adv-tasks.md`
+- `knowledge/00_GESTAO_CORPORATIVA/operacao/asana/README.md`
+
+## Mapa Asana (gestão e projetos)
+
+- Fonte de verdade de tarefas e backlog: `docs/adr/0001-fonte-verdade-tarefas-asana-backlog-adv-tasks.md`
+- Operação e playbooks Asana: `knowledge/00_GESTAO_CORPORATIVA/operacao/asana/README.md`
+- Inventário de campos/projetos/agentes (snapshot): `knowledge/00_GESTAO_CORPORATIVA/operacao/asana/manual-inventario-asana-projetos-campos-agentes-2026-03.md`
+- Triagens operacionais recentes: `knowledge/00_GESTAO_CORPORATIVA/operacao/asana/triagem-projeto-tasks-2026-03-22.md`
 
 ## Mapeamento rápido de ownership
 
