@@ -50,3 +50,13 @@ knowledge/99_ARQUIVO/**/*.csv
 
 # Fontes baixadas em runtime (gerador de criativos)
 tools/scripts/fonts/adventure_tofu/
+
+# Cursor/planos locais e backups de ambiente
+.cursor/plans/
+.infisical.local.backup.json
+apps/labs/minha-app/.cursor/
+
+# Rascunhos locais de áudio/script operacional Asana
+knowledge/00_GESTAO_CORPORATIVA/operacao/asana/audio-relatorio-comando-estelar-*.aiff
+knowledge/00_GESTAO_CORPORATIVA/operacao/asana/audio-relatorio-comando-estelar-*.m4a
+knowledge/00_GESTAO_CORPORATIVA/operacao/asana/audio-relatorio-comando-estelar-*-script.txt
