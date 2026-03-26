@@ -78,6 +78,15 @@ sources:
 | `clientes migrations` | app cliente | `apps/clientes/**/supabase` | Torvalds (CTO) | média | ativo | 2026-03-25 |
 | `labs migrations` | app lab | `apps/labs/**/supabase` | Torvalds (CTO) | média | ativo | 2026-03-25 |
 
+### Snapshot de migrations recentes (drift guard V10.2)
+
+- `20260318000001_adv_crm_seed_funnel_stages.sql`
+- `20260318000002_adv_crm_funcoes_subfuncoes.sql`
+- `20260319100000_auth_user_email_from_jwt.sql`
+- `20260325103000_align_mateus_adv_profile_id_with_auth.sql`
+- `20260325120310_conversion_forms_payload_compat.sql`
+- `20260325121500_adv_time_bank_manual_mateus_22_23_mar2026.sql`
+
 ## Observações e guardrails
 
 - Em mudanças de schema, atualizar sempre migration SQL versionada.

@@ -71,6 +71,7 @@ Status: **APROVADO para merge**
 | check | status | detalhe |
 |---|---|---|
 | V10.1 endpoint drift M06 | OK | Drift=1 (limiar<=3). |
+| V10.2 migration drift M03 | OK | Drift=0 (limiar<=2). |
 
 ## Correções prioritárias
 
@@ -79,4 +80,4 @@ Status: **APROVADO para merge**
 ## Melhorias opcionais MVP+1
 
 - Aprofundar V02 e V05 com validação semântica por entidade.
-- Incluir checks de drift para migrations (último arquivo por app evidenciado no M03).
+- Ajustar limiares V10 por release para reduzir falsos positivos em semanas de alta cadência.
