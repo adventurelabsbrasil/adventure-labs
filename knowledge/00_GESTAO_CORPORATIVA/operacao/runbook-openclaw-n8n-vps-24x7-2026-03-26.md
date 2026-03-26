@@ -62,6 +62,12 @@ Esperado: `401` ou `200` dependendo da configuracao de autenticacao.
 
 Padrao recomendado: publicar OpenClaw como recurso no Coolify (build controlado), em vez de execucao ad-hoc por terminal.
 
+**Decisao de arquitetura (fixa):**
+
+- `n8n` e `openclaw` em modo servico no Coolify.
+- Execucao manual no host (fora do Coolify) apenas para manutencao pontual e com janela controlada.
+- Nao usar deploy do OpenClaw a partir do monorepo com submodulos privados.
+
 ### 5.2 Pre-condicoes minimas
 
 - Diretorio de codigo presente em `/root/openclaw`.
@@ -85,6 +91,49 @@ docker compose up -d
 docker compose ps
 ```
 
+### 5.5 Publicacao padrao no Coolify (Docker Compose direto)
+
+1. Criar novo recurso de aplicacao em `Docker Compose` (nao `Dockerfile`).
+2. Nao conectar `Git Repository` para o OpenClaw neste fluxo.
+3. Definir `FQDN` como `openclaw.adventurelabs.com.br` (sem `https://`).
+4. Ativar `Generate SSL` e `HTTP/2`.
+5. Habilitar `Basic Auth` inicial para hardening.
+6. Colar compose canonico:
+
+```yaml
+services:
+  gateway:
+    image: ghcr.io/bmorphism/openclaw:latest
+    restart: unless-stopped
+    command: ["gateway", "--bind", "0.0.0.0", "--port", "18789"]
+    environment:
+      OPENCLAW_CONFIG_DIR: /home/openclaw/.openclaw
+      OPENCLAW_WORKSPACE_DIR: /home/openclaw/workspace
+    volumes:
+      - openclaw_config:/home/openclaw/.openclaw
+      - openclaw_workspace:/home/openclaw/workspace
+    ports:
+      - "18789:18789"
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:18789/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  openclaw_config:
+  openclaw_workspace:
+```
+
+### 5.6 Erros conhecidos neste ambiente (e antierro)
+
+- `fatal: could not read Username for 'https://github.com'`:
+  - causa: submodulos privados no clone do monorepo.
+  - antierro: usar Compose direto no Coolify para OpenClaw.
+- `unknown instruction: services:`:
+  - causa: YAML de compose colado em campo `Dockerfile`.
+  - antierro: validar build pack como `Docker Compose` antes de salvar.
+
 ## 6) Integracao com monorepo e Git (governanca)
 
 Para evitar alteracoes sem rastreabilidade:
@@ -93,6 +142,16 @@ Para evitar alteracoes sem rastreabilidade:
 2. Commits com prefixo claro (`feat(openclaw):`, `chore(openclaw):`, etc.).
 3. Cada push relevante deve gerar referencia em tarefa operacional (Asana/Admin).
 4. PR de consolidacao para `main` com revisao humana.
+
+### 6.1 Politica minima para agente always-on
+
+- Branch padrao do agente: `openclaw/<tema>`.
+- Prefixos aceitos: `feat(openclaw):`, `fix(openclaw):`, `chore(openclaw):`, `docs(openclaw):`.
+- Bloqueio operacional: sem push direto em `main`.
+- Cada alteracao relevante deve registrar:
+  - link da PR;
+  - evidencia operacional (logs/resultado);
+  - referencia no registro de continuidade.
 
 ## 7) Segredos e Infisical
 
@@ -116,7 +175,30 @@ infisical run --path=/ --env=prod -- env | grep -E "OPENCLAW|N8N|GITHUB|SUPABASE
   - `curl -I` nos subdominios
   - verificacao de logs com erro critico nas ultimas 24h
 
-## 9) Criterios de aceite (operacao continua)
+### 8.1 Verificacao de TLS para evitar HSTS lock
+
+Validar o certificado em producao para o host correto:
+
+```bash
+echo | openssl s_client -connect openclaw.adventurelabs.com.br:443 -servername openclaw.adventurelabs.com.br 2>/dev/null | openssl x509 -noout -issuer -subject -dates
+```
+
+Esperado: certificado publico valido para `openclaw.adventurelabs.com.br` (nao `TRAEFIK DEFAULT CERT`).
+
+## 9) Separacao de acesso local vs VPS (alias operacionais)
+
+Para nao misturar usos, manter dois modelos de acesso:
+
+1. **Alias local (manutencao/diagnostico):**
+   - endpoint local: `http://127.0.0.1:18789` (ou porta local equivalente);
+   - uso: troubleshooting e testes internos.
+2. **Alias VPS (producao always-on):**
+   - endpoint publico: `https://openclaw.adventurelabs.com.br`;
+   - uso: operacao diaria e integracoes externas.
+
+Regra: qualquer automacao externa deve apontar para o alias VPS; alias local fica restrito a manutencao.
+
+## 10) Criterios de aceite (operacao continua)
 
 - Reboot da VPS nao derruba stack critica.
 - n8n responde por dominio com SSL e autenticacao ativa.

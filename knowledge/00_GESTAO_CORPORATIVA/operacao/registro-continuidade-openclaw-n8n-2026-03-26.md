@@ -70,6 +70,25 @@ Commits encontrados na janela `2026-03-25` a `2026-03-26` no monorepo local:
 - `openclaw`: operacional localmente na VPS, mas sem publicacao HTTPS estavel no subdominio.
 - `coolify`: operacional, porem fluxo atual de publicacao do OpenClaw ainda desalinhado (Git com submodulos privados e/ou tipo de build pack incorreto).
 
+## Fechamento tecnico (always-on)
+
+### Padrão definido
+
+- OpenClaw passa a ter padrao oficial de deploy em `Docker Compose` direto no Coolify.
+- Fica descartado, para este servico, o deploy via monorepo com submodulos privados.
+
+### Validacoes externas executadas no fechamento
+
+- `coolify.adventurelabs.com.br` -> `200`.
+- `n8n.adventurelabs.com.br` -> `401` esperado.
+- `openclaw.adventurelabs.com.br` -> `404` com host roteado no proxy.
+- Certificado atual de OpenClaw: `TRAEFIK DEFAULT CERT` (ainda sem emissao publica valida para o host).
+
+### Proximo marco de aceite
+
+- Recurso `openclaw` criado no Coolify em tipo `Docker Compose` com SSL ativo e certificado valido (nao default).
+- Confirmacao final por navegador sem HSTS error.
+
 ## Risco de continuidade identificado
 
 - OpenClaw ainda sem padrao operacional unico (Coolify vs execucao manual no host).

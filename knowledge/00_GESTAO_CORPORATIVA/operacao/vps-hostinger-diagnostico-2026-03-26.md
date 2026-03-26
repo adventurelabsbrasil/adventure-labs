@@ -116,6 +116,27 @@ Observação: não há endpoint HTTPS confiável no momento para acesso público
 - O bloqueio principal nao foi no runtime do OpenClaw, e sim no fluxo de publicacao via Coolify (fonte Git com submodulos privados e configuracao de tipo de recurso).
 - O estado atual do dominio OpenClaw permanece sem TLS valido para acesso por navegador, enquanto `n8n` e `coolify` seguem operacionais.
 
+## Evidencia adicional (fechamento do dia)
+
+### Verificacao externa de DNS/HTTPS
+
+- `coolify.adventurelabs.com.br`: `HTTP/2 200`.
+- `n8n.adventurelabs.com.br`: `HTTP/2 401` (esperado sem login).
+- `openclaw.adventurelabs.com.br`: `HTTP/2 404` (host roteado, mas sem app correta no alvo atual).
+- DNS `A` dos 3 dominios apontando para `187.77.251.199`.
+
+### Verificacao de certificado do OpenClaw
+
+- Certificado atual apresentado no handshake:
+  - `subject=CN=TRAEFIK DEFAULT CERT`
+  - `issuer=CN=TRAEFIK DEFAULT CERT`
+- Conclusao: o host de OpenClaw ainda nao recebeu certificado publico confiavel (ex.: Let's Encrypt) no proxy, justificando alerta `ERR_CERT_AUTHORITY_INVALID` no navegador.
+
+### Limite de automacao nesta sessao
+
+- Tentativa de SSH nao interativa a `root@187.77.251.199` sem credencial disponivel no agente (`Permission denied`).
+- Alteracoes internas da VPS/Coolify devem seguir runbook guiado com execucao humana autenticada.
+
 ## Riscos identificados
 
 - Ausência de firewall gerenciado na conta Hostinger.

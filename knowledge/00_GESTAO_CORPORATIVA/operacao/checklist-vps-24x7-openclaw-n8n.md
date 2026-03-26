@@ -14,6 +14,7 @@ status: ativo
 - [ ] `https://coolify.adventurelabs.com.br` retorna `200`.
 - [ ] `https://n8n.adventurelabs.com.br` retorna `401` ou `200` (conforme auth).
 - [ ] `https://openclaw.adventurelabs.com.br` retorna resposta valida apos publicacao.
+- [ ] Certificado do `openclaw.adventurelabs.com.br` nao e `TRAEFIK DEFAULT CERT`.
 - [ ] Reboot da VPS reergue containers automaticamente.
 
 ## B) Persistencia
@@ -39,3 +40,9 @@ status: ativo
 - [ ] OpenClaw operando em branch dedicada (`openclaw/*`).
 - [ ] Commits padronizados e auditaveis.
 - [ ] Vinculo com tarefa operacional para mudancas relevantes.
+
+## F) Separacao de acesso (alias)
+
+- [ ] Alias local de manutencao definido (`127.0.0.1`/porta local).
+- [ ] Alias de producao definido (`https://openclaw.adventurelabs.com.br`).
+- [ ] Automacoes externas usando apenas alias de producao.

@@ -4,7 +4,7 @@ title: Workflows, automações e cronjobs
 ssot: true
 owner: Torvalds (CTO)
 updated: 2026-03-26
-version: 1.1.0
+version: 1.2.0
 apps_scope: [admin, adventure, monorepo]
 review_sla: por PR + quinzenal
 sources:
@@ -57,10 +57,17 @@ sources:
 | endpoint | métodos | entrada esperada | saída esperada | autenticação |
 |---|---|---|---|---|
 | `/api/csuite/andon-asana-run` | `GET/POST` | contexto opcional de execução | resumo/resultado da rodada | `authorization` e/ou `x-admin-key=CRON_SECRET` |
+| `/api/csuite/andon-tts` | `POST` | payload para geração/estilo de áudio | status + metadados de geração | `x-admin-key=CRON_SECRET` |
+| `/api/csuite/context-docs` | `GET` | parâmetros opcionais de contexto | contexto consolidado de documentação | `authorization` |
 | `/api/csuite/founder-report` | `POST` | payload de contexto fundador | relatório consolidado | `x-admin-key=CRON_SECRET` |
 | `/api/csuite/daily-memory` | `GET` | parâmetros opcionais de período | memória diária agregada | `x-admin-key=CRON_SECRET` |
+| `/api/csuite/google-workspace-advisor-inspect` | `POST` | payload de inspeção workspace | diagnóstico e recomendações | `x-admin-key=CRON_SECRET` |
+| `/api/meta/accounts` | `GET` | client_id opcional | lista de contas vinculadas | `x-admin-key=CRON_SECRET` |
+| `/api/meta/accounts/[id]/campaigns` | `GET` | account_id e filtros opcionais | campanhas por conta | `x-admin-key=CRON_SECRET` |
+| `/api/meta/accounts/[id]/insights` | `GET` | account_id + intervalo | insights por conta | `x-admin-key=CRON_SECRET` |
 | `/api/meta/daily` | `GET/POST` | conta/campanha/intervalo | métricas/meta diária | `x-admin-key=CRON_SECRET` |
 | `/api/meta/mapping` | `GET/POST` | mapeamento conta↔cliente | confirmação/matriz de vínculo | `x-admin-key=CRON_SECRET` |
+| `/api/meta/topics` | `POST` | tópicos/campanhas para análise | confirmação de persistência/processamento | `x-admin-key=CRON_SECRET` |
 | `/api/cron/daily-summary` | `GET/POST` | trigger agendado/manual | status de execução do resumo | `authorization`/`CRON_SECRET` |
 | `/api/cron/whatsapp-daily` | `POST` | payload de mensagens/trigger | status de processamento | `authorization` e/ou `x-admin-key=CRON_SECRET` |
 | `/api/n8n/sueli-config` | `GET` | request de configuração | config sanitizada para fluxo | `x-admin-key=CRON_SECRET` |
