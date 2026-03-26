@@ -4,7 +4,7 @@ title: Apps, rotas, scripts e deploy
 ssot: true
 owner: Torvalds (CTO)
 updated: 2026-03-26
-version: 1.1.0
+version: 1.2.0
 apps_scope: [admin, adventure, monorepo]
 review_sla: por PR + quinzenal
 sources:
@@ -32,6 +32,8 @@ sources:
 | `/api/ads/*` | `GET/PATCH` | admin | campanhas Google Ads | `x-admin-key = CRON_SECRET` ou sessão + allowlist | `src/middleware.ts` protege `/api/ads/:path*` | `apps/core/admin/src/app/api/ads/**/route.ts` |
 | `/api/lara/*` | `GET/POST` | admin | agente Lara e memória operacional | `x-admin-key = CRON_SECRET` ou sessão + allowlist | `src/middleware.ts` protege `/api/lara/:path*` | `apps/core/admin/src/app/api/lara/**/route.ts` |
 | `/api/cron/*` | `GET/POST` | admin | jobs diários e relatórios | token/header (`authorization`/`x-admin-key`) por handler | middleware não obrigatório no matcher global | `apps/core/admin/src/app/api/cron/**/route.ts` |
+| `/api/csuite/*` | `GET/POST` | admin | automações C-Suite e contexto operacional | por handler (`authorization` e/ou `x-admin-key`) | fora do matcher global; proteção aplicada no handler | `apps/core/admin/src/app/api/csuite/**/route.ts` |
+| `/api/n8n/*` | `GET` | admin | endpoints de configuração para workflows | `x-admin-key = CRON_SECRET` | fora do matcher global; proteção aplicada no handler | `apps/core/admin/src/app/api/n8n/**/route.ts` |
 | `/auth/callback|/auth/logout|/auth/signout` | `GET/POST` | admin | ciclo de autenticação e sessão | callback liberado; logout/signout por sessão/cookies | `src/middleware.ts` (`/auth/callback`) | `apps/core/admin/src/app/auth/**/route.ts` |
 | `createBrowserRouter` + `path:*` | client routes | adventure | roteamento SPA público + áreas internas | sem bloqueio de rota em `PrivateRoute` (layout only) | N/A (Vite/SPA) | `apps/core/adventure/src/routes/index.tsx` |
 | `supabase/functions/*` | HTTP endpoint | adventure | edge functions e serviços auxiliares | depende de policy por função/tabela | N/A | `apps/core/adventure/supabase/functions` |
@@ -44,6 +46,21 @@ sources:
 | Sessão obrigatória | para rotas protegidas, redireciona para `/login` ou retorna `401` em API | `apps/core/admin/src/middleware.ts` |
 | Allowlist de e-mail | usa `ADMIN_ALLOWED_EMAILS` + owner fixo `contato@adventurelabs.com.br` | `apps/core/admin/src/middleware.ts` |
 | Chave técnica para APIs | bypass com `x-admin-key == CRON_SECRET` em Ads/Meta/Lara | `apps/core/admin/src/middleware.ts` |
+
+## Cobertura semântica de endpoints operacionais (admin)
+
+| endpoint | métodos | auth esperado | observação |
+|---|---|---|---|
+| `/api/csuite/andon-asana-run` | `GET/POST` | header e/ou chave técnica | rodada de execução Asana |
+| `/api/csuite/andon-tts` | `POST` | chave técnica | geração de áudio/script |
+| `/api/csuite/context-docs` | `GET` | header de autorização | consolidação de contexto documental |
+| `/api/csuite/daily-memory` | `GET` | chave técnica | snapshot de memória operacional |
+| `/api/csuite/founder-report` | `POST` | chave técnica | relatório do founder |
+| `/api/csuite/google-workspace-advisor-inspect` | `POST` | chave técnica | inspeção operacional workspace |
+| `/api/meta/accounts` | `GET` | chave técnica | lista contas Meta |
+| `/api/meta/accounts/[id]/campaigns` | `GET` | chave técnica | campanhas por conta |
+| `/api/meta/accounts/[id]/insights` | `GET` | chave técnica | insights por conta |
+| `/api/meta/topics` | `POST` | chave técnica | tópicos/insumos do agente |
 
 ## Scripts registrados (core)
 

@@ -4,7 +4,7 @@ title: Dados, banco, RLS e migrations
 ssot: true
 owner: Torvalds (CTO)
 updated: 2026-03-26
-version: 1.1.0
+version: 1.2.0
 apps_scope: [admin, adventure, monorepo]
 review_sla: por PR + quinzenal
 sources:
@@ -73,7 +73,7 @@ sources:
 | item | tipo | caminho | owner | criticidade | status | ultima_atualizacao |
 |---|---|---|---|---|---|---|
 | `supabase/migrations/` | diretório migrations raiz | `supabase/migrations` | Torvalds (CTO) | alta | ativo | 2026-03-25 |
-| `admin migrations` | app core | `apps/core/admin/supabase` | Torvalds (CTO) | alta | a mapear (checkout parcial) | 2026-03-25 |
+| `admin migrations` | app core | `apps/core/admin/supabase` | Torvalds (CTO) | alta | ativo (migrations evidenciadas) | 2026-03-26 |
 | `adventure migrations` | app core | `apps/core/adventure/supabase` | Torvalds (CTO) | alta | ativo | 2026-03-25 |
 | `clientes migrations` | app cliente | `apps/clientes/**/supabase` | Torvalds (CTO) | média | ativo | 2026-03-25 |
 | `labs migrations` | app lab | `apps/labs/**/supabase` | Torvalds (CTO) | média | ativo | 2026-03-25 |

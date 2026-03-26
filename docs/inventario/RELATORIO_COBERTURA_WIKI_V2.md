@@ -38,7 +38,7 @@
 ---
 title: Relatório de Cobertura — Wiki Corporativa v2
 updated: 2026-03-26
-version: 1.1.0
+version: 1.2.0
 sources:
   - docs/WIKI_CORPORATIVO_INDEX.md
   - docs/inventario/_raw/RAW_DATA_v2.md
@@ -93,5 +93,11 @@ sources:
 ## 3) Sugestões de próximos passos (MVP+1)
 
 1. Integrar validação wiki em workflow automático de PR.
-2. Incluir validação semântica de domínio (ex.: checks por tipo de entidade M02/M03/M06).
+2. Incluir checks semânticos automatizados para endpoint coverage (M02/M06) e status de migrations (M03).
 3. Rodar auditoria quinzenal de consistência entre INDEX, módulos e relatório de cobertura.
+
+## 4) Rodada semântica aplicada (2026-03-26)
+
+- M02: cobertura expandida para endpoints operacionais de `csuite` e `meta`.
+- M03: status de `admin migrations` atualizado para evidência real (`ativo`).
+- M06: matriz I/O ampliada com endpoints faltantes (`csuite`, `meta/accounts`, `meta/topics`).

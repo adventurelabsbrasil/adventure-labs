@@ -61,4 +61,4 @@ Status: **APROVADO para merge**
 ## Melhorias opcionais MVP+1
 
 - Aprofundar V02 e V05 com validação semântica por entidade.
-- Expandir o workflow `.github/workflows/wiki-corporativo-validation.yml` com checks de domínio (M02/M03/M06), além do estrutural.
+- Integrar este script ao CI para execução por PR.
