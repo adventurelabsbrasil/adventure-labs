@@ -2,7 +2,7 @@
 title: OS Registry — INDEX mestre
 domain: conhecimento
 tags: [registry, index, ssot]
-updated: 2026-03-24
+updated: 2026-03-30
 ---
 
 # OS Registry — INDEX mestre
@@ -93,13 +93,16 @@ updated: 2026-03-24
 
 ---
 
-## 6. Workflows n8n
+## 6. Workflows n8n e OpenClaw (VPS)
 
 | Recurso | Caminho |
 |---------|---------|
+| **Índice SSOT (n8n + OpenClaw Buzz, Coolify, Infisical)** | [`knowledge/00_GESTAO_CORPORATIVA/operacao/INDEX-n8n-openclaw-vps.md`](../../00_GESTAO_CORPORATIVA/operacao/INDEX-n8n-openclaw-vps.md) |
 | Pasta canónica JSON | [`workflows/n8n/`](../../../workflows/n8n/) |
+| Workspace OpenClaw (Buzz / Comando Estelar) | [`openclaw/`](../../../openclaw/) |
 | Plano n8n / automações | [`docs/PLANO_N8N_AUTOMACOES_AGENTES_SKILLS_TOOLS.md`](../../../docs/PLANO_N8N_AUTOMACOES_AGENTES_SKILLS_TOOLS.md) |
 | Cursor workflows | [`docs/CURSOR_WORKFLOWS.md`](../../../docs/CURSOR_WORKFLOWS.md) |
+| Infisical (pastas `/admin`, `/n8n`, `/vps-openclaw`) | [`docs/INFISICAL_SYNC.md`](../../../docs/INFISICAL_SYNC.md) |
 
 ---
 

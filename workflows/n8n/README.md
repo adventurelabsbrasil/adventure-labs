@@ -1,6 +1,6 @@
 # Workflows n8n — Admin Adventure Labs
 
-Workflows do **n8n** usados pela Adventure. **Produção (2026):** instância na **VPS Hostinger** via **Coolify** (Comando Estelar — ex.: `n8n.adventurelabs.com.br`), onde correm integrações operacionais e novos fluxos. Os JSON em `workflows/n8n/` (C-Suite, Lara, Sueli, Zazu, etc.) são a **fonte versionada**; importação para essa instância faz-se via **Public API** (`N8N_API_URL` + `N8N_API_TOKEN` no Admin). A pasta **`ce-n8n/`** guarda exports explícitos do Comando Estelar.
+Workflows do **n8n** usados pela Adventure. **Produção (2026):** instância na **VPS Hostinger** via **Coolify** (Comando Estelar — ex.: `n8n.adventurelabs.com.br`), onde correm integrações operacionais e novos fluxos. Os JSON em `workflows/n8n/` (C-Suite, Lara, Sueli, Zazu, etc.) são a **fonte versionada**; importação para essa instância faz-se via **Public API** (`N8N_API_URL` + `N8N_API_TOKEN` no Admin). A pasta **`ce-n8n/`** guarda exports explícitos do Comando Estelar. **Índice operacional (n8n + OpenClaw Buzz):** [`knowledge/00_GESTAO_CORPORATIVA/operacao/INDEX-n8n-openclaw-vps.md`](../../knowledge/00_GESTAO_CORPORATIVA/operacao/INDEX-n8n-openclaw-vps.md).
 
 ## Versão em produção (manutenção)
 
@@ -13,6 +13,7 @@ Workflows do **n8n** usados pela Adventure. **Produção (2026):** instância na
 | **`sueli/sueli-conciliacao-bancaria-v1.json`** | **Sueli** — Agente de IA Financeira para conciliação bancária (comprovantes/OFX x Omie). Tools: Omie API, Google Sheets, Google Chat, OFX Parser. Ver [sueli/README.md](sueli/README.md) e skill [agents/skills/sueli-conciliacao-bancaria/SKILL.md](../agents/skills/sueli-conciliacao-bancaria/SKILL.md). |
 | **`whatsapp_groups_agent/whatsapp-groups-daily-v1.json`** | **Zazu** — Resumo diário dos grupos de WhatsApp de clientes (worker WhatsApp Web + n8n). Publica em `adv_founder_reports` para o Cagan (CPO) e C-Suite. Ver [whatsapp_groups_agent/README.md](whatsapp_groups_agent/README.md) e worker [apps/labs/whatsapp-worker/README.md](../../whatsapp-worker/README.md). |
 | **`ce-n8n/*.json`** | **Comando Estelar (Renato)** — workflows na VPS (Coolify). Versionar aqui cada export estável. Ver [ce-n8n/README.md](ce-n8n/README.md). |
+| **`linkedin/adv-linkedin-native-form-webhook-to-supabase.json`** | **LinkedIn Lead Gen** — webhook n8n → Edge Function `linkedin-native-lead-submit` → `conversion_forms` / CRM Admin. Deploy VPS: [linkedin/HOSTINGER_VPS_N8N_DEPLOY.md](linkedin/HOSTINGER_VPS_N8N_DEPLOY.md). |
 
 Para manutenções futuras, edite o JSON do V11 (ou exporte do n8n após alterações), valide e reimporte com o script de import (ver abaixo). Mantenha este README e o [CHANGELOG em `csuite/`](csuite/CHANGELOG.md) atualizados ao criar novas versões.
 
@@ -65,6 +66,12 @@ O script (**nome legado** `import-to-railway.sh`) envia o JSON para **qualquer**
 
 # Zazu (WhatsApp Grupos — resumo diário para Cagan/CPO)
 ./apps/core/admin/scripts/n8n/import-to-railway.sh "workflows/n8n/whatsapp_groups_agent/whatsapp-groups-daily-v1.json"
+
+# LinkedIn Native Form → Supabase (Hostinger / Coolify)
+./apps/core/admin/scripts/n8n/import-to-railway.sh "workflows/n8n/linkedin/adv-linkedin-native-form-webhook-to-supabase.json"
+
+# Mesmo import com secrets do Infisical (pasta /admin) — na raiz do monorepo
+pnpm n8n:import:linkedin
 ```
 
 Ver: [apps/core/admin/scripts/n8n/import-to-railway.sh](../../apps/core/admin/scripts/n8n/import-to-railway.sh).

@@ -60,6 +60,8 @@ Novos apps: atualize o case e os fallbacks em `foldermap_infisical_path()` e rod
 | `GOOGLE_ADS_CLIENT_SECRET` | OAuth2 |
 | `GOOGLE_ADS_REFRESH_TOKEN` | OAuth2 (offline) |
 | `GOOGLE_ADS_CUSTOMER_ID` | Conta Google Ads (formato `xxx-xxx-xxxx`) |
+| `GOOGLE_ADS_LOGIN_CUSTOMER_ID` | MCC opcional para header `login-customer-id` |
+| `GTM_TAG_ID` | Container GTM alvo (ex.: `GTM-MN283T6L`) |
 | `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` | Auth Admin |
 | `CLERK_SECRET_KEY` | Auth Admin |
 | `NEXT_PUBLIC_SUPABASE_URL` | Dados Admin |
@@ -68,6 +70,52 @@ Novos apps: atualize o case e os fallbacks em `foldermap_infisical_path()` e rod
 | `CRON_SECRET` | `x-admin-key` em cron e integracoes |
 
 Outras chaves ja documentadas em `apps/core/admin/.env.example` (GitHub, n8n, Gemini, etc.) devem existir no mesmo ambiente Infisical quando o fluxo depender delas.
+
+### n8n (VPS Coolify + workflow LinkedIn → Supabase)
+
+Centralize na pasta Infisical **`/admin`** (mesmo ambiente que o Admin), com os **mesmos nomes** usados nas Secrets do Coolify no serviço n8n — evita duplicar “nomes diferentes para a mesma coisa”.
+
+| Chave | Uso |
+|-------|-----|
+| `N8N_API_URL` | Base HTTPS do n8n (ex.: `https://n8n.adventurelabs.com.br`) — import via API (`pnpm n8n:import:linkedin`). |
+| `N8N_API_TOKEN` | API Key da Public API do n8n (Settings → API no n8n). Header `X-N8N-API-KEY` no script de import. |
+| `LINKEDIN_EDGE_FUNCTION_URL` | URL da Edge Function `linkedin-native-lead-submit` (slug com hífens). |
+| `LINKEDIN_WEBHOOK_SECRET` | Igual ao secret da função no Supabase (`x-webhook-secret`). |
+| `SUPABASE_ANON_KEY` | Pode repetir o valor de `NEXT_PUBLIC_SUPABASE_ANON_KEY` do mesmo projeto, para testes `curl` / automação que chamam a função. |
+
+**Producao no Coolify:** o serviço n8n continua a ler essas variáveis nas **Secrets** do recurso; sincronize valores com o Infisical (manual ou integração Infisical → deploy, conforme a vossa política).
+
+**Comando (raiz do monorepo, com `infisical login` + pasta `/admin` preenchida):**
+
+```bash
+pnpm n8n:import:linkedin
+```
+
+**Agente no Cursor:** o agente **nao** acede ao painel Infisical na nuvem. Ele pode:
+- Executar comandos como `pnpm n8n:import:linkedin` no teu terminal (injecao via `infisical run` na tua maquina), ou
+- Ler `apps/core/admin/.env.local` **se** existir no workspace (gitignored) — opcionalmente gerado com `infisical secrets` / export local; **nunca** commitar valores.
+
+Nunca colocar tokens em Markdown versionado. Runbook: `workflows/n8n/linkedin/HOSTINGER_VPS_N8N_DEPLOY.md` e `workflows/n8n/linkedin/CHECKLIST_OPERADOR_REATIVACAO_N8N_LINKEDIN.md`.
+
+### Pastas opcionais: `/n8n` e `/vps-openclaw`
+
+Para reduzir ambiguidade quando o time separar segredos por serviço na VPS (além de `/admin`):
+
+| Pasta Infisical | Uso |
+|-----------------|-----|
+| **`/n8n`** | Variáveis **exclusivas** do container/serviço n8n no Coolify (ex.: `N8N_ENCRYPTION_KEY`, `WEBHOOK_URL`, `DB_*` se Postgres dedicado). Os **mesmos nomes** devem espelhar as Secrets do recurso no Coolify. |
+| **`/vps-openclaw`** | Runtime do gateway OpenClaw (Buzz) na VPS: `OPENCLAW_CONFIG_DIR`, `OPENCLAW_WORKSPACE_DIR` (caminhos lógicos), API keys de modelos, **`ASANA_ACCESS_TOKEN`**, `ASANA_PROJECT_GIDS` (se o Buzz usar a skill Sandra), tokens GitHub para PRs/automação, e outras chaves que o gateway ler. |
+
+**Regra:** manter **nomes idênticos** entre Coolify / `.env` na VPS e Infisical. O Admin e os scripts da raiz podem continuar a usar **`/admin`**; duplicar apenas o necessário em `/n8n` ou `/vps-openclaw` se a política de acesso Infisical exigir separação.
+
+**Comandos (exemplos):**
+
+```bash
+infisical run --env=dev --path=/n8n -- env | grep N8N
+infisical run --env=dev --path=/vps-openclaw -- env | grep -E 'OPENCLAW|ASANA|GITHUB'
+```
+
+Índice SSOT: `knowledge/00_GESTAO_CORPORATIVA/operacao/INDEX-n8n-openclaw-vps.md`.
 
 ## Import em lote (subir `.env.local` para o Infisical)
 
