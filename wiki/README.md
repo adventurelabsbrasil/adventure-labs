@@ -19,6 +19,7 @@ Esta pasta é a **wiki condensada** do monorepo: onboarding rápido para C-Suite
 | [Skills-por-owner](Skills-por-owner.md) | Catálogo por owner |
 | [Automacoes-e-integracoes](Automacoes-e-integracoes.md) | n8n, integrações |
 | [Young-Talents-ATS-Seguranca](Young-Talents-ATS-Seguranca.md) | RLS, ATS |
+| [Auditoria-ACORE-WIKI-2026-03-31](Auditoria-ACORE-WIKI-2026-03-31.md) | Aderência A.C.O.R.E., WIKI e saneamento |
 
 ## Backlog de árvore (braindump → wiki)
 

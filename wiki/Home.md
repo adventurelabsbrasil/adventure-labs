@@ -28,6 +28,7 @@ Bem-vindo à Wiki do repositório **adventure-labs**. Aqui fica o **manual naveg
 - [[Skills-por-owner]]
 - [[Automacoes-e-integracoes]]
 - [[Young-Talents-ATS-Seguranca]] — acesso ao ATS (RLS, staff, formulário público; sem segredos no Git)
+- [[Auditoria-ACORE-WIKI-2026-03-31]] — diagnóstico de aderência e plano de saneamento
 
 ### Onde fica a documentação “full”
 

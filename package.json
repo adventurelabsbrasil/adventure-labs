@@ -16,9 +16,27 @@
     "benditta:dev": "infisical run --env=dev --path=/clientes/benditta -- pnpm --filter @cliente/benditta-app dev",
     "young:dev": "infisical run --env=dev --path=/clientes/young-talents -- pnpm --filter @cliente/young-plataforma dev",
     "check-deadlines": "infisical run --env=dev --path=/monorepo -- bash scripts/check-deadlines.sh",
+    "n8n:import:linkedin": "infisical run --env=dev --path=/admin -- bash apps/core/admin/scripts/n8n/import-to-railway.sh workflows/n8n/linkedin/adv-linkedin-native-form-webhook-to-supabase.json",
     "secrets:push:infisical": "bash tools/scripts/infisical-push-env-local.sh",
+    "google:verify": "infisical run --env=dev --path=${INFISICAL_GOOGLE_ADS_PATH:-/admin} -- node tools/scripts/google-marketing-cli.mjs verify",
+    "google:ads:diag": "infisical run --env=dev --path=${INFISICAL_GOOGLE_ADS_PATH:-/admin} -- node tools/scripts/google-marketing-cli.mjs ads:diag",
+    "google:ads:conversions": "infisical run --env=dev --path=${INFISICAL_GOOGLE_ADS_PATH:-/admin} -- node tools/scripts/google-marketing-cli.mjs ads:conversions",
+    "google:ads:conversion-get": "infisical run --env=dev --path=${INFISICAL_GOOGLE_ADS_PATH:-/admin} -- node tools/scripts/google-marketing-cli.mjs ads:conversion-get",
+    "google:ads:create-click-conversion": "infisical run --env=dev --path=${INFISICAL_GOOGLE_ADS_PATH:-/admin} -- node tools/scripts/google-marketing-cli.mjs ads:create-click-conversion",
+    "google:ads:create-budget-proposal": "infisical run --env=dev --path=${INFISICAL_GOOGLE_ADS_PATH:-/admin} -- node tools/scripts/google-marketing-cli.mjs ads:create-budget-proposal",
+    "google:gtm:lookup": "infisical run --env=dev --path=${INFISICAL_GOOGLE_GTM_PATH:-/clientes/03_ROSE} -- node tools/scripts/google-marketing-cli.mjs gtm:lookup",
+    "google:gtm:create-workspace": "infisical run --env=dev --path=${INFISICAL_GOOGLE_GTM_PATH:-/clientes/03_ROSE} -- node tools/scripts/google-marketing-cli.mjs gtm:create-workspace",
+    "google:gtm:workspaces": "infisical run --env=dev --path=${INFISICAL_GOOGLE_GTM_PATH:-/clientes/03_ROSE} -- node tools/scripts/google-marketing-cli.mjs gtm:workspaces",
+    "google:gtm:tags": "infisical run --env=dev --path=${INFISICAL_GOOGLE_GTM_PATH:-/clientes/03_ROSE} -- node tools/scripts/google-marketing-cli.mjs gtm:tags",
+    "google:gtm:triggers": "infisical run --env=dev --path=${INFISICAL_GOOGLE_GTM_PATH:-/clientes/03_ROSE} -- node tools/scripts/google-marketing-cli.mjs gtm:triggers",
+    "google:gtm:versions": "infisical run --env=dev --path=${INFISICAL_GOOGLE_GTM_PATH:-/clientes/03_ROSE} -- node tools/scripts/google-marketing-cli.mjs gtm:versions",
+    "google:gtm:environments": "infisical run --env=dev --path=${INFISICAL_GOOGLE_GTM_PATH:-/clientes/03_ROSE} -- node tools/scripts/google-marketing-cli.mjs gtm:environments",
+    "google:gtm:publish-version": "infisical run --env=dev --path=${INFISICAL_GOOGLE_GTM_PATH:-/clientes/03_ROSE} -- node tools/scripts/google-marketing-cli.mjs gtm:publish-version",
+    "google:gtm:create-raw": "infisical run --env=dev --path=${INFISICAL_GOOGLE_GTM_PATH:-/clientes/03_ROSE} -- node tools/scripts/google-marketing-cli.mjs gtm:create-raw",
+    "google:gtm:version-publish": "infisical run --env=dev --path=${INFISICAL_GOOGLE_GTM_PATH:-/clientes/03_ROSE} -- node tools/scripts/google-marketing-cli.mjs gtm:version-publish",
     "asana:router:dry": "node tools/scripts/asana-inbox-router.mjs",
-    "asana:router:apply": "node tools/scripts/asana-inbox-router.mjs --apply"
+    "asana:router:apply": "node tools/scripts/asana-inbox-router.mjs --apply",
+    "governance:check": "bash tools/scripts/check-repo-governance.sh"
   },
   "devDependencies": {
     "@railway/cli": "^4.31.0"

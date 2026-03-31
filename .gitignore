@@ -1,5 +1,5 @@
 # Artefatos acidentais de clone / macOS
-**/.git 2
+**/.DS_Store
 
 # Secrets e credenciais (Service Role / tokens — nunca no GitHub)
 .env
@@ -46,6 +46,10 @@ openclaw_workspace_backup_1/
 *.mp3
 *.mp4
 *WhatsApp Chat*/
+**/wapp_conversations/**
+apps/clientes/04_young/ranking-vendas.bak/
+**/README 2.md
+**/package-lock 2.json
 knowledge/99_ARQUIVO/**/*.csv
 
 # Fontes baixadas em runtime (gerador de criativos)
