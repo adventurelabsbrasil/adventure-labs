@@ -1,0 +1,212 @@
+{
+  "name": "Time Bank Admin: confirmar registro por e-mail (entrada/saída)",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "adv-time-bank-entries/clock-in",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "d4c7ce3c-7b1a-4b0d-b1ab-4fb4ce8d1d21",
+      "name": "Webhook Entrada (clock_in)",
+      "webhookId": "6f2a3e9e-4d7a-4e6d-bb3e-2a0a7b0b6f2e",
+      "notes": "Gatilho: POST quando for criado um registro em `public.adv_time_bank_entries` com type='clock_in'. Payload esperado (exemplos suportados): { user_email, recorded_at, location_id, note, id } ou { new: {...} } ou { record: {...} }."
+    },
+    {
+      "parameters": {
+        "jsCode": "const item = $input.first();\nlet J = item.json ?? {};\n\n// Compatibilidade com payloads diferentes (Supabase triggers/realtime/edge)\nlet record = J.record ?? J.new ?? J?.data?.record ?? J?.data?.new ?? J;\nif (record && typeof record === 'object' && record.record) record = record.record;\n\nconst user_email = String(record.user_email ?? record.userEmail ?? J.user_email ?? J.userEmail ?? '').trim();\nconst entry_id = String(record.id ?? J.id ?? '').trim();\nconst location_id = String(record.location_id ?? record.locationId ?? '').trim();\nconst note = record.note ? String(record.note) : '';\nconst recorded_at = String(record.recorded_at ?? record.recordedAt ?? '').trim();\n\nlet recorded_at_sp = recorded_at;\ntry {\n  if (recorded_at) {\n    const d = new Date(recorded_at);\n    if (!Number.isNaN(d.getTime())) {\n      recorded_at_sp = new Intl.DateTimeFormat('pt-BR', {\n        timeZone: 'America/Sao_Paulo',\n        year: 'numeric',\n        month: '2-digit',\n        day: '2-digit',\n        hour: '2-digit',\n        minute: '2-digit',\n        second: '2-digit'\n      }).format(d);\n    }\n  }\n} catch (e) {}\n\nif (!user_email) {\n  throw new Error('user_email não encontrado no payload (necessário para enviar o e-mail).');\n}\n\nreturn [{\n  json: {\n    user_email,\n    entry_id,\n    type: 'clock_in',\n    type_label: 'Entrada',\n    recorded_at,\n    recorded_at_sp,\n    note,\n    location_id,\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        240,
+        0
+      ],
+      "id": "3cfcacb2-a0f7-44cb-83a9-ae6a2b3f1bb0",
+      "name": "Normalize Entrada (clock_in)"
+    },
+    {
+      "parameters": {
+        "fromEmail": "noreply@adventurelabs.com.br",
+        "toEmail": "={{ $json.user_email }}",
+        "subject": "=Confirmação do seu registro de ponto — {{ $json.type_label }}",
+        "emailType": "text",
+        "message": "=Olá!\\n\\nConfirmamos que o seu registro de ponto foi salvo com sucesso no Adventure Labs.\\n\\nTipo: {{ $json.type_label }}\\nHorário: {{ $json.recorded_at_sp || $json.recorded_at || '—' }}\\nLocal (ID): {{ $json.location_id || '—' }}\\n{{ $json.note ? ('\\nObservação: ' + $json.note) : '' }}\\n\\nSe isso não foi você, por favor avise o time.\\n\\nObrigado,\\nAdventure Labs",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.sendEmail",
+      "typeVersion": 2.1,
+      "position": [
+        480,
+        0
+      ],
+      "id": "a7f2ad6f-9c1d-4c0b-a0c6-1a2c3df6a12d",
+      "name": "Send Email (Entrada)",
+      "notes": "Configure uma credencial SMTP no n8n (Settings → Credentials) e selecione no node após importar."
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"ok\": true,\n  \"message\": \"E-mail de confirmação enviado (Entrada).\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        720,
+        0
+      ],
+      "id": "a0c1b7e0-2b4a-4f1e-9f7b-9d0c2e1e5b7f",
+      "name": "Respond Webhook (Entrada)"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "adv-time-bank-entries/clock-out",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        260
+      ],
+      "id": "c7ce4c12-9c6d-4a8e-9a0d-2f1a0e3c6b2a",
+      "name": "Webhook Saída (clock_out)",
+      "webhookId": "0d6e7d1a-1a8b-4f1f-9c9b-2d3b4c5d6e7f",
+      "notes": "Gatilho: POST quando for criado um registro em `public.adv_time_bank_entries` com type='clock_out'. Payload esperado: { user_email, recorded_at, location_id, note, id } ou { new: {...} } ou { record: {...} }."
+    },
+    {
+      "parameters": {
+        "jsCode": "const item = $input.first();\nlet J = item.json ?? {};\n\n// Compatibilidade com payloads diferentes (Supabase triggers/realtime/edge)\nlet record = J.record ?? J.new ?? J?.data?.record ?? J?.data?.new ?? J;\nif (record && typeof record === 'object' && record.record) record = record.record;\n\nconst user_email = String(record.user_email ?? record.userEmail ?? J.user_email ?? J.userEmail ?? '').trim();\nconst entry_id = String(record.id ?? J.id ?? '').trim();\nconst location_id = String(record.location_id ?? record.locationId ?? '').trim();\nconst note = record.note ? String(record.note) : '';\nconst recorded_at = String(record.recorded_at ?? record.recordedAt ?? '').trim();\n\nlet recorded_at_sp = recorded_at;\ntry {\n  if (recorded_at) {\n    const d = new Date(recorded_at);\n    if (!Number.isNaN(d.getTime())) {\n      recorded_at_sp = new Intl.DateTimeFormat('pt-BR', {\n        timeZone: 'America/Sao_Paulo',\n        year: 'numeric',\n        month: '2-digit',\n        day: '2-digit',\n        hour: '2-digit',\n        minute: '2-digit',\n        second: '2-digit'\n      }).format(d);\n    }\n  }\n} catch (e) {}\n\nif (!user_email) {\n  throw new Error('user_email não encontrado no payload (necessário para enviar o e-mail).');\n}\n\nreturn [{\n  json: {\n    user_email,\n    entry_id,\n    type: 'clock_out',\n    type_label: 'Saída',\n    recorded_at,\n    recorded_at_sp,\n    note,\n    location_id,\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        240,
+        260
+      ],
+      "id": "f1e2c3d4-5678-4abc-9def-0123456789ab",
+      "name": "Normalize Saída (clock_out)"
+    },
+    {
+      "parameters": {
+        "fromEmail": "noreply@adventurelabs.com.br",
+        "toEmail": "={{ $json.user_email }}",
+        "subject": "=Confirmação do seu registro de ponto — {{ $json.type_label }}",
+        "emailType": "text",
+        "message": "=Olá!\\n\\nConfirmamos que o seu registro de ponto foi salvo com sucesso no Adventure Labs.\\n\\nTipo: {{ $json.type_label }}\\nHorário: {{ $json.recorded_at_sp || $json.recorded_at || '—' }}\\nLocal (ID): {{ $json.location_id || '—' }}\\n{{ $json.note ? ('\\nObservação: ' + $json.note) : '' }}\\n\\nSe isso não foi você, por favor avise o time.\\n\\nObrigado,\\nAdventure Labs",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.sendEmail",
+      "typeVersion": 2.1,
+      "position": [
+        480,
+        260
+      ],
+      "id": "b0c1d2e3-f4a5-4b6c-9d0e-1f2a3b4c5d6e",
+      "name": "Send Email (Saída)",
+      "notes": "Configure uma credencial SMTP no n8n (Settings → Credentials) e selecione no node após importar."
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"ok\": true,\n  \"message\": \"E-mail de confirmação enviado (Saída).\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        720,
+        260
+      ],
+      "id": "c1d2e3f4-a5b6-4c7d-8e9f-0a1b2c3d4e5f",
+      "name": "Respond Webhook (Saída)"
+    }
+  ],
+  "connections": {
+    "Webhook Entrada (clock_in)": {
+      "main": [
+        [
+          {
+            "node": "Normalize Entrada (clock_in)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize Entrada (clock_in)": {
+      "main": [
+        [
+          {
+            "node": "Send Email (Entrada)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Email (Entrada)": {
+      "main": [
+        [
+          {
+            "node": "Respond Webhook (Entrada)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook Saída (clock_out)": {
+      "main": [
+        [
+          {
+            "node": "Normalize Saída (clock_out)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize Saída (clock_out)": {
+      "main": [
+        [
+          {
+            "node": "Send Email (Saída)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Email (Saída)": {
+      "main": [
+        [
+          {
+            "node": "Respond Webhook (Saída)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "3c0a5a7f-8e7d-4b6a-9db2-f8b0c3f2c9a1",
+  "meta": {},
+  "id": "adv-time-bank-entries-email-confirm"
+}

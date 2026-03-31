@@ -121,6 +121,18 @@
     .toggle { display: inline-block; width: 1.2rem; text-align: center; margin-right: 0.35rem; font-size: 0.85rem; color: var(--muted); }
     .row-child td:nth-child(2) { padding-left: 2rem; }
     .row-child .toggle { visibility: hidden; }
+    .row-detail { font-size: 0.85rem; }
+    .row-detail td:nth-child(2) { padding-left: 2.25rem; padding-top: 0.4rem; padding-bottom: 0.4rem; vertical-align: top; }
+    .row-detail.row-detail-nested td:nth-child(2) { padding-left: 3.35rem; }
+    .detail-cell { line-height: 1.38; max-width: 22rem; }
+    .detail-entity { display: block; font-weight: 600; color: var(--text); }
+    .detail-desc { display: block; font-size: 0.78rem; color: var(--muted); margin-top: 0.2rem; }
+    .mes-detail-inner { padding: 0.55rem 0.5rem !important; background: rgba(0,0,0,0.12); border-bottom: 1px solid var(--border); }
+    .mes-detail-line { display: flex; justify-content: space-between; align-items: flex-start; gap: 0.75rem; flex-wrap: wrap; padding: 0.3rem 0; font-size: 0.85rem; border-bottom: 1px solid rgba(255,255,255,0.05); }
+    .mes-detail-line:last-child { border-bottom: none; }
+    .mes-detail-line .mes-detail-meta { flex: 1; min-width: 10rem; }
+    .btn-detalhe { font-size: 0.72rem; margin-left: 0.4rem; padding: 0.12rem 0.5rem; border-radius: 6px; border: 1px solid var(--border); background: var(--bg); color: var(--accent); cursor: pointer; font-family: inherit; vertical-align: middle; font-weight: 600; }
+    .btn-detalhe:hover { border-color: var(--accent); }
     /* Impressão DRE: tema claro, A4 paisagem */
     @media print {
       body { background: #fff; }
@@ -135,6 +147,28 @@
       .print-dre .despesa-num { color: #b00; }
       .print-dre tfoot td { font-weight: 700; background: #e8e8e8; border-top: 2px solid #333; }
       @page { size: 297mm 210mm landscape; margin: 12mm; }
+    }
+    .filtro-dre-wrap {
+      margin: 1rem 0 1.25rem;
+      padding: 0.75rem 1rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-size: 0.9rem;
+    }
+    .filtro-dre-wrap label {
+      cursor: pointer;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.6rem;
+      color: var(--text);
+    }
+    .filtro-dre-wrap input { margin-top: 0.2rem; accent-color: var(--accent); }
+    .filtro-dre-wrap .filtro-dre-hint {
+      margin: 0.45rem 0 0 1.65rem;
+      font-size: 0.8rem;
+      color: var(--muted);
+      line-height: 1.35;
     }
     @media screen {
       .print-dre { max-width: 297mm; margin: 1rem auto; padding: 12mm; background: #fafafa; color: #1a1a1a; border: 1px solid #ddd; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
@@ -151,6 +185,14 @@
     <h1>DRE — Jan a Mar 2026</h1>
     <p class="subtitle">Adventure Labs · Demonstração do Resultado (3 primeiros meses)</p>
     <div id="pendentes-banner" class="pendentes-banner" aria-live="polite"></div>
+
+    <div class="filtro-dre-wrap">
+      <label for="filtro-visao-operacional">
+        <input type="checkbox" id="filtro-visao-operacional" />
+        <span>Ocultar integralização de capital e movimentos de CDB (visão operacional)</span>
+      </label>
+      <p class="filtro-dre-hint">Ao marcar, somem do DRE as linhas de <strong>Outras Entradas</strong> e <strong>Outras Despesas</strong> usadas para aportes/transferências entre contas, e <strong>Investimento</strong> (ex.: CDB). Gráficos, totais e abas passam a refletir só o fluxo operacional.</p>
+    </div>
 
     <div class="tabs" role="tablist">
       <button type="button" role="tab" data-tab="jan" aria-selected="false">Janeiro</button>
@@ -229,7 +271,7 @@
     </div>
 
     <div id="panel-analitico" class="panel">
-      <p class="subtitle" style="margin-bottom: 1rem;">Por categoria do plano de contas · Jan–Mar 2026 (total por coluna no pé de cada tabela)</p>
+      <p class="subtitle" style="margin-bottom: 1rem;">Por categoria do plano de contas · Jan–Mar 2026 (total por coluna no pé de cada tabela). Clique em <strong>+</strong> na linha da categoria para ver o <strong>detalhe por entidade/fornecedor</strong> (OFX / controle); subcontas hierárquicas aparecem primeiro, depois as linhas analíticas.</p>
       <div class="card">
         <h3>Receitas por categoria</h3>
         <div class="table-wrap" style="overflow-x: auto;">
@@ -297,12 +339,24 @@
     </div>
 
     <div id="panel-imprimir" class="panel">
-      <p class="subtitle" style="margin-bottom: 1rem;">Formato para impressão · A4 paisagem · tema claro</p>
+      <p class="subtitle" style="margin-bottom: 0.7rem;">Formato para impressão · A4 paisagem · tema claro</p>
+      <div class="filtro-dre-wrap" style="margin-top: 0; margin-bottom: 0.9rem;">
+        <label for="print-filtro-operacional" style="margin-bottom: 0.5rem;">
+          <input type="checkbox" id="print-filtro-operacional" />
+          <span>Ocultar integralizações e investimento em CDB na impressão</span>
+        </label>
+        <label for="print-filtro-detalhado">
+          <input type="checkbox" id="print-filtro-detalhado" />
+          <span>Imprimir versão detalhada/analítica (entidade + descrição)</span>
+        </label>
+      </div>
       <button type="button" onclick="window.print()" style="padding: 0.5rem 1rem; font-weight: 600; cursor: pointer; margin-bottom: 1rem; border-radius: 8px; border: 1px solid var(--border); background: var(--surface); color: var(--text);">Imprimir / PDF</button>
       <div class="print-dre" id="print-dre-container">
         <div class="sheet">
           <h2 style="margin: 0 0 0.5rem 0; font-size: 1.1rem;">DRE — Jan a Mar 2026 · Adventure Labs</h2>
           <p style="margin: 0 0 1rem 0; font-size: 0.85rem; color: #555;">Demonstração do Resultado do Exercício (3 primeiros meses)</p>
+          <p id="print-dre-filtro-nota" style="display: none; margin: 0 0 0.4rem 0; font-size: 0.8rem; color: #666;">Visão operacional: integralização de capital e movimentos de CDB excluídos desta impressão.</p>
+          <p id="print-dre-detalhe-nota" style="display: none; margin: 0 0 0.75rem 0; font-size: 0.8rem; color: #666;">Versão detalhada: inclui entidade/fornecedor e descrição por lançamento para análise gerencial.</p>
           <table id="print-dre-table" style="width: 100%; border-collapse: collapse;"></table>
         </div>
       </div>
@@ -311,11 +365,72 @@
 
   <script>
     (function() {
-    const DRE = {"titulo":"DRE — Jan a Mar 2026","empresa":"Adventure Labs","periodo":{"inicio":"2026-01","fim":"2026-03"},"moeda":"BRL","meses":[{"id":"jan","nome":"Janeiro 2026","receitas":[{"conta":"Receitas diretas - Clientes - Serviços Pontuais","valor":940},{"conta":"Devoluções de Compra de Serviços","valor":64.9},{"conta":"Outras Entradas","valor":50500}],"despesas":[{"conta":"Despesas Administrativas","valor":880.2},{"conta":"Despesas Financeiras","valor":64.9},{"conta":"Despesas com Vendas e Marketing","valor":275},{"conta":"Outras Despesas","valor":501}],"totais":{"receitas":51504.9,"despesas":1721.1,"resultado":49783.8}},{"id":"fev","nome":"Fevereiro 2026","receitas":[{"conta":"Receitas diretas - Clientes - Serviços Pontuais","valor":550},{"conta":"Receitas diretas - Clientes - Variáveis","valor":4508.33},{"conta":"Receitas diretas - Clientes - Serviços Recorrentes","valor":1300},{"conta":"Outras Entradas","valor":40000}],"despesas":[{"conta":"Investimento","valor":40000},{"conta":"Despesas Administrativas","valor":3250.22},{"conta":"Despesas com Vendas e Marketing","valor":1862.5},{"conta":"Despesas com Pessoal","valor":6000},{"conta":"Impostos e Taxas","valor":197.5},{"conta":"Despesas Financeiras","valor":8},{"conta":"Outras Despesas","valor":40000}],"totais":{"receitas":46358.33,"despesas":91310.22,"resultado":-44951.89}},{"id":"mar","nome":"Março 2026","receitas":[{"conta":"Receitas diretas - Clientes - Serviços Pontuais","valor":1250},{"conta":"Receitas diretas - Clientes - Serviços Recorrentes","valor":5500}],"despesas":[{"conta":"Despesas Administrativas","valor":3222.15},{"conta":"Despesas com Vendas e Marketing","valor":1062.5},{"conta":"Despesas com Pessoal","valor":3000}],"totais":{"receitas":6750,"despesas":7284.65,"resultado":-534.65}}],"consolidado":{"receitas":104613.23,"despesas":100315.97,"resultado":4297.26},"pendentes_lancamento":{"resumo":"Cartão Nubank PF — despesas Adventure já classificadas, ainda sem lançamento no controle","total":730.7,"por_mes":[{"mes":"Fevereiro 2026","valor":516.63,"detalhe":"Cursor + IOF; Google Ads Rose (reembolso via NF)"},{"mes":"Março 2026","valor":214.07,"detalhe":"Cursor + IOF; Adobe Illustrator (1 mês)"}],"por_categoria":[{"conta":"Despesas Administrativas","valor":322.84},{"conta":"Despesas com Vendas e Marketing","valor":400},{"conta":"Despesas Financeiras","valor":7.86}]}};
+    const DRE = {"titulo":"DRE — Jan a Mar 2026","empresa":"Adventure Labs","periodo":{"inicio":"2026-01","fim":"2026-03"},"moeda":"BRL","meses":[{"id":"jan","nome":"Janeiro 2026","receitas":[{"id":"JAN-R-001","conta":"Receitas diretas - Clientes - Serviços Pontuais","valor":940,"linhas":[{"id":"JAN-R-001-L01","entidade":"Roselaine Portal (Rose)","descricao":"Recebimento cliente (Sicredi)","valor":250},{"id":"JAN-R-001-L02","entidade":"Lidera Soluções","descricao":"Recebimento cliente (Sicredi)","valor":450},{"id":"JAN-R-001-L03","entidade":"SPEED ASSISTENCIA TECNICA","descricao":"Projeto Rose SPEED (Nubank PF Ribas)","valor":240}]},{"id":"JAN-R-002","conta":"Devoluções de Compra de Serviços","valor":64.9,"linhas":[{"id":"JAN-R-002-L01","entidade":"Sicredi","descricao":"Estorno tarifa cesta de relacionamento","valor":64.9}]},{"id":"JAN-R-003","conta":"Outras Entradas","valor":50500,"linhas":[{"id":"JAN-R-003-L01","entidade":"Young Empreendimentos","descricao":"Integralização / movimentação societária","valor":50000},{"id":"JAN-R-003-L02","entidade":"Rodrigo Ribas","descricao":"Aporte PF / movimentação sócio","valor":500}]}],"despesas":[{"id":"JAN-D-001","conta":"Despesas Administrativas","valor":880.2,"linhas":[{"id":"JAN-D-001-L01","entidade":"Google Cloud","descricao":"Infra cloud","valor":50},{"id":"JAN-D-001-L02","entidade":"Omieexperience","descricao":"ERP / assinatura","valor":247.2},{"id":"JAN-D-001-L03","entidade":"REGISTRO BR","descricao":"3 anos de domínio www.adventurelabs.com.br","valor":184},{"id":"JAN-D-001-L04","entidade":"ZOOP TECNOLOGIA & INSTITUICAO DE PAGAMENTO S.A.","descricao":"Certificado digital A3 (NF posterior)","valor":389},{"id":"JAN-D-001-L05","entidade":"Conciliação multi-conta","descricao":"Diferença provisória a revisar (Founder)","valor":10}]},{"id":"JAN-D-002","conta":"Despesas Financeiras","valor":64.9,"linhas":[{"id":"JAN-D-002-L01","entidade":"Sicredi","descricao":"Tarifa pacote conta (cesta de relacionamento)","valor":64.9}]},{"id":"JAN-D-003","conta":"Despesas com Vendas e Marketing","valor":275,"linhas":[{"id":"JAN-D-003-L01","entidade":"Meta / Facebook","descricao":"Mídia paga","valor":200},{"id":"JAN-D-003-L02","entidade":"Beatriz Garcia Rocha","descricao":"Design gráfico freelancer (Nubank PF)","valor":75}]},{"id":"JAN-D-004","conta":"Outras Despesas","valor":501,"linhas":[{"id":"JAN-D-004-L01","entidade":"Young Empreendimentos","descricao":"Contrapartida transferência / movimentação","valor":500},{"id":"JAN-D-004-L02","entidade":"Sicredi","descricao":"Integralização de capital subscrito","valor":1}]}],"totais":{"receitas":51504.9,"despesas":1721.1,"resultado":49783.8}},{"id":"fev","nome":"Fevereiro 2026","receitas":[{"id":"FEV-R-001","conta":"Receitas diretas - Clientes - Serviços Pontuais","valor":550,"linhas":[{"id":"FEV-R-001-L01","entidade":"Rose","descricao":"Cliente pontual","valor":250},{"id":"FEV-R-001-L02","entidade":"Rose Tebaldi","descricao":"Cliente pontual","valor":240},{"id":"FEV-R-001-L03","entidade":"Altemir Costa","descricao":"Cliente pontual","valor":60}]},{"id":"FEV-R-002","conta":"Receitas diretas - Clientes - Variáveis","valor":4508.33,"linhas":[{"id":"FEV-R-002-L01","entidade":"Roselaine Portal (Rose)","descricao":"Recebimento variável / agência (OFX Sicredi)","valor":4508.33}]},{"id":"FEV-R-003","conta":"Receitas diretas - Clientes - Serviços Recorrentes","valor":1300,"linhas":[{"id":"FEV-R-003-L01","entidade":"Rose (recorrente)","descricao":"Contrato recorrente","valor":1300}]},{"id":"FEV-R-004","conta":"Outras Entradas","valor":40000,"linhas":[{"id":"FEV-R-004-L01","entidade":"ADVENTURE COMUNICAÇÕES","descricao":"Movimentação de caixa vinculada a CDB","valor":40000}]}],"despesas":[{"id":"FEV-D-001","conta":"Investimento","valor":40000,"linhas":[{"id":"FEV-D-001-L01","entidade":"CDB Banco Inter","descricao":"Saída de caixa para ativo financeiro","valor":40000}]},{"id":"FEV-D-002","conta":"Despesas Administrativas","valor":3250.22,"linhas":[{"id":"FEV-D-002-L01","entidade":"Google Cloud","descricao":"Infra cloud","valor":200},{"id":"FEV-D-002-L02","entidade":"Triangullo","descricao":"Gráfica / comunicação visual (boleto)","valor":80.96},{"id":"FEV-D-002-L03","entidade":"Alvo Certo","descricao":"Fachada / comunicação visual (principal TED)","valor":2650},{"id":"FEV-D-002-L04","entidade":"Triangullo","descricao":"Gráfica (2º boleto)","valor":230},{"id":"FEV-D-002-L05","entidade":"Omieexperience","descricao":"ERP / assinatura","valor":252.22},{"id":"FEV-D-002-L06","entidade":"Alvo Certo / Sicredi (ajuste pendente)","descricao":"Ajuste provisório de conciliação (Founder revisará o detalhamento)","valor":-162.96}]},{"id":"FEV-D-003","conta":"Despesas com Vendas e Marketing","valor":1862.5,"linhas":[{"id":"FEV-D-003-L01","entidade":"Meta / Facebook","descricao":"Mídia paga","valor":300},{"id":"FEV-D-003-L02","entidade":"Meta / Facebook","descricao":"Mídia paga","valor":300},{"id":"FEV-D-003-L03","entidade":"Google Brasil Internet","descricao":"Google Ads (custo cliente Rose)","valor":200},{"id":"FEV-D-003-L04","entidade":"Meta / Facebook","descricao":"Mídia paga","valor":200},{"id":"FEV-D-003-L05","entidade":"Rupe Creative","descricao":"Criativo / produção","valor":562.5},{"id":"FEV-D-003-L06","entidade":"FACEBOOK SERVICOS ONLINE DO BRASIL LTDA. (a confirmar)","descricao":"Lançamento de mídia pendente de validação fina","valor":300}]},{"id":"FEV-D-004","conta":"Despesas com Pessoal","valor":6000,"linhas":[{"id":"FEV-D-004-L01","entidade":"Rodrigo Ribas","descricao":"Pró-labore / retirada (PIX)","valor":6000}]},{"id":"FEV-D-005","conta":"Impostos e Taxas","valor":197.5,"linhas":[{"id":"FEV-D-005-L01","entidade":"SEFAZ","descricao":"Tributo estadual","valor":197.5}]},{"id":"FEV-D-006","conta":"Despesas Financeiras","valor":8,"linhas":[{"id":"FEV-D-006-L01","entidade":"Sicredi","descricao":"Tarifa bancária TED do pagamento para Alvo Certo","valor":8}]},{"id":"FEV-D-007","conta":"Outras Despesas","valor":40000,"linhas":[{"id":"FEV-D-007-L01","entidade":"ADVENTURE COMUNICAÇÕES","descricao":"Transferência entre empresas do grupo","valor":40000}]}],"totais":{"receitas":46358.33,"despesas":91310.22,"resultado":-44951.89}},{"id":"mar","nome":"Março 2026","receitas":[{"id":"MAR-R-001","conta":"Receitas diretas - Clientes - Serviços Pontuais","valor":1250,"linhas":[{"id":"MAR-R-001-L01","entidade":"ITY Empreendimento Imobiliário SPE","descricao":"Serviço pontual Young","valor":800},{"id":"MAR-R-001-L02","entidade":"Lidera Soluções","descricao":"Recebimento cliente","valor":450}]},{"id":"MAR-R-002","conta":"Receitas diretas - Clientes - Serviços Recorrentes","valor":5500,"linhas":[{"id":"MAR-R-002-L01","entidade":"Benditta Marcenaria","descricao":"Contrato recorrente (3 meses)","valor":2000},{"id":"MAR-R-002-L02","entidade":"Rose (Roselaine Portal)","descricao":"Contrato recorrente","valor":3500}]}],"despesas":[{"id":"MAR-D-001","conta":"Despesas Administrativas","valor":3469.35,"linhas":[{"id":"MAR-D-001-L01","entidade":"Google Cloud","descricao":"Infra cloud","valor":265.16},{"id":"MAR-D-001-L02","entidade":"TEL3 Telecom","descricao":"Internet link escritório","valor":4},{"id":"MAR-D-001-L03","entidade":"ZOOP / Valid Certificadora","descricao":"Certificado digital A1 (NF + Omie)","valor":232},{"id":"MAR-D-001-L04","entidade":"Alvo Certo","descricao":"50% placa fachada escritório","valor":2650},{"id":"MAR-D-001-L05","entidade":"Demerge / Hostinger","descricao":"VPS mensal","valor":70.99},{"id":"MAR-D-001-L06","entidade":"Omieexperience","descricao":"ERP / assinatura","valor":247.2}]},{"id":"MAR-D-002","conta":"Despesas com Vendas e Marketing","valor":1687.5,"linhas":[{"id":"MAR-D-002-L01","entidade":"Meta / Facebook","descricao":"Mídia paga","valor":200},{"id":"MAR-D-002-L02","entidade":"Rupe Creative","descricao":"Criativo / produção","valor":562.5},{"id":"MAR-D-002-L03","entidade":"Rupe Creative","descricao":"2ª liquidação no mês","valor":625},{"id":"MAR-D-002-L04","entidade":"Meta / Facebook","descricao":"Mídia paga","valor":300}]},{"id":"MAR-D-003","conta":"Despesas com Pessoal","valor":3000,"linhas":[{"id":"MAR-D-003-L01","entidade":"Rodrigo Ribas","descricao":"Pró-labore (PIX)","valor":3000}]}],"totais":{"receitas":6750,"despesas":8156.85,"resultado":-1406.85}}],"consolidado":{"receitas":104613.23,"despesas":101188.17,"resultado":3425.06},"pendentes_lancamento":{"resumo":"Cartão Nubank PF — despesas Adventure já classificadas, ainda sem lançamento no controle","total":730.7,"por_mes":[{"mes":"Fevereiro 2026","valor":516.63,"detalhe":"Cursor + IOF; Google Ads Rose (reembolso via NF)"},{"mes":"Março 2026","valor":214.07,"detalhe":"Cursor + IOF; Adobe Illustrator (1 mês)"}],"por_categoria":[{"conta":"Despesas Administrativas","valor":322.84},{"conta":"Despesas com Vendas e Marketing","valor":400},{"conta":"Despesas Financeiras","valor":7.86}]}};
 
     if (!DRE || !DRE.consolidado || !DRE.meses || DRE.meses.length === 0) {
       document.body.insertAdjacentHTML('beforeend', '<p style="color:#f85149;padding:1rem;">Dados do DRE não disponíveis. Verifique o arquivo.</p>');
       return;
+    }
+
+    function fmt(v) {
+      return 'R$ ' + (v < 0 ? '-' : '') + Math.abs(v).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+
+    function escapeHtml(s) {
+      if (s == null || s === '') return '';
+      return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+
+    function countDetalhes(d) {
+      if (!d) return 0;
+      return (d.jan || []).length + (d.fev || []).length + (d.mar || []).length;
+    }
+
+    /** Linhas do JSON alinhadas ao relatório: aportes/transferências (Outras Entradas/Despesas) e CDB (Investimento). */
+    const EXCLUSOES_NAO_OPERACIONAIS = [
+      { id: 'jan', tipo: 'receitas', conta: 'Outras Entradas' },
+      { id: 'jan', tipo: 'despesas', conta: 'Outras Despesas' },
+      { id: 'fev', tipo: 'receitas', conta: 'Outras Entradas' },
+      { id: 'fev', tipo: 'despesas', conta: 'Investimento' },
+      { id: 'fev', tipo: 'despesas', conta: 'Outras Despesas' },
+    ];
+
+    function filtrarMesesNaoOperacionais(meses) {
+      return meses.map(function(m) {
+        const copy = JSON.parse(JSON.stringify(m));
+        EXCLUSOES_NAO_OPERACIONAIS.forEach(function(e) {
+          if (e.id !== m.id) return;
+          copy[e.tipo] = copy[e.tipo].filter(function(line) { return line.conta !== e.conta; });
+        });
+        const rec = copy.receitas.reduce(function(s, i) { return s + i.valor; }, 0);
+        const desp = copy.despesas.reduce(function(s, i) { return s + i.valor; }, 0);
+        copy.totais = { receitas: rec, despesas: desp, resultado: rec - desp };
+        return copy;
+      });
+    }
+
+    function consolidadoFromMeses(meses) {
+      const receitas = meses.reduce(function(s, m) { return s + m.totais.receitas; }, 0);
+      const despesas = meses.reduce(function(s, m) { return s + m.totais.despesas; }, 0);
+      return { receitas: receitas, despesas: despesas, resultado: receitas - despesas };
+    }
+
+    function getDreView(ocultarNaoOperacional) {
+      if (!ocultarNaoOperacional) {
+        return { meses: DRE.meses, consolidado: DRE.consolidado };
+      }
+      const meses = filtrarMesesNaoOperacionais(DRE.meses);
+      return { meses: meses, consolidado: consolidadoFromMeses(meses) };
+    }
+
+    let chartMensalInstance = null;
+    let chartSaudeInstance = null;
+
+    function destroyCharts() {
+      try {
+        if (chartMensalInstance) { chartMensalInstance.destroy(); chartMensalInstance = null; }
+        if (chartSaudeInstance) { chartSaudeInstance.destroy(); chartSaudeInstance = null; }
+      } catch (e) {}
     }
 
     function renderPendentesBanner() {
@@ -338,10 +453,6 @@
         '<ul style="margin-top:0.35rem;">' + catLines + '</ul>';
     }
 
-    function fmt(v) {
-      return 'R$ ' + (v < 0 ? '-' : '') + Math.abs(v).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-    }
-
     function renderResumo(sel, t) {
       const el = document.querySelector(sel);
       if (!el) return;
@@ -356,154 +467,382 @@
       const el = document.querySelector(sel);
       if (!el) return;
       const cls = isReceita ? 'receita-num' : 'despesa-num';
-      el.innerHTML = items.map(i => `<tr><td>${i.conta}</td><td class="num ${cls}">${fmt(isReceita ? i.valor : -Math.abs(i.valor))}</td></tr>`).join('');
-    }
-
-    // Consolidado
-    const c = DRE.consolidado;
-    const elConsReceitas = document.getElementById('cons-receitas');
-    const elConsDespesas = document.getElementById('cons-despesas');
-    const resEl = document.getElementById('cons-resultado');
-    if (elConsReceitas) elConsReceitas.textContent = fmt(c.receitas);
-    if (elConsDespesas) elConsDespesas.textContent = fmt(c.despesas);
-    if (resEl) {
-      resEl.textContent = fmt(c.resultado);
-      resEl.classList.add(c.resultado >= 0 ? 'resultado-pos' : 'resultado-neg');
-    }
-
-    renderPendentesBanner();
-
-    const tbodyCons = document.getElementById('tbody-consolidado');
-    if (tbodyCons) tbodyCons.innerHTML = DRE.meses.map(m => {
-      const r = m.totais.resultado;
-      return `<tr class="total-row"><td>${m.nome}</td><td class="num receita-num">${fmt(m.totais.receitas)}</td><td class="num despesa-num">${fmt(m.totais.despesas)}</td><td class="num ${r >= 0 ? 'resultado-pos' : 'resultado-neg'}">${fmt(r)}</td></tr>`;
-    }).join('');
-
-    // Por mês
-    DRE.meses.forEach(m => {
-      renderResumo('#resumo-' + m.id, m.totais);
-      renderTable('#receitas-' + m.id, m.receitas, true);
-      renderTable('#despesas-' + m.id, m.despesas, false);
-    });
-
-    // Analítico anual: agregar por categoria (plano de contas) com colunas Jan, Fev, Mar, Total
-    const ids = ['jan', 'fev', 'mar'];
-    const byConta = (tipo) => {
-      const map = {};
-      DRE.meses.forEach((m, i) => {
-        const list = m[tipo];
-        list.forEach(item => {
-          if (!map[item.conta]) map[item.conta] = { conta: item.conta, jan: 0, fev: 0, mar: 0 };
-          map[item.conta][ids[i]] = item.valor;
+      const uid = 'm' + Math.random().toString(36).slice(2, 9);
+      let html = '';
+      items.forEach(function(i, idx) {
+        const hasLin = i.linhas && i.linhas.length;
+        const rid = uid + '-' + idx;
+        const idTag = i.id ? ' <span class="muted" style="font-size:0.72rem;">[' + escapeHtml(i.id) + ']</span>' : '';
+        html += '<tr><td>' + i.conta + idTag +
+          (hasLin ? ' <button type="button" class="btn-detalhe" aria-expanded="false" data-target="' + rid + '">ver entidades</button>' : '') +
+          '</td><td class="num ' + cls + '">' + fmt(isReceita ? i.valor : -Math.abs(i.valor)) + '</td></tr>';
+        if (hasLin) {
+          html += '<tr id="' + rid + '" class="row-mes-detail" style="display:none;"><td colspan="2" class="mes-detail-inner">';
+          html += i.linhas.map(function(l) {
+            const lid = l.id ? ' <span class="muted" style="font-size:0.72rem;">[' + escapeHtml(l.id) + ']</span>' : '';
+            return '<div class="mes-detail-line"><span class="mes-detail-meta"><strong>' + escapeHtml(l.entidade) + '</strong>' + lid + ' — ' + escapeHtml(l.descricao) + '</span><span class="num ' + cls + '">' + fmt(isReceita ? l.valor : -Math.abs(l.valor)) + '</span></div>';
+          }).join('');
+          html += '</td></tr>';
+        }
+      });
+      el.innerHTML = html;
+      el.querySelectorAll('.btn-detalhe').forEach(function(btn) {
+        btn.addEventListener('click', function(e) {
+          e.preventDefault();
+          const tr = document.getElementById(btn.getAttribute('data-target'));
+          const open = btn.getAttribute('aria-expanded') === 'true';
+          btn.setAttribute('aria-expanded', open ? 'false' : 'true');
+          if (tr) tr.style.display = open ? 'none' : '';
         });
       });
-      return Object.values(map).map(row => ({
-        ...row,
-        total: row.jan + row.fev + row.mar
-      })).sort((a, b) => a.conta.localeCompare(b.conta));
-    };
-    const receitasAnalitico = byConta('receitas');
-    const despesasAnalitico = byConta('despesas');
+    }
+
+    const ids = ['jan', 'fev', 'mar'];
+
+    function byContaFromMeses(mesesView, tipo) {
+      const map = {};
+      mesesView.forEach(function(m, i) {
+        m[tipo].forEach(function(item) {
+          if (!map[item.conta]) {
+            map[item.conta] = { id: item.id || null, conta: item.conta, jan: 0, fev: 0, mar: 0, detalhes: { jan: [], fev: [], mar: [] } };
+          }
+          if (!map[item.conta].id && item.id) map[item.conta].id = item.id;
+          map[item.conta][ids[i]] = item.valor;
+          if (item.linhas && item.linhas.length) {
+            map[item.conta].detalhes[ids[i]] = item.linhas.slice();
+          }
+        });
+      });
+      return Object.values(map).map(function(row) {
+        return Object.assign({}, row, { total: row.jan + row.fev + row.mar });
+      }).sort(function(a, b) { return a.conta.localeCompare(b.conta); });
+    }
+
+    function buildCharts(mesesView) {
+      destroyCharts();
+      try {
+        const canvasMensal = document.getElementById('chart-mensal');
+        if (canvasMensal) {
+          const dataReceitas = mesesView.map(function(m) { return Math.max(m.totais.receitas, 1); });
+          const dataDespesas = mesesView.map(function(m) { return Math.max(m.totais.despesas, 1); });
+          chartMensalInstance = new Chart(canvasMensal.getContext('2d'), {
+            type: 'bar',
+            data: {
+              labels: mesesView.map(function(m) { return m.nome.replace(' 2026', ''); }),
+              datasets: [
+                { label: 'Receitas', data: dataReceitas, backgroundColor: 'rgba(63, 185, 80, 0.8)' },
+                { label: 'Despesas', data: dataDespesas, backgroundColor: 'rgba(248, 81, 73, 0.8)' }
+              ]
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: { legend: { labels: { color: '#e6edf3' } } },
+              scales: {
+                x: { ticks: { color: '#8b9cb3' }, grid: { color: '#2d3a4f' } },
+                y: { type: 'logarithmic', min: 1, ticks: { color: '#8b9cb3' }, grid: { color: '#2d3a4f' } }
+              }
+            }
+          });
+        }
+      } catch (e) { console.warn('Chart consolidado:', e); }
+      try {
+        const canvasSaude = document.getElementById('chart-saude');
+        if (canvasSaude) {
+          const dataR = mesesView.map(function(m) { return Math.max(m.totais.receitas, 1); });
+          const dataD = mesesView.map(function(m) { return Math.max(m.totais.despesas, 1); });
+          chartSaudeInstance = new Chart(canvasSaude.getContext('2d'), {
+            type: 'bar',
+            data: {
+              labels: mesesView.map(function(m) { return m.nome.replace(' 2026', ''); }),
+              datasets: [
+                { label: 'Receitas', data: dataR, backgroundColor: 'rgba(63, 185, 80, 0.8)' },
+                { label: 'Despesas', data: dataD, backgroundColor: 'rgba(248, 81, 73, 0.8)' }
+              ]
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: { legend: { labels: { color: '#e6edf3' } } },
+              scales: {
+                x: { ticks: { color: '#8b9cb3' }, grid: { color: '#2d3a4f' } },
+                y: { type: 'logarithmic', min: 1, ticks: { color: '#8b9cb3' }, grid: { color: '#2d3a4f' } }
+              }
+            }
+          });
+        }
+      } catch (e) { console.warn('Chart saúde:', e); }
+    }
+
+    function renderPrintTable(mesesView, consolidadoView, receitasAnalitico, despesasAnalitico, opts) {
+      const printTable = document.getElementById('print-dre-table');
+      const notaPrint = document.getElementById('print-dre-filtro-nota');
+      const notaDetalhe = document.getElementById('print-dre-detalhe-nota');
+      const visaoOperacional = !!(opts && opts.visaoOperacional);
+      const detalhado = !!(opts && opts.detalhado);
+      if (notaPrint) {
+        notaPrint.style.display = visaoOperacional ? 'block' : 'none';
+      }
+      if (notaDetalhe) {
+        notaDetalhe.style.display = detalhado ? 'block' : 'none';
+      }
+      if (!printTable) return;
+      const P = consolidadoView;
+      const fmtP = function(v) { return (v < 0 ? '-' : '') + 'R$ ' + Math.abs(v).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); };
+      let html = '<thead><tr><th>Categoria / Mês</th><th class="num">Jan</th><th class="num">Fev</th><th class="num">Mar</th><th class="num">Total</th></tr></thead><tbody>';
+
+      function renderAnaliticoPrintRows(rows, isReceita) {
+        rows.forEach(function(r) {
+          const cls = isReceita ? 'receita-num' : 'despesa-num';
+          const sign = isReceita ? 1 : -1;
+          const rowId = r.id ? ' <span style="font-size:0.72rem;color:#666;">[' + escapeHtml(r.id) + ']</span>' : '';
+          html += '<tr><td>' + escapeHtml(r.conta) + rowId + '</td><td class="num ' + cls + '">' + (r.jan ? fmtP(sign * r.jan) : '—') + '</td><td class="num ' + cls + '">' + (r.fev ? fmtP(sign * r.fev) : '—') + '</td><td class="num ' + cls + '">' + (r.mar ? fmtP(sign * r.mar) : '—') + '</td><td class="num ' + cls + '">' + fmtP(sign * r.total) + '</td></tr>';
+          if (!detalhado || !r.detalhes) return;
+          ['jan', 'fev', 'mar'].forEach(function(mid) {
+            (r.detalhes[mid] || []).forEach(function(lin) {
+              const row = { jan: 0, fev: 0, mar: 0 };
+              row[mid] = lin.valor;
+              row.total = lin.valor;
+              const lineId = lin.id ? ' [' + escapeHtml(lin.id) + ']' : '';
+              html += '<tr><td style="padding-left: 20px; color: #555;">↳ ' + escapeHtml(lin.entidade) + lineId + ' — ' + escapeHtml(lin.descricao) + '</td><td class="num ' + cls + '">' + (row.jan ? fmtP(sign * row.jan) : '—') + '</td><td class="num ' + cls + '">' + (row.fev ? fmtP(sign * row.fev) : '—') + '</td><td class="num ' + cls + '">' + (row.mar ? fmtP(sign * row.mar) : '—') + '</td><td class="num ' + cls + '">' + fmtP(sign * row.total) + '</td></tr>';
+            });
+          });
+        });
+      }
+
+      renderAnaliticoPrintRows(receitasAnalitico, true);
+      const rJan = mesesView[0].totais.receitas, rFev = mesesView[1].totais.receitas, rMar = mesesView[2].totais.receitas;
+      html += '<tr style="font-weight:700; background:#e8e8e8;"><td>Total Receitas</td><td class="num receita-num">' + fmtP(rJan) + '</td><td class="num receita-num">' + fmtP(rFev) + '</td><td class="num receita-num">' + fmtP(rMar) + '</td><td class="num receita-num">' + fmtP(P.receitas) + '</td></tr>';
+      html += '<tr><td colspan="5" style="height:6px;"></td></tr>';
+      renderAnaliticoPrintRows(despesasAnalitico, false);
+      const dJan = mesesView[0].totais.despesas, dFev = mesesView[1].totais.despesas, dMar = mesesView[2].totais.despesas;
+      html += '<tr style="font-weight:700; background:#e8e8e8;"><td>Total Despesas</td><td class="num despesa-num">' + fmtP(-dJan) + '</td><td class="num despesa-num">' + fmtP(-dFev) + '</td><td class="num despesa-num">' + fmtP(-dMar) + '</td><td class="num despesa-num">' + fmtP(-P.despesas) + '</td></tr>';
+      html += '</tbody><tfoot><tr><td><strong>Resultado (jan–mar)</strong></td><td class="num">' + fmtP(mesesView[0].totais.resultado) + '</td><td class="num">' + fmtP(mesesView[1].totais.resultado) + '</td><td class="num">' + fmtP(mesesView[2].totais.resultado) + '</td><td class="num">' + fmtP(P.resultado) + '</td></tr></tfoot>';
+      printTable.innerHTML = html;
+    }
+
+    function renderAllDre(ocultarNaoOperacional) {
+      const view = getDreView(ocultarNaoOperacional);
+      const mesesView = view.meses;
+      const c = view.consolidado;
+
+      const elConsReceitas = document.getElementById('cons-receitas');
+      const elConsDespesas = document.getElementById('cons-despesas');
+      const resEl = document.getElementById('cons-resultado');
+      if (elConsReceitas) elConsReceitas.textContent = fmt(c.receitas);
+      if (elConsDespesas) elConsDespesas.textContent = fmt(c.despesas);
+      if (resEl) {
+        resEl.textContent = fmt(c.resultado);
+        resEl.classList.remove('resultado-pos', 'resultado-neg');
+        resEl.classList.add(c.resultado >= 0 ? 'resultado-pos' : 'resultado-neg');
+      }
+
+      const tbodyCons = document.getElementById('tbody-consolidado');
+      if (tbodyCons) {
+        tbodyCons.innerHTML = mesesView.map(function(m) {
+          const r = m.totais.resultado;
+          return '<tr class="total-row"><td>' + m.nome + '</td><td class="num receita-num">' + fmt(m.totais.receitas) + '</td><td class="num despesa-num">' + fmt(m.totais.despesas) + '</td><td class="num ' + (r >= 0 ? 'resultado-pos' : 'resultado-neg') + '">' + fmt(r) + '</td></tr>';
+        }).join('');
+      }
+
+      mesesView.forEach(function(m) {
+        renderResumo('#resumo-' + m.id, m.totais);
+        renderTable('#receitas-' + m.id, m.receitas, true);
+        renderTable('#despesas-' + m.id, m.despesas, false);
+      });
+
+      const receitasAnalitico = byContaFromMeses(mesesView, 'receitas');
+      const despesasAnalitico = byContaFromMeses(mesesView, 'despesas');
+
+      const receitasGrouped = groupByParent(receitasAnalitico);
+      const despesasGrouped = groupByParent(despesasAnalitico);
+      renderAnaliticoAccordion('analitico-receitas', 'analitico-receitas-foot', receitasGrouped, true);
+      renderAnaliticoAccordion('analitico-despesas', 'analitico-despesas-foot', despesasGrouped, false);
+
+      buildCharts(mesesView);
+
+      const elSaudeReceitas = document.getElementById('saude-receitas');
+      const elSaudeDespesas = document.getElementById('saude-despesas');
+      const elSaudeResultado = document.getElementById('saude-resultado');
+      const elSaudeMargem = document.getElementById('saude-margem');
+      if (elSaudeReceitas) elSaudeReceitas.textContent = fmt(c.receitas);
+      if (elSaudeDespesas) elSaudeDespesas.textContent = fmt(c.despesas);
+      const res = c.resultado;
+      if (elSaudeResultado) {
+        elSaudeResultado.textContent = fmt(res);
+        elSaudeResultado.classList.remove('resultado-pos', 'resultado-neg');
+        elSaudeResultado.classList.add(res >= 0 ? 'resultado-pos' : 'resultado-neg');
+      }
+      const margem = c.receitas ? (c.resultado / c.receitas * 100) : 0;
+      if (elSaudeMargem) elSaudeMargem.textContent = margem.toFixed(1) + '%';
+
+      const chkPrintOperacional = document.getElementById('print-filtro-operacional');
+      const chkPrintDetalhado = document.getElementById('print-filtro-detalhado');
+      const printOperacional = chkPrintOperacional ? chkPrintOperacional.checked : !!ocultarNaoOperacional;
+      const printDetalhado = chkPrintDetalhado ? chkPrintDetalhado.checked : false;
+      const printView = getDreView(printOperacional);
+      const printReceitas = byContaFromMeses(printView.meses, 'receitas');
+      const printDespesas = byContaFromMeses(printView.meses, 'despesas');
+      renderPrintTable(printView.meses, printView.consolidado, printReceitas, printDespesas, {
+        visaoOperacional: printOperacional,
+        detalhado: printDetalhado
+      });
+    }
 
     function groupByParent(rows) {
       const map = {};
-      rows.forEach(r => {
+      rows.forEach(function(r) {
         const parts = r.conta.split(' - ');
-        const parentKey = parts.length >= 2 ? parts.slice(0, -1).join(' - ') : r.conta;
-        const childLabel = parts.length >= 2 ? parts[parts.length - 1] : r.conta;
-        if (!map[parentKey]) map[parentKey] = { parent: parentKey, children: [], jan: 0, fev: 0, mar: 0, total: 0 };
-        map[parentKey].children.push({ label: childLabel, jan: r.jan, fev: r.fev, mar: r.mar, total: r.total });
+        const det = r.detalhes || { jan: [], fev: [], mar: [] };
+        if (parts.length < 2) {
+          map['__flat_' + r.conta] = {
+            id: r.id || null,
+            parent: r.conta,
+            isFlat: true,
+            children: [],
+            jan: r.jan,
+            fev: r.fev,
+            mar: r.mar,
+            total: r.total,
+            detalhes: det
+          };
+          return;
+        }
+        const parentKey = parts.slice(0, -1).join(' - ');
+        const childLabel = parts[parts.length - 1];
+        if (!map[parentKey]) {
+          map[parentKey] = { parent: parentKey, children: [], jan: 0, fev: 0, mar: 0, total: 0 };
+        }
+        map[parentKey].children.push({
+          id: r.id || null,
+          label: childLabel,
+          jan: r.jan,
+          fev: r.fev,
+          mar: r.mar,
+          total: r.total,
+          detalhes: det
+        });
         map[parentKey].jan += r.jan;
         map[parentKey].fev += r.fev;
         map[parentKey].mar += r.mar;
         map[parentKey].total += r.total;
       });
-      return Object.values(map).sort((a, b) => a.parent.localeCompare(b.parent));
+      return Object.values(map).sort(function(a, b) { return a.parent.localeCompare(b.parent); });
     }
-    const receitasGrouped = groupByParent(receitasAnalitico);
-    const despesasGrouped = groupByParent(despesasAnalitico);
+
+    function renderDetailRowsFromDetalhes(detalhes, parentGid, cls, fmtCell, nested) {
+      const nestClass = nested ? 'row-detail-nested' : '';
+      let out = '';
+      ['jan', 'fev', 'mar'].forEach(function(mid) {
+        (detalhes[mid] || []).forEach(function(lin) {
+          const row = { jan: 0, fev: 0, mar: 0 };
+          row[mid] = lin.valor;
+          row.total = lin.valor;
+          const lid = lin.id ? ' <span class="muted" style="font-size:0.72rem;">[' + escapeHtml(lin.id) + ']</span>' : '';
+          out += '<tr class="row-detail ' + nestClass + '" data-parent-id="' + parentGid + '" style="display:none;">' +
+            '<td class="toggle"></td>' +
+            '<td class="detail-cell"><span class="detail-entity">' + escapeHtml(lin.entidade) + '</span>' +
+            '<span class="detail-desc">' + escapeHtml(lin.descricao) + lid + '</span></td>' +
+            '<td class="num ' + cls + '">' + fmtCell(row.jan) + '</td>' +
+            '<td class="num ' + cls + '">' + fmtCell(row.fev) + '</td>' +
+            '<td class="num ' + cls + '">' + fmtCell(row.mar) + '</td>' +
+            '<td class="num ' + cls + '">' + fmtCell(row.total) + '</td>' +
+            '</tr>';
+        });
+      });
+      return out;
+    }
 
     function renderAnaliticoAccordion(tbodyId, footId, groups, isReceita) {
       const tbody = document.getElementById(tbodyId);
       const foot = document.getElementById(footId);
       if (!tbody || !foot) return;
       const cls = isReceita ? 'receita-num' : 'despesa-num';
-      const fmtCell = v => v === 0 ? '—' : fmt(isReceita ? v : -Math.abs(v));
-      const F = isReceita ? v => fmt(v) : v => fmt(-v);
+      const fmtCell = function(v) { return v === 0 ? '—' : fmt(isReceita ? v : -Math.abs(v)); };
+      const F = isReceita ? function(v) { return fmt(v); } : function(v) { return fmt(-v); };
       let sumJan = 0, sumFev = 0, sumMar = 0, sumTotal = 0;
-      tbody.innerHTML = groups.map((g, gi) => {
+      tbody.innerHTML = groups.map(function(g, gi) {
         sumJan += g.jan; sumFev += g.fev; sumMar += g.mar; sumTotal += g.total;
-        const hasChildren = g.children.length > 0;
         const id = tbodyId + '-g-' + gi;
-        const childRows = hasChildren ? g.children.map(c => `
-          <tr class="row-child" data-parent-id="${id}" style="display:none;">
-            <td class="toggle"></td>
-            <td>${c.label}</td>
-            <td class="num ${cls}">${fmtCell(c.jan)}</td>
-            <td class="num ${cls}">${fmtCell(c.fev)}</td>
-            <td class="num ${cls}">${fmtCell(c.mar)}</td>
-            <td class="num ${cls}">${fmtCell(c.total)}</td>
-          </tr>
-        `).join('') : '';
-        return `
-          <tr class="row-parent" data-id="${id}" data-open="0">
-            <td class="toggle">${hasChildren ? '+' : ''}</td>
-            <td>${g.parent}</td>
-            <td class="num ${cls}">${fmtCell(g.jan)}</td>
-            <td class="num ${cls}">${fmtCell(g.fev)}</td>
-            <td class="num ${cls}">${fmtCell(g.mar)}</td>
-            <td class="num ${cls}">${fmtCell(g.total)}</td>
-          </tr>${childRows}`;
+        const childCount = g.children ? g.children.length : 0;
+        const detFlat = g.isFlat ? countDetalhes(g.detalhes) : 0;
+        const childWithDet = g.children ? g.children.some(function(c) { return countDetalhes(c.detalhes) > 0; }) : false;
+        const hasExpand = childCount > 0 || detFlat > 0 || childWithDet;
+
+        let inner = '';
+        if (g.isFlat) {
+          inner += renderDetailRowsFromDetalhes(g.detalhes, id, cls, fmtCell, false);
+        } else if (g.children && g.children.length) {
+          g.children.forEach(function(c) {
+            const childIdTag = c.id ? ' <span class="muted" style="font-size:0.72rem;">[' + escapeHtml(c.id) + ']</span>' : '';
+            inner += '<tr class="row-child" data-parent-id="' + id + '" style="display:none;">' +
+              '<td class="toggle"></td>' +
+              '<td>' + escapeHtml(c.label) + childIdTag + '</td>' +
+              '<td class="num ' + cls + '">' + fmtCell(c.jan) + '</td>' +
+              '<td class="num ' + cls + '">' + fmtCell(c.fev) + '</td>' +
+              '<td class="num ' + cls + '">' + fmtCell(c.mar) + '</td>' +
+              '<td class="num ' + cls + '">' + fmtCell(c.total) + '</td>' +
+              '</tr>';
+            inner += renderDetailRowsFromDetalhes(c.detalhes || { jan: [], fev: [], mar: [] }, id, cls, fmtCell, true);
+          });
+        }
+
+        const parentIdTag = g.id ? ' <span class="muted" style="font-size:0.72rem;">[' + escapeHtml(g.id) + ']</span>' : '';
+        return '<tr class="row-parent" data-id="' + id + '" data-open="0">' +
+          '<td class="toggle">' + (hasExpand ? '+' : '') + '</td>' +
+          '<td>' + escapeHtml(g.parent) + parentIdTag + '</td>' +
+          '<td class="num ' + cls + '">' + fmtCell(g.jan) + '</td>' +
+          '<td class="num ' + cls + '">' + fmtCell(g.fev) + '</td>' +
+          '<td class="num ' + cls + '">' + fmtCell(g.mar) + '</td>' +
+          '<td class="num ' + cls + '">' + fmtCell(g.total) + '</td>' +
+          '</tr>' + inner;
       }).join('');
-      foot.querySelector('tr').innerHTML = `
-        <td></td>
-        <td><strong>Total</strong></td>
-        <td class="num ${cls}">${F(sumJan)}</td>
-        <td class="num ${cls}">${F(sumFev)}</td>
-        <td class="num ${cls}">${F(sumMar)}</td>
-        <td class="num ${cls}">${F(sumTotal)}</td>`;
-      tbody.querySelectorAll('.row-parent[data-id]').forEach(tr => {
-        const id = tr.dataset.id;
-        const children = tbody.querySelectorAll('.row-child[data-parent-id="' + id + '"]');
-        if (children.length === 0) return;
-        tr.addEventListener('click', () => {
+
+      foot.querySelector('tr').innerHTML =
+        '<td></td>' +
+        '<td><strong>Total</strong></td>' +
+        '<td class="num ' + cls + '">' + F(sumJan) + '</td>' +
+        '<td class="num ' + cls + '">' + F(sumFev) + '</td>' +
+        '<td class="num ' + cls + '">' + F(sumMar) + '</td>' +
+        '<td class="num ' + cls + '">' + F(sumTotal) + '</td>';
+
+      tbody.querySelectorAll('.row-parent[data-id]').forEach(function(tr) {
+        const pid = tr.dataset.id;
+        const nested = tbody.querySelectorAll('tr[data-parent-id="' + pid + '"]');
+        if (nested.length === 0) return;
+        tr.addEventListener('click', function() {
           const open = tr.dataset.open === '1';
           tr.dataset.open = open ? '0' : '1';
-          tr.querySelector('.toggle').textContent = open ? '+' : '−';
-          children.forEach(c => { c.style.display = open ? 'none' : ''; });
+          const tgl = tr.querySelector('.toggle');
+          if (tgl) tgl.textContent = open ? '+' : '−';
+          nested.forEach(function(c) { c.style.display = open ? 'none' : ''; });
         });
       });
     }
-    renderAnaliticoAccordion('analitico-receitas', 'analitico-receitas-foot', receitasGrouped, true);
-    renderAnaliticoAccordion('analitico-despesas', 'analitico-despesas-foot', despesasGrouped, false);
 
-    // Gráficos (try/catch para não quebrar o resto se Chart.js falhar)
-    try {
-      const canvasMensal = document.getElementById('chart-mensal');
-      if (canvasMensal) {
-        const dataReceitas = DRE.meses.map(m => Math.max(m.totais.receitas, 1));
-        const dataDespesas = DRE.meses.map(m => Math.max(m.totais.despesas, 1));
-        new Chart(canvasMensal.getContext('2d'), {
-          type: 'bar',
-          data: {
-            labels: DRE.meses.map(m => m.nome.replace(' 2026', '')),
-            datasets: [
-              { label: 'Receitas', data: dataReceitas, backgroundColor: 'rgba(63, 185, 80, 0.8)' },
-              { label: 'Despesas', data: dataDespesas, backgroundColor: 'rgba(248, 81, 73, 0.8)' }
-            ]
-          },
-          options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: { legend: { labels: { color: '#e6edf3' } } },
-            scales: {
-              x: { ticks: { color: '#8b9cb3' }, grid: { color: '#2d3a4f' } },
-              y: { type: 'logarithmic', min: 1, ticks: { color: '#8b9cb3' }, grid: { color: '#2d3a4f' } }
-            }
-          }
-        });
-      }
-    } catch (e) { console.warn('Chart consolidado:', e); }
+    renderPendentesBanner();
+    renderAllDre(false);
+    const chkFiltro = document.getElementById('filtro-visao-operacional');
+    if (chkFiltro) {
+      chkFiltro.addEventListener('change', function() {
+        const chkPrintOperacional = document.getElementById('print-filtro-operacional');
+        if (chkPrintOperacional) chkPrintOperacional.checked = chkFiltro.checked;
+        renderAllDre(chkFiltro.checked);
+      });
+    }
+    const chkPrintOperacional = document.getElementById('print-filtro-operacional');
+    if (chkPrintOperacional && chkFiltro) {
+      chkPrintOperacional.checked = chkFiltro.checked;
+      chkPrintOperacional.addEventListener('change', function() {
+        renderAllDre(chkFiltro.checked);
+      });
+    }
+    const chkPrintDetalhado = document.getElementById('print-filtro-detalhado');
+    if (chkPrintDetalhado && chkFiltro) {
+      chkPrintDetalhado.addEventListener('change', function() {
+        renderAllDre(chkFiltro.checked);
+      });
+    }
 
     // Tabs
     document.querySelectorAll('.tabs button').forEach(btn => {
@@ -518,68 +857,6 @@
     });
     document.querySelector('.tabs button[data-tab="consolidado"]').classList.add('active');
     document.querySelector('.tabs button[data-tab="consolidado"]').setAttribute('aria-selected', 'true');
-
-    // Aba Saúde: KPIs + gráfico escala logarítmica
-    const elSaudeReceitas = document.getElementById('saude-receitas');
-    const elSaudeDespesas = document.getElementById('saude-despesas');
-    const elSaudeResultado = document.getElementById('saude-resultado');
-    const elSaudeMargem = document.getElementById('saude-margem');
-    if (elSaudeReceitas) elSaudeReceitas.textContent = fmt(DRE.consolidado.receitas);
-    if (elSaudeDespesas) elSaudeDespesas.textContent = fmt(DRE.consolidado.despesas);
-    const res = DRE.consolidado.resultado;
-    if (elSaudeResultado) {
-      elSaudeResultado.textContent = fmt(res);
-      elSaudeResultado.classList.add(res >= 0 ? 'resultado-pos' : 'resultado-neg');
-    }
-    const margem = DRE.consolidado.receitas ? (DRE.consolidado.resultado / DRE.consolidado.receitas * 100) : 0;
-    if (elSaudeMargem) elSaudeMargem.textContent = margem.toFixed(1) + '%';
-    try {
-      const canvasSaude = document.getElementById('chart-saude');
-      if (canvasSaude) {
-        const dataR = DRE.meses.map(m => Math.max(m.totais.receitas, 1));
-        const dataD = DRE.meses.map(m => Math.max(m.totais.despesas, 1));
-        new Chart(canvasSaude.getContext('2d'), {
-          type: 'bar',
-          data: {
-            labels: DRE.meses.map(m => m.nome.replace(' 2026', '')),
-            datasets: [
-              { label: 'Receitas', data: dataR, backgroundColor: 'rgba(63, 185, 80, 0.8)' },
-              { label: 'Despesas', data: dataD, backgroundColor: 'rgba(248, 81, 73, 0.8)' }
-            ]
-          },
-          options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: { legend: { labels: { color: '#e6edf3' } } },
-            scales: {
-              x: { ticks: { color: '#8b9cb3' }, grid: { color: '#2d3a4f' } },
-              y: { type: 'logarithmic', min: 1, ticks: { color: '#8b9cb3' }, grid: { color: '#2d3a4f' } }
-            }
-          }
-        });
-      }
-    } catch (e) { console.warn('Chart saúde:', e); }
-
-    // Tabela impressão DRE (A4 paisagem, tema claro)
-    const printTable = document.getElementById('print-dre-table');
-    if (printTable) {
-      const P = DRE.consolidado;
-      const fmtP = v => (v < 0 ? '-' : '') + 'R$ ' + Math.abs(v).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-      let html = '<thead><tr><th>Categoria / Mês</th><th class="num">Jan</th><th class="num">Fev</th><th class="num">Mar</th><th class="num">Total</th></tr></thead><tbody>';
-      receitasAnalitico.forEach(r => {
-        html += '<tr><td>' + r.conta + '</td><td class="num receita-num">' + (r.jan ? fmtP(r.jan) : '—') + '</td><td class="num receita-num">' + (r.fev ? fmtP(r.fev) : '—') + '</td><td class="num receita-num">' + (r.mar ? fmtP(r.mar) : '—') + '</td><td class="num receita-num">' + fmtP(r.total) + '</td></tr>';
-      });
-      const rJan = DRE.meses[0].totais.receitas, rFev = DRE.meses[1].totais.receitas, rMar = DRE.meses[2].totais.receitas;
-      html += '<tr style="font-weight:700; background:#e8e8e8;"><td>Total Receitas</td><td class="num receita-num">' + fmtP(rJan) + '</td><td class="num receita-num">' + fmtP(rFev) + '</td><td class="num receita-num">' + fmtP(rMar) + '</td><td class="num receita-num">' + fmtP(P.receitas) + '</td></tr>';
-      html += '<tr><td colspan="5" style="height:6px;"></td></tr>';
-      despesasAnalitico.forEach(r => {
-        html += '<tr><td>' + r.conta + '</td><td class="num despesa-num">' + (r.jan ? fmtP(-r.jan) : '—') + '</td><td class="num despesa-num">' + (r.fev ? fmtP(-r.fev) : '—') + '</td><td class="num despesa-num">' + (r.mar ? fmtP(-r.mar) : '—') + '</td><td class="num despesa-num">' + fmtP(-r.total) + '</td></tr>';
-      });
-      const dJan = DRE.meses[0].totais.despesas, dFev = DRE.meses[1].totais.despesas, dMar = DRE.meses[2].totais.despesas;
-      html += '<tr style="font-weight:700; background:#e8e8e8;"><td>Total Despesas</td><td class="num despesa-num">' + fmtP(-dJan) + '</td><td class="num despesa-num">' + fmtP(-dFev) + '</td><td class="num despesa-num">' + fmtP(-dMar) + '</td><td class="num despesa-num">' + fmtP(-P.despesas) + '</td></tr>';
-      html += '</tbody><tfoot><tr><td><strong>Resultado (jan–mar)</strong></td><td class="num">' + fmtP(DRE.meses[0].totais.resultado) + '</td><td class="num">' + fmtP(DRE.meses[1].totais.resultado) + '</td><td class="num">' + fmtP(DRE.meses[2].totais.resultado) + '</td><td class="num">' + fmtP(P.resultado) + '</td></tr></tfoot>';
-      printTable.innerHTML = html;
-    }
     })();
   </script>
 </body>

@@ -1,0 +1,19 @@
+{
+  "name": "GA4 - page_view",
+  "type": "gaawe",
+  "parameter": [
+    {
+      "type": "template",
+      "key": "measurementId",
+      "value": "G-XXXXXXXXXX"
+    },
+    {
+      "type": "template",
+      "key": "eventName",
+      "value": "page_view"
+    }
+  ],
+  "firingTriggerId": [
+    "REPLACE_WITH_TRIGGER_ID_PAGE_VIEW"
+  ]
+}

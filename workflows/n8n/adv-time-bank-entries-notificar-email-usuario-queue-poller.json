@@ -1,0 +1,145 @@
+{
+  "name": "Time Bank Admin: confirmar registro por e-mail (fila/cron)",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "*/1 * * * *"
+            }
+          ]
+        }
+      },
+      "id": "tbq-schedule-001",
+      "name": "Schedule (a cada 1 min)",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        240,
+        0
+      ],
+      "notes": "Busca itens não enviados na fila, envia e marca como sent."
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "WITH to_send AS (\n  SELECT id\n  FROM public.adv_time_bank_entry_notifications\n  WHERE sent_at IS NULL\n    AND (locked_at IS NULL OR locked_at < NOW() - INTERVAL '5 minutes')\n  ORDER BY queued_at ASC\n  LIMIT 50\n),\nlocked AS (\n  UPDATE public.adv_time_bank_entry_notifications n\n  SET locked_at = NOW(),\n      error = NULL\n  WHERE n.id IN (SELECT id FROM to_send)\n  RETURNING n.*\n)\nSELECT * FROM locked;",
+        "options": {}
+      },
+      "id": "tbq-postgres-lock-select-001",
+      "name": "Lock + Buscar fila (sent_at IS NULL)",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        460,
+        0
+      ],
+      "notes": "Requer credencial do Postgres/Supabase no n8n."
+    },
+    {
+      "parameters": {
+        "jsCode": "const item = $input.first();\nconst J = item.json || {};\n\nconst type = J.type || '';\nconst type_label = type === 'clock_in' ? 'Entrada' : 'Saída';\n\nlet recorded_at_sp = J.recorded_at;\ntry {\n  if (J.recorded_at) {\n    const d = new Date(J.recorded_at);\n    if (!Number.isNaN(d.getTime())) {\n      recorded_at_sp = new Intl.DateTimeFormat('pt-BR', {\n        timeZone: 'America/Sao_Paulo',\n        year: 'numeric',\n        month: '2-digit',\n        day: '2-digit',\n        hour: '2-digit',\n        minute: '2-digit',\n        second: '2-digit'\n      }).format(d);\n    }\n  }\n} catch (e) {}\n\nreturn [{\n  json: {\n    ...J,\n    type_label,\n    recorded_at_sp\n  }\n}];"
+      },
+      "id": "tbq-code-normalize-001",
+      "name": "Normalize (label + horário SP)",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        680,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "fromEmail": "noreply@adventurelabs.com.br",
+        "toEmail": "={{ $json.user_email }}",
+        "subject": "=Confirmação do seu registro de ponto — {{ $json.type_label }}",
+        "emailType": "text",
+        "message": "=Olá!\\n\\nConfirmamos que o seu registro de ponto foi salvo com sucesso no Adventure Labs.\\n\\nTipo: {{ $json.type_label }}\\nHorário: {{ $json.recorded_at_sp || $json.recorded_at || '—' }}\\nLocal (ID): {{ $json.location_id || '—' }}\\n{{ $json.note ? ('\\nObservação: ' + $json.note) : '' }}\\n\\nSe isso não foi você, por favor avise o time.\\n\\nObrigado,\\nAdventure Labs",
+        "options": {}
+      },
+      "id": "tbq-send-email-001",
+      "name": "Send Email (Usuário)",
+      "type": "n8n-nodes-base.sendEmail",
+      "typeVersion": 2.1,
+      "position": [
+        900,
+        0
+      ],
+      "notes": "Configure credencial SMTP e ajuste o 'From' se necessário."
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "UPDATE public.adv_time_bank_entry_notifications\nSET sent_at = NOW(),\n    locked_at = NULL,\n    error = NULL\nWHERE id = '{{ $json.id }}';",
+        "options": {}
+      },
+      "id": "tbq-postgres-mark-sent-001",
+      "name": "Mark sent_at",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        1120,
+        0
+      ],
+      "notes": "Requer credencial do Postgres/Supabase no n8n."
+    }
+  ],
+  "connections": {
+    "Schedule (a cada 1 min)": {
+      "main": [
+        [
+          {
+            "node": "Lock + Buscar fila (sent_at IS NULL)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Lock + Buscar fila (sent_at IS NULL)": {
+      "main": [
+        [
+          {
+            "node": "Normalize (label + horário SP)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize (label + horário SP)": {
+      "main": [
+        [
+          {
+            "node": "Send Email (Usuário)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Email (Usuário)": {
+      "main": [
+        [
+          {
+            "node": "Mark sent_at",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "1",
+  "meta": {}
+}
+

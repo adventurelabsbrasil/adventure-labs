@@ -90,3 +90,42 @@ Em um chat com agente habilitado para MCP, peça algo como: *“Mostre minhas ta
 ## MCP já configurado neste repo
 
 O arquivo **`.cursor/mcp.json`** na raiz pode conter outros servidores (ex.: Railway). A entrada **Asana** pode ficar no **MCP global do Cursor** ou ser mesclada ao JSON do projeto — **sem** colocar secrets no arquivo versionado; use sempre `env` + variáveis locais.
+
+---
+
+## Google Ads + GTM (ROSE) via MCP local
+
+Este repositório agora inclui servidor MCP local `google-marketing` para operações de:
+
+- diagnóstico de acesso Google Ads;
+- lookup de container GTM por `GTM-XXXX`;
+- listagem de workspaces GTM;
+- criação de entidades GTM por payload bruto (`tag`, `trigger`, `variable`);
+- criação de versão e publicação do container.
+
+### Arquivos
+
+- Bridge: `tools/scripts/mcp-google-marketing-bridge.sh`
+- Servidor MCP: `tools/mcp/google-marketing-mcp.mjs`
+- Template env local: `.cursor/google-marketing-mcp.env.example`
+
+### Setup local (sem commitar credenciais)
+
+1. Copie:
+
+```bash
+cp .cursor/google-marketing-mcp.env.example .cursor/google-marketing-mcp.env
+```
+
+2. Preencha no `.cursor/google-marketing-mcp.env`:
+   - `GOOGLE_ADS_CLIENT_ID`
+   - `GOOGLE_ADS_CLIENT_SECRET`
+   - `GOOGLE_ADS_DEVELOPER_TOKEN`
+   - `GOOGLE_ADS_REFRESH_TOKEN`
+   - `GOOGLE_ADS_CUSTOMER_ID=167-722-6456`
+   - `GTM_TAG_ID=GTM-MN283T6L`
+   - `GOOGLE_ADS_LOGIN_CUSTOMER_ID` (opcional; MCC)
+
+3. Reinicie MCP no Cursor.
+
+> Operação recomendada: manter credenciais no Infisical (`/admin`) e usar este env apenas como espelho local, sem versionamento.

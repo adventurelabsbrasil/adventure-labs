@@ -1,0 +1,19 @@
+{
+  "name": "Ads Conversion - page_view LP Auxilio Maternidade",
+  "type": "awct",
+  "parameter": [
+    {
+      "type": "template",
+      "key": "conversionId",
+      "value": "16549386051"
+    },
+    {
+      "type": "template",
+      "key": "conversionLabel",
+      "value": "xTwGCNvw1ZAcEMOurtM9"
+    }
+  ],
+  "firingTriggerId": [
+    "7"
+  ]
+}

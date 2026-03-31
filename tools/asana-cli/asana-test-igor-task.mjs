@@ -45,7 +45,8 @@ function loadEnvFiles(paths) {
 
 loadEnvFiles([
   join(__dirname, ".env"),
-  join(__dirname, "..", "..", "apps", "admin", ".env.local"),
+  join(__dirname, "..", "..", "apps", "core", "admin", ".env.local"),
+  join(__dirname, "..", "..", "apps", "core", "admin", ".env"),
 ]);
 
 const dryRun = process.argv.includes("--dry-run");

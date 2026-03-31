@@ -1,0 +1,53 @@
+{
+  "name": "ADV Webhook Healthcheck (n8n v1)",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "adv-healthcheck-webhook",
+        "httpMethod": "POST",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "Webhook_Healthcheck",
+      "name": "Webhook Healthcheck",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        300,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { ok: true, source: 'n8n-v1-healthcheck', received: $json } }}",
+        "options": {}
+      },
+      "id": "Respond_Healthcheck",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        620,
+        280
+      ]
+    }
+  ],
+  "connections": {
+    "Webhook Healthcheck": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "active": false
+}

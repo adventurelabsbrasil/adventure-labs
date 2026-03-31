@@ -8,35 +8,182 @@
       "id": "jan",
       "nome": "Janeiro 2026",
       "receitas": [
-        { "conta": "Receitas diretas - Clientes - Serviços Pontuais", "valor": 940 },
-        { "conta": "Devoluções de Compra de Serviços", "valor": 64.90 },
-        { "conta": "Outras Entradas", "valor": 50500 }
+        {
+          "id": "JAN-R-001",
+          "conta": "Receitas diretas - Clientes - Serviços Pontuais",
+          "valor": 940,
+          "linhas": [
+            { "id": "JAN-R-001-L01", "entidade": "Roselaine Portal (Rose)", "descricao": "Recebimento cliente (Sicredi)", "valor": 250 },
+            { "id": "JAN-R-001-L02", "entidade": "Lidera Soluções", "descricao": "Recebimento cliente (Sicredi)", "valor": 450 },
+            { "id": "JAN-R-001-L03", "entidade": "SPEED ASSISTENCIA TECNICA", "descricao": "Projeto Rose SPEED (Nubank PF Ribas)", "valor": 240 }
+          ]
+        },
+        {
+          "id": "JAN-R-002",
+          "conta": "Devoluções de Compra de Serviços",
+          "valor": 64.9,
+          "linhas": [
+            { "id": "JAN-R-002-L01", "entidade": "Sicredi", "descricao": "Estorno tarifa cesta de relacionamento", "valor": 64.9 }
+          ]
+        },
+        {
+          "id": "JAN-R-003",
+          "conta": "Outras Entradas",
+          "valor": 50500,
+          "linhas": [
+            { "id": "JAN-R-003-L01", "entidade": "Young Empreendimentos", "descricao": "Integralização / movimentação societária", "valor": 50000 },
+            { "id": "JAN-R-003-L02", "entidade": "Rodrigo Ribas", "descricao": "Aporte PF / movimentação sócio", "valor": 500 }
+          ]
+        }
       ],
       "despesas": [
-        { "conta": "Despesas Administrativas", "valor": 880.20 },
-        { "conta": "Despesas Financeiras", "valor": 64.90 },
-        { "conta": "Despesas com Vendas e Marketing", "valor": 275 },
-        { "conta": "Outras Despesas", "valor": 501 }
+        {
+          "id": "JAN-D-001",
+          "conta": "Despesas Administrativas",
+          "valor": 880.2,
+          "linhas": [
+            { "id": "JAN-D-001-L01", "entidade": "Google Cloud", "descricao": "Infra cloud", "valor": 50 },
+            { "id": "JAN-D-001-L02", "entidade": "Omieexperience", "descricao": "ERP / assinatura", "valor": 247.2 },
+            { "id": "JAN-D-001-L03", "entidade": "REGISTRO BR", "descricao": "3 anos de domínio www.adventurelabs.com.br", "valor": 184 },
+            { "id": "JAN-D-001-L04", "entidade": "ZOOP TECNOLOGIA & INSTITUICAO DE PAGAMENTO S.A.", "descricao": "Certificado digital A3 (NF posterior)", "valor": 389 },
+            { "id": "JAN-D-001-L05", "entidade": "Conciliação multi-conta", "descricao": "Diferença provisória a revisar (Founder)", "valor": 10 }
+          ]
+        },
+        {
+          "id": "JAN-D-002",
+          "conta": "Despesas Financeiras",
+          "valor": 64.9,
+          "linhas": [
+            { "id": "JAN-D-002-L01", "entidade": "Sicredi", "descricao": "Tarifa pacote conta (cesta de relacionamento)", "valor": 64.9 }
+          ]
+        },
+        {
+          "id": "JAN-D-003",
+          "conta": "Despesas com Vendas e Marketing",
+          "valor": 275,
+          "linhas": [
+            { "id": "JAN-D-003-L01", "entidade": "Meta / Facebook", "descricao": "Mídia paga", "valor": 200 },
+            { "id": "JAN-D-003-L02", "entidade": "Beatriz Garcia Rocha", "descricao": "Design gráfico freelancer (Nubank PF)", "valor": 75 }
+          ]
+        },
+        {
+          "id": "JAN-D-004",
+          "conta": "Outras Despesas",
+          "valor": 501,
+          "linhas": [
+            { "id": "JAN-D-004-L01", "entidade": "Young Empreendimentos", "descricao": "Contrapartida transferência / movimentação", "valor": 500 },
+            { "id": "JAN-D-004-L02", "entidade": "Sicredi", "descricao": "Integralização de capital subscrito", "valor": 1 }
+          ]
+        }
       ],
-      "totais": { "receitas": 51504.90, "despesas": 1721.10, "resultado": 49783.80 }
+      "totais": { "receitas": 51504.9, "despesas": 1721.1, "resultado": 49783.8 }
     },
     {
       "id": "fev",
       "nome": "Fevereiro 2026",
       "receitas": [
-        { "conta": "Receitas diretas - Clientes - Serviços Pontuais", "valor": 550 },
-        { "conta": "Receitas diretas - Clientes - Variáveis", "valor": 4508.33 },
-        { "conta": "Receitas diretas - Clientes - Serviços Recorrentes", "valor": 1300 },
-        { "conta": "Outras Entradas", "valor": 40000 }
+        {
+          "id": "FEV-R-001",
+          "conta": "Receitas diretas - Clientes - Serviços Pontuais",
+          "valor": 550,
+          "linhas": [
+            { "id": "FEV-R-001-L01", "entidade": "Rose", "descricao": "Cliente pontual", "valor": 250 },
+            { "id": "FEV-R-001-L02", "entidade": "Rose Tebaldi", "descricao": "Cliente pontual", "valor": 240 },
+            { "id": "FEV-R-001-L03", "entidade": "Altemir Costa", "descricao": "Cliente pontual", "valor": 60 }
+          ]
+        },
+        {
+          "id": "FEV-R-002",
+          "conta": "Receitas diretas - Clientes - Variáveis",
+          "valor": 4508.33,
+          "linhas": [
+            { "id": "FEV-R-002-L01", "entidade": "Roselaine Portal (Rose)", "descricao": "Recebimento variável / agência (OFX Sicredi)", "valor": 4508.33 }
+          ]
+        },
+        {
+          "id": "FEV-R-003",
+          "conta": "Receitas diretas - Clientes - Serviços Recorrentes",
+          "valor": 1300,
+          "linhas": [
+            { "id": "FEV-R-003-L01", "entidade": "Rose (recorrente)", "descricao": "Contrato recorrente", "valor": 1300 }
+          ]
+        },
+        {
+          "id": "FEV-R-004",
+          "conta": "Outras Entradas",
+          "valor": 40000,
+          "linhas": [
+            { "id": "FEV-R-004-L01", "entidade": "ADVENTURE COMUNICAÇÕES", "descricao": "Movimentação de caixa vinculada a CDB", "valor": 40000 }
+          ]
+        }
       ],
       "despesas": [
-        { "conta": "Investimento", "valor": 40000 },
-        { "conta": "Despesas Administrativas", "valor": 3250.22 },
-        { "conta": "Despesas com Vendas e Marketing", "valor": 1862.50 },
-        { "conta": "Despesas com Pessoal", "valor": 6000 },
-        { "conta": "Impostos e Taxas", "valor": 197.50 },
-        { "conta": "Despesas Financeiras", "valor": 8 },
-        { "conta": "Outras Despesas", "valor": 40000 }
+        {
+          "id": "FEV-D-001",
+          "conta": "Investimento",
+          "valor": 40000,
+          "linhas": [
+            { "id": "FEV-D-001-L01", "entidade": "CDB Banco Inter", "descricao": "Saída de caixa para ativo financeiro", "valor": 40000 }
+          ]
+        },
+        {
+          "id": "FEV-D-002",
+          "conta": "Despesas Administrativas",
+          "valor": 3250.22,
+          "linhas": [
+            { "id": "FEV-D-002-L01", "entidade": "Google Cloud", "descricao": "Infra cloud", "valor": 200 },
+            { "id": "FEV-D-002-L02", "entidade": "Triangullo", "descricao": "Gráfica / comunicação visual (boleto)", "valor": 80.96 },
+            { "id": "FEV-D-002-L03", "entidade": "Alvo Certo", "descricao": "Fachada / comunicação visual (principal TED)", "valor": 2650 },
+            { "id": "FEV-D-002-L04", "entidade": "Triangullo", "descricao": "Gráfica (2º boleto)", "valor": 230 },
+            { "id": "FEV-D-002-L05", "entidade": "Omieexperience", "descricao": "ERP / assinatura", "valor": 252.22 },
+            { "id": "FEV-D-002-L06", "entidade": "Alvo Certo / Sicredi (ajuste pendente)", "descricao": "Ajuste provisório de conciliação (Founder revisará o detalhamento)", "valor": -162.96 }
+          ]
+        },
+        {
+          "id": "FEV-D-003",
+          "conta": "Despesas com Vendas e Marketing",
+          "valor": 1862.5,
+          "linhas": [
+            { "id": "FEV-D-003-L01", "entidade": "Meta / Facebook", "descricao": "Mídia paga", "valor": 300 },
+            { "id": "FEV-D-003-L02", "entidade": "Meta / Facebook", "descricao": "Mídia paga", "valor": 300 },
+            { "id": "FEV-D-003-L03", "entidade": "Google Brasil Internet", "descricao": "Google Ads (custo cliente Rose)", "valor": 200 },
+            { "id": "FEV-D-003-L04", "entidade": "Meta / Facebook", "descricao": "Mídia paga", "valor": 200 },
+            { "id": "FEV-D-003-L05", "entidade": "Rupe Creative", "descricao": "Criativo / produção", "valor": 562.5 },
+            { "id": "FEV-D-003-L06", "entidade": "FACEBOOK SERVICOS ONLINE DO BRASIL LTDA. (a confirmar)", "descricao": "Lançamento de mídia pendente de validação fina", "valor": 300 }
+          ]
+        },
+        {
+          "id": "FEV-D-004",
+          "conta": "Despesas com Pessoal",
+          "valor": 6000,
+          "linhas": [
+            { "id": "FEV-D-004-L01", "entidade": "Rodrigo Ribas", "descricao": "Pró-labore / retirada (PIX)", "valor": 6000 }
+          ]
+        },
+        {
+          "id": "FEV-D-005",
+          "conta": "Impostos e Taxas",
+          "valor": 197.5,
+          "linhas": [
+            { "id": "FEV-D-005-L01", "entidade": "SEFAZ", "descricao": "Tributo estadual", "valor": 197.5 }
+          ]
+        },
+        {
+          "id": "FEV-D-006",
+          "conta": "Despesas Financeiras",
+          "valor": 8,
+          "linhas": [
+            { "id": "FEV-D-006-L01", "entidade": "Sicredi", "descricao": "Tarifa bancária TED do pagamento para Alvo Certo", "valor": 8 }
+          ]
+        },
+        {
+          "id": "FEV-D-007",
+          "conta": "Outras Despesas",
+          "valor": 40000,
+          "linhas": [
+            { "id": "FEV-D-007-L01", "entidade": "ADVENTURE COMUNICAÇÕES", "descricao": "Transferência entre empresas do grupo", "valor": 40000 }
+          ]
+        }
       ],
       "totais": { "receitas": 46358.33, "despesas": 91310.22, "resultado": -44951.89 }
     },
@@ -44,25 +191,70 @@
       "id": "mar",
       "nome": "Março 2026",
       "receitas": [
-        { "conta": "Receitas diretas - Clientes - Serviços Pontuais", "valor": 1250 },
-        { "conta": "Receitas diretas - Clientes - Serviços Recorrentes", "valor": 5500 }
+        {
+          "id": "MAR-R-001",
+          "conta": "Receitas diretas - Clientes - Serviços Pontuais",
+          "valor": 1250,
+          "linhas": [
+            { "id": "MAR-R-001-L01", "entidade": "ITY Empreendimento Imobiliário SPE", "descricao": "Serviço pontual Young", "valor": 800 },
+            { "id": "MAR-R-001-L02", "entidade": "Lidera Soluções", "descricao": "Recebimento cliente", "valor": 450 }
+          ]
+        },
+        {
+          "id": "MAR-R-002",
+          "conta": "Receitas diretas - Clientes - Serviços Recorrentes",
+          "valor": 5500,
+          "linhas": [
+            { "id": "MAR-R-002-L01", "entidade": "Benditta Marcenaria", "descricao": "Contrato recorrente (3 meses)", "valor": 2000 },
+            { "id": "MAR-R-002-L02", "entidade": "Rose (Roselaine Portal)", "descricao": "Contrato recorrente", "valor": 3500 }
+          ]
+        }
       ],
       "despesas": [
-        { "conta": "Despesas Administrativas", "valor": 3222.15 },
-        { "conta": "Despesas com Vendas e Marketing", "valor": 1062.50 },
-        { "conta": "Despesas com Pessoal", "valor": 3000 }
+        {
+          "id": "MAR-D-001",
+          "conta": "Despesas Administrativas",
+          "valor": 3469.35,
+          "linhas": [
+            { "id": "MAR-D-001-L01", "entidade": "Google Cloud", "descricao": "Infra cloud", "valor": 265.16 },
+            { "id": "MAR-D-001-L02", "entidade": "TEL3 Telecom", "descricao": "Internet link escritório", "valor": 4 },
+            { "id": "MAR-D-001-L03", "entidade": "ZOOP / Valid Certificadora", "descricao": "Certificado digital A1 (NF + Omie)", "valor": 232 },
+            { "id": "MAR-D-001-L04", "entidade": "Alvo Certo", "descricao": "50% placa fachada escritório", "valor": 2650 },
+            { "id": "MAR-D-001-L05", "entidade": "Demerge / Hostinger", "descricao": "VPS mensal", "valor": 70.99 },
+            { "id": "MAR-D-001-L06", "entidade": "Omieexperience", "descricao": "ERP / assinatura", "valor": 247.2 }
+          ]
+        },
+        {
+          "id": "MAR-D-002",
+          "conta": "Despesas com Vendas e Marketing",
+          "valor": 1687.5,
+          "linhas": [
+            { "id": "MAR-D-002-L01", "entidade": "Meta / Facebook", "descricao": "Mídia paga", "valor": 200 },
+            { "id": "MAR-D-002-L02", "entidade": "Rupe Creative", "descricao": "Criativo / produção", "valor": 562.5 },
+            { "id": "MAR-D-002-L03", "entidade": "Rupe Creative", "descricao": "2ª liquidação no mês", "valor": 625 },
+            { "id": "MAR-D-002-L04", "entidade": "Meta / Facebook", "descricao": "Mídia paga", "valor": 300 }
+          ]
+        },
+        {
+          "id": "MAR-D-003",
+          "conta": "Despesas com Pessoal",
+          "valor": 3000,
+          "linhas": [
+            { "id": "MAR-D-003-L01", "entidade": "Rodrigo Ribas", "descricao": "Pró-labore (PIX)", "valor": 3000 }
+          ]
+        }
       ],
-      "totais": { "receitas": 6750, "despesas": 7284.65, "resultado": -534.65 }
+      "totais": { "receitas": 6750, "despesas": 8156.85, "resultado": -1406.85 }
     }
   ],
   "consolidado": {
     "receitas": 104613.23,
-    "despesas": 100315.97,
-    "resultado": 4297.26
+    "despesas": 101188.17,
+    "resultado": 3425.06
   },
   "pendentes_lancamento": {
     "resumo": "Cartão Nubank PF — despesas Adventure já classificadas, ainda sem lançamento no controle",
-    "total": 730.70,
+    "total": 730.7,
     "por_mes": [
       {
         "mes": "Fevereiro 2026",
@@ -77,7 +269,7 @@
     ],
     "por_categoria": [
       { "conta": "Despesas Administrativas", "valor": 322.84 },
-      { "conta": "Despesas com Vendas e Marketing", "valor": 400.00 },
+      { "conta": "Despesas com Vendas e Marketing", "valor": 400.0 },
       { "conta": "Despesas Financeiras", "valor": 7.86 }
     ]
   }

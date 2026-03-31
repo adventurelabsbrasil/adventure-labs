@@ -1,7 +1,7 @@
 # Relatório DRE — Jan a Mar 2026 (3 primeiros meses)
 
 **Fonte:** CSV `202601_POP_Controle_Financeiro - Contas.csv` + OFX Sicredi (jan a mar).  
-**Elaborado em:** 13/03/2026 · **Atualizado (OFX completo março):** 24/03/2026.  
+**Elaborado em:** 13/03/2026 · **Atualizado (OFX março fechado):** 30/03/2026 (Sueli inativa no n8n; atualização direta no Cursor).  
 **Objetivo:** DRE mensal e anual (jan–mar), com rastreio OFX → plano de contas (sem “caixa preta”).
 
 ---
@@ -12,7 +12,8 @@
 - **OFX Sicredi (reexportados, mesma conta `1090000000797213`):** pasta canônica de trabalho da skill Sueli:
   - `apps/core/admin/agents/skills/sueli-conciliacao-bancaria/sicredi/sicredi_1774381641.ofx` — **jan/2026**
   - `apps/core/admin/agents/skills/sueli-conciliacao-bancaria/sicredi/sicredi_1774381655.ofx` — **fev/2026**
-  - `apps/core/admin/agents/skills/sueli-conciliacao-bancaria/sicredi/sicredi_1774381668.ofx` — **mar/2026** (extrato com `DTEND` 31/03; lançamentos até **24/03** no arquivo atual)
+  - `apps/core/admin/agents/skills/sueli-conciliacao-bancaria/sicredi/sicredi_1774898310.ofx` — **mar/2026** (extrato fechado; `DTSERVER` 30/03/2026; todos os lançamentos até **30/03**)
+  - *Referência:* `sicredi_1774381668.ofx` — recorte anterior do mesmo mês (cortava em 24/03); substituído pelo arquivo acima para DRE/dashboard.
 - Cópias históricas em `knowledge/99_ARQUIVO/sicredi/` (nomes `sicredi_177341*.ofx`) podem divergir só por metadata; **valores jan/fev conferidos com os OFX da skill.**
 
 ---
@@ -66,31 +67,31 @@
 
 ### 2.3 Março 2026
 
-*Fonte: OFX `sicredi_1774381668.ofx` (Sicredi). A versão de 13/03 cobria só parte do mês; abaixo inclui lançamentos até **24/03**.*
+*Fonte: OFX `sicredi_1774898310.ofx` (Sicredi), fechamento do mês com lançamentos até **30/03**.*
 
 | Plano de Contas                                    | Receitas   | Despesas    |
 | -------------------------------------------------- | ---------- | ----------- |
 | Receitas diretas - Clientes - Serviços Pontuais     | 1.250,00   | —            |
 | Receitas diretas - Clientes - Serviços Recorrentes | 5.500,00   | —            |
-| Despesas Administrativas                           | —          | 3.222,15     |
-| Despesas com Vendas e Marketing                    | —          | 1.062,50     |
+| Despesas Administrativas                           | —          | 3.469,35     |
+| Despesas com Vendas e Marketing                    | —          | 1.687,50     |
 | Despesas com Pessoal                               | —          | 3.000,00     |
-| **Subtotal**                                       | **6.750,00** | **7.284,65** |
-| **Resultado março**                                |            | **-534,65**  |
+| **Subtotal**                                       | **6.750,00** | **8.156,85** |
+| **Resultado março**                                |            | **-1.406,85** |
 
-*Detalhe mar (OFX):* **Receitas:** ITY Empreendimento 800 + Lidera 450 + Benditta 2.000 + Rose 3.500. **Adm:** Google Cloud 265,16 + TEL3 4 + **Alvo Certo 2.650** (50% placa de fachada) + **certificado digital A1** (Valid Certificadora, liquidação via **ZOOP** no extrato, 232,00) + **Hostinger VPS** (plano ~70,99; PIX via **Demerge** no extrato). **Vendas/Marketing:** Meta 200 + 300 + Rupe 562,50. **Pessoal:** pró-labore Rodrigo Ribas 3.000.
+*Detalhe mar (OFX):* **Receitas:** ITY Empreendimento 800 + Lidera 450 + Benditta 2.000 + Rose 3.500. **Adm:** Google Cloud 265,16 + TEL3 4 + **Alvo Certo 2.650** (50% placa de fachada) + **certificado digital A1** (Valid Certificadora, liquidação via **ZOOP**, 232,00) + **Hostinger VPS** (70,99; PIX **Demerge**) + **Omie** 247,20 (30/03). **Vendas/Marketing:** Meta 200 + 300 + Rupe 562,50 + **Rupe 625,00** (25/03). **Pessoal:** pró-labore Rodrigo Ribas 3.000.
 
-**Saldo contábil no OFX (ledger):** R$ 4.844,30 em 31/03 (`LEDGERBAL`).
+**Saldo contábil no OFX (ledger):** R$ 3.972,10 em 31/03 (`LEDGERBAL` — arquivo `sicredi_1774898310.ofx`).
 
 ---
 
 ## 3. DRE consolidado (jan–mar 2026)
 
-| Item          | Jan 2026   | Fev 2026    | Mar 2026   | Total jan–mar |
-| ------------- | ---------- | ----------- | ---------- | ------------- |
-| **Receitas**  | 51.504,90  | 46.358,33   | 6.750,00   | 104.613,23    |
-| **Despesas**  | 1.721,10   | 91.310,22   | 7.284,65   | 100.315,97    |
-| **Resultado** | 49.783,80  | -44.951,89  | -534,65    | 4.297,26      |
+| Item          | Jan 2026   | Fev 2026    | Mar 2026    | Total jan–mar |
+| ------------- | ---------- | ----------- | ----------- | ------------- |
+| **Receitas**  | 51.504,90  | 46.358,33   | 6.750,00    | 104.613,23    |
+| **Despesas**  | 1.721,10   | 91.310,22   | 8.156,85    | 101.188,17    |
+| **Resultado** | 49.783,80  | -44.951,89  | -1.406,85   | 3.425,06      |
 
 *Contas Nubank/Young/Inter: permanecem no gerenciamento (Founder confirmou que devem constar); jan/fev já refletem o CSV multi-conta; mar só Sicredi.*
 
@@ -98,7 +99,7 @@
 
 ## 4. Respostas do Founder (incorporadas)
 
-1. **OFX Sicredi:** Reexportados em 24/03/2026 (`sicredi_1774381641/55/68.ofx`); março: **Valid A1** (via ZOOP), **Hostinger VPS** (via Demerge), **Alvo Certo** (2ª parcela fachada), demais linhas na §7.
+1. **OFX Sicredi:** Jan/fev conforme `sicredi_1774381641/55`; março fechado em **30/03/2026** (`sicredi_1774898310.ofx`), incl. **Omie** 247,20 e **Rupe** 625 após o corte de 24/03; **Valid A1** (ZOOP), **Hostinger** (Demerge), **Alvo Certo** (2ª parcela fachada), demais linhas na §7.
 2. **R$ 8 DOC/TED:** Cobrança por TED em vez de PIX → Despesas Financeiras.
 3. **Diferença R$ 8 (Alvo Certo):** Taxa TED; Alvo Certo 2.650 (Desp Adm) + taxa 8 (Desp Financeiras).
 4. **TEL3 R$ 4:** Internet escritório (fim do mês) → Despesas Administrativas.
@@ -124,7 +125,7 @@ Resumo: Sicredi→Inter = transferência (zerar ou Outras Entradas/Outras Despes
 ## 5. DRE visual e dinâmico
 
 Relatório interativo com gráficos e abas por mês:
-- **Dados:** `knowledge/00_GESTAO_CORPORATIVA/operacao/dre-jan-mar-2026.json`
+- **Dados:** `knowledge/00_GESTAO_CORPORATIVA/operacao/dre-jan-mar-2026.json` — cada linha de receita/despesa pode incluir **`linhas`** com `entidade`, `descricao` e `valor` (espelho da §7 / OFX), para o HTML mostrar **entidade/fornecedor** ao expandir (+) na aba **Analítico anual** ou **ver entidades** nas abas mensais.
 - **Página:** `knowledge/00_GESTAO_CORPORATIVA/operacao/dre-jan-mar-2026.html` — abra no navegador (duplo clique no Finder ou arraste o arquivo para o Chrome). O topo da página mostra um **aviso em destaque** com o total do cartão Nubank PF **ainda não lançado** no controle; os gráficos seguem refletindo só o que está consolidado no JSON (alinhado ao controle até você efetivar).
 
 ---
@@ -136,6 +137,8 @@ Relatório interativo com gráficos e abas por mês:
 | 1 | 232,00 | ZOOP (liquidação boleto) | Certificado digital **A1** — **Valid Certificadora Digital Ltda** (integração NF ↔ Omie) | **Despesas Administrativas** |
 | 2 | 70,99 | Demerge (PIX) | **Hostinger** — VPS plano mensal recorrente | **Despesas Administrativas** |
 | 3 | 2.650,00 | Alvo Certo (PIX) | **50% remanescente** da placa de fachada do escritório Adventure | **Despesas Administrativas** |
+| 4 | 625,00 | Rupe Creative (PIX, 25/03) | Criativo / produção (mesma linha do fornecedor Rupe) | **Despesas com Vendas e Marketing** |
+| 5 | 247,20 | Omieexperience (PIX, 30/03) | ERP / assinatura Omie | **Despesas Administrativas** |
 
 ---
 
@@ -199,12 +202,27 @@ Nada abaixo fica como “diversos”: cada linha tem **fornecedor/cliente** e **
 | 16/03 | -232,00 | ZOOP | **Valid Certificadora** — certificado A1 (NF + Omie) | Despesas Administrativas |
 | 20/03 | -2.650,00 | Alvo Certo | 50% placa fachada escritório | Despesas Administrativas |
 | 24/03 | -70,99 | Demerge | **Hostinger** — VPS mensal | Despesas Administrativas |
+| 25/03 | -625,00 | Rupe Creative | Criativo / produção (2ª liquidação no mês) | Despesas com Vendas e Marketing |
+| 30/03 | -247,20 | Omieexperience (Omie) | ERP / assinatura | Despesas Administrativas |
 
 ### Sobre “Outras Entradas / Outras Despesas” no DRE agregado (jan–fev)
 
 No plano de contas oficial ainda existem as contas **Outras Entradas** e **Outras Despesas**. Elas aparecem no JSON/HTML por causa do **CSV multi-conta** (integralização Young, retorno CDB, transferência para Inter), não como “não sei o que é”. Recomendação para o Omie: criar **subcontas nomeadas** (ex.: *Integralização Young*, *Transferência Sicredi→Inter*, *Saída para CDB*) para não parecer “diversos” nos relatórios.
 
 Pendências de classificação de OFX Sicredi: **nenhuma** até o corte atual.
+
+### IDs únicos e linhas provisórias (governança)
+
+- Cada linha do DRE (categoria e detalhamento) agora possui **ID único** no JSON/HTML para facilitar comunicação de ajustes (ex.: `FEV-D-003-L06`).
+- Janeiro / Despesas Administrativas:
+  - `JAN-D-001-L03` Registro BR — R$ 184,00
+  - `JAN-D-001-L04` ZOOP Certificado A3 — R$ 389,00
+  - `JAN-D-001-L05` diferença provisória — R$ 10,00 (pendente revisão do Founder)
+- Fevereiro / Despesas Financeiras:
+  - `FEV-D-006-L01` taxa TED Sicredi para pagamento Alvo Certo — R$ 8,00
+- Fevereiro ainda contém linhas provisórias com entidade identificada e pendência de refinamento:
+  - `FEV-D-002-L06` ajuste de conciliação
+  - `FEV-D-003-L06` lançamento de mídia a confirmar
 
 ---
 
@@ -243,3 +261,14 @@ Arquivos-base lidos em `apps/core/admin/agents/skills/sueli-conciliacao-bancaria
 > Observação de competência/caixa: esses valores são custos da Adventure pagos no cartão pessoal; para fechamento contábil correto, lançar contrapartida em conta de passivo com sócio (reembolso a pagar), e baixar quando houver pagamento.
 
 **Política do dashboard visual (HTML):** enquanto isso não estiver no `Controle_Financeiro.csv` / Omie, o **DRE interativo não soma** esses R$ 730,70 nas despesas — só exibe o **banner laranja** no HTML com o detalhe. Depois de lançar, podemos regenerar o JSON a partir do controle (ou você pede para eu atualizar os totais).
+
+### Aviso operacional — conta pessoal e reembolsos
+
+> **Atenção:** o cartão Nubank PF usado em despesas da Adventure é conta **pessoal**. Para não distorcer DRE, margem e caixa:
+>
+> 1. Custos da Adventure pagos no cartão PF devem entrar como despesa da categoria correta **com contrapartida em passivo com sócio** (*reembolso a pagar*).
+> 2. O pagamento do reembolso ao sócio baixa esse passivo e **não** deve virar nova despesa.
+> 3. Gastos pessoais devem ficar fora do DRE da empresa.
+> 4. No HTML de impressão, use os checkboxes para:
+>    - ocultar integralizações/investimento (visão operacional), e
+>    - incluir detalhamento analítico (entidade + descrição), quando precisar auditar decisão a decisão.

@@ -1,0 +1,21 @@
+{
+  "name": "EV - page_view",
+  "type": "customEvent",
+  "customEventFilter": [
+    {
+      "type": "equals",
+      "parameter": [
+        {
+          "type": "template",
+          "key": "arg0",
+          "value": "{{_event}}"
+        },
+        {
+          "type": "template",
+          "key": "arg1",
+          "value": "page_view"
+        }
+      ]
+    }
+  ]
+}

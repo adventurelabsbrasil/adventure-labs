@@ -1,0 +1,19 @@
+{
+  "name": "Ads Conversion - click_cta WhatsApp LP Auxilio",
+  "type": "awct",
+  "parameter": [
+    {
+      "type": "template",
+      "key": "conversionId",
+      "value": "16549386051"
+    },
+    {
+      "type": "template",
+      "key": "conversionLabel",
+      "value": "xDgrCOjI4pAcEMOurtM9"
+    }
+  ],
+  "firingTriggerId": [
+    "8"
+  ]
+}

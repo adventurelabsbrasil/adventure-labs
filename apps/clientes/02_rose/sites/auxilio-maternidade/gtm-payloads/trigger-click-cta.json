@@ -1,0 +1,21 @@
+{
+  "name": "EV - click_cta",
+  "type": "customEvent",
+  "customEventFilter": [
+    {
+      "type": "equals",
+      "parameter": [
+        {
+          "type": "template",
+          "key": "arg0",
+          "value": "{{_event}}"
+        },
+        {
+          "type": "template",
+          "key": "arg1",
+          "value": "click_cta"
+        }
+      ]
+    }
+  ]
+}

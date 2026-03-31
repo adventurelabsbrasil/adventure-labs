@@ -1,0 +1,126 @@
+{
+  "name": "ADV LinkedIn Native Form -> Supabase (n8n v2 canonical)",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "adv-linkedin-native-form-v2",
+        "httpMethod": "POST",
+        "responseMode": "responseNode"
+      },
+      "id": "Webhook_LinkedIn",
+      "name": "Webhook LinkedIn Lead",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        280,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const body = $json.body ?? $json;\nconst lead = body.lead ?? body;\n\nreturn [{\n  json: {\n    lead_id: lead.id ?? lead.lead_id ?? null,\n    form_id: lead.form_id ?? '1003946029',\n    form_name: lead.form_name ?? null,\n    campaign_id: lead.campaign_id ?? null,\n    adset_id: lead.adset_id ?? null,\n    ad_id: lead.ad_id ?? null,\n    source_platform: 'linkedin',\n    source_channel: 'paid-social',\n    linkedin_clid: lead.linkedin_clid ?? null,\n    li_fat_id: lead.li_fat_id ?? null,\n    gclid: lead.gclid ?? null,\n    fbclid: lead.fbclid ?? null,\n    utm_source: lead.utm_source ?? null,\n    utm_medium: lead.utm_medium ?? null,\n    utm_campaign: lead.utm_campaign ?? null,\n    utm_content: lead.utm_content ?? null,\n    utm_term: lead.utm_term ?? null,\n    full_name: lead.full_name ?? lead.name ?? null,\n    first_name: lead.first_name ?? null,\n    last_name: lead.last_name ?? null,\n    email: lead.email ?? null,\n    phone: lead.phone ?? null,\n    role: lead.role ?? null,\n    company_name: lead.company_name ?? null,\n    message: lead.message ?? null\n  }\n}];"
+      },
+      "id": "Normalize_Payload",
+      "name": "Normalize Payload",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        560,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.LINKEDIN_EDGE_FUNCTION_URL }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "x-webhook-secret",
+              "value": "={{ $env.LINKEDIN_WEBHOOK_SECRET }}"
+            },
+            {
+              "name": "apikey",
+              "value": "={{ $env.SUPABASE_ANON_KEY }}"
+            },
+            {
+              "name": "Authorization",
+              "value": "={{ 'Bearer ' + $env.SUPABASE_ANON_KEY }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json) }}",
+        "options": {}
+      },
+      "id": "POST_Edge_Function",
+      "name": "POST Edge Function",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        840,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}"
+      },
+      "id": "Respond",
+      "name": "Respond",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1080,
+        280
+      ]
+    }
+  ],
+  "connections": {
+    "Webhook LinkedIn Lead": {
+      "main": [
+        [
+          {
+            "node": "Normalize Payload",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize Payload": {
+      "main": [
+        [
+          {
+            "node": "POST Edge Function",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "POST Edge Function": {
+      "main": [
+        [
+          {
+            "node": "Respond",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {}
+}

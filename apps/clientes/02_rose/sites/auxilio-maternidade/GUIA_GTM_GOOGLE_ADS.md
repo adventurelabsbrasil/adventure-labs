@@ -73,6 +73,8 @@ No GTM:
   - `Click URL` `contains` `whatsapp.com`
 7. **Save**.
 
+> Alternativa recomendada neste repo (mais estável): usar trigger de **Custom Event** com nome `click_cta`, já enviado pelo `dataLayer` da landing.
+
 ---
 
 ## 6) Criar tag de conversão Google Ads
@@ -103,6 +105,15 @@ No GTM:
   - `CL - All Pages` disparou no carregamento.
   - `Ads Conversion - WhatsApp Click` disparou no clique.
 5. Garanta que a tag de conversão não dispara em cliques fora do WhatsApp.
+
+### Eventos técnicos disponíveis na LP
+
+A landing já publica no `dataLayer`:
+
+- `page_view` (carregamento da página)
+- `click_cta` (cliques em CTAs do WhatsApp)
+
+Você pode usar estes eventos como trigger no GTM para reduzir ambiguidade de seletor.
 
 ---
 

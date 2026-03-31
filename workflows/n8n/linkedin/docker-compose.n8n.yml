@@ -1,0 +1,33 @@
+# Referência para deploy do n8n na VPS Hostinger.
+#
+# Uso recomendado: colar no Coolify como serviço "Docker Compose" ou recurso Docker
+# com domínio HTTPS (LinkedIn exige URL pública HTTPS no webhook).
+#
+# NÃO exponha 5678 em HTTP puro para produção — use proxy/TLS (Coolify ou Traefik).
+
+services:
+  n8n:
+    image: docker.n8n.io/n8nio/n8n:latest
+    restart: unless-stopped
+    ports:
+      - "5678:5678"
+    environment:
+      # Host público (sem protocolo) — alinhar ao domínio do Coolify
+      - N8N_HOST=${N8N_HOST:-n8n.example.com}
+      - N8N_PORT=5678
+      - N8N_PROTOCOL=https
+      # Obrigatório para webhooks estáveis (URL base que o n8n anuncia)
+      - WEBHOOK_URL=${WEBHOOK_URL}
+      # Gerar uma chave fixa e guardar no vault (nunca rotacionar sem re-criptografar credenciais)
+      - N8N_ENCRYPTION_KEY=${N8N_ENCRYPTION_KEY}
+      - GENERIC_TIMEZONE=America/Sao_Paulo
+      - TZ=America/Sao_Paulo
+      # Usados pelo workflow LinkedIn → Supabase (HTTP Request node lê $env.*)
+      - LINKEDIN_EDGE_FUNCTION_URL=${LINKEDIN_EDGE_FUNCTION_URL}
+      - LINKEDIN_WEBHOOK_SECRET=${LINKEDIN_WEBHOOK_SECRET}
+      - SUPABASE_ANON_KEY=${SUPABASE_ANON_KEY}
+    volumes:
+      - n8n_data:/home/node/.n8n
+
+volumes:
+  n8n_data:

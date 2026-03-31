@@ -77,6 +77,17 @@ Commits encontrados na janela `2026-03-25` a `2026-03-26` no monorepo local:
 - OpenClaw passa a ter padrao oficial de deploy em `Docker Compose` direto no Coolify.
 - Fica descartado, para este servico, o deploy via monorepo com submodulos privados.
 
+### Execucao de hoje (OpenClaw always-on via PM2)
+- Gateway identificado rodando em `18789`.
+- `gateway.bind` foi ajustado para `lan` (para permitir healthcheck por IP e acesso externo via proxy).
+- Servico supervisionado que ocupava a porta foi parado para eliminar conflito ao iniciar via PM2.
+- Gateway foi iniciado sob PM2 como processo `openclaw` (foreground supervisionado) na porta `18789`.
+- Healthchecks validados:
+  - `curl http://127.0.0.1:18789/health` => `health:200`
+  - `curl http://187.77.251.199:18789/health` => `health:200`
+- Persistencia garantida no boot da VPS com `pm2 save` + `pm2 startup` (systemd).
+- Ajuste de acesso operacional no Mac: aliases adicionados no `~/.zshrc` (ex.: `oclaw-ip`, `oclaw-logs`, `oclaw-status`) apontando para `187.77.251.199:18789`.
+
 ### Validacoes externas executadas no fechamento
 
 - `coolify.adventurelabs.com.br` -> `200`.
@@ -85,7 +96,7 @@ Commits encontrados na janela `2026-03-25` a `2026-03-26` no monorepo local:
 - Certificado atual de OpenClaw: `TRAEFIK DEFAULT CERT` (ainda sem emissao publica valida para o host).
 
 ### Proximo marco de aceite
-
+- Aguardar 24h de estabilidade do OpenClaw sempre-on (PM2 online + `health:200`) antes de publicar no Coolify com HTTPS.
 - Recurso `openclaw` criado no Coolify em tipo `Docker Compose` com SSL ativo e certificado valido (nao default).
 - Confirmacao final por navegador sem HSTS error.
 

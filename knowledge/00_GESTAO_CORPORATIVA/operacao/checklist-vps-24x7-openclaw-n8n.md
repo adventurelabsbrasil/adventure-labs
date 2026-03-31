@@ -46,3 +46,4 @@ status: ativo
 - [ ] Alias local de manutencao definido (`127.0.0.1`/porta local).
 - [ ] Alias de producao definido (`https://openclaw.adventurelabs.com.br`).
 - [ ] Automacoes externas usando apenas alias de producao.
+- [ ] Publicar via Coolify + HTTPS somente apos 24h de estabilidade (PM2 online + health:200).

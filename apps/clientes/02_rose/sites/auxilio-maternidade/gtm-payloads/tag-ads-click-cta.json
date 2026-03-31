@@ -1,0 +1,19 @@
+{
+  "name": "Ads Conversion - click_cta WhatsApp",
+  "type": "ads_conversion_tracking",
+  "parameter": [
+    {
+      "type": "template",
+      "key": "conversionId",
+      "value": "16549386051"
+    },
+    {
+      "type": "template",
+      "key": "conversionLabel",
+      "value": "REPLACE_WITH_CONVERSION_LABEL"
+    }
+  ],
+  "firingTriggerId": [
+    "REPLACE_WITH_TRIGGER_ID_CLICK_CTA"
+  ]
+}

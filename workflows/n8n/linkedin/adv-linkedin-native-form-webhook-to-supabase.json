@@ -43,114 +43,20 @@
             {
               "name": "x-webhook-secret",
               "value": "={{ $env.LINKEDIN_WEBHOOK_SECRET }}"
+            },
+            {
+              "name": "apikey",
+              "value": "={{ $env.SUPABASE_ANON_KEY }}"
+            },
+            {
+              "name": "Authorization",
+              "value": "={{ 'Bearer ' + $env.SUPABASE_ANON_KEY }}"
             }
           ]
         },
         "sendBody": true,
-        "bodyParameters": {
-          "parameters": [
-            {
-              "name": "lead_id",
-              "value": "={{ $json.lead_id }}"
-            },
-            {
-              "name": "form_id",
-              "value": "={{ $json.form_id }}"
-            },
-            {
-              "name": "form_name",
-              "value": "={{ $json.form_name }}"
-            },
-            {
-              "name": "campaign_id",
-              "value": "={{ $json.campaign_id }}"
-            },
-            {
-              "name": "adset_id",
-              "value": "={{ $json.adset_id }}"
-            },
-            {
-              "name": "ad_id",
-              "value": "={{ $json.ad_id }}"
-            },
-            {
-              "name": "source_platform",
-              "value": "linkedin"
-            },
-            {
-              "name": "source_channel",
-              "value": "paid-social"
-            },
-            {
-              "name": "linkedin_clid",
-              "value": "={{ $json.linkedin_clid }}"
-            },
-            {
-              "name": "li_fat_id",
-              "value": "={{ $json.li_fat_id }}"
-            },
-            {
-              "name": "gclid",
-              "value": "={{ $json.gclid }}"
-            },
-            {
-              "name": "fbclid",
-              "value": "={{ $json.fbclid }}"
-            },
-            {
-              "name": "utm_source",
-              "value": "={{ $json.utm_source }}"
-            },
-            {
-              "name": "utm_medium",
-              "value": "={{ $json.utm_medium }}"
-            },
-            {
-              "name": "utm_campaign",
-              "value": "={{ $json.utm_campaign }}"
-            },
-            {
-              "name": "utm_content",
-              "value": "={{ $json.utm_content }}"
-            },
-            {
-              "name": "utm_term",
-              "value": "={{ $json.utm_term }}"
-            },
-            {
-              "name": "full_name",
-              "value": "={{ $json.full_name }}"
-            },
-            {
-              "name": "first_name",
-              "value": "={{ $json.first_name }}"
-            },
-            {
-              "name": "last_name",
-              "value": "={{ $json.last_name }}"
-            },
-            {
-              "name": "email",
-              "value": "={{ $json.email }}"
-            },
-            {
-              "name": "phone",
-              "value": "={{ $json.phone }}"
-            },
-            {
-              "name": "role",
-              "value": "={{ $json.role }}"
-            },
-            {
-              "name": "company_name",
-              "value": "={{ $json.company_name }}"
-            },
-            {
-              "name": "message",
-              "value": "={{ $json.message }}"
-            }
-          ]
-        },
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json) }}",
         "options": {}
       },
       "id": "POST_Edge_Function",

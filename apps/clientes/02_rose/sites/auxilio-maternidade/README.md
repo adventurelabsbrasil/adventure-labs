@@ -2,7 +2,11 @@
 
 Landing de conversão responsiva para o serviço de **Auxílio-Maternidade** da Rose Portal Advocacia. Destinada a subdomínio de roseportaladvocacia.com.br. Site estático (HTML + CSS), sem formulário; todos os contatos são direcionados ao WhatsApp.
 
-**Google Ads (gtag.js)** instalado no `<head>` com ID `AW-16549386051`. Google Tag Manager não está em uso nesta LP.
+**Google Tag Manager** ativo no `<head>/<noscript>` com container `GTM-MN283T6L`.  
+A LP também publica eventos no `dataLayer` para operação de mídia:
+
+- `page_view` no carregamento da página;
+- `click_cta` em cliques de CTAs de WhatsApp.
 
 ---
 
