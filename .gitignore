@@ -16,6 +16,17 @@
 **/respostas-sigilosas*.md
 **/respostas-questionario*.md
 
+# Google OAuth / Service Account — nunca versionar
+client_secret*.json
+*-credentials.json
+service_account*.json
+token.json
+credentials.json
+
+# Lockfiles alternativos (apenas pnpm é permitido — ver docs/GOVERNANCA_LOCKFILES.md)
+package-lock.json
+yarn.lock
+
 # Temp e archive (clones pesados, sub-repos)
 _internal/temp/
 _internal/archive/*

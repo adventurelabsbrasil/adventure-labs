@@ -2,7 +2,7 @@
   "name": "@adventure-labs/config",
   "version": "0.0.1",
   "private": true,
-  "description": "Configurações compartilhadas (ESLint, TypeScript, etc.)",
+  "description": "[STUB] Configurações compartilhadas (ESLint, TypeScript) — sem implementação. Referência: @adventure-labs/benditta-meta-dashboard é o modelo a seguir para um package real.",
   "main": "index.js",
   "exports": {},
   "scripts": {}

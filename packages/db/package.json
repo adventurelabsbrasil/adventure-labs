@@ -2,7 +2,7 @@
   "name": "@adventure-labs/db",
   "version": "0.0.1",
   "private": true,
-  "description": "Schemas, migrations e utilitários de banco compartilhados",
+  "description": "[STUB] Schemas, migrations e types Supabase compartilhados — sem implementação. Próximo passo: centralizar tipos gerados pelo Supabase usados em múltiplos apps.",
   "main": "index.js",
   "exports": {},
   "scripts": {}

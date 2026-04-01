@@ -1,36 +1,70 @@
+# Adventure Labs — Submodules
+# Critério: apps com deploy próprio, CI independente ou repo externo → submodule
+# Apps internos sem deploy independente → workspace local em apps/clientes/ ou apps/labs/
+# Atualizar submodules: git submodule update --remote --merge
+
+# ─── Core Products ────────────────────────────────────────────────────────────
 [submodule "apps/core/admin"]
 	path = apps/core/admin
 	url = https://github.com/adventurelabsbrasil/admin.git
-[submodule "apps/labs/finfeed"]
-	path = apps/labs/finfeed
-	url = https://github.com/adventurelabsbrasil/finfeed.git
-[submodule "apps/core/elite"]
-	path = apps/core/elite
-	url = https://github.com/adventurelabsbrasil/elite.git
+	branch = main
+
 [submodule "apps/core/adventure"]
 	path = apps/core/adventure
 	url = https://github.com/adventurelabsbrasil/adventure.git
-[submodule "apps/clientes/01_lidera/lidera/space"]
-	path = apps/clientes/01_lidera/lidera/space
-	url = https://github.com/adventurelabsbrasil/lidera-space.git
-[submodule "apps/clientes/02_rose/roseportaladvocacia"]
-	path = apps/clientes/02_rose/roseportaladvocacia
-	url = https://github.com/adventurelabsbrasil/roseportaladvocacia.git
-[submodule "apps/clientes/04_young/young-emp"]
-	path = apps/clientes/04_young/young-emp
-	url = https://github.com/adventurelabsbrasil/young-emp.git
-[submodule "apps/clientes/04_young/ranking-vendas"]
-	path = apps/clientes/04_young/ranking-vendas
-	url = https://github.com/rodrigoribasyoung/ranking-vendas.git
-[submodule "apps/clientes/04_young/young-talents"]
-	path = apps/clientes/04_young/young-talents
-	url = https://github.com/adventurelabsbrasil/young-talents.git
-[submodule "apps/clientes/01_lidera/lidera/skills"]
-	path = apps/clientes/01_lidera/lidera/skills
-	url = https://github.com/adventurelabsbrasil/lidera-skills.git
+	branch = main
+
+[submodule "apps/core/elite"]
+	path = apps/core/elite
+	url = https://github.com/adventurelabsbrasil/elite.git
+	branch = main
+
+# ─── Labs (avaliar migração para local se inativos) ───────────────────────────
+[submodule "apps/labs/finfeed"]
+	path = apps/labs/finfeed
+	url = https://github.com/adventurelabsbrasil/finfeed.git
+	branch = main
+
 [submodule "apps/labs/whatsapp-worker"]
 	path = apps/labs/whatsapp-worker
 	url = https://github.com/adventurelabsbrasil/adv-zazu-whatsapp-worker.git
+	branch = main
+
+# ─── Cliente 01 — Lidera ──────────────────────────────────────────────────────
+[submodule "apps/clientes/01_lidera/lidera/space"]
+	path = apps/clientes/01_lidera/lidera/space
+	url = https://github.com/adventurelabsbrasil/lidera-space.git
+	branch = main
+
+[submodule "apps/clientes/01_lidera/lidera/skills"]
+	path = apps/clientes/01_lidera/lidera/skills
+	url = https://github.com/adventurelabsbrasil/lidera-skills.git
+	branch = main
+
+# ─── Cliente 02 — Rose ────────────────────────────────────────────────────────
+[submodule "apps/clientes/02_rose/roseportaladvocacia"]
+	path = apps/clientes/02_rose/roseportaladvocacia
+	url = https://github.com/adventurelabsbrasil/roseportaladvocacia.git
+	branch = main
+
+# ─── Cliente 04 — Young ───────────────────────────────────────────────────────
+[submodule "apps/clientes/04_young/young-talents"]
+	path = apps/clientes/04_young/young-talents
+	url = https://github.com/adventurelabsbrasil/young-talents.git
+	branch = main
+
+[submodule "apps/clientes/04_young/young-emp"]
+	path = apps/clientes/04_young/young-emp
+	url = https://github.com/adventurelabsbrasil/young-emp.git
+	branch = main
+
+[submodule "apps/clientes/04_young/ranking-vendas"]
+	path = apps/clientes/04_young/ranking-vendas
+	url = https://github.com/rodrigoribasyoung/ranking-vendas.git
+	branch = main
+
+# ─── Tools ────────────────────────────────────────────────────────────────────
 [submodule "tools/dino"]
 	path = tools/dino
 	url = https://github.com/adventurelabsbrasil/dino.git
+	branch = main

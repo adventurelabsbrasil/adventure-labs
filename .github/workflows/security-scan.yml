@@ -1,0 +1,73 @@
+name: Security Scan
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  gitleaks:
+    name: Detectar credenciais expostas (Gitleaks)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # histórico completo para scan full
+
+      - name: Run Gitleaks
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # GITLEAKS_LICENSE: ${{ secrets.GITLEAKS_LICENSE }}  # necessário para repos privados em orgs
+
+  governance:
+    name: Verificar governança do repo
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: latest
+
+      - name: Verificar package-lock.json proibidos
+        run: |
+          FOUND=$(find . -name "package-lock.json" \
+            -not -path "./.git/*" \
+            -not -path "*/node_modules/*" \
+            -not -path "*/.next/*" | head -20)
+          if [ -n "$FOUND" ]; then
+            echo "❌ package-lock.json encontrado(s) — apenas pnpm-lock.yaml é permitido:"
+            echo "$FOUND"
+            exit 1
+          fi
+          echo "✅ Nenhum package-lock.json encontrado."
+
+      - name: Verificar yarn.lock proibidos
+        run: |
+          FOUND=$(find . -name "yarn.lock" \
+            -not -path "./.git/*" \
+            -not -path "*/node_modules/*" | head -10)
+          if [ -n "$FOUND" ]; then
+            echo "❌ yarn.lock encontrado(s) — apenas pnpm-lock.yaml é permitido:"
+            echo "$FOUND"
+            exit 1
+          fi
+          echo "✅ Nenhum yarn.lock encontrado."
+
+      - name: Verificar arquivos proibidos
+        run: |
+          FOUND=$(find . \
+            -not -path "./.git/*" \
+            -not -path "*/node_modules/*" \
+            \( -name "client_secret*.json" \
+               -o -name "service_account*.json" \
+               -o -name "token.json" \) | head -10)
+          if [ -n "$FOUND" ]; then
+            echo "❌ Arquivos de credencial encontrados no repo:"
+            echo "$FOUND"
+            exit 1
+          fi
+          echo "✅ Nenhum arquivo de credencial encontrado."

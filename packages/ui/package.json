@@ -2,7 +2,7 @@
   "name": "@adventure-labs/ui",
   "version": "0.0.1",
   "private": true,
-  "description": "Componentes UI compartilhados entre apps Adventure Labs",
+  "description": "[STUB] Componentes UI compartilhados — sem implementação. Cada app usa seus próprios componentes por enquanto. Próximo passo: migrar componentes usados em ≥2 apps.",
   "main": "index.js",
   "exports": {},
   "scripts": {}
