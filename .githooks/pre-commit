@@ -20,44 +20,34 @@ if [ -z "$STAGED" ]; then
   exit 0
 fi
 
-# ─── Padrões de credenciais proibidas ──────────────────────────────────────
-declare -A PATTERNS
-PATTERNS["Google OAuth Client Secret"]="GOCSPX-[A-Za-z0-9_-]+"
-PATTERNS["Google API Key"]="AIzaSy[A-Za-z0-9_-]{33}"
-PATTERNS["Supabase JWT (anon/service_role)"]="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+"
-PATTERNS["OpenAI / Anthropic secret key"]="sk-[A-Za-z0-9]{20,}"
-PATTERNS["Supabase key em .env.example"]="SUPABASE_(ANON|SERVICE)_KEY=ey[A-Za-z0-9]"
-PATTERNS["Gemini API key em .env.example"]="GEMINI_API_KEY=AIzaSy"
-
-for FILE in $STAGED; do
-  # Pular binários e arquivos deletados
-  [ -f "$FILE" ] || continue
-
-  for LABEL in "${!PATTERNS[@]}"; do
-    PATTERN="${PATTERNS[$LABEL]}"
-    if git diff --cached -- "$FILE" | grep -qE "\+.*${PATTERN}"; then
-      echo -e "${RED}❌ BLOQUEADO: ${LABEL} detectado em '${FILE}'${NC}"
+# ─── Padrões de credenciais proibidas (bash 3.x compat) ─────────────────────
+check_pattern() {
+  local label="$1"
+  local pattern="$2"
+  for FILE in $STAGED; do
+    [ -f "$FILE" ] || continue
+    if git diff --cached -- "$FILE" | grep -qE "\+.*${pattern}"; then
+      echo -e "${RED}❌ BLOQUEADO: ${label} detectado em '${FILE}'${NC}"
       BLOCKED=1
     fi
   done
-done
+}
 
-# ─── Arquivos proibidos ─────────────────────────────────────────────────────
-FORBIDDEN_PATTERNS=(
-  "client_secret.*\.json"
-  "service_account.*\.json"
-  "^credentials\.json$"
-  "^token\.json$"
-)
+check_pattern "Google OAuth Client Secret" "GOCSPX-[A-Za-z0-9_-]+"
+check_pattern "Google API Key"             "AIzaSy[A-Za-z0-9_-]{33}"
+check_pattern "JWT (Supabase/genérico)"    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9\.[A-Za-z0-9_-]+"
+check_pattern "OpenAI / Anthropic key"     "sk-[A-Za-z0-9]{20,}"
+check_pattern "Supabase key em .env"       "SUPABASE_(ANON|SERVICE)_KEY=ey[A-Za-z0-9]"
+# Padrão dividido para não auto-acionar o hook ao commitar este arquivo
+_GEMINI_PAT="GEMINI_API_KEY=AIza"; check_pattern "Gemini key em .env" "${_GEMINI_PAT}Sy"
 
+# ─── Arquivos proibidos ───────────────────────────────────────────────────────
 for FILE in $STAGED; do
   BASENAME=$(basename "$FILE")
-  for PAT in "${FORBIDDEN_PATTERNS[@]}"; do
-    if echo "$BASENAME" | grep -qE "$PAT"; then
-      echo -e "${RED}❌ BLOQUEADO: arquivo proibido staged: '${FILE}'${NC}"
-      BLOCKED=1
-    fi
-  done
+  if echo "$BASENAME" | grep -qE "(client_secret.*\.json|service_account.*\.json|^credentials\.json$|^token\.json$)"; then
+    echo -e "${RED}❌ BLOQUEADO: arquivo de credencial proibido: '${FILE}'${NC}"
+    BLOCKED=1
+  fi
 done
 
 if [ "$BLOCKED" -eq 1 ]; then
