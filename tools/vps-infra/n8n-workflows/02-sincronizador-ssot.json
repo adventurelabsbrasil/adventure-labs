@@ -1,0 +1,143 @@
+{
+  "name": "Sincronizador SSOT — Google Drive → Supabase Vector",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [{ "field": "hours", "hoursInterval": 6 }]
+        }
+      },
+      "id": "schedule-trigger",
+      "name": "Schedule (6h)",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [240, 300]
+    },
+    {
+      "parameters": {
+        "operation": "list",
+        "driveId": { "__rl": true, "mode": "list", "value": "My Drive" },
+        "folderId": { "__rl": true, "mode": "list", "value": "root" },
+        "filter": "name contains 'Oficializar'",
+        "options": { "fields": "files(id,name,mimeType,modifiedTime)" }
+      },
+      "id": "gdrive-list-folder",
+      "name": "Google Drive — Pasta Oficializar",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [460, 300],
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "google-drive-oauth",
+          "name": "Google Drive — Adventure Labs"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": { "__rl": true, "mode": "id", "value": "={{ $json.id }}" },
+        "options": {}
+      },
+      "id": "gdrive-download",
+      "name": "Download Arquivo",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [680, 300],
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "google-drive-oauth",
+          "name": "Google Drive — Adventure Labs"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Converte o binário para texto markdown\nconst item = $input.first();\nconst fileName = $('Google Drive — Pasta Oficializar').item.json.name || 'documento';\nconst mimeType = $('Google Drive — Pasta Oficializar').item.json.mimeType || '';\nconst modifiedTime = $('Google Drive — Pasta Oficializar').item.json.modifiedTime || new Date().toISOString();\n\nlet content = '';\nif (item.binary?.data) {\n  content = Buffer.from(item.binary.data.data, 'base64').toString('utf-8');\n} else if (item.json?.data) {\n  content = item.json.data;\n}\n\n// Divide em chunks de ~2000 chars para embeddings\nconst chunkSize = 2000;\nconst overlap = 200;\nconst chunks = [];\nfor (let i = 0; i < content.length; i += chunkSize - overlap) {\n  chunks.push(content.slice(i, i + chunkSize));\n}\n\nreturn chunks.map((chunk, idx) => ({\n  json: {\n    title: `${fileName} [parte ${idx + 1}/${chunks.length}]`,\n    content: chunk,\n    source: 'google_drive',\n    source_url: `gdrive://${$('Google Drive — Pasta Oficializar').item.json.id}`,\n    tags: ['ssot', 'oficializar', fileName.toLowerCase().replace(/\\s+/g, '-')],\n    modified_time: modifiedTime\n  }\n}));"
+      },
+      "id": "parse-to-chunks",
+      "name": "Converter para Chunks",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [900, 300]
+    },
+    {
+      "parameters": {
+        "url": "https://generativelanguage.googleapis.com/v1beta/models/text-embedding-004:embedContent",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpQueryAuth",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [{ "name": "key", "value": "={{ $credentials.geminiApiKey }}" }]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            { "name": "model", "value": "models/text-embedding-004" },
+            { "name": "content", "value": "={ \"parts\": [{ \"text\": \"{{ $json.content }}\" }] }" }
+          ]
+        },
+        "options": { "timeout": 30000 }
+      },
+      "id": "gemini-embed",
+      "name": "Gemini — Embedding",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1120, 300]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "INSERT INTO public.knowledge_base (title, content, source, source_url, tags, embedding)\nVALUES (\n  '{{ $('Converter para Chunks').item.json.title }}',\n  '{{ $('Converter para Chunks').item.json.content.replace(/'/g, \"''\") }}',\n  'google_drive',\n  '{{ $('Converter para Chunks').item.json.source_url }}',\n  ARRAY[{{ $('Converter para Chunks').item.json.tags.map(t => `'${t}'`).join(',') }}],\n  '[{{ $json.embedding.values.join(',') }}]'::vector\n)\nON CONFLICT DO NOTHING\nRETURNING id;",
+        "options": {}
+      },
+      "id": "upsert-supabase",
+      "name": "Upsert Supabase Vector",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [1340, 300],
+      "credentials": {
+        "postgres": {
+          "id": "supabase-postgres",
+          "name": "Supabase — adventurelabsbrasil"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\nreturn [{ json: { synced: items.length, timestamp: new Date().toISOString(), status: 'ok' } }];"
+      },
+      "id": "summary",
+      "name": "Sumário",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1560, 300]
+    }
+  ],
+  "connections": {
+    "Schedule (6h)": {
+      "main": [[{ "node": "Google Drive — Pasta Oficializar", "type": "main", "index": 0 }]]
+    },
+    "Google Drive — Pasta Oficializar": {
+      "main": [[{ "node": "Download Arquivo", "type": "main", "index": 0 }]]
+    },
+    "Download Arquivo": {
+      "main": [[{ "node": "Converter para Chunks", "type": "main", "index": 0 }]]
+    },
+    "Converter para Chunks": {
+      "main": [[{ "node": "Gemini — Embedding", "type": "main", "index": 0 }]]
+    },
+    "Gemini — Embedding": {
+      "main": [[{ "node": "Upsert Supabase Vector", "type": "main", "index": 0 }]]
+    },
+    "Upsert Supabase Vector": {
+      "main": [[{ "node": "Sumário", "type": "main", "index": 0 }]]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "saveDataSuccessExecution": "all",
+    "saveExecutionProgress": true
+  },
+  "tags": ["adventure-labs", "ssot", "rag", "google-drive"]
+}
