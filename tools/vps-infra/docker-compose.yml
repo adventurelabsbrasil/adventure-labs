@@ -136,20 +136,20 @@ services:
       retries: 3
 
   # ─── Evolution API (api-wa.adventurelabs.com.br) ───
-  # Fix: CACHE_REDIS_ENABLED=true é obrigatório para Baileys iniciar (WA blocklist em VPS)
-  # Usa o mesmo Redis do Infisical na database 2 (Infisical usa db 0)
+  # v2.3.7 compilado nativamente na VPS (x86_64) — usa Baileys 7.0.0-rc.9
+  # CACHE_REDIS_ENABLED=true obrigatório para Baileys iniciar; usa Redis db2
   evolution-api:
-    image: atendai/evolution-api:latest
+    image: evolution-api:2.3.7
     container_name: adventure-evolution
     restart: unless-stopped
     networks:
       - adventure_network
     ports:
-      - "8081:8081"
+      - "8081:8080"
     volumes:
       - evolution_data:/evolution/instances
     environment:
-      - SERVER_PORT=8081
+      - SERVER_PORT=8080
       - SERVER_URL=https://api-wa.adventurelabs.com.br
       - AUTHENTICATION_TYPE=apikey
       - AUTHENTICATION_API_KEY=${EVOLUTION_API_KEY}
@@ -165,13 +165,13 @@ services:
       - DATABASE_SAVE_DATA_CHATS=true
       - LOG_LEVEL=ERROR,WARN,LOG,INFO
       - LOG_BAILEYS=warn
-      - TZ=America/Sao_Paulo
-      - DEL_INSTANCE=false
-      - LANGUAGE=pt-BR
       - CACHE_REDIS_ENABLED=true
       - CACHE_REDIS_URI=redis://infisical-redis:6379/2
       - CACHE_REDIS_PREFIX_KEY=evolution
       - CACHE_REDIS_SAVE_INSTANCES=false
+      - DEL_INSTANCE=false
+      - LANGUAGE=pt-BR
+      - TZ=America/Sao_Paulo
     depends_on:
       - adventure-postgres
       - infisical-redis
@@ -180,7 +180,7 @@ services:
         limits:
           memory: 768m
     healthcheck:
-      test: ["CMD-SHELL", "wget --spider -q http://localhost:8081/ || exit 1"]
+      test: ["CMD-SHELL", "wget --spider -q http://localhost:8080/ 2>/dev/null || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 3
