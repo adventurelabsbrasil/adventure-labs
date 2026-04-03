@@ -1,0 +1,163 @@
+{
+  "name": "Transcrição de Áudio WhatsApp → Asana",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "evolution-webhook",
+        "responseMode": "onReceived",
+        "options": {}
+      },
+      "id": "webhook-evolution",
+      "name": "Webhook Evolution API",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [240, 300],
+      "webhookId": "evolution-webhook"
+    },
+    {
+      "parameters": {
+        "jsCode": "const body = $input.first().json;\n// Aceitar apenas audioMessage ou audioOgg\nconst msgType = body?.data?.messageType || body?.event || '';\nconst isAudio = ['audioMessage', 'audioOgg', 'pttMessage'].includes(msgType) ||\n  body?.data?.message?.audioMessage ||\n  body?.data?.message?.pttMessage;\n\nif (!isAudio) {\n  return [{ json: { skip: true, reason: 'not audio', type: msgType } }];\n}\n\nconst from = body?.data?.key?.remoteJid || body?.data?.pushName || 'unknown';\nconst mediaUrl = body?.data?.message?.audioMessage?.url || \n                 body?.data?.message?.pttMessage?.url || '';\nconst mediaBase64 = body?.data?.message?.audioMessage?.base64 || '';\nconst instanceName = body?.instance || 'adventure';\n\nreturn [{ json: { isAudio: true, from, mediaUrl, mediaBase64, instanceName, rawBody: body } }];"
+      },
+      "id": "filter-audio",
+      "name": "Filtrar Áudio",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [{ "value1": "={{ $json.isAudio }}", "value2": true }]
+        }
+      },
+      "id": "if-audio",
+      "name": "É Áudio?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [680, 300]
+    },
+    {
+      "parameters": {
+        "url": "=https://api-wa.adventurelabs.com.br/chat/getBase64FromMediaMessage/{{ $json.instanceName }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [{ "name": "apikey", "value": "={{ $credentials.evolutionApiKey }}" }]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            { "name": "message", "value": "={{ $json.rawBody.data.key }}" },
+            { "name": "convertToMp4", "value": false }
+          ]
+        },
+        "options": { "timeout": 30000 }
+      },
+      "id": "download-audio",
+      "name": "Download Base64 Áudio",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [900, 200]
+    },
+    {
+      "parameters": {
+        "url": "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpQueryAuth",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [{ "name": "key", "value": "={{ $credentials.geminiApiKey }}" }]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "contents",
+              "value": "=[{\"parts\":[{\"inline_data\":{\"mime_type\":\"audio/ogg\",\"data\":\"{{ $json.base64 }}\"}},{\"text\":\"Transcreva este áudio em português brasileiro. Depois, gere um resumo executivo em 2-3 frases destacando os pontos de ação mais importantes. Formato:\\n\\n📝 TRANSCRIÇÃO:\\n[texto completo]\\n\\n✅ RESUMO EXECUTIVO:\\n[2-3 frases com os principais pontos de ação]\"}]}]"
+            }
+          ]
+        },
+        "options": { "timeout": 60000 }
+      },
+      "id": "gemini-transcribe",
+      "name": "Gemini — Transcrever + Resumir",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1120, 200]
+    },
+    {
+      "parameters": {
+        "jsCode": "const geminiResp = $input.first().json;\nconst transcricao = geminiResp?.candidates?.[0]?.content?.parts?.[0]?.text || 'Não foi possível transcrever.';\nconst from = $('Filtrar Áudio').item.json.from;\nconst timestamp = new Date().toISOString();\n\nreturn [{ json: { transcricao, from, timestamp, summary: transcricao.split('✅ RESUMO EXECUTIVO:')[1]?.trim() || transcricao.substring(0, 200) } }];"
+      },
+      "id": "extract-transcricao",
+      "name": "Extrair Transcrição",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1340, 200]
+    },
+    {
+      "parameters": {
+        "operation": "createTask",
+        "workspaceId": "={{ $credentials.asanaWorkspaceId }}",
+        "name": "=🎙️ Áudio transcrito — {{ $json.from }} ({{ new Date($json.timestamp).toLocaleString('pt-BR') }})",
+        "additionalFields": {
+          "notes": "=De: {{ $json.from }}\nData: {{ new Date($json.timestamp).toLocaleString('pt-BR') }}\n\n{{ $json.transcricao }}",
+          "projects": []
+        }
+      },
+      "id": "asana-task",
+      "name": "Criar Task no Asana",
+      "type": "n8n-nodes-base.asana",
+      "typeVersion": 1,
+      "position": [1560, 200],
+      "credentials": {
+        "asanaApi": {
+          "id": "asana-api",
+          "name": "Asana — Adventure Labs"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={ \"ok\": true }"
+      },
+      "id": "respond-ok",
+      "name": "Responder 200",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [1560, 420]
+    }
+  ],
+  "connections": {
+    "Webhook Evolution API": {
+      "main": [[{ "node": "Filtrar Áudio", "type": "main", "index": 0 }]]
+    },
+    "Filtrar Áudio": {
+      "main": [[{ "node": "É Áudio?", "type": "main", "index": 0 }]]
+    },
+    "É Áudio?": {
+      "main": [
+        [{ "node": "Download Base64 Áudio", "type": "main", "index": 0 }],
+        [{ "node": "Responder 200", "type": "main", "index": 0 }]
+      ]
+    },
+    "Download Base64 Áudio": {
+      "main": [[{ "node": "Gemini — Transcrever + Resumir", "type": "main", "index": 0 }]]
+    },
+    "Gemini — Transcrever + Resumir": {
+      "main": [[{ "node": "Extrair Transcrição", "type": "main", "index": 0 }]]
+    },
+    "Extrair Transcrição": {
+      "main": [[{ "node": "Criar Task no Asana", "type": "main", "index": 0 }]]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "saveDataSuccessExecution": "all",
+    "saveExecutionProgress": true
+  },
+  "tags": ["adventure-labs", "whatsapp", "transcricao", "asana"]
+}

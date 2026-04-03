@@ -1,0 +1,194 @@
+{
+  "name": "Isca — Roteirista de Vídeo",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "roteirista-video",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "id": "webhook-trigger",
+      "name": "Webhook LP",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [240, 300],
+      "webhookId": "roteirista-video"
+    },
+    {
+      "parameters": {
+        "jsCode": "const body = $input.first().json.body || $input.first().json;\nconst whatsapp = (body.whatsapp || '').replace(/\\D/g, '');\nconst url = (body.url || '').trim();\n\nif (!whatsapp || whatsapp.length < 10) {\n  throw new Error('WhatsApp inválido');\n}\nif (!url || !url.startsWith('http')) {\n  throw new Error('URL inválida');\n}\n\nreturn [{ json: { whatsapp, url, name: body.name || '', source: body.source || 'lp_martech', utm_source: body.utm_source || '', utm_medium: body.utm_medium || '', utm_campaign: body.utm_campaign || '' } }];"
+      },
+      "id": "validate-input",
+      "name": "Validar Input",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "url": "=https://r.jina.ai/{{ $json.url }}",
+        "options": {
+          "headers": {
+            "entries": [
+              { "name": "Accept", "value": "text/plain" },
+              { "name": "X-Return-Format", "value": "text" }
+            ]
+          },
+          "timeout": 30000
+        }
+      },
+      "id": "jina-scraper",
+      "name": "Jina.ai Scraping",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [680, 300]
+    },
+    {
+      "parameters": {
+        "url": "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpQueryAuth",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            { "name": "key", "value": "={{ $credentials.geminiApiKey }}" }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "contents",
+              "value": "=[{\"parts\":[{\"text\":\"Você é um especialista em marketing de conteúdo brasileiro. Com base no conteúdo abaixo extraído da URL {{ $('Validar Input').item.json.url }}, crie um ROTEIRO DE VÍDEO CURTO (30-60 segundos) para Reels/TikTok que seja persuasivo, com gancho forte nos primeiros 3 segundos, e que gere curiosidade. Formato:\\n\\n🎬 GANCHO (0-3s):\\n[texto]\\n\\n📢 DESENVOLVIMENTO (3-25s):\\n[texto]\\n\\n💡 CTA (25-30s):\\n[texto]\\n\\nConteúdo da página:\\n{{ $json.data.substring(0, 3000) }}\"}]}]"
+            }
+          ]
+        },
+        "options": { "timeout": 60000 }
+      },
+      "id": "gemini-roteiro",
+      "name": "Gemini — Gerar Roteiro",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [900, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "const geminiResp = $input.first().json;\nconst roteiro = geminiResp?.candidates?.[0]?.content?.parts?.[0]?.text || 'Não foi possível gerar o roteiro. Tente novamente.';\nconst input = $('Validar Input').item.json;\n\nreturn [{ json: { ...input, roteiro, scrape_url: input.url } }];"
+      },
+      "id": "extract-roteiro",
+      "name": "Extrair Roteiro",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1120, 300]
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "schema": "public",
+        "table": "crm_leads",
+        "columns": "whatsapp, name, source, utm_source, utm_medium, utm_campaign, input_url, ai_output, status",
+        "additionalFields": {}
+      },
+      "id": "save-supabase",
+      "name": "Salvar no Supabase",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [1340, 300],
+      "credentials": {
+        "postgres": {
+          "id": "supabase-postgres",
+          "name": "Supabase — adventurelabsbrasil"
+        }
+      },
+      "parameters": {
+        "operation": "insert",
+        "schema": "public",
+        "table": "crm_leads",
+        "dataMode": "defineBelow",
+        "valuesToSend": {
+          "values": [
+            { "column": "whatsapp", "value": "={{ $json.whatsapp }}" },
+            { "column": "name", "value": "={{ $json.name }}" },
+            { "column": "source", "value": "={{ $json.source }}" },
+            { "column": "utm_source", "value": "={{ $json.utm_source }}" },
+            { "column": "utm_medium", "value": "={{ $json.utm_medium }}" },
+            { "column": "utm_campaign", "value": "={{ $json.utm_campaign }}" },
+            { "column": "input_url", "value": "={{ $json.url }}" },
+            { "column": "ai_output", "value": "={{ $json.roteiro }}" },
+            { "column": "status", "value": "new" }
+          ]
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "=https://api-wa.adventurelabs.com.br/message/sendText/adventure",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "apikey", "value": "={{ $credentials.evolutionApiKey }}" }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            { "name": "number", "value": "=55{{ $('Extrair Roteiro').item.json.whatsapp }}" },
+            {
+              "name": "text",
+              "value": "=🎬 *Seu Roteiro de Vídeo chegou!*\n\nOlá{{ $('Extrair Roteiro').item.json.name ? ', ' + $('Extrair Roteiro').item.json.name : '' }}! Aqui está o roteiro criado para {{ $('Extrair Roteiro').item.json.url }}:\n\n{{ $('Extrair Roteiro').item.json.roteiro }}\n\n---\n_Gerado por Adventure Labs • adventure.com.br_"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "whatsapp-send",
+      "name": "Enviar via WhatsApp",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1560, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{ json: { success: true, message: 'Roteiro enviado via WhatsApp!', whatsapp: $('Extrair Roteiro').item.json.whatsapp } }];"
+      },
+      "id": "response",
+      "name": "Resposta LP",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1780, 300]
+    }
+  ],
+  "connections": {
+    "Webhook LP": {
+      "main": [[{ "node": "Validar Input", "type": "main", "index": 0 }]]
+    },
+    "Validar Input": {
+      "main": [[{ "node": "Jina.ai Scraping", "type": "main", "index": 0 }]]
+    },
+    "Jina.ai Scraping": {
+      "main": [[{ "node": "Gemini — Gerar Roteiro", "type": "main", "index": 0 }]]
+    },
+    "Gemini — Gerar Roteiro": {
+      "main": [[{ "node": "Extrair Roteiro", "type": "main", "index": 0 }]]
+    },
+    "Extrair Roteiro": {
+      "main": [[{ "node": "Salvar no Supabase", "type": "main", "index": 0 }]]
+    },
+    "Salvar no Supabase": {
+      "main": [[{ "node": "Enviar via WhatsApp", "type": "main", "index": 0 }]]
+    },
+    "Enviar via WhatsApp": {
+      "main": [[{ "node": "Resposta LP", "type": "main", "index": 0 }]]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "saveDataSuccessExecution": "all",
+    "saveExecutionProgress": true,
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "tags": ["adventure-labs", "isca", "whatsapp"]
+}
