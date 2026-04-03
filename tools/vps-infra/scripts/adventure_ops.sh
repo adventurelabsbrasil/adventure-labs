@@ -65,7 +65,27 @@ docker run --rm \
   alpine sh -c "tar -czf /backup/evolution_${DATE}.tar.gz -C /source . 2>/dev/null; true" 2>>"$LOG_FILE" || true
 log "Backup Evolution: OK"
 
-# 5. Verificar saúde dos containers
+# 5. Backup Cérebro Agentes (Git Auto-Commit)
+log "Fazendo auto-commit dos agentes e configurações..."
+cd /opt/adventure-labs || log "Diretório /opt/adventure-labs não encontrado para backup git"
+if [ -d "/opt/adventure-labs/.git" ]; then
+  # Adiciona mudanças em agents/, knowledge/, tools/, e scripts/
+  git add agents/ knowledge/ tools/ scripts/ 2>>"$LOG_FILE" || true
+  
+  # Verifica se tem algo a comitar
+  if ! git diff --cached --quiet; then
+    git commit -m "chore(backup): auto-save diário de agentes e configs [skip ci]" 2>>"$LOG_FILE" || true
+    # Se quiser forçar o push: 
+    # git push origin main 2>>"$LOG_FILE" || log "Falha no git push. Commit salvo localmente."
+    log "Auto-commit Git: OK (Novas mudanças salvas localmente)"
+  else
+    log "Auto-commit Git: Nenhuma alteração nos agentes detectada."
+  fi
+else
+  log "Auto-commit Git: Ignorado (/opt/adventure-labs não é um repositório git)"
+fi
+
+# 6. Verificar saúde dos containers
 log "Verificando saúde dos containers..."
 UNHEALTHY=""
 for container in adventure-n8n adventure-metabase adventure-uptime adventure-evolution adventure-infisical; do
@@ -79,15 +99,15 @@ if [[ -n "$UNHEALTHY" ]]; then
   notify_telegram "⚠️ <b>Adventure Labs — Containers com problema</b>%0A$(date)%0AProblema:$UNHEALTHY"
 fi
 
-# 6. Limpar backups antigos (manter 7 dias)
+# 7. Limpar backups antigos (manter 7 dias)
 log "Limpando backups antigos (>7 dias)..."
 find "$BACKUP_DIR" -name "*.sql.gz" -mtime +7 -delete 2>/dev/null || true
 find "$BACKUP_DIR" -name "*.tar.gz" -mtime +7 -delete 2>/dev/null || true
 find "$BACKUP_DIR" -name "ops_*.log" -mtime +14 -delete 2>/dev/null || true
 
-# 7. Sumário
+# 8. Sumário
 TOTAL=$(du -sh "$BACKUP_DIR" | cut -f1)
 log "=== Backup concluído. Total em disco: $TOTAL ==="
-notify_telegram "✅ <b>Adventure Labs — Backup OK</b>%0A$(date)%0APostgres + Metabase + n8n + Evolution%0ADisco usado: $TOTAL"
+notify_telegram "✅ <b>Adventure Labs — Backup OK</b>%0A$(date)%0APostgres + Metabase + n8n + Evolution + Git Agentes%0ADisco usado: $TOTAL"
 
 exit 0
