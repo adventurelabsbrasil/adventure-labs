@@ -90,7 +90,7 @@ services:
         limits:
           memory: 256m
 
-  # ─── Infisical Redis ───
+  # ─── Infisical Redis (shared: Infisical db0, Evolution db2) ───
   infisical-redis:
     image: redis:7-alpine
     container_name: adventure-infisical-redis
@@ -136,6 +136,8 @@ services:
       retries: 3
 
   # ─── Evolution API (api-wa.adventurelabs.com.br) ───
+  # Fix: CACHE_REDIS_ENABLED=true é obrigatório para Baileys iniciar (WA blocklist em VPS)
+  # Usa o mesmo Redis do Infisical na database 2 (Infisical usa db 0)
   evolution-api:
     image: atendai/evolution-api:latest
     container_name: adventure-evolution
@@ -150,6 +152,9 @@ services:
       - SERVER_PORT=8081
       - SERVER_URL=https://api-wa.adventurelabs.com.br
       - AUTHENTICATION_TYPE=apikey
+      - AUTHENTICATION_API_KEY=${EVOLUTION_API_KEY}
+      - QRCODE_LIMIT=30
+      - QRCODE_EXPIRATION_LIMIT=60
       - DATABASE_PROVIDER=postgresql
       - DATABASE_CONNECTION_URI=postgresql://infisical:${POSTGRES_PASSWORD}@adventure-postgres:5432/evolution
       - DATABASE_CONNECTION_CLIENT_NAME=evolution_exchange
@@ -158,16 +163,22 @@ services:
       - DATABASE_SAVE_MESSAGE_UPDATE=true
       - DATABASE_SAVE_DATA_CONTACTS=true
       - DATABASE_SAVE_DATA_CHATS=true
-      - LOG_LEVEL=WARN
+      - LOG_LEVEL=ERROR,WARN,LOG,INFO
+      - LOG_BAILEYS=warn
       - TZ=America/Sao_Paulo
       - DEL_INSTANCE=false
       - LANGUAGE=pt-BR
+      - CACHE_REDIS_ENABLED=true
+      - CACHE_REDIS_URI=redis://infisical-redis:6379/2
+      - CACHE_REDIS_PREFIX_KEY=evolution
+      - CACHE_REDIS_SAVE_INSTANCES=false
     depends_on:
       - adventure-postgres
+      - infisical-redis
     deploy:
       resources:
         limits:
-          memory: 512m
+          memory: 768m
     healthcheck:
       test: ["CMD-SHELL", "wget --spider -q http://localhost:8081/ || exit 1"]
       interval: 30s
