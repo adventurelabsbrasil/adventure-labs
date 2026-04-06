@@ -264,6 +264,11 @@
           click_url: href,
           page_path: window.location.pathname
         });
+        window.dataLayer.push({
+          event: "whatsapp_conversion",
+          button_location: "landing_page_maternidade",
+          service: "auxilio_maternidade"
+        });
       });
     })();
   </script>
