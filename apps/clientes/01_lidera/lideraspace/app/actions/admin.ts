@@ -169,14 +169,18 @@ export async function updateLesson(
   const supabase = await createClient();
 
   const title = formData.get("title") as string;
-  const type = formData.get("type") as "video" | "doc" | "page";
+  const type = formData.get("type") as "video" | "doc" | "page" | "embed" | "link";
   const video_url = (formData.get("video_url") as string) || null;
+  const embed_url = (formData.get("embed_url") as string) || null;
   const content_md = (formData.get("content_md") as string) || null;
   const material_url = (formData.get("material_url") as string) || null;
+  const blocksRaw = formData.get("content_blocks") as string;
+  let content_blocks = [];
+  try { content_blocks = JSON.parse(blocksRaw || "[]"); } catch {}
 
   const { error } = await supabase
     .from("lms_lessons")
-    .update({ title, type, video_url, content_md, material_url })
+    .update({ title, type, video_url, embed_url, content_md, content_blocks, material_url })
     .eq("id", lessonId);
 
   if (error) throw new Error(error.message);
@@ -184,6 +188,25 @@ export async function updateLesson(
   revalidatePath(`/dashboard/admin/programs/${programId}`);
   revalidatePath(`/dashboard/admin/programs/${programId}/lessons/${lessonId}/edit`);
   redirect(`/dashboard/admin/programs/${programId}`);
+}
+
+export async function renameModule(moduleId: string, programId: string, formData: FormData) {
+  await assertAdmin();
+  const supabase = await createClient();
+  const title = formData.get("title") as string;
+  if (!title?.trim()) return;
+  const { error } = await supabase.from("lms_modules").update({ title }).eq("id", moduleId);
+  if (error) throw new Error(error.message);
+  revalidatePath(`/dashboard/admin/programs/${programId}`);
+}
+
+export async function togglePublished(programId: string, published: boolean) {
+  await assertAdmin();
+  const supabase = await createClient();
+  const { error } = await supabase.from("lms_programs").update({ published }).eq("id", programId);
+  if (error) throw new Error(error.message);
+  revalidatePath(`/dashboard/admin/programs`);
+  revalidatePath(`/dashboard/admin/programs/${programId}`);
 }
 
 export async function deleteLesson(lessonId: string, programId: string) {

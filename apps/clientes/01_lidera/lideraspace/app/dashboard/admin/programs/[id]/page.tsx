@@ -11,7 +11,9 @@ import { Badge } from "@/components/ui/badge";
 import { MaterialUpload } from "@/components/admin/MaterialUpload";
 import {
   updateProgram,
+  togglePublished,
   createModule,
+  renameModule,
   deleteModule,
   createLesson,
   deleteLesson,
@@ -124,28 +126,21 @@ export default async function AdminProgramDetailPage({
               />
             </div>
 
-            <div className="flex items-center gap-3">
-              <input
-                type="hidden"
-                name="published"
-                value={(program as any).published ? "true" : "false"}
-              />
-              <label className="flex items-center gap-2.5 cursor-pointer">
-                <input
-                  type="checkbox"
-                  name="published"
-                  value="true"
-                  defaultChecked={(program as any).published}
-                  onChange={(e) => {
-                    const hidden = e.target
-                      .closest("form")
-                      ?.querySelector('input[type="hidden"][name="published"]') as HTMLInputElement;
-                    if (hidden) hidden.value = e.target.checked ? "true" : "false";
-                  }}
-                  className="h-4 w-4 rounded border-border accent-gold-400"
-                />
-                <span className="text-sm text-foreground">Publicado (visível para membros)</span>
-              </label>
+            {/* Published toggle as separate form (immediate action) */}
+            <div className="flex items-center gap-3 pt-1">
+              <form action={togglePublished.bind(null, programId, !(program as any).published)}>
+                <button
+                  type="submit"
+                  className={`flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium transition-all border ${
+                    (program as any).published
+                      ? "border-green-500/30 bg-green-500/10 text-green-400 hover:bg-green-500/15"
+                      : "border-border bg-navy-800 text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  <span className={`h-2 w-2 rounded-full ${(program as any).published ? "bg-green-400" : "bg-muted-foreground/40"}`} />
+                  {(program as any).published ? "Publicado — clique para despublicar" : "Rascunho — clique para publicar"}
+                </button>
+              </form>
             </div>
 
             <Button type="submit" size="sm">
@@ -192,9 +187,19 @@ export default async function AdminProgramDetailPage({
                       <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded bg-gold-400/10 text-xs font-bold text-gold-400">
                         {mod.order + 1}
                       </div>
-                      <span className="flex-1 text-sm font-medium text-foreground">
-                        {mod.title}
-                      </span>
+                      <form
+                        action={renameModule.bind(null, mod.id, programId)}
+                        className="flex-1 min-w-0"
+                        onSubmit={(e) => { (e.currentTarget.querySelector('input') as HTMLInputElement)?.blur(); }}
+                      >
+                        <input
+                          name="title"
+                          defaultValue={mod.title}
+                          className="w-full bg-transparent text-sm font-medium text-foreground focus:outline-none focus:ring-1 focus:ring-gold-400/40 rounded px-1 -ml-1 placeholder:text-muted-foreground"
+                          placeholder="Nome do módulo"
+                          onBlur={(e) => e.currentTarget.form?.requestSubmit()}
+                        />
+                      </form>
                       <Badge variant="secondary" className="text-xs">
                         {lessons.length} aula{lessons.length !== 1 ? "s" : ""}
                       </Badge>
