@@ -1,0 +1,80 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Dark navy + gold theme */
+    --background: 222 47% 4%;       /* navy-950 */
+    --foreground: 45 80% 92%;       /* warm off-white */
+
+    --card: 220 55% 7%;             /* navy-900 */
+    --card-foreground: 45 80% 92%;
+
+    --popover: 220 55% 7%;
+    --popover-foreground: 45 80% 92%;
+
+    --primary: 43 68% 50%;          /* gold-400 #D4AF37 */
+    --primary-foreground: 220 55% 7%;
+
+    --secondary: 220 45% 12%;       /* navy-800 */
+    --secondary-foreground: 45 60% 85%;
+
+    --muted: 220 45% 12%;
+    --muted-foreground: 220 20% 55%;
+
+    --accent: 43 68% 50%;
+    --accent-foreground: 220 55% 7%;
+
+    --destructive: 0 62% 45%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 220 40% 15%;
+    --input: 220 40% 15%;
+    --ring: 43 68% 50%;
+
+    --radius: 0.75rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    @apply bg-navy-900;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-navy-700 rounded-full;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-gold-600;
+  }
+}
+
+@layer components {
+  /* Gold shimmer border utility */
+  .gold-border {
+    @apply ring-1 ring-gold-400/20 hover:ring-gold-400/50 transition-all duration-200;
+  }
+
+  /* Gold text gradient */
+  .text-gold-gradient {
+    @apply bg-gradient-to-r from-gold-200 via-gold-400 to-gold-200 bg-clip-text text-transparent;
+  }
+
+  /* Card glass effect */
+  .card-glass {
+    @apply bg-navy-900/80 backdrop-blur-sm;
+  }
+}
