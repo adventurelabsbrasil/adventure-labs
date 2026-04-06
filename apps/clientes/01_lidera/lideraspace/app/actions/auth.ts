@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { headers } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
 
 export async function login(formData: FormData) {
@@ -18,6 +19,25 @@ export async function login(formData: FormData) {
 
   revalidatePath("/", "layout");
   redirect("/dashboard");
+}
+
+export async function loginWithGoogle() {
+  const supabase = await createClient();
+  const headersList = await headers();
+  const origin = headersList.get("origin") ?? "https://lideraspace.adventurelabs.com.br";
+
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    provider: "google",
+    options: {
+      redirectTo: `${origin}/auth/callback`,
+    },
+  });
+
+  if (error || !data.url) {
+    redirect("/login?error=1");
+  }
+
+  redirect(data.url);
 }
 
 export async function logout() {
