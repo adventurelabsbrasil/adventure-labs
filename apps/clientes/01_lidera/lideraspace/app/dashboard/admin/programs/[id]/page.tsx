@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
+import { MaterialUpload } from "@/components/admin/MaterialUpload";
 import {
   updateProgram,
   createModule,
@@ -19,6 +20,7 @@ import {
   ArrowLeft,
   Plus,
   Trash2,
+  Pencil,
   Play,
   FileText,
   FileEdit,
@@ -231,6 +233,15 @@ export default async function AdminProgramDetailPage({
                             <Badge variant="secondary" className="text-xs px-1.5 py-0 capitalize">
                               {lesson.type}
                             </Badge>
+                            <Link href={`/dashboard/admin/programs/${programId}/lessons/${lesson.id}/edit`}>
+                              <button
+                                type="button"
+                                className="flex h-6 w-6 items-center justify-center rounded text-muted-foreground/60 hover:text-gold-400 hover:bg-gold-400/10 transition-colors"
+                                title="Editar aula"
+                              >
+                                <Pencil className="h-3 w-3" />
+                              </button>
+                            </Link>
                             <form action={deleteLesson.bind(null, lesson.id, programId)}>
                               <button
                                 type="submit"
@@ -302,15 +313,12 @@ export default async function AdminProgramDetailPage({
                               />
                             </div>
                             <div className="space-y-1">
-                              <Label htmlFor={`material_url-${mod.id}`} className="text-xs">
-                                URL do material (PDF, planilha, etc.)
+                              <Label className="text-xs">
+                                Material complementar (PDF, planilha, etc.)
                               </Label>
-                              <Input
-                                id={`material_url-${mod.id}`}
-                                name="material_url"
-                                type="url"
-                                placeholder="https://..."
-                                className="h-8 text-sm"
+                              <MaterialUpload
+                                inputName="material_url"
+                                lessonId={`new-${mod.id}`}
                               />
                             </div>
                             <div className="space-y-1">

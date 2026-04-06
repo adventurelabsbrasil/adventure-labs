@@ -160,6 +160,32 @@ export async function createLesson(
   revalidatePath(`/dashboard/admin/programs/${programId}`);
 }
 
+export async function updateLesson(
+  lessonId: string,
+  programId: string,
+  formData: FormData
+) {
+  await assertAdmin();
+  const supabase = await createClient();
+
+  const title = formData.get("title") as string;
+  const type = formData.get("type") as "video" | "doc" | "page";
+  const video_url = (formData.get("video_url") as string) || null;
+  const content_md = (formData.get("content_md") as string) || null;
+  const material_url = (formData.get("material_url") as string) || null;
+
+  const { error } = await supabase
+    .from("lms_lessons")
+    .update({ title, type, video_url, content_md, material_url })
+    .eq("id", lessonId);
+
+  if (error) throw new Error(error.message);
+
+  revalidatePath(`/dashboard/admin/programs/${programId}`);
+  revalidatePath(`/dashboard/admin/programs/${programId}/lessons/${lessonId}/edit`);
+  redirect(`/dashboard/admin/programs/${programId}`);
+}
+
 export async function deleteLesson(lessonId: string, programId: string) {
   await assertAdmin();
   const supabase = await createClient();
