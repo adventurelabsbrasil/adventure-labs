@@ -169,7 +169,7 @@ export default async function ProgramDetailPage({
           <h2 className="text-base font-semibold text-foreground mb-4">
             Conteúdo do programa
           </h2>
-          <ModuleList modules={program.modules} />
+          <ModuleList modules={program.modules} programId={program.id} />
         </div>
       </div>
     </div>

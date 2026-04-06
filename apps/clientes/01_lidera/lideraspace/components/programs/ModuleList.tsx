@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
-import { Play, FileText, FileEdit, CheckCircle2, Circle, Lock } from "lucide-react";
+import { useTransition } from "react";
+import Link from "next/link";
+import { Play, FileText, FileEdit, CheckCircle2, Circle, Loader2 } from "lucide-react";
 import {
   Accordion,
   AccordionContent,
@@ -10,6 +11,7 @@ import {
 } from "@/components/ui/accordion";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import { toggleLessonComplete } from "@/app/actions/progress";
 
 export type LessonType = "video" | "doc" | "page";
 
@@ -31,10 +33,13 @@ export interface Module {
 
 interface ModuleListProps {
   modules: Module[];
-  onToggleLesson?: (lessonId: string, completed: boolean) => void;
+  programId: string;
 }
 
-const lessonTypeConfig: Record<LessonType, { icon: React.ElementType; label: string; color: string }> = {
+const lessonTypeConfig: Record<
+  LessonType,
+  { icon: React.ElementType; label: string; color: string }
+> = {
   video: { icon: Play, label: "Vídeo", color: "text-blue-400" },
   doc: { icon: FileText, label: "Documento", color: "text-amber-400" },
   page: { icon: FileEdit, label: "Conteúdo", color: "text-purple-400" },
@@ -42,33 +47,44 @@ const lessonTypeConfig: Record<LessonType, { icon: React.ElementType; label: str
 
 function LessonItem({
   lesson,
-  onToggle,
+  programId,
 }: {
   lesson: Lesson;
-  onToggle?: (id: string, completed: boolean) => void;
+  programId: string;
 }) {
   const config = lessonTypeConfig[lesson.type];
   const Icon = config.icon;
+  const [isPending, startTransition] = useTransition();
+
+  function handleToggle(e: React.MouseEvent) {
+    e.preventDefault();
+    e.stopPropagation();
+    startTransition(async () => {
+      await toggleLessonComplete(lesson.id, programId, !lesson.completed);
+    });
+  }
 
   return (
-    <div
+    <Link
+      href={`/dashboard/programs/${programId}/lessons/${lesson.id}`}
       className={cn(
         "group flex items-center gap-3 rounded-lg px-3 py-2.5 transition-all duration-150",
-        "hover:bg-navy-800/60 cursor-pointer",
-        lesson.completed && "opacity-70"
+        "hover:bg-navy-800/60",
+        lesson.completed && "opacity-75"
       )}
-      onClick={() => onToggle?.(lesson.id, !lesson.completed)}
     >
-      {/* Completion indicator */}
+      {/* Completion toggle */}
       <button
         className="shrink-0 transition-colors"
-        aria-label={lesson.completed ? "Marcar como não concluída" : "Marcar como concluída"}
-        onClick={(e) => {
-          e.stopPropagation();
-          onToggle?.(lesson.id, !lesson.completed);
-        }}
+        aria-label={
+          lesson.completed ? "Marcar como não concluída" : "Marcar como concluída"
+        }
+        onClick={handleToggle}
+        disabled={isPending}
       >
-        {lesson.completed ? (
+        {isPending ? (
+          <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+        ) : lesson.completed ? (
           <CheckCircle2 className="h-4 w-4 text-gold-400" />
         ) : (
           <Circle className="h-4 w-4 text-muted-foreground/40 group-hover:text-muted-foreground" />
@@ -84,21 +100,26 @@ function LessonItem({
       <span
         className={cn(
           "flex-1 text-sm",
-          lesson.completed ? "line-through text-muted-foreground" : "text-foreground"
+          lesson.completed
+            ? "line-through text-muted-foreground"
+            : "text-foreground group-hover:text-gold-300 transition-colors"
         )}
       >
         {lesson.title}
       </span>
 
       {/* Type badge */}
-      <Badge variant="secondary" className="hidden sm:inline-flex text-xs px-1.5 py-0">
+      <Badge
+        variant="secondary"
+        className="hidden sm:inline-flex text-xs px-1.5 py-0"
+      >
         {config.label}
       </Badge>
-    </div>
+    </Link>
   );
 }
 
-export function ModuleList({ modules, onToggleLesson }: ModuleListProps) {
+export function ModuleList({ modules, programId }: ModuleListProps) {
   const defaultOpen = modules.length > 0 ? [modules[0].id] : [];
 
   return (
@@ -127,7 +148,9 @@ export function ModuleList({ modules, onToggleLesson }: ModuleListProps) {
                   {module.order + 1}
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-foreground">{module.title}</p>
+                  <p className="text-sm font-medium text-foreground">
+                    {module.title}
+                  </p>
                   <p className="text-xs text-muted-foreground mt-0.5">
                     {completedCount}/{totalCount} aulas concluídas
                   </p>
@@ -145,7 +168,7 @@ export function ModuleList({ modules, onToggleLesson }: ModuleListProps) {
                     <LessonItem
                       key={lesson.id}
                       lesson={lesson}
-                      onToggle={onToggleLesson}
+                      programId={programId}
                     />
                   ))
                 )}
