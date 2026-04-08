@@ -1,0 +1,39 @@
+name: Deploy — Lideraspace
+
+on:
+  push:
+    branches:
+      - claude/compassionate-poitras
+      - main
+    paths:
+      - 'apps/clientes/01_lidera/lideraspace/**'
+
+jobs:
+  deploy:
+    name: Deploy to Vercel (production)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Vercel deployment
+        run: |
+          RESPONSE=$(curl -s -X POST \
+            "https://api.vercel.com/v13/deployments?teamId=${{ secrets.VERCEL_TEAM_ID }}" \
+            -H "Authorization: Bearer ${{ secrets.VERCEL_TOKEN }}" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "name": "lideraspace",
+              "project": "prj_Cc4lnjebKKykxiYell8fFbrMZ7rs",
+              "target": "production",
+              "gitSource": {
+                "type": "github",
+                "repoId": 1175013622,
+                "ref": "${{ github.ref_name }}"
+              }
+            }')
+          echo "$RESPONSE"
+          DEPLOY_ID=$(echo "$RESPONSE" | jq -r '.id')
+          echo "Deploy ID: $DEPLOY_ID"
+          if [ "$DEPLOY_ID" = "null" ] || [ -z "$DEPLOY_ID" ]; then
+            echo "❌ Deploy failed"
+            exit 1
+          fi
+          echo "✅ Deploy triggered: $DEPLOY_ID"
