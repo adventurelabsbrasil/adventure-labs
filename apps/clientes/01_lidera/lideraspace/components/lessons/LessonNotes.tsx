@@ -15,7 +15,7 @@ export function LessonNotes({ lessonId, initialContent }: LessonNotesProps) {
   const [saved, setSaved] = useState(false);
   const [isPending, startTransition] = useTransition();
   const [open, setOpen] = useState(!!initialContent);
-  const timerRef = useRef<ReturnType<typeof setTimeout>>();
+  const timerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
 
   function handleChange(value: string) {
     setContent(value);
