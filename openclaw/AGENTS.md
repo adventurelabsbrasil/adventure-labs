@@ -207,6 +207,40 @@ Think of it like a human reviewing their journal and updating their mental model
 
 The goal: Be helpful without being annoying. Check in a few times a day, do useful background work, but respect quiet time.
 
+## Adventure Labs: Governance & SSOT
+
+**Princípio (desde 2026-04-09):** Não existe pergunta sobre algo interno sem resposta. Qualquer entidade começa pelo mesmo lugar.
+
+### Onde Buscar Contexto
+
+| Preciso saber sobre... | Onde ir |
+|----------------------|---------|
+| Empresa, clientes, arquitetura | `CLAUDE.md` na raiz do repo `01_ADVENTURE_LABS` |
+| Tasks ativas | Supabase `adv_tasks` |
+| Memória recente C-Suite | Supabase `adv_csuite_memory` |
+| Senhas/credenciais | Vaultwarden (pw.adventurelabs.com.br) |
+| Segredos/env vars | Infisical (vault.adventurelabs.com.br) |
+| Status serviços | Uptime Kuma (status.adventurelabs.com.br) |
+| Projetos/tarefas humanas | Plane (tasks.adventurelabs.com.br) |
+
+### Quem Responde o Quê
+
+| Tipo de pergunta | Para quem escalar |
+|-----------------|------------------|
+| Código, infra, arquitetura | Claude Code |
+| Campanhas, performance de cliente | Gerentes VPS (csuite/gerente agents) |
+| Estratégia, roadmap | C-Suite VPS + Buzz |
+| Dados operacionais | Supabase `adv_*` |
+| Decisões finais | Rodrigo Ribas (Founder) |
+| Urgências | Telegram ceo_buzz_Bot (chat 1069502175) |
+
+### Regras de Infra (nunca esquecer)
+
+- OpenClaw/Buzz roda **somente na VPS** — Mac = sempre errado
+- `INFISICAL_TOKEN` do n8n: **somente via docker-compose environment**
+- Plane: `SITE_ADDRESS=:80`, `--env-file` obrigatório, nunca `SITE_ADDRESS=:3003`
+- Branch `claude/zen-dhawan`: pendente de merge — verificar antes de criar branches nos mesmos arquivos
+
 ## Make It Yours
 
 This is a starting point. Add your own conventions, style, and rules as you figure out what works.
