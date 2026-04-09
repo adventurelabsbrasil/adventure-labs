@@ -73,6 +73,7 @@
 | csuite-buffett (CFO) | `13 11 * * 1` | Review de custos da stack (sem valores R$) | Telegram |
 | csuite-torvalds (CTO) | `17 11 * * 3` | Saúde do código, git branches, VPS | Telegram |
 | csuite-cagan (CPO) | `23 11 * * 5` | Pulse clientes, entregas, riscos | Telegram |
+| csuite-davinci (CINO) | `27 10 * * 1-5` | Varre ROADMAP_IDEAS.md, processa braindumps, lapida insights não-lineares | Telegram |
 | gerente-rose | `33 10 * * 1-5` | Briefing diário conta Rose | Telegram |
 | gerente-young | `11 12 * * 2` | Briefing semanal Young | Telegram |
 | gerente-benditta | `19 12 * * 3` | Briefing semanal Benditta | Telegram |

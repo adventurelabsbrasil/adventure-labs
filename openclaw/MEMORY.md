@@ -75,6 +75,7 @@ Output: Telegram `ceo_buzz_Bot` com status e tamanhos.
 | csuite-buffett | `13 11 * * 1` | CFO: review de custos (sem R$) |
 | csuite-torvalds | `17 11 * * 3` | CTO: saúde código + VPS |
 | csuite-cagan | `23 11 * * 5` | CPO: pulse clientes |
+| csuite-davinci | `27 10 * * 1-5` | CINO: braindumps, insights, inovação |
 | gerente-rose | `33 10 * * 1-5` | AM Rose diário |
 | gerente-young | `11 12 * * 2` | AM Young semanal |
 | gerente-benditta | `19 12 * * 3` | AM Benditta semanal |
