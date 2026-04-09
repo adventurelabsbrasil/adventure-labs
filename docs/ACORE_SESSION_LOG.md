@@ -4,6 +4,34 @@ Registro operacional para handoff entre Human, CTO (Torvalds) e agentes. Atualiz
 
 ---
 
+## 2026-04-09 — Nova tabela adv_ads_daily_metrics (ad-level granularity)
+
+### Feito
+
+- **`adv_ads_daily_metrics`** criada no Supabase (`adventurelabsbrasil` / `ftctmseyrqhckutpfdeq`) via `apply_migration`.
+- Migration versionada no monorepo: `supabase/migrations/20260409100000_adv_ads_daily_metrics.sql`.
+- Colunas: id, date, client, account_id, account_name, campaign_name, adset_name, ad_name, objective, impressions, reach, clicks, spend, conversations, leads, created_at.
+- **UNIQUE constraint** em `(date, account_id, campaign_name, adset_name, ad_name)` — idempotência garantida.
+- Índices em date, client e account_id. RLS habilitado.
+- Complementa `adv_campaign_metrics_daily` (campaign-level) com granularidade de **anúncio**.
+
+### Onde paramos
+
+- Tabela criada e live no Supabase. **RLS policies** ainda não foram adicionadas — definir conforme uso (n8n service_role vs dashboard autenticado).
+- Migration no monorepo está na worktree `claude/dreamy-booth` — precisa de merge para `main`.
+
+### Próximos
+
+- **Buzz/n8n:** configurar automação que popula `adv_ads_daily_metrics` com dados de Meta Ads e/ou Google Ads.
+- **RLS policies:** adicionar quando o padrão de acesso estiver definido (service_role para ingestão, read para dashboards).
+- **Merge:** PR da worktree `claude/dreamy-booth` → `main` com esta migration.
+
+### Bloqueios
+
+- Nenhum.
+
+---
+
 ## 2026-03-25 — Diagnóstico consolidado ACORE + próximos passos (execução)
 
 ### Feito
