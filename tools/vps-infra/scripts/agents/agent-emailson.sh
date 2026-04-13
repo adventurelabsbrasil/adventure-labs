@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
-# agent-triagem-emails.sh — Triagem diária de emails (skill triagem-emails)
-# Deploy: /opt/adventure-labs/scripts/agents/agent-triagem-emails.sh
-# Cron:   0 5 * * *  /opt/adventure-labs/scripts/agents/agent-triagem-emails.sh >> /opt/adventure-labs/logs/agent-triagem-emails.log 2>&1
+# agent-emailson.sh — Emailson Correia (agente de triagem diária de emails)
+# Deploy: /opt/adventure-labs/scripts/agents/agent-emailson.sh
+# Cron:   0 5 * * *  /opt/adventure-labs/scripts/agents/agent-emailson.sh >> /opt/adventure-labs/logs/agent-emailson.log 2>&1
 #
-# Missao: Invocar Claude Code CLI para rodar a skill `triagem-emails` usando Gmail MCP,
-# gravar insights em docs/braindump/email-insights-YYYY-MM-DD.md e notificar Telegram.
+# Missao: Invocar Claude Code CLI para rodar a skill `triagem-emails` (persona Emailson Correia)
+# usando Gmail MCP, gravar insights em docs/braindump/email-insights-YYYY-MM-DD.md e notificar Telegram.
 #
 # Diferente dos outros agentes do C-Suite: este NAO usa adventure-agent.sh (dispatcher via
 # Anthropic API direta) porque precisa de acesso ao Gmail MCP, que so esta disponivel
@@ -15,7 +15,7 @@ set -euo pipefail
 REPO_DIR="${ADVENTURE_REPO_DIR:-/opt/adventure-labs}"
 LOG_DIR="${REPO_DIR}/logs"
 DATE_UTC=$(date -u +%Y-%m-%d)
-LOG_FILE="${LOG_DIR}/agent-triagem-emails_${DATE_UTC}.log"
+LOG_FILE="${LOG_DIR}/agent-emailson_${DATE_UTC}.log"
 TELEGRAM_BOT_TOKEN="${TELEGRAM_BOT_TOKEN:-}"
 TELEGRAM_CHAT_ID="${TELEGRAM_CHAT_ID:-1069502175}"
 
@@ -35,14 +35,14 @@ notify_telegram() {
 
 fail() {
   log "ERRO: $*"
-  notify_telegram "🚨 <b>Triagem de emails — FALHA</b>
+  notify_telegram "🚨 <b>Emailson Correia — FALHA na triagem</b>
 $(date -u)
 Erro: $*
 Log: ${LOG_FILE}"
   exit 1
 }
 
-log "=== Início triagem-emails (${DATE_UTC}) ==="
+log "=== Início Emailson Correia / triagem-emails (${DATE_UTC}) ==="
 
 # Requisitos
 command -v claude >/dev/null 2>&1 || fail "Claude CLI não encontrado no PATH"
@@ -58,7 +58,7 @@ export TELEGRAM_BOT_TOKEN
 export TELEGRAM_CHAT_ID
 
 # Prompt headless: invoca a skill. Claude CLI carrega .claude/skills/ automaticamente.
-PROMPT="Execute a skill \`triagem-emails\` agora. Varra os emails das últimas 24h, trie conforme o protocolo de braindump, grave o report em docs/braindump/email-insights-${DATE_UTC}.md e envie a notificação Telegram. Reporte ao final: número de threads avaliadas, contagens por categoria e caminho do arquivo."
+PROMPT="Você é Emailson Correia. Execute a skill \`triagem-emails\` agora. Varra os emails das últimas 24h, trie conforme o protocolo de braindump, grave o report em docs/braindump/email-insights-${DATE_UTC}.md e envie a notificação Telegram assinada como Emailson. Reporte ao final: número de threads avaliadas, contagens por categoria e caminho do arquivo."
 
 log "Invocando Claude CLI..."
 if ! claude -p "$PROMPT" 2>&1 | tee -a "$LOG_FILE"; then
@@ -71,6 +71,6 @@ if [[ ! -f "$OUTPUT_FILE" ]]; then
 fi
 
 log "Triagem concluída. Arquivo: $OUTPUT_FILE"
-log "=== Fim triagem-emails ==="
+log "=== Fim Emailson Correia ==="
 
 exit 0
