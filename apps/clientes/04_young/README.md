@@ -4,6 +4,7 @@
 - `young-emp` — Young Emp
 - **Young Talents (app):** [`apps/clientes/young-talents/plataforma`](../../apps/clientes/young-talents/plataforma/) — pacote `@cliente/young-plataforma`
 - `ranking-vendas` — Ranking de vendas
+- [`pingostudio`](pingostudio/) — Looker Studio sobre Supabase (PINGOSTUDIO-264): migra a fonte do dashboard Young de Google Sheets para Postgres Supabase (`vvtympzatclvjaqucebr`), onde o CRM Pingolead escreve
 
 ## Young Talents — segurança (ATS)
 
