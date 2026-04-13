@@ -4,6 +4,49 @@ Registro operacional para handoff entre Human, CTO (Torvalds) e agentes. Atualiz
 
 ---
 
+## 2026-04-13 — Emailson Correia (skill `triagem-emails`) + dispatcher VPS
+
+### Feito
+
+- **Skill de projeto** criada em `.claude/skills/triagem-emails/SKILL.md` — persona **Emailson Correia** (Wilson/Emerson + email · Correia evocando Correios), tom cordial e direto, PT-BR.
+- **Protocolo de triagem** da skill segue `.cursor/rules/adventure-braindump-triage.mdc`: categorias 🚨 Urgente / 💡 Insight / 📋 Operação (rascunho Asana) / 🔧 Engenharia (rascunho BACKLOG) / ℹ️ Só info / ❓ Pergunta aberta.
+- **Redlines** explícitos: nunca colar PII, tokens, senhas, valores financeiros no markdown versionado — apenas referências "ver thread Gmail".
+- **Output diário** gravado em `docs/braindump/email-insights-YYYY-MM-DD.md` (padrão existente do braindump).
+- **Notificação Telegram** assinada como Emailson, via `curl` com `--data-urlencode`, chat `1069502175`, bot `ceo_buzz_Bot` — pattern mirror de `tools/vps-infra/scripts/adventure_ops.sh:16-24`.
+- **Dispatcher VPS** criado em `tools/vps-infra/scripts/agents/agent-emailson.sh` (chmod +x) — invoca `claude -p` (necessário p/ acesso Gmail MCP, que `adventure-agent.sh` não provê).
+- **CLAUDE.md** atualizado: linha `emailson-correia | 0 5 * * * | ...` inserida na tabela de Agentes Autônomos, entre `gerente-benditta` e `backup-vps`.
+- **Branch:** `claude/create-new-skill-MgGR7` · **Commits:** `ff5d24b` (skill+dispatcher+cron entry), `d70c8fc` (rename para persona Emailson) · **Push:** `origin/claude/create-new-skill-MgGR7` ✅.
+- **Validação do carregamento:** o harness reconhece `triagem-emails` na lista de skills disponíveis após o primeiro commit.
+
+### Onde paramos
+
+- Skill **ativa on-demand** em qualquer sessão Claude Code neste repo. Trigger: "checar emails", "triagem de emails", "chama o Emailson", etc.
+- **Gmail MCP ainda não autenticado** no harness atual — só `authenticate`/`complete_authentication` expostos; `search_threads`/`get_thread` aparecerão após auth.
+- **Zero execução real** até agora — a skill não foi exercida contra uma inbox real nesta sessão.
+- **Cron 5am UTC** documentado no CLAUDE.md mas **não deployado na VPS** ainda.
+
+### Próximos
+
+- **[Humano] Autenticar Gmail MCP** (próxima sessão): rodar `mcp__*__authenticate` e `complete_authentication` para liberar as tools de leitura.
+- **[Quem testar] Validação end-to-end on-demand**: pedir "chama o Emailson" com MCP autenticado; conferir (1) criação de `docs/braindump/email-insights-2026-04-13.md`, (2) ausência de PII, (3) chegada do Telegram assinado como Emailson.
+- **[Rodrigo / infra VPS] Deploy do cron**:
+  ```bash
+  scp tools/vps-infra/scripts/agents/agent-emailson.sh root@vps:/opt/adventure-labs/scripts/agents/
+  # crontab -e na VPS:
+  0 5 * * * /opt/adventure-labs/scripts/agents/agent-emailson.sh >> /opt/adventure-labs/logs/agent-emailson.log 2>&1
+  ```
+  Requer `TELEGRAM_BOT_TOKEN` no ambiente do cron (Infisical). Pré-requisito VPS: `claude` CLI instalado **e** Gmail MCP configurado **e autenticado**.
+- **[Rodrigo] Decidir PR vs manter branch**: abrir PR de `claude/create-new-skill-MgGR7` → `main` quando houver validação real, ou manter branch viva até o teste E2E.
+- **Follow-up opcional**: estender `adventure_ops.sh:73` para incluir `docs/braindump/` no auto-commit diário — senão insights triados na VPS ficam só no disco local.
+- **Follow-up opcional**: insert em `adv_csuite_memory` (Supabase) para que o resto do C-Suite (Ogilvy, Ohno, Cagan) enxergue os insights do Emailson sem precisar ler o markdown.
+
+### Bloqueios
+
+- **Gmail MCP não autenticado** no harness atual — bloqueia qualquer teste real da skill nesta sessão.
+- **Nenhum bloqueio para merge/PR** — código está isolado (nova skill + novo script + 1 linha em CLAUDE.md); sem conflito esperado com `claude/zen-dhawan`.
+
+---
+
 ## 2026-04-09 — Nova tabela adv_ads_daily_metrics (ad-level granularity)
 
 ### Feito
