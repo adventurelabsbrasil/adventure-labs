@@ -77,6 +77,7 @@
 | gerente-rose | `33 10 * * 1-5` | Briefing diário conta Rose | Telegram |
 | gerente-young | `11 12 * * 2` | Briefing semanal Young | Telegram |
 | gerente-benditta | `19 12 * * 3` | Briefing semanal Benditta | Telegram |
+| triagem-emails | `0 5 * * *` | Varre Gmail das últimas 24h, tria insights via skill `triagem-emails`, grava em `docs/braindump/` | Telegram + arquivo md |
 | backup-vps | `30 6 * * *` | Backup VPS → Drive (n8n, Plane, Infisical, Vaultwarden, Supabase, configs) | Telegram |
 
 **Scripts:** `/opt/adventure-labs/scripts/agents/` (VPS)
