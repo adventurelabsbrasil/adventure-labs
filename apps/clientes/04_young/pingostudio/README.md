@@ -32,9 +32,12 @@ Pingolead (PWA Young) ──writes──▶  Supabase vvtympzatclvjaqucebr
 pingostudio/
 ├── README.md                                           # este arquivo
 ├── HANDOFF.md                                          # estado atual e próximos passos
+├── FIELD_MAPPING.md                                    # template p/ rastrear fields Sheets→Postgres
 ├── scripts/
+│   ├── 00_connect.sh                                   # helper: testa direct→pooler, exporta URL
 │   ├── 01_introspect.sql                               # roda no Supabase, descobre schema
-│   └── 01_introspect.out.txt                           # output (adicionar após rodar)
+│   ├── 01_introspect.out.txt                           # output (adicionar após rodar)
+│   └── 02_validate_looker_reader.sh                    # 3 testes do looker_reader
 └── supabase/
     └── migrations/
         └── 20260413000000_create_looker_reader.sql    # role + grants + BYPASSRLS
@@ -85,21 +88,32 @@ psql "postgresql://postgres@db.vvtympzatclvjaqucebr.supabase.co:5432/postgres?ss
 
 ### 3. Validar o `looker_reader`
 
+Script pronto (`scripts/02_validate_looker_reader.sh`) roda os 3 testes em sequência:
+
 ```bash
-# Senha do Vaultwarden → Young Pingolead Looker Reader
-export PGPASSWORD='<senha_looker_reader>'
+export LOOKER_READER_PWD='<senha do Vaultwarden>'
+export PINGOSTUDIO_TABLE='public.<alguma_tabela_pingolead>'   # descoberta no passo 1
 
-# Conecta (deve dar shell psql)
-psql "postgresql://looker_reader.vvtympzatclvjaqucebr@aws-0-sa-east-1.pooler.supabase.com:6543/postgres?sslmode=require"
-
-# Dentro do psql:
-SELECT 1;                                            -- deve retornar 1
-SELECT COUNT(*) FROM <schema>.<tabela_pingolead>;    -- deve retornar um número (0 se zerado)
-INSERT INTO <tabela_pingolead> DEFAULT VALUES;       -- deve dar "permission denied"
-\q
+bash apps/clientes/04_young/pingostudio/scripts/02_validate_looker_reader.sh
 ```
 
+Saída esperada:
+
+```
+=== 1. Conexão básica ===
+  OK  SELECT 1 → 1
+=== 2. Read via BYPASSRLS ===
+  OK  COUNT public.<tabela> → N linhas
+=== 3. INSERT deve ser negado ===
+  OK  INSERT negado (read-only confirmado)
+=== ✅ TUDO OK. looker_reader pronto para ser usado no Looker Studio. ===
+```
+
+Se qualquer teste falhar, revisar a migration antes de ir pro Looker.
+
 ### 4. Novo Looker Studio
+
+Usar `FIELD_MAPPING.md` como planilha de controle ao longo desta fase.
 
 1. Abrir o relatório atual: https://lookerstudio.google.com/reporting/0449c5e9-0773-4f50-a9be-4a9af1dbcd51/page/zHINF/edit
 2. **Arquivo → Fazer uma cópia**. Título: **"Young Empreendimentos — Dashboard (Supabase)"**.
@@ -111,11 +125,11 @@ INSERT INTO <tabela_pingolead> DEFAULT VALUES;       -- deve dar "permission den
    - Senha: do Vaultwarden
    - **Enable SSL**: sim (obrigatório)
 4. Selecionar as tabelas Pingolead necessárias. Criar uma data source por tabela (ou usar Custom Query para joins).
-5. Em cada gráfico/scorecard/tabela do relatório: **Alterar fonte de dados** → apontar para o Postgres. Remapear campos — os nomes de colunas do Postgres podem diferir dos cabeçalhos do Sheets.
+5. Em cada gráfico/scorecard/tabela do relatório: **Alterar fonte de dados** → apontar para o Postgres. Remapear campos — os nomes de colunas do Postgres podem diferir dos cabeçalhos do Sheets. Registrar cada mapeamento em `FIELD_MAPPING.md`.
 6. Refazer fórmulas de métricas calculadas (CPL, CPM, ROAS etc.) se aplicável.
 7. Recriar filtros globais (datas, empreendimento, canal) apontando para colunas do Postgres.
 8. Remover a data source antiga (Sheets) da cópia.
-9. **Compartilhar**: pegar a lista de stakeholders da aba Compartilhar do relatório original e adicionar no novo.
+9. **Compartilhar**: pegar a lista de stakeholders da aba Compartilhar do relatório original e adicionar no novo (rastrear no `FIELD_MAPPING.md`).
 
 ### 5. Arquivar fontes antigas
 
