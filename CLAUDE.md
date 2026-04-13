@@ -1,7 +1,19 @@
 # Adventure Labs — Cérebro Estável (SSOT para Claude Code e Cursor)
 
 > **Leia este arquivo antes de qualquer tarefa.** É o ponto de entrada de toda entidade que interage com a Adventure Labs.
-> Atualizado: 2026-04-09
+> Atualizado: 2026-04-13
+
+---
+
+## ⚠️ Sistemas Arquivados (NÃO usar como fonte de verdade)
+
+Os serviços abaixo foram **descontinuados**. Notificações por email/webhook podem continuar chegando, mas são ruído — tratar como arquivados, não migrar trabalho para eles, não criar tasks/deploys novos:
+
+| Sistema | Substituído por | Observação |
+|---------|----------------|------------|
+| **Asana** | Plane (tasks.adventurelabs.com.br) | Daily reminders ainda chegam no email — ignorar |
+| **Coolify** | (deploys ficam em Vercel / VPS Docker) | Dashboard descontinuado |
+| **Railway** | VPS Hostinger + Vercel | Repo `railway-openclaw` tem workflow falhando em loop — ignorar notificações |
 
 ---
 
