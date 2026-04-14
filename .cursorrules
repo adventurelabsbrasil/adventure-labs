@@ -22,3 +22,35 @@ Nós operamos em um Monorepo gerenciado por `pnpm workspaces`.
 1. Antes de codar, valide se a tarefa envolve o Backend (Supabase/n8n) ou o Frontend (Next.js/Tailwind).
 2. Não gere códigos "mockados". Tente sempre conectar com as APIs reais usando as variáveis de ambiente seguras.
 3. Se gerar um novo fluxo do n8n, salve o export do `.json` correspondente na pasta `/workflows/n8n` para versionamento no Git.
+
+## Infraestrutura Ativa (Adventure Labs VPS) — Operação NEXUS
+
+**VPS:** `187.77.251.199` (Hostinger, Ubuntu, Docker Compose)
+**Infra local sincronizada (após sync):** `.adventure_brain/current_infra/`
+**Script de sync:** `tools/vps-infra/sync-infra-context.sh`
+
+| Serviço | Container | URL | Porta host |
+|---------|-----------|-----|-----------|
+| n8n | `adventure-n8n` | flow.adventurelabs.com.br | 5678 |
+| Metabase | `adventure-metabase` | bi.adventurelabs.com.br | 3000 |
+| Infisical | `adventure-infisical` | vault.adventurelabs.com.br | — |
+| Vaultwarden | `adventure-vaultwarden` | pw.adventurelabs.com.br | — |
+| Plane | `adventure-plane` | tasks.adventurelabs.com.br | 3003 |
+| Evolution API | `adventure-evolution` | api-wa.adventurelabs.com.br | — |
+| Uptime Kuma | `adventure-uptime` | status.adventurelabs.com.br | — |
+| Supabase | (managed cloud) | supabase.com | — |
+
+**Segredos:** NUNCA no código. Sempre via Infisical (`vault.adventurelabs.com.br`) ou env vars injetadas no Docker Compose.
+**Tabelas runtime dos agentes:** `adv_tasks`, `adv_csuite_memory`, `adv_stack_subscriptions`, `adv_ads_daily_metrics`, `adv_whatsapp_daily`.
+**Scripts VPS:** `/opt/adventure-labs/scripts/` — dispatcher principal: `adventure-agent.sh`.
+**OpenClaw/Buzz:** systemd `openclaw-gateway.service`, porta 18789 loopback, workspace `/root/.openclaw/workspace/`.
+**Backup VPS:** `gdrive-adventure:99_ARQUIVO/VPS_BACKUPS/` via rclone.
+
+## IA Local (Ollama) — Fallback do Cursor
+
+**Verificar se está rodando:** `curl -s http://localhost:11434/api/tags | jq .`
+**Endpoint compatível OpenAI:** `http://localhost:11434/v1`
+**Modelo principal (código):** `qwen2.5-coder:7b`
+**Modelo embeddings (RAG local):** `nomic-embed-text`
+
+Workflow de debug rápido: rode `sync-infra-context.sh` → use `@Codebase` no Cursor incluindo `.adventure_brain/` → pergunte sobre containers, logs ou configs. Ver `AI_WORKFLOW.md` na raiz.

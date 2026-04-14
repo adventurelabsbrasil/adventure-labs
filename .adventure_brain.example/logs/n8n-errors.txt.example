@@ -1,0 +1,5 @@
+# Populado por: docker logs adventure-n8n --tail 200 | grep -iE 'error|warn|fail|exception' | tail -50
+# Execute sync-infra-context.sh para gerar o arquivo real com dados reais da VPS
+
+[EXAMPLE] 2026-04-14T10:00:00.000Z error Workflow execution failed { workflowId: '123' }
+[EXAMPLE] 2026-04-14T10:01:00.000Z warn Connection timeout to external service

@@ -1,0 +1,12 @@
+# Populado por: ssh root@187.77.251.199 "docker ps --format 'table {{.Names}}\t{{.Status}}\t{{.Image}}'"
+# Execute sync-infra-context.sh para gerar o arquivo real
+
+NAMES                    STATUS                   IMAGE
+adventure-n8n            Up X hours (healthy)     n8nio/n8n:latest
+adventure-metabase       Up X hours (healthy)     metabase/metabase:latest
+adventure-evolution      Up X hours               atendai/chatwoot:latest
+adventure-infisical      Up X hours               infisical/infisical:latest
+adventure-uptime         Up X hours               louislam/uptime-kuma:latest
+adventure-vaultwarden    Up X hours               vaultwarden/server:latest
+adventure-plane          Up X hours               makeplane/plane-frontend:latest
+adventure-postgres       Up X hours               postgres:15

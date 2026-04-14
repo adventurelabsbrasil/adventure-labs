@@ -75,3 +75,6 @@ apps/labs/minha-app/.cursor/
 knowledge/00_GESTAO_CORPORATIVA/operacao/asana/audio-relatorio-comando-estelar-*.aiff
 knowledge/00_GESTAO_CORPORATIVA/operacao/asana/audio-relatorio-comando-estelar-*.m4a
 knowledge/00_GESTAO_CORPORATIVA/operacao/asana/audio-relatorio-comando-estelar-*-script.txt
+
+# Operação NEXUS — Adventure Brain (runtime local; use .adventure_brain.example/ como referência)
+.adventure_brain/

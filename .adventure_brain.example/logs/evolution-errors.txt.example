@@ -1,0 +1,5 @@
+# Populado por: docker logs adventure-evolution --tail 200 | grep -iE 'error|warn|fail|exception' | tail -50
+# Execute sync-infra-context.sh para gerar o arquivo real com dados reais da VPS
+
+[EXAMPLE] 2026-04-14T10:00:00.000Z ERROR WhatsApp connection lost { instance: 'adventure' }
+[EXAMPLE] 2026-04-14T10:02:00.000Z WARN Rate limit reached for number +55...
