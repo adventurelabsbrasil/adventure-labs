@@ -1,0 +1,15 @@
+=== 1. Conexão básica ===
+  [32mOK[0m  SELECT 1 → 1
+=== 2. Read via BYPASSRLS ===
+  [32mOK[0m  COUNT public.crm_deals → 21898 linhas
+=== 3. INSERT deve ser negado ===
+  [32mOK[0m  INSERT negado (read-only confirmado)
+
+=== ✅ TUDO OK. looker_reader pronto para ser usado no Looker Studio. ===
+
+Host pooler:  aws-0-sa-east-1.pooler.supabase.com
+Porta:        6543
+Database:     postgres
+Usuário:      looker_reader.vvtympzatclvjaqucebr
+SSL:          Enable
+ERROR:  permission denied for table rh_folha_mensal

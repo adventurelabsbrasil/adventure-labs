@@ -24,7 +24,7 @@ set -u
 : "${LOOKER_READER_PWD:?defina LOOKER_READER_PWD com a senha do Vaultwarden}"
 : "${PINGOSTUDIO_TABLE:=public.crm_deals}"
 
-URL="postgresql://looker_reader.${SUPABASE_REF}:${LOOKER_READER_PWD}@aws-0-${SUPABASE_REGION}.pooler.supabase.com:6543/postgres?sslmode=require"
+URL="postgresql://looker_reader:${LOOKER_READER_PWD}@db.${SUPABASE_REF}.supabase.co:5432/postgres?sslmode=require"
 
 pass() { printf "  \033[32mOK\033[0m  %s\n" "$1"; }
 fail() { printf "  \033[31mFAIL\033[0m %s\n" "$1"; FAILED=1; }
