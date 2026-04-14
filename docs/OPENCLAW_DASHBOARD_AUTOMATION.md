@@ -61,16 +61,28 @@ Responde diretamente à pergunta "contratei VPS para não depender do Macbook": 
 
 ### Setup na VPS (uma vez)
 
+Usar o script idempotente `scripts/vps-tailscale-setup.sh`:
+
 ```bash
-# em root@hostinger
+# do Mac, mandar o script pra VPS e rodar
+scp scripts/vps-tailscale-setup.sh root@187.77.251.199:/tmp/
+
+# diagnóstico primeiro (não altera nada)
+ssh root@187.77.251.199 'bash /tmp/vps-tailscale-setup.sh --check'
+
+# instalação + tailscale up (vai imprimir URL de auth — abrir no browser)
+ssh -t root@187.77.251.199 'bash /tmp/vps-tailscale-setup.sh --install'
+
+# DEPOIS de confirmar que Mac acessa a VPS via Tailscale, bloquear 18789 público:
+ssh -t root@187.77.251.199 'bash /tmp/vps-tailscale-setup.sh --lockdown'
+```
+
+Equivalente manual (se preferir):
+
+```bash
 curl -fsSL https://tailscale.com/install.sh | sh
-
-# subir na tailnet com hostname bonito, MagicDNS e Tailscale SSH
 tailscale up --hostname=hostinger --ssh --accept-routes
-
-# confirmar
-tailscale status
-tailscale ip -4
+tailscale status && tailscale ip -4
 ```
 
 `--ssh` habilita Tailscale SSH: você passa a entrar na VPS via `ssh root@hostinger` sem chave/senha (autenticação é a própria tailnet). Mantém chave tradicional como fallback se preferir.
@@ -173,9 +185,33 @@ Em outras palavras: Claude Code é seu caso de uso mais profundo; OpenClaw é su
 
 ---
 
-## Próximos passos sugeridos
+## Próximos passos — execução
 
-1. **Hoje:** testar `scripts/buzz-dashboard.sh` no Mac (mantém fluxo atual, só mais rápido)
-2. **Esta semana:** instalar Tailscale na VPS com `--ssh` e validar acesso do Mac + iPhone
-3. **Mês:** bookmark no iPhone pro dashboard via MagicDNS; avaliar Tailscale Serve se quiser URL HTTPS
-4. **Sempre:** manter gateway em loopback + firewall bloqueando 18789 público — a segurança do Buzz depende disso
+Do seu Mac, na raiz do repo, na ordem:
+
+```bash
+# 1) Instalar o comando buzz-dashboard
+ln -sf "$(pwd)/scripts/buzz-dashboard.sh" /usr/local/bin/buzz-dashboard
+buzz-dashboard                 # valida fluxo atual (SSH + tunnel + Chrome)
+
+# 2) Tailscale na VPS (diagnóstico → install → lockdown)
+scp scripts/vps-tailscale-setup.sh root@187.77.251.199:/tmp/
+ssh root@187.77.251.199 'bash /tmp/vps-tailscale-setup.sh --check'
+ssh -t root@187.77.251.199 'bash /tmp/vps-tailscale-setup.sh --install'
+# autenticar a VPS na tailnet da Adventure Labs (URL impressa)
+
+# 3) Apontar buzz-dashboard pro hostname Tailscale
+echo 'export BUZZ_VPS_HOST=hostinger' >> ~/.zshrc
+source ~/.zshrc
+buzz-dashboard                 # agora entra via Tailscale SSH
+
+# 4) iPhone: instalar app Tailscale e logar — bookmark http://hostinger:18789 fica em casa
+
+# 5) (OPCIONAL, só depois de validar 3) fechar porta pública 18789
+ssh -t root@187.77.251.199 'bash /tmp/vps-tailscale-setup.sh --lockdown'
+```
+
+**Invariantes de segurança:**
+- Gateway permanece em `127.0.0.1:18789` (loopback) OU em `tailscale0` com firewall bloqueando eth0
+- Token do dashboard **nunca** deve ir pra internet pública
+- Nginx de `openclaw.adventurelabs.com.br` em `tools/openclaw/nginx/openclaw.conf` **não deve ser deployado**
