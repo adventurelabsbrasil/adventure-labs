@@ -383,8 +383,8 @@ export default function LPContent() {
               <h2 className="footer-title">Contato</h2>
               <p className="footer-address">Porto Alegre, RS</p>
               <p>
-                <a href="tel:+5551996605387" className="footer-link">
-                  +55 51 99660-5387
+                <a href="tel:+5551997805367" className="footer-link">
+                  +55 51 99780-5367
                 </a>
               </p>
               <p>

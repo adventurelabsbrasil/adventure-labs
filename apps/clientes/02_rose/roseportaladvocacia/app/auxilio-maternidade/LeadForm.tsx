@@ -10,7 +10,7 @@ import {
 import { useSearchParams } from "next/navigation";
 import { CIDADES_RS } from "./cidades-rs";
 
-const WHATSAPP_NUMBER = "5551997805387";
+const WHATSAPP_NUMBER = "5551997805367";
 
 declare global {
   interface Window {
