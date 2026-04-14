@@ -1,12 +1,27 @@
-# HANDOFF — PINGOSTUDIO-264 (Young / Looker Studio → Supabase)
+# HANDOFF — PINGOSTUDIO-264 (Young / Migração de BI)
 
-**Data:** 2026-04-13
+**Data inicial:** 2026-04-13 (v1: Looker Studio)
+**Data do pivot:** 2026-04-14 (v2: Metabase)
 **Branch:** `claude/migrate-looker-supabase-1DHBz`
 **Responsável Adventure:** Rodrigo Ribas (interim, Mateus em férias)
 
 ---
 
-## Sumário executivo
+## ⚠️ PIVOT v2 — Metabase Adventure (2026-04-14)
+
+A missão **pivotou de Looker Studio para Metabase** após decisão Founder + Caroline + Eduardo. Razões em [`README.md`](README.md). Para executar:
+
+- 📘 **Como executar:** [`METABASE_SETUP.md`](METABASE_SETUP.md) — passo-a-passo da UI (Fase A → G)
+- 💻 **SQL versionado:** [`QUERIES_CRM.sql`](QUERIES_CRM.sql) — 15 Questions p/ os 5 dashboards
+- 🎯 **Funil real:** [`FUNIL_PINGOLEAD.md`](FUNIL_PINGOLEAD.md) — preencher após Fase B
+
+A role `looker_reader` criada na v1 é **reaproveitada intacta** (nome fica, funciona pra Metabase). Senha permanece a mesma (Vaultwarden). Os bloqueios da v1 (pooler IPv4, MCP cross-org, cliques no browser) deixam de ser críticos: Metabase na VPS Adventure resolve.
+
+O que segue abaixo é histórico v1 — útil pra credenciais, comandos psql legados, contexto da senha. Não considerar Looker Studio como caminho ativo.
+
+---
+
+## Sumário executivo (v1, histórico)
 
 Task de migração do dashboard Looker Studio da Young Empreendimentos, trocando a fonte de dados de Google Sheets para o Supabase Postgres do projeto `vvtympzatclvjaqucebr` (onde o CRM Pingolead escreve). Escopo: só a camada de visualização. Sem migração de dados históricos.
 

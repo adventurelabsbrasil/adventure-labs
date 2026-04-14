@@ -1,155 +1,109 @@
-# Young Pingostudio — Looker Studio sobre Supabase
+# Young Pingostudio — BI Metabase sobre Supabase Pingolead (v2)
 
-Migração do dashboard Looker Studio da Young Empreendimentos da fonte **Google Sheets** para **Supabase PostgreSQL** (`vvtympzatclvjaqucebr`), onde o CRM próprio Pingolead escreve.
+Dashboard de CRM/vendas da Young Empreendimentos no **Metabase Adventure** (`bi.adventurelabs.com.br`), conectado direto ao **Supabase Pingolead** (`vvtympzatclvjaqucebr`) onde o CRM próprio escreve.
 
 Ticket: **PINGOSTUDIO-264**
+
+## Por que Metabase (e não mais Looker Studio)
+
+Tentativa v1 (Looker Studio com data source Postgres) travou em 3 frentes: pooler IPv4 do Supabase Young não validado para o GCP, fluxo de MCP cross-org lento no Claude Code Cloud, ~3h de cliques no browser pra remapear cada gráfico. Histórico em [`RELATORIO_PARCIAL_2026-04-14.md`](RELATORIO_PARCIAL_2026-04-14.md).
+
+Decisão Founder + Caroline + Eduardo (2026-04-14): **pivot pra Metabase** que já roda na VPS Adventure. Resolve os 3 bloqueadores:
+
+- ✅ Conexão Postgres direto da VPS, sem quota Google nem dependência de pooler-only
+- ✅ Questions versionadas em SQL (commitado em [`QUERIES_CRM.sql`](QUERIES_CRM.sql), reproduzível por qualquer executor)
+- ✅ Alinhado ao stack oficial Adventure (CLAUDE.md: *Metabase | bi.adventurelabs.com.br | Dashboards*)
 
 ## Arquitetura
 
 ```
-Pingolead (PWA Young) ──writes──▶  Supabase vvtympzatclvjaqucebr
-                                     │ schema: <ver 01_introspect.out.txt>
-                                     │
-                                     │ role: looker_reader  (SELECT + BYPASSRLS)
-                                     ▼ pooler IPv4 (aws-0-sa-east-1.pooler.supabase.com:6543)
-                              Looker Studio (novo report Adventure)
-                                     │
-                                     ▼ compartilhado com Young (viewer)
+Pingolead (PWA Young) ──writes──▶ Supabase vvtympzatclvjaqucebr
+                                    │ schema public, 9 tabelas crm_*
+                                    │ role: looker_reader (SELECT + BYPASSRLS)
+                                    ▼ Postgres connection (SSL)
+                            Metabase (VPS Adventure 187.77.251.199)
+                            container adventure-metabase:3000
+                                    │
+                                    ▼ via NGINX
+                            https://bi.adventurelabs.com.br
+                                    │ Collection "Young Empreendimentos"
+                                    │ Group "Young" (acesso restrito)
+                                    ▼
+                            Equipe Adventure + Young (convidados)
 ```
 
-## Escopo
+## Escopo MVP (v2)
 
-- ✅ Criar role `looker_reader` no Supabase com SELECT nas tabelas Pingolead + BYPASSRLS
-- ✅ Clonar o relatório Looker Studio atual e trocar a data source de Sheets → Postgres Supabase via conector nativo
-- ✅ Compartilhar o novo relatório com stakeholders Young
-- ❌ **Não** migrar dados históricos da planilha (Pingolead preenche do zero)
-- ❌ **Não** alterar código da Pingolead
-- ❌ **Não** deletar planilha ou relatório antigo (apenas arquivar/deprecar)
+- ✅ Conectar Supabase Young no Metabase como database `Young Pingolead (CRM)`
+- ✅ Criar Collection `Young Empreendimentos` + Group `Young` (acesso restrito)
+- ✅ 5 dashboards CRM/vendas (Visão Geral, Funil, Consultores, Empreendimentos, Perdas)
+- ✅ Convite a 1 usuário Young de teste (validação)
+- ❌ **Sem dados de marketing/ads** (Pingolead não tem; ficou para missão futura)
+- ❌ Sem migração de dados históricos da planilha
+- ⚠️ Subdomínio `bi.young.adventurelabs.com.br` — opcional, só se Caroline/Young pedirem após validação
 
 ## Estrutura de arquivos
 
 ```
 pingostudio/
-├── README.md                                           # este arquivo
-├── HANDOFF.md                                          # estado atual e próximos passos
-├── FIELD_MAPPING.md                                    # template p/ rastrear fields Sheets→Postgres
+├── README.md                            # este arquivo
+├── HANDOFF.md                           # estado, credenciais, cola-pronto
+├── METABASE_SETUP.md                    # passo-a-passo da UI (Fase A → G)
+├── QUERIES_CRM.sql                      # 15 Questions versionadas em SQL
+├── FUNIL_PINGOLEAD.md                   # mapeamento real dos status (preencher Fase B)
+├── RELATORIO_PARCIAL_2026-04-14.md      # histórico v1 (Looker Studio)
+├── reference/
+│   └── looker_atual_2026-04-13.pdf      # dashboards do Looker antigo (referência visual)
 ├── scripts/
-│   ├── 00_connect.sh                                   # helper: testa direct→pooler, exporta URL
-│   ├── 01_introspect.sql                               # roda no Supabase, descobre schema
-│   ├── 01_introspect.out.txt                           # output (adicionar após rodar)
-│   └── 02_validate_looker_reader.sh                    # 3 testes do looker_reader
-└── supabase/
-    └── migrations/
-        └── 20260413000000_create_looker_reader.sql    # role + grants + BYPASSRLS
+│   ├── 00_connect.sh                    # helper psql (legado v1, ainda útil)
+│   ├── 01_introspect.sql + .out.txt     # schema Pingolead descoberto
+│   ├── 02_validate_looker_reader.sh     # valida role
+│   ├── 02_validate.out.txt              # validação OK via direct
+│   ├── 03_enum_values.sql               # queries da Fase B
+│   └── 99_*.sh                          # diagnóstico (legado v1)
+└── supabase/migrations/
+    └── 20260413000000_create_looker_reader.sql   # role aplicada (mantém)
 ```
 
-## Como aplicar (passo a passo)
+## Como usar (TL;DR)
 
-### 1. Introspectar o schema Pingolead no Supabase
+Toda a execução roteirizada em [`METABASE_SETUP.md`](METABASE_SETUP.md). Resumo:
 
-Numa máquina com acesso à internet (ex.: seu laptop, VPS Adventure):
+1. **Fase A:** logar em `bi.adventurelabs.com.br` → Admin → Databases → Add → conectar Supabase Young (10 min)
+2. **Fase B:** rodar 5 queries de descoberta de enum no SQL Editor → preencher `FUNIL_PINGOLEAD.md` (5 min)
+3. **Fase C:** criar Collection "Young Empreendimentos" + Group "Young" (10 min)
+4. **Fase D:** copiar cada bloco de `QUERIES_CRM.sql` para o SQL Editor → salvar como Question na Collection → montar 5 dashboards (~2h)
+5. **Fase E:** convidar 1 email Young de teste, validar permissões + spot check (10 min)
+6. **Fase F (opcional):** subdomínio Young branded (15 min se decidir fazer)
+7. **Fase G:** cutover — comunicar Young, deprecar Looker antigo, arquivar Sheets (10 min)
 
-```bash
-export PGPASSWORD='lg9S6Iz8y4LKSjxu'
+## Estado da role `looker_reader`
 
-# Tentar direct connection primeiro
-psql "postgresql://postgres@db.vvtympzatclvjaqucebr.supabase.co:5432/postgres?sslmode=require" \
-     -f apps/clientes/04_young/pingostudio/scripts/01_introspect.sql \
-     > apps/clientes/04_young/pingostudio/scripts/01_introspect.out.txt 2>&1
+Já criada e validada:
+- 9 tabelas `crm_*` com `GRANT SELECT`
+- `BYPASSRLS` ativo
+- 21.898 linhas em `crm_deals` acessíveis
+- Senha no Vaultwarden, item **"Young Pingolead Looker Reader"**
+- Validação completa em [`scripts/02_validate.out.txt`](scripts/02_validate.out.txt)
 
-# Se falhar (DNS IPv6), tentar pooler IPv4:
-psql "postgresql://postgres.vvtympzatclvjaqucebr@aws-0-sa-east-1.pooler.supabase.com:6543/postgres?sslmode=require" \
-     -f apps/clientes/04_young/pingostudio/scripts/01_introspect.sql \
-     > apps/clientes/04_young/pingostudio/scripts/01_introspect.out.txt 2>&1
-```
+Detalhes em [`HANDOFF.md`](HANDOFF.md).
 
-Inspecione `01_introspect.out.txt`. Anote:
+## Gap conhecido
 
-- O **nome do schema** onde a Pingolead criou as tabelas (pode ser `public`, `pingolead`, `crm`, `young` ou outro)
-- As **tabelas** que o Pingolead usa (nomes, colunas, tipos)
-- Se há **RLS ativo** nelas (esperado: sim, é default Supabase)
+Pingolead **não tem dados de marketing/ads**: impressões, cliques, investimento, CTR, CPC, CPA, CPL, breakdown por canal. O dashboard antigo (Looker) buscava do Sheets. **No MVP v2 do Metabase, esses gráficos simplesmente não existem** (escopo só CRM). Próxima missão (separada) avaliaria criar tabelas `ads_*` na Pingolead + pipeline Meta/Google APIs.
 
-### 2. Ajustar e aplicar a migration do `looker_reader`
+## Hive Mind
 
-Abra `supabase/migrations/20260413000000_create_looker_reader.sql` e:
+Estado canônico desta missão:
+- **`agent_context` key:** `young.pingostudio.looker_migration` (Supabase `ftctmseyrqhckutpfdeq`)
+- **`adv_csuite_memory`:** entrada `csuite_decision` ID `a47d1c66-19aa-4ee3-912e-be9dc2bb1272`
+- **Memória Buzz:** `openclaw/memory/2026-04-13-pingostudio-264.md` + `openclaw/memory/2026-04-14-pingostudio-264-pivot-metabase.md`
 
-1. Substitua `<SENHA_GERADA>` pela senha exibida no chat pelo Claude (já guardada no Vaultwarden como **"Young Pingolead Looker Reader"**).
-2. Se o schema da Pingolead **não for `public`**, troque todas as ocorrências de `public` pelo nome correto nas linhas de GRANT.
+Para retomar a missão em qualquer sessão: consulte os 4 acima.
 
-Rode:
+## Referências
 
-```bash
-export PGPASSWORD='lg9S6Iz8y4LKSjxu'
-psql "postgresql://postgres@db.vvtympzatclvjaqucebr.supabase.co:5432/postgres?sslmode=require" \
-     -f apps/clientes/04_young/pingostudio/supabase/migrations/20260413000000_create_looker_reader.sql
-```
-
-**IMPORTANTE:** após rodar, reverta o arquivo (deixe `<SENHA_GERADA>` como placeholder) antes de dar commit. A senha real fica só no Vaultwarden.
-
-### 3. Validar o `looker_reader`
-
-Script pronto (`scripts/02_validate_looker_reader.sh`) roda os 3 testes em sequência:
-
-```bash
-export LOOKER_READER_PWD='<senha do Vaultwarden>'
-export PINGOSTUDIO_TABLE='public.<alguma_tabela_pingolead>'   # descoberta no passo 1
-
-bash apps/clientes/04_young/pingostudio/scripts/02_validate_looker_reader.sh
-```
-
-Saída esperada:
-
-```
-=== 1. Conexão básica ===
-  OK  SELECT 1 → 1
-=== 2. Read via BYPASSRLS ===
-  OK  COUNT public.<tabela> → N linhas
-=== 3. INSERT deve ser negado ===
-  OK  INSERT negado (read-only confirmado)
-=== ✅ TUDO OK. looker_reader pronto para ser usado no Looker Studio. ===
-```
-
-Se qualquer teste falhar, revisar a migration antes de ir pro Looker.
-
-### 4. Novo Looker Studio
-
-Usar `FIELD_MAPPING.md` como planilha de controle ao longo desta fase.
-
-1. Abrir o relatório atual: https://lookerstudio.google.com/reporting/0449c5e9-0773-4f50-a9be-4a9af1dbcd51/page/zHINF/edit
-2. **Arquivo → Fazer uma cópia**. Título: **"Young Empreendimentos — Dashboard (Supabase)"**.
-3. **Recursos → Gerenciar fontes de dados adicionadas → Adicionar uma fonte → PostgreSQL**:
-   - Host: `aws-0-sa-east-1.pooler.supabase.com` (confirmar em Supabase dashboard → Settings → Database → Connection pooling se a região for outra)
-   - Porta: `6543`
-   - Database: `postgres`
-   - Usuário: `looker_reader.vvtympzatclvjaqucebr`
-   - Senha: do Vaultwarden
-   - **Enable SSL**: sim (obrigatório)
-4. Selecionar as tabelas Pingolead necessárias. Criar uma data source por tabela (ou usar Custom Query para joins).
-5. Em cada gráfico/scorecard/tabela do relatório: **Alterar fonte de dados** → apontar para o Postgres. Remapear campos — os nomes de colunas do Postgres podem diferir dos cabeçalhos do Sheets. Registrar cada mapeamento em `FIELD_MAPPING.md`.
-6. Refazer fórmulas de métricas calculadas (CPL, CPM, ROAS etc.) se aplicável.
-7. Recriar filtros globais (datas, empreendimento, canal) apontando para colunas do Postgres.
-8. Remover a data source antiga (Sheets) da cópia.
-9. **Compartilhar**: pegar a lista de stakeholders da aba Compartilhar do relatório original e adicionar no novo (rastrear no `FIELD_MAPPING.md`).
-
-### 5. Arquivar fontes antigas
-
-- Renomear o relatório antigo para `[DEPRECATED 2026-04] Young ...` e mover permissões para read-only.
-- Mover a planilha Sheets para pasta de arquivo no Drive (`99_ARQUIVO_YYYY_MM/`). **Não excluir**.
-
-## Gestão de segredos
-
-- **Senha `postgres` (superuser):** conforme instruções do ticket. **Não versionar.** Guardar no **Vaultwarden**.
-- **Senha `looker_reader`:** gerada no deploy; gravar no Vaultwarden em item **"Young Pingolead Looker Reader"**. **Não versionar.**
-
-Nenhum arquivo neste diretório deve conter senhas reais — apenas placeholders.
-
-## Referências no repo
-
-- `supabase/migrations/20260318000000_adv_crm_schema.sql` — padrão de schema CRM Adventure (comparação)
-- `apps/clientes/04_young/young-talents/supabase/migrations/002_create_candidates_table.sql` — padrão de migration com RLS
-- `apps/clientes/04_young/young-emp/docs/PLANO.md` — contexto martech Young (entidades planejadas)
-- `clients/03_young/CONTEXTO_CONTA_YOUNG_2026-03.md` — contexto da conta
-
-## Status
-
-Ver [`HANDOFF.md`](HANDOFF.md) para o estado atual da migração.
+- Plano aprovado: `/root/.claude/plans/cosmic-greeting-wadler.md`
+- Stack Adventure: `/CLAUDE.md` (BHAG, North Star, infra)
+- Setup VPS / NGINX: `tools/vps-infra/docker-compose.yml`, `tools/vps-infra/nginx/conf.d/adventure-labs-https.conf`
+- Convenções de cliente: `clients/03_young/CONTEXTO_CONTA_YOUNG_2026-03.md`
