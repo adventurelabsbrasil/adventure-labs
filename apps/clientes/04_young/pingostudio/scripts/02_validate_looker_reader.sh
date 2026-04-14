@@ -22,7 +22,7 @@ set -u
 : "${SUPABASE_REF:=vvtympzatclvjaqucebr}"
 : "${SUPABASE_REGION:=sa-east-1}"
 : "${LOOKER_READER_PWD:?defina LOOKER_READER_PWD com a senha do Vaultwarden}"
-: "${PINGOSTUDIO_TABLE:?defina PINGOSTUDIO_TABLE (ex.: public.leads)}"
+: "${PINGOSTUDIO_TABLE:=public.crm_deals}"
 
 URL="postgresql://looker_reader.${SUPABASE_REF}:${LOOKER_READER_PWD}@aws-0-${SUPABASE_REGION}.pooler.supabase.com:6543/postgres?sslmode=require"
 

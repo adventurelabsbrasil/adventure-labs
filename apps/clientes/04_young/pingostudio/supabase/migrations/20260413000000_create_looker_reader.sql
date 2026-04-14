@@ -1,68 +1,90 @@
 -- ==========================================================================
--- PINGOSTUDIO-264 — Role read-only `looker_reader` para Looker Studio
+-- PINGOSTUDIO-264 — Role read-only `looker_reader` para Looker Studio (Young)
 -- ==========================================================================
 -- Contexto:
---   A Young Empreendimentos migrou a fonte do dashboard Looker Studio
---   de Google Sheets para o Supabase `vvtympzatclvjaqucebr`, onde o CRM
---   Pingolead escreve. Este role dá SELECT read-only para o conector
---   PostgreSQL do Looker, com BYPASSRLS para contornar policies que
---   bloqueiam leitura externa ao fluxo auth-based do Supabase.
+--   A Pingolead (Young Empreendimentos) é o banco operacional completo da
+--   incorporadora — 123 tabelas em `public` cobrindo CRM, RH, cobrança,
+--   construção, Sienge, ATS. O escopo deste dashboard Looker é APENAS CRM
+--   (leads, deals, funil, consultores) — por decisão do Founder em
+--   2026-04-14.
 --
--- Como aplicar (executar em máquina com acesso à internet):
+--   Esta migration faz GRANT SELECT APENAS nas tabelas `crm_*`. Qualquer
+--   outra tabela (incluindo sienge_*, comercial_*, cidades, empreendimentos
+--   globais) fica fora do alcance do `looker_reader`. Se o Looker precisar
+--   de dimensões extras no futuro, um GRANT avulso é adicionado sem recriar
+--   o role.
 --
---   1. Abrir este arquivo e substituir <SENHA_GERADA> pela senha real
---      (ver HANDOFF.md, item "Senha gerada"). NÃO commitar a senha.
---   2. Rodar:
---        export PGPASSWORD='lg9S6Iz8y4LKSjxu'
---        psql "postgresql://postgres@db.vvtympzatclvjaqucebr.supabase.co:5432/postgres?sslmode=require" \
---             -f apps/clientes/04_young/pingostudio/supabase/migrations/20260413000000_create_looker_reader.sql
---   3. Reverter a substituição (deixar <SENHA_GERADA> de volta) antes de commitar.
+--   Schema confirmado pela introspecção (scripts/01_introspect.out.txt):
+--   `public` (único schema de dados).
 --
--- IMPORTANTE: ajustar o nome do SCHEMA da Pingolead antes de rodar.
--- Por padrão abaixo está `public`. Se o schema real for outro (ex.: `pingolead`,
--- `crm`, `young`), substituir em TODOS os lugares marcados com
--- "PINGOLEAD_SCHEMA" ou rodar o passo 0 para aplicar em múltiplos schemas.
+-- Como aplicar (da VPS, pelo Buzz após confirmação do Founder):
+--   1. Substituir <SENHA_GERADA> pela senha real (HANDOFF.md).
+--   2. psql "postgresql://postgres:<pwd>@db.vvtympzatclvjaqucebr.supabase.co:5432/postgres?sslmode=require" \
+--          -f apps/clientes/04_young/pingostudio/supabase/migrations/20260413000000_create_looker_reader.sql
+--   3. Reverter o placeholder (deixar <SENHA_GERADA>) antes de commit.
+--
+-- Gaps conhecidos (não bloqueiam esta migration):
+--   ⚠️ Pingolead NÃO tem tabelas de marketing/ads (impressões, cliques,
+--      investimento, CTR, CPC, CPA, CPL, canais). KPIs de ads do dashboard
+--      atual virão do Sheets via data source híbrida no Looker novo
+--      (Postgres p/ vendas + Sheets p/ ads). Futuro: criar tabela daily_ads
+--      na Pingolead quando Eduardo implementar pipeline.
 -- ==========================================================================
 
 BEGIN;
 
--- 1. Criar role (se já existir, o usuário deve DROP ROLE primeiro)
+-- 1. Role de leitura (logable, sem herança de outros roles)
 CREATE ROLE looker_reader WITH LOGIN PASSWORD '<SENHA_GERADA>' NOINHERIT;
 
--- 2. BYPASSRLS — necessário para um BI externo ler tabelas com RLS ativo
---    (Supabase liga RLS por padrão; sem isso o Looker veria zero linhas).
+-- 2. BYPASSRLS — Looker Studio é BI externo; precisa ignorar RLS
+--    que o Supabase liga por default em tabelas com auth/tenant-scoped.
 ALTER ROLE looker_reader BYPASSRLS;
 
--- 3. Conectar ao banco
+-- 3. Conexão e USAGE
 GRANT CONNECT ON DATABASE postgres TO looker_reader;
-
--- 4. USAGE no schema da Pingolead
---    >>> TROCAR "public" pelo schema real da Pingolead, se diferente <<<
 GRANT USAGE ON SCHEMA public TO looker_reader;
 
--- 5. SELECT em todas as tabelas existentes no schema
-GRANT SELECT ON ALL TABLES IN SCHEMA public TO looker_reader;
+-- 4. GRANT SELECT APENAS em crm_*
+--    Enumeração via catalog garante que só tabelas existentes são alcançadas
+--    e que novas tabelas crm_* (se Pingolead criar) podem ser pegas ao
+--    reaplicar esta migration.
+DO $$
+DECLARE
+  t record;
+  n int := 0;
+BEGIN
+  FOR t IN
+    SELECT table_name
+    FROM information_schema.tables
+    WHERE table_schema = 'public'
+      AND table_type  = 'BASE TABLE'
+      AND table_name LIKE 'crm\_%'  -- underscore literal
+    ORDER BY table_name
+  LOOP
+    EXECUTE format('GRANT SELECT ON public.%I TO looker_reader', t.table_name);
+    RAISE NOTICE 'GRANT SELECT ON public.% → looker_reader', t.table_name;
+    n := n + 1;
+  END LOOP;
+  RAISE NOTICE 'Total de tabelas crm_* liberadas: %', n;
+END $$;
 
--- 6. Default privileges — qualquer tabela nova criada no schema já
---    nasce com SELECT para o looker_reader (evita grant manual
---    toda vez que a Pingolead criar tabela nova)
-ALTER DEFAULT PRIVILEGES IN SCHEMA public
-  GRANT SELECT ON TABLES TO looker_reader;
+-- 5. Default privileges para tabelas crm_* futuras NÃO são configuradas
+--    globalmente (evita que tabelas não-CRM herdem acesso). Para uma nova
+--    crm_*, reaplicar esta migration ou rodar GRANT avulso.
 
 COMMIT;
 
 -- ==========================================================================
--- Pós-aplicação: validar
+-- Validação pós-apply (como looker_reader via pooler)
 -- ==========================================================================
---   # conectar como looker_reader via pooler IPv4 (Looker Studio usa esse host)
---   psql "postgresql://looker_reader.vvtympzatclvjaqucebr@aws-0-sa-east-1.pooler.supabase.com:6543/postgres?sslmode=require"
+--   # DEVE retornar uma contagem
+--   SELECT COUNT(*) FROM public.crm_deals;
 --
---   # deve retornar 1
---   SELECT 1;
+--   # DEVE falhar com "permission denied" (tabela fora do escopo CRM)
+--   SELECT COUNT(*) FROM public.rh_folha_mensal;
+--   SELECT COUNT(*) FROM public.sienge_contratos_de_vendas;
+--   SELECT COUNT(*) FROM public.cidades;
 --
---   # deve listar linhas (ou 0 se tabelas zeradas)
---   SELECT COUNT(*) FROM <tabela_pingolead>;
---
---   # deve falhar com "permission denied"
---   INSERT INTO <tabela_pingolead> DEFAULT VALUES;
+--   # DEVE falhar (role é read-only)
+--   INSERT INTO public.crm_deals (id) VALUES (gen_random_uuid());
 -- ==========================================================================
