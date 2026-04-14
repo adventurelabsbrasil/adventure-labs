@@ -1,53 +1,69 @@
 #!/usr/bin/env bash
 # buzz-dashboard — abre o OpenClaw dashboard do Mac em 1 comando
 #
-# Substitui o fluxo manual:
-#   1) login Hostinger → terminal VPS
-#   2) rodar `openclaw dashboard`
-#   3) copiar ssh -N -L 18789:... e colar no Mac
-#   4) copiar URL com token e colar no Chrome
+# Fluxo:
+#   1) lê token cacheado em ~/.config/buzz/token (ou --refresh pra buscar via SSH)
+#   2) sobe SSH tunnel 18789 → hostinger:18789 via Tailscale (se não houver)
+#   3) abre Chrome em http://localhost:18789/#token=...
 #
 # Uso:
-#   ./scripts/buzz-dashboard.sh             # abre dashboard
-#   ./scripts/buzz-dashboard.sh --stop      # derruba tunnel aberto
-#   ./scripts/buzz-dashboard.sh --status    # status do tunnel
+#   buzz-dashboard            # abre dashboard
+#   buzz-dashboard --stop     # derruba tunnel
+#   buzz-dashboard --status   # diagnóstico
+#   buzz-dashboard --refresh  # busca token atualizado na VPS
 #
 # Requisitos no Mac:
-#   - chave SSH autorizada em root@187.77.251.199 (ou host Tailscale)
-#   - `open` (padrão macOS) OU `xdg-open` no Linux
+#   - Tailscale ativo (Mac + VPS na mesma tailnet; hostname "hostinger")
+#   - chave SSH autorizada em root@hostinger
+#   - ~/.config/buzz/token com o token do dashboard (chmod 600)
 #
 # Variáveis de ambiente (opcionais):
-#   BUZZ_VPS_HOST   destino SSH (default: 187.77.251.199; pode ser `hostinger` se Tailscale ativo)
+#   BUZZ_VPS_HOST   destino SSH (default: hostinger — via Tailscale MagicDNS)
 #   BUZZ_VPS_USER   usuário SSH (default: root)
-#   BUZZ_PORT       porta do gateway OpenClaw (default: 18789)
+#   BUZZ_PORT       porta do gateway (default: 18789)
 #   BUZZ_BROWSER    app do browser (default: "Google Chrome")
+#   BUZZ_TOKEN_FILE caminho do token (default: ~/.config/buzz/token)
 
 set -euo pipefail
 
-VPS_HOST="${BUZZ_VPS_HOST:-187.77.251.199}"
+VPS_HOST="${BUZZ_VPS_HOST:-hostinger}"
 VPS_USER="${BUZZ_VPS_USER:-root}"
 PORT="${BUZZ_PORT:-18789}"
 BROWSER="${BUZZ_BROWSER:-Google Chrome}"
-PID_FILE="${TMPDIR:-/tmp}/buzz-dashboard.${PORT}.pid"
+TOKEN_FILE="${BUZZ_TOKEN_FILE:-$HOME/.config/buzz/token}"
 
-log() { printf '\033[1;36m[buzz]\033[0m %s\n' "$*"; }
-err() { printf '\033[1;31m[buzz]\033[0m %s\n' "$*" >&2; }
+log()  { printf '\033[1;36m[buzz]\033[0m %s\n' "$*"; }
+warn() { printf '\033[1;33m[buzz]\033[0m %s\n' "$*"; }
+err()  { printf '\033[1;31m[buzz]\033[0m %s\n' "$*" >&2; }
 
 is_tunnel_alive() {
-  [[ -f "$PID_FILE" ]] || return 1
-  local pid
-  pid=$(cat "$PID_FILE")
-  kill -0 "$pid" 2>/dev/null
+  lsof -ti ":${PORT}" >/dev/null 2>&1
 }
 
 stop_tunnel() {
-  if is_tunnel_alive; then
-    local pid
-    pid=$(cat "$PID_FILE")
-    log "encerrando tunnel (pid=$pid)"
-    kill "$pid" 2>/dev/null || true
+  local pids
+  pids=$(lsof -ti ":${PORT}" 2>/dev/null || true)
+  if [[ -n "$pids" ]]; then
+    log "encerrando tunnel (pids: $pids)"
+    echo "$pids" | xargs -r kill 2>/dev/null || true
   fi
-  rm -f "$PID_FILE"
+}
+
+refresh_token() {
+  log "buscando token atualizado em ${VPS_USER}@${VPS_HOST}..."
+  local output token
+  # openclaw dashboard precisa de TTY (socket systemd user)
+  output=$(ssh -t -o ConnectTimeout=10 "${VPS_USER}@${VPS_HOST}" 'openclaw dashboard' 2>/dev/null || true)
+  token=$(printf '%s' "$output" | grep -oE 'token=[A-Za-z0-9]+' | head -n1 | cut -d= -f2)
+  if [[ -z "$token" ]]; then
+    err "falha ao extrair token. Output bruto:"
+    printf '%s\n' "$output" >&2
+    return 1
+  fi
+  mkdir -p "$(dirname "$TOKEN_FILE")"
+  printf '%s\n' "$token" > "$TOKEN_FILE"
+  chmod 600 "$TOKEN_FILE"
+  log "token atualizado: ${token:0:10}… ($TOKEN_FILE)"
 }
 
 case "${1:-}" in
@@ -58,57 +74,62 @@ case "${1:-}" in
     ;;
   --status)
     if is_tunnel_alive; then
-      log "tunnel ativo (pid=$(cat "$PID_FILE")) em localhost:${PORT}"
-      exit 0
+      log "tunnel ativo: pid=$(lsof -ti ":${PORT}" | head -n1), porta=${PORT}"
     else
       log "tunnel inativo."
-      exit 1
     fi
+    if [[ -f "$TOKEN_FILE" ]]; then
+      local_token=$(head -n1 "$TOKEN_FILE")
+      log "token cached: ${local_token:0:10}… ($TOKEN_FILE)"
+    else
+      warn "sem token cached em $TOKEN_FILE"
+    fi
+    log "host: ${VPS_USER}@${VPS_HOST}:${PORT}"
+    exit 0
+    ;;
+  --refresh)
+    refresh_token
+    exit $?
     ;;
 esac
 
-# 1) buscar URL do dashboard via SSH (openclaw dashboard é executado pelo user openclaw via systemd)
-log "solicitando URL do dashboard em ${VPS_USER}@${VPS_HOST}..."
-DASHBOARD_OUTPUT=$(ssh -o ConnectTimeout=10 -o BatchMode=yes "${VPS_USER}@${VPS_HOST}" 'openclaw dashboard --print-url 2>/dev/null || openclaw dashboard') || {
-  err "falha ao conectar em ${VPS_USER}@${VPS_HOST}. Verifique SSH e Tailscale."
-  exit 1
-}
-
-# 2) extrair URL com token (procura http://...#token=...)
-DASHBOARD_URL=$(printf '%s\n' "$DASHBOARD_OUTPUT" | grep -oE 'https?://[^[:space:]]+#token=[A-Za-z0-9]+' | head -n1 || true)
-
-if [[ -z "$DASHBOARD_URL" ]]; then
-  err "não foi possível extrair URL do dashboard. Output bruto:"
-  printf '%s\n' "$DASHBOARD_OUTPUT" >&2
-  exit 1
+# token
+if [[ ! -f "$TOKEN_FILE" ]]; then
+  warn "sem token em $TOKEN_FILE — buscando via SSH..."
+  refresh_token || {
+    err "sem token disponível. Rode 'buzz-dashboard --refresh' manualmente."
+    exit 1
+  }
 fi
+TOKEN=$(head -n1 "$TOKEN_FILE")
 
-# 3) abrir tunnel SSH em background se ainda não está
+# tunnel
 if is_tunnel_alive; then
-  log "tunnel já ativo em localhost:${PORT} (pid=$(cat "$PID_FILE"))"
+  log "tunnel já ativo em localhost:${PORT}"
 else
-  log "abrindo tunnel SSH localhost:${PORT} → ${VPS_HOST}:${PORT}..."
-  ssh -N -L "${PORT}:127.0.0.1:${PORT}" \
+  log "abrindo tunnel ${VPS_USER}@${VPS_HOST}:${PORT} → localhost:${PORT}..."
+  ssh -fN \
       -o ServerAliveInterval=30 \
       -o ServerAliveCountMax=3 \
       -o ExitOnForwardFailure=yes \
-      "${VPS_USER}@${VPS_HOST}" &
-  echo $! > "$PID_FILE"
-  # pequena espera pro tunnel subir
+      -L "${PORT}:127.0.0.1:${PORT}" \
+      "${VPS_USER}@${VPS_HOST}"
+  # espera tunnel responder
   for _ in 1 2 3 4 5; do
-    if nc -z localhost "$PORT" 2>/dev/null; then break; fi
-    sleep 0.5
+    if curl -s -o /dev/null -m 1 "http://localhost:${PORT}/"; then break; fi
+    sleep 0.4
   done
 fi
 
-# 4) abrir no navegador
-log "abrindo dashboard: ${DASHBOARD_URL}"
+# abre browser
+URL="http://localhost:${PORT}/#token=${TOKEN}"
+log "abrindo dashboard"
 if [[ "$(uname -s)" == "Darwin" ]]; then
-  open -a "$BROWSER" "$DASHBOARD_URL"
+  open -a "$BROWSER" "$URL"
 elif command -v xdg-open >/dev/null 2>&1; then
-  xdg-open "$DASHBOARD_URL" >/dev/null 2>&1 &
+  xdg-open "$URL" >/dev/null 2>&1 &
 else
-  log "abra manualmente: $DASHBOARD_URL"
+  log "URL: $URL"
 fi
 
-log "pronto. Para encerrar: $0 --stop"
+log "pronto. 'buzz-dashboard --stop' pra encerrar tunnel."
