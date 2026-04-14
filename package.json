@@ -36,6 +36,10 @@
     "google:gtm:version-publish": "infisical run --env=dev --path=${INFISICAL_GOOGLE_GTM_PATH:-/clientes/03_ROSE} -- node tools/scripts/google-marketing-cli.mjs gtm:version-publish",
     "asana:router:dry": "node tools/scripts/asana-inbox-router.mjs",
     "asana:router:apply": "node tools/scripts/asana-inbox-router.mjs --apply",
+    "mp:verify": "infisical run --env=${INFISICAL_MP_ENV:-dev} --path=/mp -- node tools/scripts/mercadopago-cli.mjs verify",
+    "mp:payments:search": "infisical run --env=${INFISICAL_MP_ENV:-dev} --path=/mp -- node tools/scripts/mercadopago-cli.mjs payments:search",
+    "mp:sync:payments": "infisical run --env=${INFISICAL_MP_ENV:-dev} --path=/mp -- node tools/scripts/mercadopago-cli.mjs sync:payments",
+    "mp:sync:all": "infisical run --env=${INFISICAL_MP_ENV:-dev} --path=/mp -- node tools/scripts/mercadopago-cli.mjs sync:all",
     "governance:check": "bash tools/scripts/check-repo-governance.sh"
   },
   "devDependencies": {

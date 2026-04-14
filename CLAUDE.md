@@ -78,6 +78,7 @@
 | gerente-young | `11 12 * * 2` | Briefing semanal Young | Telegram |
 | gerente-benditta | `19 12 * * 3` | Briefing semanal Benditta | Telegram |
 | backup-vps | `30 6 * * *` | Backup VPS → Drive (n8n, Plane, Infisical, Vaultwarden, Supabase, configs) | Telegram |
+| mercadopago-sync | `*/30 * * * *` | Sync incremental Mercado Pago → Supabase `adv_mp_payments` (conciliação financeira). Data sync puro, sem dispatcher LLM | Telegram apenas em erro |
 
 **Scripts:** `/opt/adventure-labs/scripts/agents/` (VPS)
 **Dispatcher:** `/opt/adventure-labs/scripts/adventure-agent.sh` (Supabase context + Anthropic API + Telegram)

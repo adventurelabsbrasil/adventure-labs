@@ -186,7 +186,15 @@ CLIENTE CHEGA → vê o site/LP → deixa contato → IA processa → WhatsApp r
 
 #### MercadoPago / Sicredi
 **O que é:** Gateways de pagamento.
-**Na Adventure Labs:** Integrados para processar pagamentos de clientes.
+**Na Adventure Labs:** Integrados para processar pagamentos. A integração com Mercado Pago hoje é **apenas leitura** (uso interno para conciliação financeira):
+
+- **CLI:** `tools/scripts/mercadopago-cli.mjs` — comandos `verify`, `payments:search`, `sync:payments`, `sync:all`
+- **Scripts npm:** `pnpm mp:verify`, `pnpm mp:sync:payments`, `pnpm mp:sync:all`
+- **Agente VPS:** `tools/vps-infra/scripts/agents/mercadopago-sync.sh` → deploy em `/opt/adventure-labs/scripts/agents/` com cron `*/30 * * * *`
+- **Destino Supabase:** `adv_mp_payments` (espelho completo com `raw jsonb`), `adv_mp_sync_log` (auditoria). RLS: service_role-only.
+- **Infisical:** path `/mp` com `MP_ACCESS_TOKEN`, `MP_PUBLIC_KEY`, `MP_CLIENT_ID`, `MP_CLIENT_SECRET`, `MP_USER_ID`, `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`
+- **Consumidores:** Sueli (financeiro AI) via WhatsApp/email, Buffett (CFO agente), dashboards Metabase
+- **Fora de escopo por ora:** checkout de cliente, webhooks IPN, saldo/atividades (endpoints MP instáveis — reimplementar quando houver caso de uso concreto)
 
 #### Omie ERP
 **O que é:** Sistema de gestão empresarial (emissão de NF, financeiro, CRM básico).
