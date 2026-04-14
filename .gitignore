@@ -23,6 +23,10 @@ service_account*.json
 token.json
 credentials.json
 
+# Claude Code — settings locais (podem conter tokens de MCP)
+.claude/settings.local.json
+.mcp.local.json
+
 # Lockfiles alternativos (apenas pnpm é permitido — ver docs/GOVERNANCA_LOCKFILES.md)
 package-lock.json
 yarn.lock
