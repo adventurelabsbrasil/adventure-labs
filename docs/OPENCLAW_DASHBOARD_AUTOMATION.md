@@ -93,19 +93,26 @@ tailscale status && tailscale ip -4
 2. Acesso pelo Mac/iPhone via Tailscale **SSH tunnel sobre Tailscale** (ainda precisa de tunnel, mas agora via rede privada criptografada e disponível em qualquer lugar)
 3. Ajustar script: `export BUZZ_VPS_HOST=hostinger`
 
-### Opção mais limpa: bind no Tailscale + firewall
+### Opção mais limpa: bind no IP da tailnet (sem UFW)
 
-Se quiser eliminar o tunnel e acessar direto `http://hostinger:18789`:
+Pra eliminar o tunnel e permitir acesso do iPhone, o gateway precisa ouvir em `tailscale0`. A forma mais segura é alterar o systemd unit pra passar `--host <IP_TAILNET>` ao gateway:
 
 ```bash
-# na VPS, configurar gateway pra ouvir na interface Tailscale também
-# editar /root/.openclaw/openclaw.json → "bind": "0.0.0.0"  (ou tailscale0 IP)
-# E adicionar firewall UFW pra bloquear 18789 em eth0 (internet pública)
-ufw allow in on tailscale0 to any port 18789
-ufw deny 18789/tcp
+# Editar /root/.config/systemd/user/openclaw-gateway.service
+# Linha ExecStart:
+#   de:  ExecStart=/usr/bin/node .../index.js gateway --port 18789
+#   pra: ExecStart=/usr/bin/node .../index.js gateway --host 100.122.165.119 --port 18789
+
+systemctl --user daemon-reload
+systemctl --user restart openclaw-gateway
+
+# Validar
+ss -tlnp | grep 18789   # deve listar 100.122.165.119:18789
 ```
 
-Com isso, o dashboard fica disponível **só dentro da tailnet**, sem SSH, sem tunnel, sem porta pública — basta digitar `http://hostinger:18789/#token=...` no browser.
+Depois disso, `http://hostinger:18789/#token=...` funciona direto do Mac e iPhone (ambos na tailnet). **Sem UFW necessário** — o gateway literalmente não escuta em eth0.
+
+> **Por que não `0.0.0.0` + UFW?** A VPS tem múltiplos serviços expostos em eth0 (n8n:5678, docker proxies 3000-3003, etc). Ativar UFW sem auditoria completa pode quebrar serviços. Bind explícito no IP da tailnet é defesa em profundidade sem depender de firewall.
 
 ### Celular
 
