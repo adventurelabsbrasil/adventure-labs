@@ -2,11 +2,13 @@
 
 **Objetivo:** eliminar o fluxo manual de 5 passos (Hostinger → terminal web → `openclaw dashboard` → copiar SSH → colar no Mac → copiar URL → abrir Chrome) e permitir acesso ao dashboard do Buzz de qualquer lugar, inclusive celular.
 
-**Estado atual (2026-04-14):**
+**Estado atual (2026-04-15):**
 
-- Gateway OpenClaw roda via systemd em `127.0.0.1:18789` na VPS (loopback-only; ver `tools/openclaw/VPS_SETUP.md`)
-- Auth = token impresso por `openclaw dashboard`
-- Acesso remoto exige SSH tunnel manual
+- Gateway OpenClaw roda via systemd em `127.0.0.1:18789` na VPS (bind=loopback; ver `tools/openclaw/VPS_SETUP.md`)
+- Auth = token persistente em `openclaw.json → gateway.auth.token` (mesmo token a cada `openclaw dashboard`)
+- Tailscale ativo em Mac + VPS + iPhone (mesma tailnet `tailf7a1ad.ts.net`)
+- Mac tem comando `buzz` funcional via SSH tunnel Tailscale
+- iPhone ainda **não tem** acesso direto (bloqueado pelo requisito de "secure context" do OpenClaw Control UI)
 
 ---
 
@@ -222,3 +224,84 @@ ssh -t root@187.77.251.199 'bash /tmp/vps-tailscale-setup.sh --lockdown'
 - Gateway permanece em `127.0.0.1:18789` (loopback) OU em `tailscale0` com firewall bloqueando eth0
 - Token do dashboard **nunca** deve ir pra internet pública
 - Nginx de `openclaw.adventurelabs.com.br` em `tools/openclaw/nginx/openclaw.conf` **não deve ser deployado**
+
+---
+
+## Execução 2026-04-15 — descobertas reais & estado final
+
+Documenta o que foi validado em produção, para sobrescrever pontos teóricos acima quando divergirem.
+
+### Descobertas do OpenClaw que mudaram o plano
+
+1. **Flag `--bind` aceita modo, não IP.** Valores válidos: `loopback|lan|tailnet|auto|custom`. Passar um IP (`--bind 100.122.165.119`) faz o gateway degradar silenciosamente e voltar pra loopback.
+2. **Config nativo existe.** O `openclaw.json` já tem seção `gateway.bind` — editar config é mais limpo que mexer no systemd unit.
+3. **Token é persistente.** `openclaw dashboard` imprime sempre o mesmo token (vive em `openclaw.json → gateway.auth.token`). Não rotaciona a cada chamada — pode ser cacheado localmente.
+4. **Control UI exige secure context.** A partir da v2026.4.12 o dashboard exige HTTPS **ou** `localhost`/`127.0.0.1`. Acesso via `http://hostinger:18789` (HTTP tailnet sem TLS) é bloqueado com: `control ui requires device identity (use HTTPS or localhost secure context)`.
+5. **`tailscale up` via SSH tailnet recusa alterações por default.** Retorna erro `"you are connected over Tailscale; ...lose-ssh"`. Usar `tailscale set --ssh=true` em vez disso (non-destructive), ou `--accept-risk=lose-ssh` explicitamente.
+6. **Sintaxe nova do `tailscale serve`** (v1.64+): `tailscale serve --bg <backend>` — sem `https:443 /`. HTTPS é assumido.
+
+### Arquitetura final recomendada
+
+```
+iPhone / Mac → (tailnet WireGuard) → hostinger.tailf7a1ad.ts.net:443 (Tailscale Serve HTTPS)
+                                         ↓ reverse proxy
+                                     127.0.0.1:18789 (OpenClaw gateway, bind=loopback)
+```
+
+Vantagens:
+- HTTPS real com cert Let's Encrypt (satisfaz secure context → iPhone funciona)
+- Gateway em loopback (defesa em profundidade; porta 18789 nunca exposta diretamente)
+- Acesso apenas dentro da tailnet (Tailscale Serve, não Funnel)
+- Nenhum SSH tunnel necessário; Mac e iPhone abrem URL HTTPS direto
+
+### Config final do `openclaw.json` (seção gateway)
+
+```json
+{
+  "gateway": {
+    "port": 18789,
+    "mode": "local",
+    "bind": "loopback",
+    "controlUi": {
+      "allowInsecureAuth": true,
+      "allowedOrigins": [
+        "http://127.0.0.1:18789",
+        "http://hostinger:18789",
+        "http://localhost:18789",
+        "https://claw.adventurelabs.com.br",
+        "https://hostinger.tailf7a1ad.ts.net",
+        "https://hostinger.tailf7a1ad.ts.net:443"
+      ]
+    },
+    "auth": { "mode": "token", "token": "<persistente>" }
+  }
+}
+```
+
+### Pré-requisito pendente — ativar HTTPS Certificates na tailnet
+
+Tailscale Serve HTTPS exige que a feature esteja habilitada no admin console:
+
+1. Ir em https://login.tailscale.com/admin/dns
+2. Seção **HTTPS Certificates** → **Enable HTTPS**
+3. Rodar `scripts/buzz-vps-serve.sh` (este repo) de novo
+
+Enquanto isso não for feito, o modo de operação é **fallback tunnel**: gateway em loopback + `buzz` no Mac faz SSH tunnel + abre em `http://localhost:18789` (secure context OK). iPhone não funciona neste modo.
+
+### Heads-up de segurança descoberto
+
+Durante diagnóstico foi identificado `OPENROUTER_API_KEY` em **plain text** no unit file systemd (`/root/.config/systemd/user/openclaw-gateway.service`). Ação recomendada (não bloqueante):
+
+1. Rotacionar a chave no OpenRouter dashboard
+2. Mover pra `/root/.openclaw/env.conf` (chmod 600)
+3. Referenciar via `EnvironmentFile=/root/.openclaw/env.conf` no unit
+
+### Scripts operacionais criados
+
+| Script | O que faz | Quando rodar |
+|--------|-----------|--------------|
+| `scripts/buzz-dashboard.sh` | Mac: abre dashboard (detecta direto/tunnel automático) | diário (`buzz`) |
+| `scripts/vps-tailscale-setup.sh` | VPS: check/install/lockdown Tailscale | one-shot (já executado) |
+| `scripts/buzz-vps-serve.sh` * | VPS: ativa Tailscale Serve HTTPS + fallback | rodar após HTTPS habilitado no admin |
+
+\* não commitado no repo — foi gerado inline na conversa; reaproveitar dos commits do PR se necessário.

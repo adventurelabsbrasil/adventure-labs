@@ -4,6 +4,49 @@ Registro operacional para handoff entre Human, CTO (Torvalds) e agentes. Atualiz
 
 ---
 
+## 2026-04-15 — Automação acesso OpenClaw Dashboard (Mac + iPhone, via Tailscale)
+
+**Branch:** `claude/automate-openclaw-login-j8CYA`
+**Módulo SSOT:** M08 (infra) + M05 (IA/agentes)
+**Artefatos:** `scripts/buzz-dashboard.sh`, `scripts/vps-tailscale-setup.sh`, `docs/OPENCLAW_DASHBOARD_AUTOMATION.md`
+
+### Problema original
+Acesso manual ao dashboard OpenClaw levava ~2min e 5 passos: login Hostinger → terminal web → `openclaw dashboard` → copiar comando SSH → colar no Mac → copiar URL+token → abrir Chrome. Dependência 100% do MacBook. Sem acesso pelo iPhone.
+
+### Feito
+- **Mac:** comando `buzz` funcional (alias pra `buzz-dashboard.sh` em `~/bin/`). Cache de token em `~/.config/buzz/token` (chmod 600). Auto-detecta rota: direto via Tailscale > SSH tunnel fallback.
+- **VPS:** Tailscale já estava instalado e os 3 nodes (Mac, iPhone, VPS) já estavam na mesma tailnet (`tailf7a1ad.ts.net`). Nenhuma instalação nova foi necessária — só configuração.
+- **Gateway OpenClaw:** tentativa `bind=tailnet` via `openclaw.json` funcionou tecnicamente (porta abriu em `100.122.165.119:18789`), mas bloqueada pelo novo requisito de **secure context** da Control UI v2026.4.12. Revertido pra `bind=loopback` como estado estável.
+- **Config:** `openclaw.json → gateway.controlUi.allowedOrigins` expandido com hostname+FQDN+IP da tailnet (mantidos para quando HTTPS estiver disponível).
+- **Documentação:** `docs/OPENCLAW_DASHBOARD_AUTOMATION.md` consolidado com descobertas reais (ver seção "Execução 2026-04-15").
+
+### Descobertas técnicas registradas
+1. Flag `--bind` do OpenClaw aceita modo (`loopback|lan|tailnet|auto|custom`), não IP.
+2. Token do dashboard é **persistente** — mora em `openclaw.json`, não rotaciona.
+3. Control UI v2026.4.12 exige HTTPS ou localhost (secure context). `http://hostinger:18789` é bloqueado.
+4. `tailscale up` via sessão SSH da tailnet recusa alterações; usar `tailscale set` em vez disso.
+5. Sintaxe nova do `tailscale serve`: `tailscale serve --bg <backend>` (sem `https:443 /`).
+6. Gateway expõe no unit file systemd uma `OPENROUTER_API_KEY` em plain text → rotacionar e mover pra EnvironmentFile.
+
+### Estado atual (end-of-session)
+- ✅ **Mac:** `buzz` abre dashboard em 3s via SSH tunnel Tailscale → `localhost:18789` (secure context OK)
+- ⏳ **iPhone:** bloqueado. Precisa HTTPS via Tailscale Serve. Requisito: ativar HTTPS Certificates em https://login.tailscale.com/admin/dns
+- ✅ **Gateway:** `bind=loopback`, porta pública 18789 não exposta, acesso só por tunnel/tailnet
+
+### Onde paramos
+Usuário (founder) precisa ativar **HTTPS Certificates** no admin Tailscale. Depois rodar o script `buzz-vps-serve.sh` (gerado na conversa, não commitado — reaproveitar da branch) que configura `tailscale serve --bg http://127.0.0.1:18789` e adiciona origin HTTPS.
+
+### Próximos
+- **Founder:** ativar HTTPS Certificates no admin Tailscale (1 clique) → destrava iPhone.
+- **Claude:** após HTTPS habilitado, atualizar `buzz-dashboard.sh` para preferir URL HTTPS (`https://hostinger.tailf7a1ad.ts.net/`) quando disponível. Commitar `scripts/buzz-vps-serve.sh` no repo.
+- **Claude:** rotacionar `OPENROUTER_API_KEY` + mover pra EnvironmentFile (follow-up de segurança).
+- **PR:** abrir da branch `claude/automate-openclaw-login-j8CYA` pra `main` quando founder autorizar.
+
+### Bloqueios
+- HTTPS Certificates no admin Tailscale — ação manual humana pendente.
+
+---
+
 ## 2026-04-09 — Nova tabela adv_ads_daily_metrics (ad-level granularity)
 
 ### Feito
