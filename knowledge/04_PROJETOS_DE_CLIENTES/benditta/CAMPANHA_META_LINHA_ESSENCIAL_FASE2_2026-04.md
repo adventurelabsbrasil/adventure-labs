@@ -41,9 +41,10 @@ drive_criativos: "https://drive.google.com/open?id=128YsEU3UrbBfM4v-7IMnlOD0_AI9
 ## 2. Objetivo da campanha
 
 **Objetivo Meta Ads:** Geração de Cadastros (Lead Ads — Formulário Nativo Instagram)
-**Meta de resultado:** 8–15 leads MQL em 15 dias
+**Meta de resultado:** 8–15 leads MQL em 15 dias / 10 dias úteis
 **Métrica-guia:** Custo por lead qualificado (CPL alvo: abaixo de R$ 75)
 **Qualificação mínima de MQL:** orçamento declarado ≥ R$ 30k + 2 ou mais ambientes + tem projeto (ou em andamento)
+**Fluxo pós-form:** tela de agradecimento do Lead Form → botão "Falar no WhatsApp" → abre WhatsApp comercial Benditta
 
 ---
 
@@ -52,11 +53,13 @@ drive_criativos: "https://drive.google.com/open?id=128YsEU3UrbBfM4v-7IMnlOD0_AI9
 | Nível | Decisão | Justificativa |
 |-------|---------|---------------|
 | **Conta** | act=763660518134498 | Conta de anúncios Benditta |
-| **Campanha** | 1 campanha CBO | Orçamento concentrado — CBO direciona verba para o conjunto de melhor CPL |
-| **Orçamento diário** | R$ 40/dia | R$ 600 ÷ 15 dias |
+| **Campanha** | 1 campanha CBO | Orçamento fixo por ad set evita que um consuma o outro (verba equilibrada) |
+| **Orçamento diário total** | R$ 50/dia | R$ 25/dia por ad set × 2 ad sets |
+| **Duração** | 15 dias corridos / 10 dias úteis | Período: ~17–30 abr/2026 |
+| **Investimento total estimado** | R$ 700–750 | R$ 50 × 14–15 dias |
 | **Grupos de anúncio** | 2 conjuntos | Ad Set 1: Consumidor Final · Ad Set 2: Arquitetos |
 | **Criativos** | Vídeo 3 + Vídeo 4 (Drive) | 1 vídeo por conjunto |
-| **Destino** | Formulário Nativo Meta | Lead qualificado sem sair do Instagram |
+| **Destino** | Formulário Nativo → WhatsApp | Lead preenche form → tela de agradecimento abre WhatsApp comercial |
 | **Plataforma** | Instagram (Feed + Reels + Stories) | Foco exclusivo Instagram nesta fase |
 | **Região** | RMPA + Litoral RS | Público com capacidade de investimento |
 
@@ -112,8 +115,16 @@ drive_criativos: "https://drive.google.com/open?id=128YsEU3UrbBfM4v-7IMnlOD0_AI9
 
 ## 5. Formulário Nativo MQL — campos validados
 
+> **Fluxo completo:**
+> Instagram → anúncio → formulário nativo (6 campos) → tela de agradecimento com botão "Falar no WhatsApp" → abre WhatsApp comercial Benditta
+>
 > **Lógica:** quem não tem projeto OU orçamento abaixo de R$ 15k ainda pode preencher — mas o time comercial
 > prioriza atendimento para quem declarar R$ 30k+ e 2+ ambientes. Isso cria a fila de MQL sem bloquear volume.
+>
+> **Configuração técnica do Lead Form (Igor):**
+> - Tipo de formulário: "Mais volume" (More Volume) — facilita preenchimento
+> - Na aba "Tela de agradecimento": adicionar botão CTA tipo "Enviar mensagem" → inserir link `https://wa.me/[NUMERO_COMERCIAL_BENDITTA]` com mensagem pré-preenchida
+> - Mensagem sugerida para o link: `Olá! Acabei de preencher o formulário da Linha Essencial e quero saber mais.`
 
 **Campos do formulário:**
 
@@ -176,17 +187,21 @@ Linha Essencial Benditta. Exclusivo para arquitetos e designers.
 
 ## 7. Orçamento e cronograma
 
-| Período | Ação | Verba |
-|---------|------|-------|
-| 15–16/abr | Configuração: BM, criativos, formulário, revisão | — |
-| **17–23/abr** (Semana 1) | Campanha no ar — fase de aprendizado | R$ 280 |
-| **24–30/abr** (Semana 2) | Ajuste: pausar perdedor, reforçar melhor CPL | R$ 320 |
-| **Total** | | **R$ 600** |
+| Período | Ação | Verba diária | Acumulado |
+|---------|------|-------------|-----------|
+| 15–16/abr | Configuração: BM, criativos, formulário, lead form, WhatsApp link | — | — |
+| **17–23/abr** (Semana 1 — 5 dias úteis) | Campanha no ar — fase de aprendizado algoritmo | R$ 50 | R$ 350 |
+| **24–30/abr** (Semana 2 — 5 dias úteis) | Ajuste: analisar CPL, manter estrutura ou rebalancear copy | R$ 50 | R$ 350 |
+| **Total** | | **R$ 50/dia** | **~R$ 700** |
+
+**Distribuição por ad set:**
+- Ad Set Consumidor Final: R$ 25/dia (Vídeo 3 ou 4)
+- Ad Set Arquitetos: R$ 25/dia (Vídeo 4 ou 3)
 
 **Regras de otimização:**
 - Não pausar ad set antes de **3 dias completos** de dados
-- Se 1 conjunto gerar CPL 30% menor após dia 5 → migrar 60–70% do budget para ele
-- Se nenhum lead MQL nos primeiros 5 dias → revisar copy e formulário antes de pausar
+- Após dia 7: se 1 conjunto estiver com CPL 40%+ pior → revisar copy, não pausar ainda
+- Se nenhum lead MQL nos primeiros 7 dias úteis → revisar copy e perguntas do formulário antes de qualquer pausa
 
 ---
 

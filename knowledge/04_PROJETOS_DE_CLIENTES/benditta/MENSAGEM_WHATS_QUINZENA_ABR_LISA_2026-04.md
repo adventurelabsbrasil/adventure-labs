@@ -34,13 +34,14 @@ Vamos subir a nova campanha no Instagram com os 2 vídeos. A principal mudança 
 - Quantos ambientes?
 - Qual o orçamento estimado? *(opções de R$ 15k até acima de R$ 200k)*
 
-Isso filtra logo de cara quem tem projeto completo e ticket compatível — que é o perfil que vocês querem atender.
+Isso filtra logo de cara quem tem projeto completo e ticket compatível — e depois do formulário o botão já **abre direto o WhatsApp comercial de vocês**, com a mensagem inicial pré-preenchida.
 
 → Dois grupos de anúncio:
 - Um focado em **clientes finais** que querem obra sob medida com padrão e clareza
 - Um focado em **arquitetos e designers** da RMPA e litoral do RS que precisam de parceiro de execução técnica
 
-→ Investimento total: **R$ 600** / R$ 40 por dia
+→ Investimento: **R$ 50/dia** · R$ 25 por anúncio · ~15 dias / 10 dias úteis
+→ Investimento total estimado: **~R$ 700**
 → Primeira análise de dados em ~7 dias
 
 ---
