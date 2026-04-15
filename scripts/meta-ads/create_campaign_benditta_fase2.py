@@ -61,10 +61,10 @@ CFG = {
     "drive_remote":     "gdrive-adventure:",
     "drive_folder_id":  "128YsEU3UrbBfM4v-7IMnlOD0_AI969BO",
 
-    # Nomes dos vídeos na pasta Drive (ajustar se necessário)
-    # Padrão: pega o arquivo cujo nome contém a string abaixo
-    "video3_contains":  "BENDITTA 3",   # → Arquitetos
-    "video4_contains":  "BENDITTA 4",   # → Cliente Final
+    # Nomes dos vídeos na pasta Drive
+    # Confirmado via rclone lsf em 15/04/2026
+    "video3_contains":  "BEN_VD_03",    # → Arquitetos  ("Quando o projeto e bem pensando")
+    "video4_contains":  "BEN_VD_04",    # → Cliente Final ("Quando voce comeca um projeto completo")
 
     # Budget
     "daily_budget_per_adset_brl": 25.0,   # R$25/dia por ad set = R$50/dia total
