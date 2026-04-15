@@ -58,7 +58,7 @@ Criados/atualizados em `knowledge/04_PROJETOS_DE_CLIENTES/benditta/`:
 | Campanha CBO (OUTCOME_LEADS) | `120241798663620353` | ✅ Pausada |
 | Ad Set — Cliente Final | `120241798663800353` | ✅ Geo corrigido manualmente |
 | Ad Set — Arquitetos | `120241798664090353` | ✅ Geo corrigido manualmente |
-| Criativos + Anúncios | — | ⏳ Igor/Mateus via Gerenciador |
+| Criativos + Anúncios | — | ✅ Criados manualmente por Rodrigo |
 
 **Budget:** R$50/dia total · Período: 17/04 → 30/04/2026 · Total previsto: ~R$650
 
@@ -81,10 +81,10 @@ Criados/atualizados em `knowledge/04_PROJETOS_DE_CLIENTES/benditta/`:
 
 ## Pendências imediatas
 
-### 🔴 Igor / Mateus Scopel
-- Criar 2 anúncios manualmente no Gerenciador (briefing completo disponível)
-- Ativar campanha após revisão
-- Confirmar ativação para Rodrigo
+### ✅ Anúncios
+- Criados manualmente por **Rodrigo** no Gerenciador em 15/04/2026
+- Igor participou da estratégia inicial (documento de briefing) e atendimento, não da execução técnica
+- Campanha pronta para ativação
 
 ### 🟡 Meta (sistema)
 - Business Verification da Adventure Labs em análise (~2 dias úteis)
