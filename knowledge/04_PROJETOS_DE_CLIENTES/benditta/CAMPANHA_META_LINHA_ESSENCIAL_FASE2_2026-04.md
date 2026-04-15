@@ -67,26 +67,29 @@ drive_criativos: "https://drive.google.com/open?id=128YsEU3UrbBfM4v-7IMnlOD0_AI9
 
 ## 4. Públicos (Ad Sets)
 
-### Ad Set 1 — Consumidor Final (alto ticket)
+### Ad Set 1 — Consumidor Final "Otimizador de Resultados"
 
-**Objetivo:** Atrair pessoas com projeto de reforma/decoração completo e capacidade de investir R$ 40k+
+**Persona-alvo:** "Otimizador de Resultados" (ver [CONCEITO_LINHA_ESSENCIAL.md](./CONCEITO_LINHA_ESSENCIAL.md#3-persona--otimizador-de-resultados)) — profissional liberal ou executivo, 30–45 anos, imóvel 60–90m², valoriza previsibilidade e evita imprevistos.
+
+**Objetivo:** Atrair pessoas com capacidade de investir R$ 40k+ que buscam **processo organizado e previsível** (não desconto)
 
 **Segmentação:**
-- Interesses: decoração de interiores, reforma residencial, arquitetura de interiores, compra de imóvel, imóveis de alto padrão, design de interiores
-- Comportamentos: compradores de alto valor, proprietários de imóvel
-- Filtros de renda/comportamento: sempre que disponível, usar sinais de renda alta (Meta: "rendas superiores", "compradores frequentes")
-- Faixa etária: 30–58 anos
+- Interesses: decoração de interiores, arquitetura residencial, reforma de apartamento, imóveis de alto padrão, design de interiores, mudança residencial
+- Comportamentos: compradores de alto valor, proprietários de imóvel, profissionais liberais
+- Filtros de renda/comportamento: usar sinais disponíveis de renda alta ("rendas superiores", "compradores frequentes")
+- **Faixa etária: 30–45 anos** (alinhada à persona da cliente)
 - Gênero: amplo
-- Região: Região Metropolitana de Porto Alegre + Litoral do RS (Torres, Tramandaí, Capão da Canoa, Xangri-Lá)
+- Região: Região Metropolitana de Porto Alegre + Litoral do RS (Torres, Tramandaí, Capão da Canoa, Xangri-Lá) — saída de Santo Antônio da Patrulha
 
-**Exclusão recomendada:** não incluir interesses genéricos como "móveis" ou "decoração simples" que atraem baixo ticket
+**Exclusão recomendada:** não incluir interesses genéricos como "móveis baratos", "promoção", "decoração simples" que atraem baixo ticket
 
-**Mensagem central:**
-> "Você tem o projeto. A Benditta tem a execução.
-> Marcenaria sob medida com padrão e clareza no investimento — sem improviso."
+**Mensagem central (ativar dores reais da persona):**
+> "Projeto pronto, mas cansado de pensar em estouro de orçamento e atraso?
+> Linha Essencial Benditta: o essencial bem feito.
+> Escolhas técnicas validadas, prazo previsível, investimento claro desde o início."
 
-**CTA:** Cadastre-se
-**Ângulo do vídeo — VÍDEO 4 (confirmado por Lisa 15/04 09:48):** humaniza o processo, Lisa descalça no ambiente residencial, foco em segurança na decisão e padrão da marca para cliente final
+**CTA:** Cadastre-se e receba análise objetiva do seu ambiente
+**Ângulo do vídeo — VÍDEO 4 (confirmado por Lisa 15/04 09:48):** humaniza o processo, Lisa descalça no ambiente residencial, foco em segurança e padrão da marca
 
 ---
 
@@ -171,11 +174,12 @@ drive_criativos: "https://drive.google.com/open?id=128YsEU3UrbBfM4v-7IMnlOD0_AI9
 ### Anúncio 1 — Consumidor Final
 
 **Headline (até 40 caracteres):**
-Sob medida, sem complicação
+O essencial bem feito
 
 **Texto principal:**
-Você não precisa entender de marcenaria para ter o melhor resultado.
-A Linha Essencial Benditta foi criada pra quem quer qualidade, clareza no investimento e execução sem surpresas.
+Cansou de reforma que vira projeto sem fim?
+A Linha Essencial Benditta foi criada para quem quer qualidade, prazo previsível e investimento claro desde o início.
+Curadoria inteligente · escolhas técnicas validadas · sem retrabalho.
 📍 Região Metropolitana de Porto Alegre e Litoral RS
 
 **CTA:** Cadastre-se
@@ -188,11 +192,12 @@ A Linha Essencial Benditta foi criada pra quem quer qualidade, clareza no invest
 Execução que respeita o seu projeto
 
 **Texto principal:**
-Parceiro de marcenaria que entrega exatamente o que foi projetado — sem alterar conceito, sem improvisar no prazo.
-Linha Essencial Benditta. Exclusivo para arquitetos e designers.
+Fidelidade técnica. Entrega previsível. Parceria sem improviso.
+A Benditta executa exatamente o que foi projetado — sem alterar conceito, sem surpresa no prazo.
+Linha Essencial · exclusivo para arquitetos e designers.
 📍 Região Metropolitana de Porto Alegre e Litoral RS
 
-**CTA:** Saiba Mais
+**CTA:** Envie seu projeto para análise
 
 ---
 

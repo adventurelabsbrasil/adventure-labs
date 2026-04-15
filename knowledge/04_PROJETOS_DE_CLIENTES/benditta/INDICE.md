@@ -83,8 +83,12 @@ Manutenção: ao criar doc novo centrado em Benditta, **adicione uma linha** aqu
 |------|-----------|
 | Padrão de documentação operacional de cliente | [`clients/_template/CLIENT_OPERACIONAL.md`](../../../clients/_template/CLIENT_OPERACIONAL.md) |
 | Brief operacional (marca, oferta, ICP e playbook) | [BRIEF_OPERACIONAL_BENDITTA_LINHA_ESSENCIAL.md](./BRIEF_OPERACIONAL_BENDITTA_LINHA_ESSENCIAL.md) |
+| **Conceito, persona e estratégia da Linha Essencial** | [CONCEITO_LINHA_ESSENCIAL.md](./CONCEITO_LINHA_ESSENCIAL.md) |
 | Linha Essencial — contexto + Drive + campanhas | [CONTEXTO_LINHA_ESSENCIAL.md](./CONTEXTO_LINHA_ESSENCIAL.md) |
 | Relatório cliente Meta (fase 1) + plano de retomada | [RELATORIO_META_LINHA_ESSENCIAL_FASE_1_2026-03.md](./RELATORIO_META_LINHA_ESSENCIAL_FASE_1_2026-03.md) |
+| **Campanha Meta Fase 2 (Abr/2026) — para validar com a cliente** | [CAMPANHA_META_LINHA_ESSENCIAL_FASE2_2026-04.md](./CAMPANHA_META_LINHA_ESSENCIAL_FASE2_2026-04.md) |
+| **Mensagem WhatsApp Lisa (quinzena abr/mai)** | [MENSAGEM_WHATS_QUINZENA_ABR_LISA_2026-04.md](./MENSAGEM_WHATS_QUINZENA_ABR_LISA_2026-04.md) |
+| Perfil comportamental Lisa + dinâmica do grupo | [PERFIL_COMPORTAMENTAL_LISA.md](./PERFIL_COMPORTAMENTAL_LISA.md) |
 | GitHub / issues | [benditta-github-project-e-issues.md](../benditta-github-project-e-issues.md) |
 | Entregas (snapshot) | [entregas-por-cliente-2026-03.md](../entregas-por-cliente-2026-03.md) § Benditta |
 | Marketing / campanhas | [campanhas-entregas-2026-03.md](../../02_MARKETING/campanhas-entregas-2026-03.md) § Benditta |
