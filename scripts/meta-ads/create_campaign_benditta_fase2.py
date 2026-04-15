@@ -433,16 +433,29 @@ def main():
 
     # ── 1. VÍDEOS ────────────────────────────────────────────────────────────
     print("\n[1/6] Vídeos (Drive → Meta)")
-    with tempfile.TemporaryDirectory(prefix="benditta_vids_") as tmpdir:
-        tmp = Path(tmpdir)
-        f3 = find_video_in_drive(CFG["video3_contains"])
-        f4 = find_video_in_drive(CFG["video4_contains"])
-        v3_path = download_video(f3, tmp)
-        v4_path = download_video(f4, tmp)
-        v3_id = upload_video(v3_path, "Benditta LE — Arquitetos")
-        v4_id = upload_video(v4_path, "Benditta LE — Cliente Final")
+    ids_file = Path(__file__).parent / "benditta_campaign_ids.json"
+    cached = json.loads(ids_file.read_text()) if ids_file.exists() else {}
+    cached_videos = cached.get("videos", {})
+
+    if cached_videos.get("video3_arquitetos") and cached_videos.get("video4_cliente"):
+        v3_id = cached_videos["video3_arquitetos"]
+        v4_id = cached_videos["video4_cliente"]
+        print(f"  ↩ Usando vídeos cacheados (sem re-upload)")
+        print(f"  ✓ video3_id: {v3_id}")
+        print(f"  ✓ video4_id: {v4_id}")
+    else:
+        with tempfile.TemporaryDirectory(prefix="benditta_vids_") as tmpdir:
+            tmp = Path(tmpdir)
+            f3 = find_video_in_drive(CFG["video3_contains"])
+            f4 = find_video_in_drive(CFG["video4_contains"])
+            v3_path = download_video(f3, tmp)
+            v4_path = download_video(f4, tmp)
+            v3_id = upload_video(v3_path, "Benditta LE — Arquitetos")
+            v4_id = upload_video(v4_path, "Benditta LE — Cliente Final")
 
     summary["videos"] = {"video3_arquitetos": v3_id, "video4_cliente": v4_id}
+    # Salva IDs de vídeo imediatamente para que próximas rodadas possam usar o cache
+    ids_file.write_text(json.dumps(summary, indent=2, ensure_ascii=False))
 
     if args.only_forms:
         print("\n[--only-forms] Pulando campanha. Criando apenas formulários.")
@@ -532,7 +545,10 @@ def main():
 
 def _print_summary(summary: dict) -> None:
     ids_file = Path(__file__).parent / "benditta_campaign_ids.json"
-    ids_file.write_text(json.dumps(summary, indent=2, ensure_ascii=False))
+    # Merge com dados existentes (preserva cache de vídeos entre rodadas)
+    existing = json.loads(ids_file.read_text()) if ids_file.exists() else {}
+    existing.update(summary)
+    ids_file.write_text(json.dumps(existing, indent=2, ensure_ascii=False))
 
     print("\n" + "=" * 65)
     print("✓ CONCLUÍDO — todos os itens criados com status PAUSED")
