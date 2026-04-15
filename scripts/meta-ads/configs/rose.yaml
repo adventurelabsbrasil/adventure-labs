@@ -1,0 +1,69 @@
+# Rose Portal Advocacia — Config Meta Ads
+# Usado por: scripts/meta-ads/create_campaign.py --client rose
+# Status: STUB — preencher antes de usar
+
+client: rose
+label: Rose Portal Advocacia
+segment: advocacia_auxilio_maternidade
+
+# Meta API — TODO: preencher
+ad_account_id: ""     # TODO: buscar no adsmanager (conta Rose)
+page_id: ""           # TODO: GET /me/accounts com token Rose
+business_id: ""       # TODO
+
+# Comunicação — TODO: preencher
+wa_comercial: ""      # WhatsApp da equipe de atendimento Rose
+
+# Drive — TODO: criar pasta de criativos Rose no Drive
+drive_remote: "gdrive-adventure:"
+drive_folder_id: ""   # TODO: ID da pasta Drive com vídeos/imagens Rose
+
+# Geo targeting — campanha Auxílio-Maternidade é nacional
+# Sugestão: Brasil todo ou focar em regiões com maior CLT
+geo:
+  - key: "BR"           # País inteiro (verificar se Meta aceita country key assim)
+    # OU listar estados principais:
+    # - key: "456"  # Rio Grande do Sul
+    # - key: "460"  # São Paulo
+
+# Demografico — mães CLT, gestantes
+age_min: 20
+age_max: 40
+
+# Posicionamentos
+publisher_platforms: [facebook, instagram]
+instagram_positions: [stream, reels, story]
+device_platforms: [mobile, desktop]
+
+# Budget — TODO: definir
+daily_budget_per_adset_brl: 30.0
+mql_budget_threshold_brl: 0    # Advocacia: todo lead é MQL (sem filtro de orçamento)
+
+# URLs — TODO: preencher
+privacy_url: ""
+lp_principal: ""    # LP Auxílio-Maternidade (já existe no Vercel?)
+
+# Públicos — TODO: definir com Rose
+# Sugestão: mães CLT, gestantes, mulheres que passaram por demissão
+audiences:
+  - key: maes_clt
+    label: Mães CLT
+    video_contains: ""     # TODO
+    form_type: mae_clt
+    cta: LEARN_MORE
+    headline: ""           # TODO: ex "Você tem direito ao Auxílio-Maternidade"
+    body: ""               # TODO
+
+# Formulário MQL — advocacia tem lógica diferente
+form_questions:
+  mae_clt:
+    - key: situacao
+      label: "Qual sua situação atual?"
+      options:
+        - {value: "Gestante empregada CLT", key: gestante_clt}
+        - {value: "Mãe em licença maternidade", key: licenca}
+        - {value: "Fui demitida durante gravidez/licença", key: demitida}
+        - {value: "Outra situação", key: outra}
+
+# IDs campanha ativa — vazio até primeira campanha ser criada
+active_campaign: {}

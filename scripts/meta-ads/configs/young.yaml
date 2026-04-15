@@ -1,0 +1,64 @@
+# Young Empreendimentos — Config Meta Ads
+# Usado por: scripts/meta-ads/create_campaign.py --client young
+# Status: STUB — preencher antes de usar
+
+client: young
+label: Young Empreendimentos
+segment: incorporadora_imoveis
+
+# Meta API — TODO: preencher
+ad_account_id: ""     # TODO: buscar em adsmanager.facebook.com
+page_id: ""           # TODO: GET /me/accounts com token Young
+business_id: ""       # TODO: business.facebook.com → configurações
+
+# Comunicação — TODO: preencher
+wa_comercial: ""      # WhatsApp do gestor de relacionamento
+
+# Drive — TODO: criar pasta de criativos Young no Drive
+drive_remote: "gdrive-adventure:"
+drive_folder_id: ""   # TODO: ID da pasta Drive com vídeos Young
+
+# Geo targeting — TODO: validar com equipe Young
+# Sugestão: Florianópolis + região (cidades do litoral SC)
+geo:
+  - key: ""           # TODO: python3 create_campaign.py --search-geo "Florianópolis"
+    radius: 40
+    distance_unit: kilometer
+
+# Demografico
+age_min: 28
+age_max: 55            # Compradores de imóvel tendem a faixa mais ampla
+
+# Posicionamentos
+publisher_platforms: [facebook, instagram]
+instagram_positions: [stream, reels, story]
+device_platforms: [mobile, desktop]
+
+# Budget — TODO: definir com equipe Young
+daily_budget_per_adset_brl: 50.0
+mql_budget_threshold_brl: 300000  # Lead com renda compatível com imóvel de alto padrão
+
+# URLs — TODO: preencher
+privacy_url: ""
+lp_principal: ""
+
+# Públicos — TODO: definir com equipe
+# Sugestão: compradores de primeiro imóvel, investidores, upgrade de imóvel
+audiences:
+  - key: compradores
+    label: Compradores de Imóvel
+    video_contains: ""     # TODO: nome do vídeo na pasta Drive
+    form_type: comprador
+    cta: LEARN_MORE
+    headline: ""           # TODO
+    body: ""               # TODO
+
+# Formulário MQL — TODO: definir perguntas qualificadoras
+form_questions:
+  comprador:
+    - key: tipo_imovel
+      label: "Qual tipo de imóvel você busca?"
+      options: []    # TODO
+
+# IDs campanha ativa — vazio até primeira campanha ser criada
+active_campaign: {}

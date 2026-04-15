@@ -1,0 +1,131 @@
+# Benditta Marcenaria — Config Meta Ads
+# Usado por: scripts/meta-ads/create_campaign.py --client benditta
+# Atualizado: 2026-04-15
+
+client: benditta
+label: Benditta Marcenaria
+segment: marcenaria_sob_medida
+
+# Meta API
+ad_account_id: act_763660518134498
+page_id: "968517269687411"
+business_id: "1159646178468576"
+
+# Comunicação comercial
+wa_comercial: "5551998252983"      # Laís Lima
+wa_financeiro: "5551984641841"     # Angélica
+
+# Drive (rclone)
+drive_remote: "gdrive-adventure:"
+drive_folder_id: 128YsEU3UrbBfM4v-7IMnlOD0_AI969BO
+
+# Geo targeting (keys verificados via Meta Targeting Search API em 15/04/2026)
+geo:
+  - key: "264859"       # Porto Alegre RS
+    radius: 40
+    distance_unit: kilometer
+  - key: "247687"       # Capão da Canoa RS (Litoral Norte RS)
+    radius: 40
+    distance_unit: kilometer
+
+# Demografico
+age_min: 30
+age_max: 45
+
+# Posicionamentos
+publisher_platforms: [instagram]
+instagram_positions: [stream, reels, story]
+device_platforms: [mobile, desktop]
+
+# Budget
+daily_budget_per_adset_brl: 25.0   # R$25/dia por ad set
+mql_budget_threshold_brl: 30000    # Lead com orçamento >= R$30k = MQL
+
+# URLs
+privacy_url: https://bendittamarcenaria.com.br
+lp_cliente:  https://benditta-lp.vercel.app/essencial/cliente
+lp_arquiteto: https://benditta-lp.vercel.app/essencial/arquiteto
+
+# Públicos e criativos
+audiences:
+  - key: cliente_final
+    label: Cliente Final
+    video_contains: BEN_VD_04      # "Quando voce comeca um projeto completo"
+    form_type: cliente
+    cta: SIGN_UP
+    headline: O essencial bem feito
+    description: Solicite sua análise de ambiente sem compromisso.
+    body: |
+      Cansou de reforma que vira projeto sem fim?
+      A Linha Essencial Benditta foi criada para quem quer qualidade, prazo previsível e investimento claro desde o início.
+      Curadoria inteligente · escolhas técnicas validadas · sem retrabalho.
+      📍 Região Metropolitana de Porto Alegre e Litoral RS
+
+  - key: arquitetos
+    label: Arquitetos
+    video_contains: BEN_VD_03      # "Quando o projeto e bem pensando"
+    form_type: arquiteto
+    cta: LEARN_MORE
+    headline: Execução que respeita o seu projeto
+    description: Envie seu projeto para análise técnica gratuita.
+    body: |
+      Fidelidade técnica. Entrega previsível. Parceria sem improviso.
+      A Benditta executa exatamente o que foi projetado — sem alterar conceito, sem surpresa no prazo.
+      Linha Essencial · exclusivo para arquitetos e designers de interiores.
+      📍 Região Metropolitana de Porto Alegre e Litoral RS
+
+# Formulário MQL — perguntas específicas do segmento
+form_questions:
+  cliente:
+    - key: tem_projeto
+      label: "Você tem projeto?"
+      options:
+        - {value: "Sim", key: sim}
+        - {value: "Estou planejando", key: planejando}
+        - {value: "Não", key: nao}
+    - key: ambientes
+      label: "Em quantos ambientes?"
+      options:
+        - {value: "1", key: "1"}
+        - {value: "2", key: "2"}
+        - {value: "3", key: "3"}
+        - {value: "4", key: "4"}
+        - {value: "5 ou mais", key: 5_ou_mais}
+    - key: orcamento
+      label: "Qual o orçamento estimado?"
+      options:
+        - {value: "Abaixo de R$ 15.000",     key: abaixo_15k}
+        - {value: "R$ 15.000 – R$ 30.000",   key: 15k_30k}
+        - {value: "R$ 30.000 – R$ 50.000",   key: 30k_50k}
+        - {value: "R$ 50.000 – R$ 100.000",  key: 50k_100k}
+        - {value: "R$ 100.000 – R$ 200.000", key: 100k_200k}
+        - {value: "Acima de R$ 200.000",     key: acima_200k}
+
+  arquiteto:
+    - key: projetos_por_ano
+      label: "Quantos projetos de marcenaria você executa por ano?"
+      options:
+        - {value: "1 a 2",     key: 1_2}
+        - {value: "3 a 5",     key: 3_5}
+        - {value: "6 ou mais", key: 6_mais}
+    - key: ticket_medio
+      label: "Ticket médio dos seus projetos de marcenaria?"
+      options:
+        - {value: "Abaixo de R$ 30.000",     key: abaixo_30k}
+        - {value: "R$ 30.000 – R$ 80.000",   key: 30k_80k}
+        - {value: "R$ 80.000 – R$ 150.000",  key: 80k_150k}
+        - {value: "Acima de R$ 150.000",     key: acima_150k}
+
+# IDs campanha ativa (Fase 2 Abr2026 — atualize a cada nova campanha)
+active_campaign:
+  run_tag: "0415202123"
+  campaign_id: "120241798663620353"
+  adsets:
+    arquitetos:    "120241798664090353"
+    cliente_final: "120241798663800353"
+  ads:
+    arquitetos:    "120241798722960353"
+    cliente_final: "120241798812150353"
+  forms:
+    cliente_final: "1428224111958811"
+    arquitetos:    "1537753711101879"
