@@ -266,7 +266,7 @@ def create_form(name: str, form_type: str, wa_message: str) -> str:
     return form_id
 
 
-def create_campaign() -> str:
+def create_campaign(run_tag: str = "") -> str:
     """
     Campanha CBO Lead Generation.
     Budget total = 2 × R$25/dia = R$50/dia = 5000 centavos.
@@ -277,8 +277,9 @@ def create_campaign() -> str:
     start_ts = int(datetime.fromisoformat(f"{CFG['start_date']}T09:00:00").timestamp())
     end_ts   = int(datetime.fromisoformat(f"{CFG['end_date']}T23:59:59").timestamp())
 
+    suffix = f" — {run_tag}" if run_tag else ""
     result = api("post", f"{CFG['ad_account_id']}/campaigns", data={
-        "name":                  "Benditta | Linha Essencial | Fase 2 | Abr2026",
+        "name":                  f"Benditta | Linha Essencial | Fase 2 | Abr2026{suffix}",
         "objective":             "OUTCOME_LEADS",
         "status":                "PAUSED",
         "special_ad_categories": "[]",
@@ -452,8 +453,10 @@ def main():
     wa_cliente   = "Olá! Acabei de preencher o formulário da Linha Essencial e quero receber uma análise do meu ambiente."
     wa_arquiteto = "Olá! Sou arquiteto(a) e quero enviar meu projeto para análise técnica da Linha Essencial Benditta."
 
-    form_cliente_id   = create_form("Benditta LE — Cliente Final — Abr2026",  "cliente",   wa_cliente)
-    form_arquiteto_id = create_form("Benditta LE — Arquitetos — Abr2026",     "arquiteto", wa_arquiteto)
+    # Sufixo timestamp garante unicidade entre rodadas (Meta bloqueia nomes duplicados)
+    run_tag = datetime.now().strftime("%m%d%H%M")
+    form_cliente_id   = create_form(f"Benditta LE — Cliente Final — Abr2026 — {run_tag}",  "cliente",   wa_cliente)
+    form_arquiteto_id = create_form(f"Benditta LE — Arquitetos — Abr2026 — {run_tag}",     "arquiteto", wa_arquiteto)
 
     summary["lead_forms"] = {
         "cliente_final": form_cliente_id,
@@ -466,7 +469,7 @@ def main():
 
     # ── 3. CAMPANHA ──────────────────────────────────────────────────────────
     print("\n[3/6] Campanha CBO")
-    campaign_id = create_campaign()
+    campaign_id = create_campaign(run_tag)
     summary["campaign_id"] = campaign_id
 
     # ── 4. AD SETS ───────────────────────────────────────────────────────────
@@ -486,8 +489,8 @@ def main():
         {"id": "6004103714583", "name": "SketchUp"},
     ]
 
-    adset_cliente_id   = create_adset(campaign_id, "Benditta LE | Cliente Final | RMPA+Litoral", form_cliente_id,   interests_cliente)
-    adset_arquiteto_id = create_adset(campaign_id, "Benditta LE | Arquitetos | RMPA+Litoral",    form_arquiteto_id, interests_arquiteto)
+    adset_cliente_id   = create_adset(campaign_id, f"Benditta LE | Cliente Final | RMPA+Litoral — {run_tag}", form_cliente_id,   interests_cliente)
+    adset_arquiteto_id = create_adset(campaign_id, f"Benditta LE | Arquitetos | RMPA+Litoral — {run_tag}",    form_arquiteto_id, interests_arquiteto)
 
     summary["adsets"] = {
         "cliente_final": adset_cliente_id,
@@ -497,7 +500,7 @@ def main():
     # ── 5. CRIATIVOS ─────────────────────────────────────────────────────────
     print("\n[5/6] Criativos")
     creative_cliente_id = create_creative(
-        name="Creative | Vídeo 4 | Cliente Final",
+        name=f"Creative | Vídeo 4 | Cliente Final — {run_tag}",
         video_id=v4_id,
         headline="O essencial bem feito",
         body=(
@@ -511,7 +514,7 @@ def main():
         form_id=form_cliente_id,
     )
     creative_arquiteto_id = create_creative(
-        name="Creative | Vídeo 3 | Arquitetos",
+        name=f"Creative | Vídeo 3 | Arquitetos — {run_tag}",
         video_id=v3_id,
         headline="Execução que respeita o seu projeto",
         body=(
@@ -532,8 +535,8 @@ def main():
 
     # ── 6. ANÚNCIOS ──────────────────────────────────────────────────────────
     print("\n[6/6] Anúncios")
-    ad_cliente_id   = create_ad(adset_cliente_id,   creative_cliente_id,   "Ad | Vídeo 4 | Cliente Final")
-    ad_arquiteto_id = create_ad(adset_arquiteto_id, creative_arquiteto_id, "Ad | Vídeo 3 | Arquitetos")
+    ad_cliente_id   = create_ad(adset_cliente_id,   creative_cliente_id,   f"Ad | Vídeo 4 | Cliente Final — {run_tag}")
+    ad_arquiteto_id = create_ad(adset_arquiteto_id, creative_arquiteto_id, f"Ad | Vídeo 3 | Arquitetos — {run_tag}")
 
     summary["ads"] = {
         "cliente_final": ad_cliente_id,
