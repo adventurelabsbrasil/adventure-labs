@@ -480,7 +480,7 @@ def main():
     wa_arquiteto = "Olá! Sou arquiteto(a) e quero enviar meu projeto para análise técnica da Linha Essencial Benditta."
 
     # Sufixo timestamp garante unicidade entre rodadas (Meta bloqueia nomes duplicados)
-    run_tag = datetime.now().strftime("%m%d%H%M")
+    run_tag = datetime.now().strftime("%m%d%H%M%S")
     form_cliente_id   = create_form(f"Benditta LE — Cliente Final — Abr2026 — {run_tag}",  "cliente",   wa_cliente)
     form_arquiteto_id = create_form(f"Benditta LE — Arquitetos — Abr2026 — {run_tag}",     "arquiteto", wa_arquiteto)
 
