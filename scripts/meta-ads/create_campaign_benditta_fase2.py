@@ -279,7 +279,7 @@ def create_campaign() -> str:
 
     result = api("post", f"{CFG['ad_account_id']}/campaigns", data={
         "name":                  "Benditta | Linha Essencial | Fase 2 | Abr2026",
-        "objective":             "LEAD_GENERATION",
+        "objective":             "OUTCOME_LEADS",
         "status":                "PAUSED",
         "special_ad_categories": "[]",
         "daily_budget":          total_daily_cents,
@@ -331,6 +331,7 @@ def create_adset(
         "campaign_id":       campaign_id,
         "optimization_goal": "LEAD_GENERATION",
         "billing_event":     "IMPRESSIONS",
+        "destination_type":  "ON_AD",
         "targeting":         json.dumps(targeting),
         "status":            "PAUSED",
         "promoted_object":   json.dumps({
