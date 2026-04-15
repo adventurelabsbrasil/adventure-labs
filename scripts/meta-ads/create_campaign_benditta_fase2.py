@@ -320,12 +320,12 @@ def create_adset(
     campaign_id: str,
     name: str,
     form_id: str,
-    interests: list,
 ) -> str:
     """Ad set dentro de campanha CBO. Budget herdado. Retorna adset_id."""
     print(f"  ⊕ Ad Set: {name}")
     targeting = _targeting_base()
-    targeting["flexible_spec"] = [{"interests": interests}]
+    # Sem flexible_spec/interests — targeting amplo por geo+idade.
+    # Meta otimiza automaticamente para leads via OUTCOME_LEADS.
 
     result = api("post", f"{CFG['ad_account_id']}/adsets", data={
         "name":              name,
@@ -473,23 +473,8 @@ def main():
 
     # ── 4. AD SETS ───────────────────────────────────────────────────────────
     print("\n[4/6] Ad Sets")
-    # Interest IDs verificados via Meta Targeting Search API
-    # Para checar: python3 create_campaign_benditta_fase2.py --search-geo "Porto Alegre"
-    interests_cliente = [
-        {"id": "6003232518610", "name": "Interior design"},
-        {"id": "6002910614826", "name": "Home renovation"},
-        {"id": "6003161363878", "name": "Real estate"},
-        {"id": "6003397425735", "name": "Architecture"},
-    ]
-    interests_arquiteto = [
-        {"id": "6003397425735", "name": "Architecture"},
-        {"id": "6003232518610", "name": "Interior design"},
-        {"id": "6003048195573", "name": "AutoCAD"},
-        {"id": "6004103714583", "name": "SketchUp"},
-    ]
-
-    adset_cliente_id   = create_adset(campaign_id, f"Benditta LE | Cliente Final | RMPA+Litoral — {run_tag}", form_cliente_id,   interests_cliente)
-    adset_arquiteto_id = create_adset(campaign_id, f"Benditta LE | Arquitetos | RMPA+Litoral — {run_tag}",    form_arquiteto_id, interests_arquiteto)
+    adset_cliente_id   = create_adset(campaign_id, f"Benditta LE | Cliente Final | RMPA+Litoral — {run_tag}", form_cliente_id)
+    adset_arquiteto_id = create_adset(campaign_id, f"Benditta LE | Arquitetos | RMPA+Litoral — {run_tag}",    form_arquiteto_id)
 
     summary["adsets"] = {
         "cliente_final": adset_cliente_id,
