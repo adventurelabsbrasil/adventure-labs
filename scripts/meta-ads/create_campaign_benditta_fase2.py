@@ -160,6 +160,16 @@ def upload_video(video_path: Path, title: str) -> str:
     return vid_id
 
 
+def get_video_thumbnail(video_id: str) -> str:
+    """Busca a thumbnail gerada pelo Meta para o vídeo. Retorna image_url."""
+    result = api("get", video_id, params={"fields": "picture"})
+    url = result.get("picture", "")
+    if not url:
+        print(f"  [WARN] Thumbnail não encontrada para {video_id}")
+        return ""
+    return url
+
+
 def create_form(name: str, form_type: str, wa_message: str) -> str:
     """
     Cria Lead Form nativo.
@@ -356,14 +366,16 @@ def create_creative(
 ) -> str:
     """Creative com vídeo + formulário nativo. Retorna creative_id."""
     print(f"  ⊕ Creative: {name}")
+    thumbnail_url = get_video_thumbnail(video_id)
     result = api("post", f"{CFG['ad_account_id']}/adcreatives", data={
         "name": name,
         "object_story_spec": json.dumps({
             "page_id": CFG["page_id"],
             "video_data": {
-                "video_id": video_id,
-                "title":    headline,
-                "message":  body,
+                "video_id":  video_id,
+                "image_url": thumbnail_url,
+                "title":     headline,
+                "message":   body,
                 "call_to_action": {
                     "type":  cta_type,
                     "value": {"lead_gen_form_id": form_id},
