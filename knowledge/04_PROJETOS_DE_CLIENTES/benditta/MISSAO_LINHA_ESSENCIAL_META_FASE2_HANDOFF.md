@@ -50,15 +50,36 @@ Criados/atualizados em `knowledge/04_PROJETOS_DE_CLIENTES/benditta/`:
 
 **Conta:** `act_763660518134498` — Benditta Marcenaria
 
-| Item criado via API | ID | Status |
-|---------------------|----|--------|
-| 2 vídeos uploadados | `1483771220427043`, `962407639593956` | ✅ Na biblioteca |
+| Item | ID | Status |
+|------|----|--------|
+| Vídeo VD03 (Arquitetos) | `1483771220427043` | ✅ |
+| Vídeo VD04 (Cliente Final) | `962407639593956` | ✅ |
 | Formulário Cliente Final | `1428224111958811` | ✅ |
 | Formulário Arquitetos | `1537753711101879` | ✅ |
-| Campanha CBO (OUTCOME_LEADS) | `120241798663620353` | ✅ Pausada |
-| Ad Set — Cliente Final | `120241798663800353` | ✅ Geo corrigido manualmente |
-| Ad Set — Arquitetos | `120241798664090353` | ✅ Geo corrigido manualmente |
-| Criativos + Anúncios | — | ✅ Criados manualmente por Rodrigo |
+| Campanha CBO (OUTCOME_LEADS) | `120241798663620353` | ✅ **ACTIVE** |
+| Ad Set — Cliente Final | `120241798663800353` | ✅ **ACTIVE** |
+| Ad Set — Arquitetos | `120241798664090353` | ✅ **ACTIVE** |
+| Ad VD04 — Cliente Final | `120241798812150353` | ✅ **ACTIVE** |
+| Ad VD03 — Arquitetos | `120241798722960353` | ✅ **ACTIVE** |
+
+**Geo final (confirmado via API):** Porto Alegre +40km + Capão da Canoa +40km (Litoral Norte RS)
+
+**Endpoints de insights para automação:**
+```
+# Campanha
+GET /120241798663620353/insights?fields=impressions,reach,clicks,spend,actions
+
+# Por ad set
+GET /120241798664090353/insights?fields=impressions,spend,actions   # Arquitetos
+GET /120241798663800353/insights?fields=impressions,spend,actions   # Cliente Final
+
+# Por anúncio
+GET /120241798722960353/insights?fields=impressions,spend,actions   # VD03
+GET /120241798812150353/insights?fields=impressions,spend,actions   # VD04
+
+# Leads (action_type: onsite_conversion.lead_grouped)
+GET /120241798663620353/insights?fields=actions&action_breakdowns=action_type
+```
 
 **Budget:** R$50/dia total · Período: 17/04 → 30/04/2026 · Total previsto: ~R$650
 

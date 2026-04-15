@@ -43,6 +43,12 @@ CLIENTS = {
         "telegram_chat_id": "1069502175", # ceo_buzz_Bot
         "label":            "Benditta Marcenaria",
         "mql_min_budget":   30000,        # R$30k — filtro MQL (orçamento declarado)
+        # IDs campanha Fase 2 Abr2026 (confirmados via API em 15/04/2026)
+        "campaign_id":      "120241798663620353",
+        "adset_arquitetos": "120241798664090353",
+        "adset_cliente":    "120241798663800353",
+        "ad_arquitetos":    "120241798722960353",
+        "ad_cliente":       "120241798812150353",
     },
     "young": {
         "ad_account_id":    "",           # TODO: preencher
