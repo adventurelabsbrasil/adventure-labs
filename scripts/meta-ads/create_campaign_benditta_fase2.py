@@ -251,9 +251,12 @@ def create_form(name: str, form_type: str, wa_message: str) -> str:
             "locale": "pt_BR",
             "questions": json.dumps(questions),
             "privacy_policy": json.dumps({"url": CFG["privacy_url"]}),
-            "thank_you_action": json.dumps({
-                "type": "WEBSITE",
+            "follow_up_action_url": wa_url,
+            "thank_you_page": json.dumps({
+                "title": "Obrigado!",
+                "body": "Recebemos seu contato. Toque no botão abaixo para falar direto com a Benditta no WhatsApp.",
                 "button_text": "Falar com a Benditta",
+                "button_type": "VIEW_WEBSITE",
                 "website_url": wa_url,
             }),
         },
