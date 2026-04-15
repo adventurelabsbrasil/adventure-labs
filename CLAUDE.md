@@ -30,7 +30,7 @@
 | Cliente | Serviço principal | Repo | Status |
 |---------|------------------|------|--------|
 | Rose Portal Advocacia | Google Ads + LP Auxílio-Maternidade | `apps/clientes/02_rose/` | Conta Google nova rodando, Meta pendente |
-| Young Empreendimentos | Meta + Google Ads + apps (young-talents, young-emp, ranking-vendas) | `apps/clientes/03_young/` | Mateus (coord) de férias, interim Rodrigo |
+| Young Empreendimentos | Meta + Google Ads + apps (young-talents, young-emp, ranking-vendas) | `apps/clientes/04_young/` | Mateus (coord) de férias, interim Rodrigo |
 | Benditta | LPs de campanha + Meta Ads | `apps/clientes/05_benditta/` | LPs live no Vercel |
 | LideraSpace | SaaS interno (plataforma) | `apps/labs/lideraspace/` | Deploy ativo |
 

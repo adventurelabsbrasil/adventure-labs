@@ -1,0 +1,48 @@
+# Adventure Labs VPS — Crontab (root)
+# Aplicar: crontab -e na VPS e colar este conteúdo
+# Todos os horários em UTC. BRT = UTC-3
+# Dispatcher: /opt/adventure-labs/scripts/adventure-agent.sh
+# Requer: /opt/adventure-labs/.env com ANTHROPIC_API_KEY, TELEGRAM_BOT_TOKEN, etc.
+
+# ── Hivemind ──────────────────────────────────────────────────────────
+# Heartbeat: a cada 4h (silencioso em OK, alerta no Telegram se falhar)
+17 */4 * * * root /opt/adventure-labs/scripts/hivemind-heartbeat.sh >> /var/log/adv-heartbeat.log 2>&1
+
+# ── C-Suite (seg-sex, horário comercial BRT) ───────────────────────────
+# COO Ohno: 8h BRT seg-sex
+3 11 * * 1-5 root /opt/adventure-labs/scripts/agents/csuite-ohno.sh >> /var/log/adv-csuite.log 2>&1
+
+# CMO Ogilvy: 9h BRT seg-sex
+7 12 * * 1-5 root /opt/adventure-labs/scripts/agents/csuite-ogilvy.sh >> /var/log/adv-csuite.log 2>&1
+
+# CFO Buffett: 8h BRT segunda-feira
+13 11 * * 1 root /opt/adventure-labs/scripts/agents/csuite-buffett.sh >> /var/log/adv-csuite.log 2>&1
+
+# CTO Torvalds: 8h BRT quarta-feira
+17 11 * * 3 root /opt/adventure-labs/scripts/agents/csuite-torvalds.sh >> /var/log/adv-csuite.log 2>&1
+
+# CPO Cagan: 8h BRT sexta-feira
+23 11 * * 5 root /opt/adventure-labs/scripts/agents/csuite-cagan.sh >> /var/log/adv-csuite.log 2>&1
+
+# CINO Da Vinci: 7h BRT seg-sex
+27 10 * * 1-5 root /opt/adventure-labs/scripts/agents/csuite-davinci.sh >> /var/log/adv-csuite.log 2>&1
+
+# ── Gerentes de Conta ────────────────────────────────────────────────
+# Gerente Rose: 7h BRT seg-sex
+33 10 * * 1-5 root /opt/adventure-labs/scripts/agents/gerente-rose.sh >> /var/log/adv-gerentes.log 2>&1
+
+# Gerente Young: 9h BRT terça-feira
+11 12 * * 2 root /opt/adventure-labs/scripts/agents/gerente-young.sh >> /var/log/adv-gerentes.log 2>&1
+
+# Gerente Benditta: 9h BRT quarta-feira
+19 12 * * 3 root /opt/adventure-labs/scripts/agents/gerente-benditta.sh >> /var/log/adv-gerentes.log 2>&1
+
+# ── Operacional ──────────────────────────────────────────────────────
+# Backup VPS → Google Drive: 3:30 BRT todo dia
+30 6 * * * root /opt/adventure-labs/scripts/backup-vps.sh >> /var/log/adv-backup.log 2>&1
+
+# Mercado Pago sync → Supabase: a cada 30 min
+*/30 * * * * root /opt/adventure-labs/scripts/agents/mercadopago-sync.sh >> /var/log/adv-mp-sync.log 2>&1
+
+# Analytics sync local: a cada 2h (já configurado)
+0 */2 * * * root python3 /opt/adventure-labs/scripts/sync_analytics_local.py >> /var/log/adventure-sync-analytics.log 2>&1
