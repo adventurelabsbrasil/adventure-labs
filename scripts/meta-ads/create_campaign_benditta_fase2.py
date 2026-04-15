@@ -327,6 +327,8 @@ def create_adset(
     # Sem flexible_spec/interests — targeting amplo por geo+idade.
     # Meta otimiza automaticamente para leads via OUTCOME_LEADS.
 
+    targeting["targeting_automation"] = {"advantage_audience": 0}
+
     result = api("post", f"{CFG['ad_account_id']}/adsets", data={
         "name":              name,
         "campaign_id":       campaign_id,
@@ -334,7 +336,6 @@ def create_adset(
         "billing_event":     "IMPRESSIONS",
         "destination_type":  "ON_AD",
         "targeting":         json.dumps(targeting),
-        "targeting_automation": json.dumps({"advantage_audience": 0}),
         "status":            "PAUSED",
         "promoted_object":   json.dumps({
             "page_id": CFG["page_id"],
