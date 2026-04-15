@@ -334,6 +334,7 @@ def create_adset(
         "billing_event":     "IMPRESSIONS",
         "destination_type":  "ON_AD",
         "targeting":         json.dumps(targeting),
+        "targeting_automation": json.dumps({"advantage_audience": 0}),
         "status":            "PAUSED",
         "promoted_object":   json.dumps({
             "page_id": CFG["page_id"],
