@@ -27,7 +27,7 @@ Uso:
   # Criar só formulários (para revisar antes de criar o resto):
   python3 create_campaign_benditta_fase2.py --only-forms
 
-Conta: act=763660518134498 | Page: 61585089129277 | BM: 1159646178468576
+Conta: act=763660518134498 | Page: 968517269687411 | BM: 1159646178468576
 """
 
 import argparse
@@ -50,7 +50,7 @@ CFG = {
     # Meta
     "access_token":     os.environ.get("META_SYSTEM_USER_TOKEN", ""),
     "ad_account_id":    "act_763660518134498",
-    "page_id":          "61585089129277",
+    "page_id":          "968517269687411",
     "business_id":      "1159646178468576",
     "api_version":      "v20.0",
 
