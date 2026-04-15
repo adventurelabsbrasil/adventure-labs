@@ -27,6 +27,9 @@ credentials.json
 package-lock.json
 yarn.lock
 
+# Meta Ads — IDs de campanha gerados por scripts
+scripts/meta-ads/*_campaign_ids.json
+
 # Temp e archive (clones pesados, sub-repos)
 _internal/temp/
 _internal/archive/*
