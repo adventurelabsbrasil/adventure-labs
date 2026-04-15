@@ -336,8 +336,7 @@ def create_adset(
         "targeting":         json.dumps(targeting),
         "status":            "PAUSED",
         "promoted_object":   json.dumps({
-            "page_id":         CFG["page_id"],
-            "leadgen_form_id": form_id,
+            "page_id": CFG["page_id"],
         }),
     })
     aid = result["id"]
