@@ -305,16 +305,16 @@ def create_campaign(run_tag: str = "") -> str:
 
 def _targeting_base() -> dict:
     """
-    Geo: RMPA (Porto Alegre + 40km) + Litoral RS (Torres + 50km).
+    Geo: RMPA (Porto Alegre + 40km) + Litoral Norte RS (Capão da Canoa + 40km).
+    Capão da Canoa cobre Litoral Norte RS incluindo Torres e região de Santo Antônio da Patrulha.
     Idade: 30–45. Plataforma: Instagram.
-    Nota: city keys verificados via Meta Targeting Search API.
-    Se retornar erro de geo, rodar: python3 create_campaign_benditta_fase2.py --search-geo
+    Nota: city keys verificados via Meta Targeting Search API em 15/04/2026.
     """
     return {
         "geo_locations": {
             "cities": [
-                {"key": "264859", "radius": 40, "distance_unit": "kilometer"},  # Porto Alegre RS (verificado via API 15/04/2026)
-                {"key": "272663", "radius": 50, "distance_unit": "kilometer"},  # Torres RS / Litoral Norte RS (verificado via API 15/04/2026)
+                {"key": "264859", "radius": 40, "distance_unit": "kilometer"},  # Porto Alegre RS
+                {"key": "247687", "radius": 40, "distance_unit": "kilometer"},  # Capão da Canoa RS / Litoral Norte RS
             ],
             "location_types": ["home", "recent"],
         },
