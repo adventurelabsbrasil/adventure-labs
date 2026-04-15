@@ -313,8 +313,8 @@ def _targeting_base() -> dict:
     return {
         "geo_locations": {
             "cities": [
-                {"key": "2267086", "radius": 40, "distance_unit": "kilometer"},  # Porto Alegre
-                {"key": "2270546", "radius": 50, "distance_unit": "kilometer"},  # Torres / Litoral Norte RS
+                {"key": "264859", "radius": 40, "distance_unit": "kilometer"},  # Porto Alegre RS (verificado via API 15/04/2026)
+                {"key": "272663", "radius": 50, "distance_unit": "kilometer"},  # Torres RS / Litoral Norte RS (verificado via API 15/04/2026)
             ],
             "location_types": ["home", "recent"],
         },
