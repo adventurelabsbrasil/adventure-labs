@@ -86,7 +86,7 @@ drive_criativos: "https://drive.google.com/open?id=128YsEU3UrbBfM4v-7IMnlOD0_AI9
 > Marcenaria sob medida com padrão e clareza no investimento — sem improviso."
 
 **CTA:** Cadastre-se
-**Ângulo do vídeo (Vídeo 3 ou 4):** humaniza o processo, destaca qualidade, segurança na decisão, padrão da marca
+**Ângulo do vídeo — VÍDEO 4 (confirmado por Lisa 15/04 09:48):** humaniza o processo, Lisa descalça no ambiente residencial, foco em segurança na decisão e padrão da marca para cliente final
 
 ---
 
@@ -106,10 +106,11 @@ drive_criativos: "https://drive.google.com/open?id=128YsEU3UrbBfM4v-7IMnlOD0_AI9
 > Entregamos o que foi projetado — sem alterar o conceito, sem atrasar."
 
 **CTA:** Saiba Mais
-**Ângulo do vídeo (Vídeo 4 ou 3):** rigor técnico, fidelidade ao projeto, parceria profissional, prazo
+**Ângulo do vídeo — VÍDEO 3 (confirmado por Lisa 15/04 09:48):** rigor técnico, fidelidade ao projeto, parceria profissional, CTA de análise técnica de projeto
 
-> **Nota Igor:** confirmar qual dos 2 vídeos (3 ou 4) tem linguagem mais técnica/profissional
-> e qual é mais emocional/residencial — isso define a alocação criativo × público.
+> **Alocação confirmada (grupo WhatsApp 15/04 09:48):**
+> - Vídeo 3 → Ad Set Arquitetos
+> - Vídeo 4 → Ad Set Consumidor Final
 
 ---
 
@@ -124,7 +125,17 @@ drive_criativos: "https://drive.google.com/open?id=128YsEU3UrbBfM4v-7IMnlOD0_AI9
 > **Configuração técnica do Lead Form (Igor):**
 > - Tipo de formulário: "Mais volume" (More Volume) — facilita preenchimento
 > - Na aba "Tela de agradecimento": adicionar botão CTA tipo "Enviar mensagem" → inserir link `https://wa.me/[NUMERO_COMERCIAL_BENDITTA]` com mensagem pré-preenchida
-> - Mensagem sugerida para o link: `Olá! Acabei de preencher o formulário da Linha Essencial e quero saber mais.`
+>
+> **Mensagens pré-preenchidas sugeridas** (adaptadas da sugestão da Iara — IA da Lisa — em 02/03/2026):
+>
+> - **Ad Set Consumidor Final:**
+>   `Olá! Quero entender como funciona a Linha Essencial para o meu ambiente.`
+>
+> - **Ad Set Arquitetos:**
+>   `Olá! Sou arquiteto(a) e quero enviar meu projeto para análise técnica da Linha Essencial.`
+>
+> **Por que importa:** a própria Lisa trouxe essa ideia de mensagem qualificada em março.
+> Adotar a sugestão dela reforça memória e método — e já organiza o atendimento comercial Benditta desde a primeira linha da conversa.
 
 **Campos do formulário:**
 
@@ -245,11 +256,11 @@ Linha Essencial Benditta. Exclusivo para arquitetos e designers.
 - [x] Região definida: RMPA + Litoral RS
 - [x] Formulário MQL definido (6 campos com faixas de orçamento)
 - [x] Públicos definidos (Consumidor Final + Arquitetos)
-- [ ] **Confirmar qual vídeo vai para qual público** (3 → consumidor, 4 → arquiteto ou vice-versa)
-- [ ] **Página do Facebook ativa e vinculada ao BM** (era bloqueio na Fase 1 — verificar)
-- [ ] **Saldo disponível na conta** confirmado
-- [ ] **Acesso Adventure Labs ao BM** da Benditta ativo
-- [ ] **Validação da Lisa** nas copies e nas perguntas do formulário
+- [x] **Alocação criativo × público confirmada pela Lisa** (15/04 09:48): Vídeo 3 → Arquitetos · Vídeo 4 → Consumidor Final
+- [x] **Saldo na conta confirmado** (Rodrigo em 10/04: "Meta já entrou o saldo")
+- [ ] **Página do Facebook ativa e vinculada ao BM** (era bloqueio na Fase 1 — Rodrigo criou página em 07/03 para não depender da antiga indisponível)
+- [ ] **Validação da Lisa** nas 3 perguntas do formulário (pendente — ver mensagem WhatsApp)
+- [ ] **Confirmar número do WhatsApp comercial** para link `wa.me/` na tela de agradecimento
 
 ---
 
