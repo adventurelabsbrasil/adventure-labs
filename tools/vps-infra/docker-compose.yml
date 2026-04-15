@@ -30,6 +30,9 @@ services:
       - GENERIC_TIMEZONE=America/Sao_Paulo
       - TZ=America/Sao_Paulo
       - NODE_OPTIONS=--max-old-space-size=768
+      # Proxy reverso (Caddy) na frente do n8n — corrige ValidationError X-Forwarded-For
+      # Se houver CDN + Caddy em série, ajustar para N8N_PROXY_HOPS=2
+      - N8N_PROXY_HOPS=1
     deploy:
       resources:
         limits:
