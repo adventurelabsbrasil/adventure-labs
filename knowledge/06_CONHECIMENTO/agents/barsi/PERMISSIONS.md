@@ -7,9 +7,11 @@
 | adv_patrimony_accounts | Supabase | Inventario de contas PJ |
 | adv_patrimony_snapshots | Supabase | Historico de fotos patrimoniais |
 | adv_patrimony_movements | Supabase | Movimentacoes relevantes |
+| adv_patrimony_assets | Supabase | Inventario de bens fisicos e digitais |
+| adv_patrimony_asset_events | Supabase | Historico de eventos dos bens |
 | adv_stack_subscriptions | Supabase | Custos recorrentes (para calcular passivo recorrente) |
-| adv_ai_providers | Supabase | Custos de IA (via Tostao) |
-| adv_csuite_memory | Supabase | Ultimas decisoes do Buffett e Tostao |
+| adv_ai_providers | Supabase | Custos de IA (via Faisca) |
+| adv_csuite_memory | Supabase | Ultimas decisoes do Buffett e Faisca |
 | relatorio-dre-jan-mar-2026.md | knowledge/00_GESTAO_CORPORATIVA/operacao/ | DRE para calculo de resultado |
 | dre-jan-mar-2026.json | knowledge/00_GESTAO_CORPORATIVA/operacao/ | DRE estruturado |
 | plano-de-contas-categorias.md | knowledge/00_GESTAO_CORPORATIVA/checklists_config/ | Referencia de categorias |
@@ -22,6 +24,8 @@
 | adv_patrimony_accounts | Supabase | Atualizar notas, status |
 | adv_patrimony_snapshots | Supabase | Inserir fotos semanais |
 | adv_patrimony_movements | Supabase | Registrar movimentacoes relevantes |
+| adv_patrimony_assets | Supabase | Cadastrar/atualizar bens |
+| adv_patrimony_asset_events | Supabase | Registrar eventos de bens (compra, manutencao, etc) |
 | adv_csuite_memory | Supabase | Gravar resumo do report (agent: 'barsi') |
 
 ## Modo Personal (PF) — Leitura
@@ -45,7 +49,7 @@
 | Sueli (PJ) | Saldos bancarios, OFX conciliados, Omie | Base para foto PJ |
 | Sueli (PF) | Saldos Nubank, categorias, fatura | Base para foto PF |
 | Chaves (Infisical) | Status de acessos bancarios (online banking APIs) | Verificar se tem acesso automatico |
-| Tostao | Custos IA como % do patrimonio | Dimensionar peso da IA no balanco |
+| Faisca | Custos IA como % do patrimonio | Dimensionar peso da IA no balanco |
 
 ## Proibicoes (DENY)
 

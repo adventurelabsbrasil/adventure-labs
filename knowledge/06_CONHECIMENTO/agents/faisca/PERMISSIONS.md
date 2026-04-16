@@ -1,4 +1,4 @@
-# PERMISSIONS.md — Tostao (Token Treasurer)
+# PERMISSIONS.md — Faisca (Token Spark)
 
 ## Leitura (READ)
 

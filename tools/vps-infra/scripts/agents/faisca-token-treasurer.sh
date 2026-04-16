@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
-# tostao-token-treasurer.sh — Tostao (Token Treasurer)
-# Deploy: /opt/adventure-labs/scripts/agents/tostao-token-treasurer.sh
-# Cron:   43 9 * * 2,5  /opt/adventure-labs/scripts/agents/tostao-token-treasurer.sh >> /opt/adventure-labs/logs/tostao.log 2>&1
+# faisca-token-treasurer.sh — Faisca (Token Spark)
+# Deploy: /opt/adventure-labs/scripts/agents/faisca-token-treasurer.sh
+# Cron:   43 9 * * 2,5  /opt/adventure-labs/scripts/agents/faisca-token-treasurer.sh >> /opt/adventure-labs/logs/faisca.log 2>&1
 #
 # Missao: Monitorar consumo de tokens e custos de IA em toda a operacao.
+# Cada token e uma faisca que acende uma aventura. Sem faisca, sem aventura.
 # Roda 09:43 UTC ter + sex, antes do Buffett (CFO).
 # Owner: Buffett (CFO)
 
@@ -11,20 +12,20 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 DISPATCHER="${SCRIPT_DIR}/../adventure-agent.sh"
-AGENT_NAME="tostao"
-AGENT_ROLE="TOKEN_TREASURER"
-AGENT_TITLE="Tostao"
+AGENT_NAME="faisca"
+AGENT_ROLE="TOKEN_SPARK"
+AGENT_TITLE="Faisca"
 
-# Persona e system prompt do Tostao
-SYSTEM_PROMPT="Voce e Tostao, o Tesoureiro de Tokens da Adventure Labs.
-Sua missao: gerenciar, monitorar e otimizar o consumo de tokens e recursos de IA em toda a operacao.
+# Persona e system prompt da Faisca
+SYSTEM_PROMPT="Voce e Faisca, a centelha que gerencia tokens de IA da Adventure Labs.
+Cada token e uma faisca que acende uma aventura. Sua missao: garantir que nenhuma centelha se perca no escuro.
 
 ## Seu estilo
-- Preciso: trabalha com dados, nao achismos
-- Economico: sabe a diferenca entre investimento e desperdicio
-- Vigilante: nada passa despercebido no consumo de tokens
-- Pragmatico: reports curtos, acao clara
-- Leal ao CFO: Buffett manda, Tostao executa
+- Rapida: detecta anomalias antes de virarem incendio
+- Precisa: numeros exatos, sem arredondamento preguicoso
+- Alerta: monitora consumo como quem vigia uma fogueira
+- Energetica: reports curtos, acao clara
+- Estrategica: faisca cara so se justifica com resultado grande
 
 ## O que voce faz a cada execucao
 1. Verificar status de todos os providers de IA (APIs + subscriptions)
@@ -64,7 +65,7 @@ Regra: nunca gastar motor caro em tarefa bracal.
 - Valores absolutos somente no Supabase (adv_token_usage)
 
 ## Formato do report
-<b>Tostao (Token Treasurer) — Balanco de Tokens</b>
+<b>Faisca (Token Spark) — Balanco de Tokens</b>
 
 <b>Periodo:</b> [data_inicio] a [data_fim]
 
@@ -131,7 +132,7 @@ ORDER BY platform_name;
 
 SELECT 'CSUITE_MEMORY_CFO' as source, agent, summary, created_at
 FROM adv_csuite_memory
-WHERE agent IN ('buffett', 'tostao')
+WHERE agent IN ('buffett', 'faisca')
 ORDER BY created_at DESC
 LIMIT 5;
 "
@@ -144,7 +145,7 @@ if [[ -x "$DISPATCHER" ]]; then
     --title "$AGENT_TITLE" \
     --system-prompt "$SYSTEM_PROMPT" \
     --context-query "$CONTEXT_QUERY" \
-    --files "knowledge/06_CONHECIMENTO/agents/tostao/HEARTBEAT.md,knowledge/00_GESTAO_CORPORATIVA/operacao/cursor-contas-e-limites.md"
+    --files "knowledge/06_CONHECIMENTO/agents/faisca/HEARTBEAT.md,knowledge/00_GESTAO_CORPORATIVA/operacao/cursor-contas-e-limites.md"
 else
   echo "[$(date)] ERRO: Dispatcher nao encontrado em $DISPATCHER" >&2
   exit 1

@@ -1,6 +1,6 @@
 -- Migration: 20260416100000_adv_ai_token_tracking.sql
--- Description: Sistema de rastreamento de tokens e custos de IA — gerido pelo agente Tostao (Token Treasurer)
--- Owner: Buffett (CFO) via Tostao
+-- Description: Sistema de rastreamento de tokens e custos de IA — gerido pelo agente Faisca (Token Spark)
+-- Owner: Buffett (CFO) via Faisca
 
 -- ============================================================
 -- 1. Registro de Provedores de IA (inventario completo)
@@ -77,7 +77,7 @@ CREATE TABLE IF NOT EXISTS public.adv_token_usage (
 
     -- Metadata
     source TEXT DEFAULT 'manual',   -- 'manual', 'api', 'scrape', 'sueli'
-    collected_by TEXT DEFAULT 'tostao',
+    collected_by TEXT DEFAULT 'faisca',
     notes TEXT,
     created_at TIMESTAMPTZ DEFAULT NOW()
 );
@@ -175,6 +175,6 @@ CREATE POLICY "token_alerts_delete" ON public.adv_token_alerts FOR DELETE
 -- ============================================================
 -- Comments
 -- ============================================================
-COMMENT ON TABLE public.adv_ai_providers IS 'Inventario de provedores de IA (APIs, assinaturas, hibridos) gerido pelo Tostao (Token Treasurer)';
-COMMENT ON TABLE public.adv_token_usage IS 'Snapshots periodicos de consumo de tokens e custos por provider, coletados pelo Tostao';
-COMMENT ON TABLE public.adv_token_alerts IS 'Historico de alertas de consumo, anomalias e oportunidades de economia gerados pelo Tostao';
+COMMENT ON TABLE public.adv_ai_providers IS 'Inventario de provedores de IA (APIs, assinaturas, hibridos) gerido pelo Faisca (Token Spark)';
+COMMENT ON TABLE public.adv_token_usage IS 'Snapshots periodicos de consumo de tokens e custos por provider, coletados pela Faisca';
+COMMENT ON TABLE public.adv_token_alerts IS 'Historico de alertas de consumo, anomalias e oportunidades de economia gerados pela Faisca';

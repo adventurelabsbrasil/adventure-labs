@@ -1,4 +1,4 @@
-# HEARTBEAT.md — Tostao (Token Treasurer)
+# HEARTBEAT.md — Faisca (Token Spark)
 
 > Checklist executado a cada run (2x/semana: ter + sex, 09:43 UTC)
 
@@ -29,7 +29,7 @@
 
 ### 5. Report
 - [ ] Gerar report formatado para Telegram
-- [ ] Gravar resumo em adv_csuite_memory (agent: 'tostao')
+- [ ] Gravar resumo em adv_csuite_memory (agent: 'faisca')
 - [ ] Se sexta-feira: report semanal consolidado para Buffett
 
 ---
@@ -37,7 +37,7 @@
 ## Formato do report
 
 ```
-<b>Tostao (Token Treasurer) — Balanco de Tokens</b>
+<b>Faisca (Token Spark) — Balanco de Tokens</b>
 
 <b>Periodo:</b> [data_inicio] a [data_fim]
 

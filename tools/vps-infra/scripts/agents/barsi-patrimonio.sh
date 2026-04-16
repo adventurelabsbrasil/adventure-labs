@@ -4,7 +4,7 @@
 # Cron:   7 10 * * 5  /opt/adventure-labs/scripts/agents/barsi-patrimonio.sh >> /opt/adventure-labs/logs/barsi.log 2>&1
 #
 # Missao: Fotografia patrimonial semanal da Adventure Labs (PJ).
-# Roda 10:07 UTC sexta-feira, depois do Tostao e antes do Buffett.
+# Roda 10:07 UTC sexta-feira, depois da Faisca e antes do Buffett.
 # Owner: Buffett (CFO)
 #
 # NOTA: Este script roda SOMENTE o modo Adventure (PJ).
@@ -40,10 +40,12 @@ Sua missao: construir e manter a fotografia patrimonial completa da empresa.
 2. Mapear contas a receber (contratos: Rose, Benditta, Young, Lidera)
 3. Mapear contas a pagar (fornecedores, reembolso socio, impostos)
 4. Avaliar ativos fixos e intangiveis (escritorio, stack digital)
-5. Calcular balanco: Ativos = Passivos + PL
-6. Comparar com semana anterior (evolucao %)
-7. Registrar movimentacoes relevantes
-8. Produzir report para Telegram
+5. Inventariar bens fisicos e digitais (equipamentos, moveis, infra, marca)
+6. Calcular depreciacao e valor atual dos bens
+7. Calcular balanco: Ativos = Passivos + PL
+8. Comparar com semana anterior (evolucao %)
+9. Registrar movimentacoes relevantes
+10. Produzir report para Telegram
 
 ## Contas monitoradas (Adventure Labs PJ)
 - Sicredi Corrente (***797213) — conta principal
@@ -56,7 +58,7 @@ Sua missao: construir e manter a fotografia patrimonial completa da empresa.
 - Reporta ao Buffett (CFO) no modo PJ
 - Consulta Sueli para saldos e conciliacoes
 - Consulta Chaves para acessos bancarios
-- Consulta Tostao para custos IA como % patrimonio
+- Consulta Faisca para custos IA como % patrimonio
 
 ## Formato do report
 <b>Barsi (Gestor de Patrimonio) — Foto Semanal</b>
@@ -123,6 +125,22 @@ WHERE movement_date >= CURRENT_DATE - INTERVAL '14 days'
 ORDER BY movement_date DESC
 LIMIT 15;
 
+SELECT 'ASSET_INVENTORY' as source, asset_name, asset_category, scope,
+       brand, model, location, responsible_person, condition,
+       purchase_date, purchase_value, current_estimated_value,
+       depreciation_rate_yearly, warranty_expiry, is_active, tags
+FROM adv_patrimony_assets
+WHERE is_active = true
+ORDER BY asset_category, asset_name;
+
+SELECT 'ASSET_EVENTS_RECENT' as source, a.asset_name,
+       e.event_type, e.event_date, e.description, e.cost
+FROM adv_patrimony_asset_events e
+JOIN adv_patrimony_assets a ON a.id = e.asset_id
+WHERE e.event_date >= CURRENT_DATE - INTERVAL '30 days'
+ORDER BY e.event_date DESC
+LIMIT 10;
+
 SELECT 'STACK_FIXED_COSTS' as source, platform_name, monthly_cost_brl,
        monthly_cost_usd, billing_type, next_renewal_date
 FROM adv_stack_subscriptions
@@ -136,7 +154,7 @@ WHERE is_active = true;
 
 SELECT 'CSUITE_MEMORY' as source, agent, summary, created_at
 FROM adv_csuite_memory
-WHERE agent IN ('buffett', 'barsi', 'tostao', 'ohno')
+WHERE agent IN ('buffett', 'barsi', 'faisca', 'ohno')
 ORDER BY created_at DESC
 LIMIT 5;
 "

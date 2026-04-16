@@ -26,9 +26,20 @@
 - [ ] Impostos a recolher (SEFAZ, DAS se aplicavel)
 - [ ] Subscriptions do mes (stack_subscriptions com billing_type = 'fixed')
 
-### 4. Avaliar ativos
-- [ ] Stack digital: checar se houve aquisicao/cancelamento
-- [ ] Escritorio: verificar se houve nova despesa de ativo
+### 4. Inventario de bens (adv_patrimony_assets)
+- [ ] Verificar se todos os bens ativos estao com dados atualizados
+- [ ] Checar se algum equipamento precisa de manutencao (proxima inspecao)
+- [ ] Verificar garantias prestes a vencer (warranty_expiry)
+- [ ] Calcular depreciacao acumulada dos bens
+- [ ] Checar se houve aquisicao, venda ou descarte de bens na semana
+- [ ] Registrar eventos relevantes em adv_patrimony_asset_events
+- [ ] Categorias a monitorar:
+  - Equipamentos (notebooks, monitores, celulares, cameras)
+  - Moveis (mesas, cadeiras, estantes do escritorio)
+  - Infraestrutura fisica (placa fachada, cabeamento, internet)
+  - Infraestrutura digital (VPS, dominios, certificados, licencas)
+  - Marca e identidade visual
+  - Veiculos (se houver)
 
 ### 5. Gerar snapshot
 - [ ] Calcular: Ativo Circulante = caixa + investimentos + recebiveis
