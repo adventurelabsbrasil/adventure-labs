@@ -1,5 +1,5 @@
 # Stack Completa — Adventure Labs
-**Data:** 2026-04-16 | **Revisão:** v5 (Rodrigo + Commander)
+**Data:** 2026-04-16 | **Revisão:** v6 (Rodrigo + Commander)
 **Fontes:** ACORE Constitution, Wiki VPS, Claude Memory, Auditoria ao vivo, respostas diretas do Founder
 **Objetivo:** Referência estratégica para decisões de contratar, escalar ou reduzir stack
 
@@ -271,9 +271,38 @@ Todos os containers `plane-app-*` estão ativos há 7 dias. Inclui: web, api, ad
 | Regime Tributário | Lucro Real |
 | Sede | Santo Antônio da Patrulha / RS |
 | Início da operação | 02/01/2026 |
-| Sociedade | Rodrigo Ribas Ferreira (sócio administrador) + Young Empreendimentos (Eduardo Tebaldi) |
+| Capital Social | R$ 50.000 — Young 95% (R$49.500) + Rodrigo 5% (R$500) |
+| Sociedade | Rodrigo Ribas Ferreira (sócio-administrador) + Young Empreendimentos (Eduardo Tebaldi) |
 
-> ⚠️ **Young é sócia E cliente.** Eduardo Tebaldi criou o Pingolead e montou n8n. Essa dupla relação exige cuidado na separação de receita de serviço vs. movimentações societárias.
+### Mapa de Relacionamentos — Quem é quem
+```
+Carlo Tebaldi (fundador Young Empreendimentos)
+  └─ casado com ──→ Roselaine Portal  ←── CLIENTE (Rose Portal Advocacia)
+  └─ filho ────────→ Eduardo Tebaldi  ←── SÓCIO Adventure Labs
+                       └─ criou Pingolead; montou n8n na Adventure
+  └─ funcionária PJ ─→ Bruna Scopel
+                         └─ sócia em ──→ Vaqeano (agência)
+                                           └─ Andressa Medeiros (tomou conta da Vaqeano)
+                                                └─ Rodrigo fundou Vaqeano → passou para Andressa
+                                                └─ Andressa trabalha também no Lidera (meio turno)
+                                                └─ Canva Pro emprestado vem desta conta da Vaqeano
+
+Rodrigo Ribas (Founder Adventure)
+  └─ fundou Lidera com Charles Simon + Guilherme Emerim
+       └─ sem participação ativa hoje (Lidera é cliente pontual, ex-sócio)
+       └─ Andressa Medeiros trabalha lá como funcionária
+
+Young Empreendimentos (Holding familiar Carlo Tebaldi)
+  └─ SÓCIA da Adventure Labs (95% capital)
+  └─ CLIENTE da Adventure Labs (R$3.500/mês)
+  └─ CEDE escritório (sala isolada) para a operação
+  └─ Mateus Fraga = Coord. marketing Young (em férias → Rodrigo interim)
+  └─ Mateus cunhado = gestão de tráfego Young + Adventure (MEI)
+```
+
+> ⚠️ **Young é sócia, cliente E locadora do escritório.** Rodrigo tem 5% do capital; Young tem 95% + é a maior fonte de receita + cede a infraestrutura física. Concentração de risco significativa: se a relação com Carlo/Eduardo mudar, impacta receita, sede e governance ao mesmo tempo.
+>
+> 💡 **Oportunidade via rede:** Rose (via casamento com Carlo) e Benditta (via rede Young) potencialmente chegaram por essa rede. Prospectar outros clientes da rede Tebaldi/Young pode ser o canal mais eficiente no curto prazo.
 
 ### Bancos PJ
 | Banco | Status | Uso |
@@ -313,14 +342,58 @@ Todos os containers `plane-app-*` estão ativos há 7 dias. Inclui: web, api, ad
 | ITY / Young | R$ 800,00 | Pontual |
 | **Total março** | **R$ 6.750,00** | |
 
-### MRR (Março 2026 — contratos recorrentes)
+### Contratos — Status e Risco (Abr/2026)
+| Cliente | Valor | Tipo | Início | Risco |
+|---------|-------|------|--------|-------|
+| Rose Portal Advocacia | R$ 3.500/mês | Recorrente **fixo** | 2026 | ✅ Estável |
+| Young Empreendimentos | R$ 3.500/mês | Recorrente (competência mar/2026) | Mar/2026 | ✅ Estável — também é sócia |
+| Benditta Marcenaria | R$ 2.000/mês | Recorrente — **contrato teste 3 meses** | 2026 | ⚠️ **Renovação incerta** — vence em breve |
+| Lidera | Pontual | Avulso (ex-sócio) | — | ℹ️ Não recorrente |
+
+### MRR (Abr/2026)
 | Cliente | MRR |
 |---------|-----|
 | Rose Portal Advocacia | R$ 3.500 |
-| Benditta Marcenaria | R$ 2.000 |
-| **MRR Base** | **R$ 5.500** |
+| Young Empreendimentos | R$ 3.500 |
+| Benditta Marcenaria | R$ 2.000 ⚠️ teste |
+| **MRR Total** | **R$ 9.000** |
+| **MRR "seguro" (sem Benditta)** | **R$ 7.000** |
 
-> ⚠️ **MRR de R$5.500 não cobre os custos operacionais de ~R$8.000+/mês.** A empresa ainda depende de serviços pontuais e da execução do plano 100k/trimestre para fechar o break-even.
+> ⚠️ **Benditta está em contrato de teste (3 meses).** Se não renovar, MRR cai de R$9.000 para R$7.000 — ainda abaixo do break-even estimado (~R$10.000 com pró-labore alvo + time). Prioridade: renovar Benditta ou substituir com novo cliente antes do vencimento.
+>
+> ℹ️ **Lidera é pontual:** Rodrigo é ex-sócio (Charles Simon + Guilherme Emerim continuam), receita não planejável como recorrente.
+
+### Meta Receita — H1 2026
+| Período | Meta Acumulada | Realizado | Gap |
+|---------|---------------|-----------|-----|
+| Q1 (jan–mar) | — | R$ 14.048 | — |
+| Q2 (abr–jun) | **R$ 100.000 acumulado** | — | Precisa R$ 85.952 em 3 meses = **~R$ 28.650/mês** |
+
+> 🔴 **Gap expressivo:** MRR atual de R$9.000 + serviços pontuais não fecha os ~R$28.650/mês necessários para bater R$100k acumulado até junho. Requer expansão agressiva de novos clientes ou projetos pontuais de alto valor no Q2.
+
+### Pró-labore
+| Item | Definido | Realizado (último mês) | Observação |
+|------|----------|----------------------|------------|
+| Pró-labore Rodrigo | R$ 6.000/mês | R$ 3.000 | Reduzido por restrição de caixa. Contracheque difere por estrutura fiscal |
+
+### Time — Custos de Pessoal
+| Pessoa | Papel | Regime | Custo/mês | Observação |
+|--------|-------|--------|-----------|------------|
+| Rodrigo Ribas | Founder / Dev / Ops | Pró-labore PJ | R$ 6.000 (alvo) / R$ 3.000 (atual) | Sócio-administrador |
+| Igor | Assistente marketing | PJ que cumpre horário | R$ 1.250 | Meio turno: 8h–11h50, seg–sex |
+| Mateus (cunhado) | Gestão de tráfego | MEI freelancer | ~R$ 25/h × 6h/sem = **~R$ 600** | Em avaliação; 6h/semana |
+| Mateus Fraga | Coord. marketing Young | MEI freelancer | A confirmar | Em férias (Rodrigo interim) |
+| **Total pessoal** | | | **~R$ 7.850–9.250/mês** | Varia conforme Rodrigo tira R$3k ou R$6k |
+
+### Escritório & Estrutura Física
+| Item | Custo/mês | Observação |
+|------|-----------|------------|
+| Aluguel | **R$ 0** | Sala isolada cedida pela Young Empreendimentos (propriedade da holding) |
+| Internet | **R$ 129** | Cabo — exclusivo do escritório |
+| Materiais / outros | ~R$ 20–50 | Erva mate, material de escritório, avulsos |
+| **Total estrutura** | **~R$ 150–180** | Benefício indireto do vínculo com Young |
+
+> 💡 **Benefício estratégico do vínculo Young:** sem custo de escritório = ~R$1.500–3.000/mês economizados vs. aluguel de sala comercial. Estrutura suportada pela holding enquanto a relação é vantajosa para ambos.
 
 ### Despesas Operacionais Recorrentes Identificadas
 | Fornecedor | Custo/mês | Categoria |
@@ -348,12 +421,15 @@ Todos os containers `plane-app-*` estão ativos há 7 dias. Inclui: web, api, ad
 |------|---------|--------|
 | Contadora | Claudia — Procor | ✅ Ativa |
 | Certificado Digital | A3 + A1 (Claudia + empresa) | ✅ Disponível — **não integrado ao Omie ainda** |
-| ERP Omie | R$ 247,20/mês | ⚠️ Assinatura ativa, uso parcial |
+| ERP Omie | R$ 247,20/mês | ⚠️ Assinatura ativa, uso parcial (só Rose) |
 | Conciliação bancária | Sueli (AI) + Buffett (CFO) | 🟡 Estruturado — OFX jan–mar processado |
-| Destino único de OFX/recibos | ❌ Não configurado | Pipeline OFX → Supabase pendente |
-| Emissão de NF | ❌ Manual / pendente integração Omie | Bloqueado por certificado não integrado |
+| Emissão de NF | ⚠️ **Manual** — NFs foram emitidas mas não sistematizadas no ERP | Bloqueado por certificado não integrado ao Omie |
+| Pipeline OFX → Supabase | ❌ Não configurado | Destino único de OFX/recibos pendente |
+| Pró-labore | R$6.000 definido, R$3.000 realizado | Contracheque tem valor diferente por estrutura fiscal |
 
-> 💡 **Prioridade financeira:** Integrar certificado A3/A1 ao Omie → habilitar NF automática → melhorar Receita formal no DRE.
+> 💡 **Prioridade financeira:** Integrar certificado A3/A1 ao Omie → sistematizar NF no ERP → habilitar NF automática → melhorar Receita formal no DRE.
+>
+> ℹ️ **NFs emitidas:** receita fiscal existe, mas sem fluxo sistematizado no ERP. Risco de divergência entre receita contábil e caixa real.
 
 ---
 
@@ -404,28 +480,43 @@ Todos os containers `plane-app-*` estão ativos há 7 dias. Inclui: web, api, ad
 
 ## 15. Orçamento Real da Stack (Abr/2026)
 
-### Custos confirmados
+### Stack de Tecnologia — Custos confirmados
 | Item | Custo/mês | Tipo |
 |------|-----------|------|
 | Claude Code Max | **> R$ 1.100** | Fixo — maior item |
-| APIs LLM (Anthropic + OpenAI + Gemini + OpenRouter + ElevenLabs) | **~R$ 247** | Variável (documentado Sueli/Buffett) |
+| APIs LLM (Anthropic + OpenAI + Gemini + OpenRouter + ElevenLabs) | **~R$ 247** | Variável |
 | Google Workspace Business Standard (2x) | ~R$ 22 ($4.40) | Fixo |
 | Cursor AI Pro | ~R$ 100 ($20) | Fixo |
 | VPS Hostinger | ~R$ 50 ($10) | Fixo |
 | ElevenLabs Starter | ~R$ 25 ($5) | Fixo |
-| **TOTAL CONFIRMADO** | **~R$ 1.544/mês** | |
+| Omie ERP | R$ 247,20 | Fixo |
+| Registro.br (domínio) | ~R$ 3/mês | Fixo (R$40/ano) |
+| Canva Pro / CapCut | R$ 0 (emprestados) | ⚠️ Risco de corte |
+| Adobe Illustrator | R$ 0 (cancelar se ainda ativo) | Verificar |
+| **TOTAL STACK** | **~R$ 1.794/mês** | |
 
-### Custos a confirmar com Sueli/Buffett
-| Item | Estimativa | Status |
-|------|-----------|--------|
-| Omie ERP | A confirmar | Pago (ao menos Rose) |
-| Registro.br (domínio) | ~R$ 40/ano ≈ R$ 3/mês | A confirmar |
-| Adobe Illustrator | R$ 0 (deve estar cancelado) | Verificar |
-| Canva Pro / CapCut | R$ 0 (emprestados) | Risco de corte |
-| **TOTAL GERAL ESTIMADO** | **~R$ 1.550–1.700/mês** | |
+### Time & Estrutura — Custos mensais
+| Item | Custo/mês | Tipo |
+|------|-----------|------|
+| Pró-labore Rodrigo (alvo) | R$ 6.000 | Pessoal (variável por caixa) |
+| Igor (PJ meio turno) | R$ 1.250 | Pessoal fixo |
+| Mateus cunhado (MEI ~6h/sem) | ~R$ 600 | Pessoal variável |
+| Internet escritório | R$ 129 | Fixo |
+| Material escritório / misc | ~R$ 50 | Variável |
+| Aluguel | **R$ 0** | Young cede a sala |
+| **TOTAL TIME + ESTRUTURA** | **~R$ 8.029** | (com R$6k pró-labore) |
 
-### Contexto de ROI
-> Claude Code Max (R$ 1.100+) representa ~65-70% do custo total de stack. É a ferramenta que mais impacta na velocidade de desenvolvimento e automação. Para justificar, deve substituir ao menos 1 dev sênior parcial (~R$ 4.000-8.000/mês) em output.
+### Burn Rate Total Estimado
+| Cenário | Burn/mês | Break-even MRR necessário |
+|---------|----------|--------------------------|
+| Pró-labore R$6.000 (alvo) | **~R$ 9.823** | ~R$ 11.000+ (com margem) |
+| Pró-labore R$3.000 (atual) | **~R$ 6.823** | ~R$ 8.000+ |
+| Sem pró-labore (bootstrap) | **~R$ 3.823** | ~R$ 4.500+ |
+
+> ⚠️ **Com MRR atual de R$9.000:** empresa está no ponto de inflexão. Cobre burn com pró-labore de R$3k, mas não o alvo de R$6k. Cada novo cliente recorrente de R$3.000+ muda o jogo.
+
+### Contexto de ROI — Stack de IA
+> Claude Code Max (R$ 1.100+) é ~14% do burn total mas o ativo de maior alavancagem. Justifica-se enquanto substitui saída de dev sênior parcial (~R$ 4.000-8.000/mês). Revisar se MRR comprimir.
 
 ---
 
@@ -472,13 +563,14 @@ Todos os containers `plane-app-*` estão ativos há 7 dias. Inclui: web, api, ad
 ### Diagnóstico atual (Abr/2026)
 | Dimensão | Score | Observação |
 |----------|-------|------------|
-| Receita vs. custo de stack | ⚠️ 4/10 | MRR R$5.500 < custo stack ~R$1.700 + time |
+| Receita vs. break-even | ⚠️ 5/10 | MRR R$9.000 cobre burn básico (R$3k pró-labore) mas não alvo (R$6k). Benditta em risco. |
 | Automação operacional | ✅ 7/10 | Hivemind rodando, 13 cron jobs, Sueli estruturada |
 | Infraestrutura técnica | ✅ 7/10 | VPS sólida, containers healthy, CI/CD parcial |
-| Cobrança/financeiro | ❌ 3/10 | PIX manual, sem NF automatizada, sem gateway recorrente |
+| Cobrança/financeiro | ❌ 3/10 | PIX manual, NF emitida mas não sistematizada, sem gateway recorrente |
 | Gestão de tarefas | ❌ 2/10 | Plane instalado mas não adotado |
-| Controle de pipeline/leads | ❌ 2/10 | WhatsApp informal, sem CRM operacional |
+| Pipeline / aquisição | ❌ 2/10 | ELITE pausado, sem funil ativo, sem CRM |
 | Comunicação profissional | ⚠️ 4/10 | Número pessoal, sem chip próprio, sem ESP |
+| Precificação | ⚠️ 3/10 | Sem tabela formal — baseada em research de abertura |
 
 ### Vercel vs. Wix vs. WordPress — qual usar?
 
@@ -511,25 +603,41 @@ Todos os containers `plane-app-*` estão ativos há 7 dias. Inclui: web, api, ad
 
 > O maior potencial não aproveitado é **WhatsApp**: com chip próprio + Evolution API + OpenClaw, o Buzz poderia atender clientes, qualificar leads e responder perguntas no WhatsApp automaticamente — sem custo adicional de API de WhatsApp Business oficial.
 
+### Pipeline — Estratégias Ativas (Abr/2026)
+
+| Frente | Status | Descrição |
+|--------|--------|-----------|
+| **Assessoria Martech Tráfego Pago** | 🟡 MVP ativo | Tentando vender o serviço. Brainstorm em andamento para campanha 99% autônoma como prova de conceito e diferencial |
+| **Micro-soluções com IA + vibecoding** | 🟡 Conceito | Usar IA e vibecoding para construir soluções rápidas para mercado específico. Fase de entendimento de mercado |
+| **ELITE** | ⏸️ Pausado | Pausado até ter prova social da Young (loteadoras/incorporadoras) e entender melhor como divulgar |
+| **Lidera** | ℹ️ Pontual | Atendimento como ex-sócio — não priorizar como estratégia de crescimento |
+
+> 💡 **Estratégia de curto prazo emergente:** campanha 99% autônoma serve dois propósitos: (1) provar o modelo para novos clientes de tráfego pago, (2) testar a venda de micro-soluções. É um MVP de marketing E de produto ao mesmo tempo.
+>
+> ⚠️ **Sem tabela de precificação formal.** Preços atuais baseados em research de mercado na abertura da empresa. Com 3,5 meses de operação e 3+ clientes ativos, há base para construir uma tabela de preços própria ancorada em resultados reais.
+
 ### Maiores atritos para escalar (ordenados por impacto)
 
-1. **🔴 Sem cobrança recorrente automática** — cada fatura é um PIX manual. Com 5 clientes ok; com 15-20 clientes vira gargalo.
-2. **🔴 MRR R$5.500 < break-even estimado ~R$10.000+** — empresa ainda não se paga sozinha. Escalar a stack antes de fechar essa conta pode piorar o caixa.
-3. **🔴 Rodrigo é gargalo** — faz estratégia + dev oversight + account management + operação. Sem delegação estruturada, crescimento tem teto humano.
-4. **🟡 Nenhum funil de aquisição automatizado** — sem ESP, sem lead nurturing, sem pipeline CRM. Novos clientes chegam via rede/indicação.
-5. **🟡 Plane instalado mas não adotado** — 12 containers de gestão de projetos sem usar = custo de RAM + zero benefício.
-6. **🟡 Vercel Hobby** — 5 projetos. Cada novo cliente webapp = novo projeto. Pro ($20/mês) se torna obrigatório ao 6º projeto ou se builds aumentarem.
-7. **🟢 Supabase Free** — 2 projetos. O 3º projeto ou crescimento de storage exige Pro ($25/mês).
-8. **🟢 VPS RAM pressionada** — 4.9G/7.8G. Adicionar mais agentes/containers requer upgrade para KVM4 (~$20/mês a mais).
+1. **🔴 Benditta: contrato de teste expirando** — renovação incerta. Perder R$2.000/mês empurra MRR para R$7.000 e aumenta o gap para a meta H1.
+2. **🔴 Meta H1 R$100k: gap de ~R$28.650/mês** — MRR atual de R$9.000 + serviços não fecha. Requer novos clientes ou projetos de alto valor em abril/maio.
+3. **🔴 Rodrigo é gargalo** — faz estratégia + dev + account management + operação financeira + interim Young. Sem delegação estruturada, escalar tem teto humano.
+4. **🔴 Sem cobrança recorrente automática** — PIX manual. Com 5 clientes ok; com 10+ clientes vira gargalo operacional.
+5. **🟡 Sem funil de aquisição** — ELITE pausado, sem ESP, sem CRM, sem pipeline ativo. Novos clientes chegam via rede Tebaldi (dependência de 1 rede de relacionamentos).
+6. **🟡 Concentração Young** — Young é sócia + cliente + locadora. 3 laços com a mesma holding = risco concentrado.
+7. **🟡 Plane instalado mas não adotado** — 12 containers sem uso = custo de RAM sem retorno.
+8. **🟡 Vercel Hobby** — ao 6º projeto web, precisa de Pro ($20/mês).
 
 ### O que seria o "próximo nível" de stack?
-Para ir de R$5.500 para R$20.000+ MRR sem travar:
-- [ ] Gateway de cobrança recorrente (Stripe ou Kiwify) → faturamento automático
+Para fechar a meta H1 e ir de R$9.000 para R$20.000+ MRR:
+- [ ] **Renovar Benditta** ou substituir cliente antes do vencimento do contrato
+- [ ] **Campanha 99% autônoma como prova social** → habilita vender assessoria martech com case concreto
+- [ ] **Tabela de precificação formal** → ancorar em resultados reais dos primeiros 3 meses
+- [ ] Gateway de cobrança recorrente (Stripe ou Kiwify) → automatizar faturamento
 - [ ] Chip próprio + WhatsApp Business via OpenClaw → atendimento e qualificação automatizada
 - [ ] ESP básico (Brevo free ou Resend funcionando) → nurturing e comunicação em escala
-- [ ] Plane ou GitHub Issues adotado de verdade → delegação real para Igor/Mateus
 - [ ] NF automática via Omie + certificado integrado → formalização da receita
+- [ ] Plane ou GitHub Issues adotado de verdade → delegação real para Igor/Mateus
 
-*v5 — Atualizado com respostas diretas do Founder em 2026-04-16.*
-*Fontes: ACORE Constitution, wiki VPS, Claude Memory, auditoria ao vivo 2026-04-15/16, Rodrigo Ribas.*
+*v6 — Atualizado com 14 respostas diretas do Founder + mapa de relacionamentos em 2026-04-16.*
+*Fontes: ACORE Constitution, wiki VPS, Claude Memory, auditoria ao vivo 2026-04-15/16, DRE Sueli, Rodrigo Ribas.*
 *Próxima revisão recomendada: 2026-05-01*
