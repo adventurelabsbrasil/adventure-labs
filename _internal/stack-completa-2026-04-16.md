@@ -1,5 +1,5 @@
 # Stack Completa — Adventure Labs
-**Data:** 2026-04-16 | **Revisão:** v3 (Rodrigo + Commander)
+**Data:** 2026-04-16 | **Revisão:** v5 (Rodrigo + Commander)
 **Fontes:** ACORE Constitution, Wiki VPS, Claude Memory, Auditoria ao vivo, respostas diretas do Founder
 **Objetivo:** Referência estratégica para decisões de contratar, escalar ou reduzir stack
 
@@ -45,11 +45,13 @@
 ### Rede & Segurança
 | Item | Detalhe | Status |
 |------|---------|--------|
-| Reverse Proxy | Nginx + SSL Let's Encrypt | ✅ |
-| VPN Mac | Tailscale instalado | ✅ |
-| Secrets | Infisical self-hosted (`vault.adventurelabs.com.br`) | ✅ (não integrado ao hivemind ainda) |
-| Senhas | Vaultwarden (`pw.adventurelabs.com.br`) | ✅ |
-| Monitor | Uptime Kuma (`status.adventurelabs.com.br`) | ✅ |
+| **Nginx** | Reverse proxy VPS — SSL Let's Encrypt, roteamento de subdomínios | ✅ Ativo |
+| Tailscale | VPN Mac → VPS (acesso privado sem expor portas) | ✅ |
+| Infisical | Self-hosted VPS (`vault.adventurelabs.com.br`) | ✅ Container ativo — **scripts do hivemind ainda leem .env direto, não via Infisical** |
+| Vaultwarden | Senhas (`pw.adventurelabs.com.br`) | ✅ |
+| Uptime Kuma | Monitor (`status.adventurelabs.com.br`) | ✅ |
+
+> 💡 **Infisical: VPS e cloud são complementares.** A instância self-hosted VPS está ativa. O Infisical Cloud (free tier) poderia sincronizar segredos com Vercel e GitHub Actions sem SSH. Atualmente nenhum dos dois está integrado ao hivemind — gap de segurança (scripts leem `.env` diretamente).
 
 ---
 
@@ -121,8 +123,18 @@ Todos os containers `plane-app-*` estão ativos há 7 dias. Inclui: web, api, ad
 | Cerebras | Fallback Qwen 3 | Variável (low) | API key ativa |
 | Together.ai | Fallback Llama 3.3 70B | Variável (low) | API key ativa |
 | DeepSeek | Fallback | Variável (low) | API key ativa |
-| Jina Reader | Web scraping/leitura | Variável | API key ativa |
-| Manus AI | Desconhecido | — | API key ativa, uso a confirmar |
+| Jina Reader | Web scraping/leitura | Variável | ⚠️ **Nunca usado** — revogar key |
+| Manus AI | Desconhecido | — | ⚠️ **Uso não confirmado** — verificar e revogar se não usar |
+
+> 💡 **Revogar Jina e Manus:** keys ativas sem uso = superfície de ataque desnecessária. Revogar nas respectivas dashboards e remover do openclaw.json.
+
+### Distinção crítica: Claude Code Max vs. Anthropic API
+| Item | O que é | Custo | Observação |
+|------|---------|-------|------------|
+| **Claude Code Max** | Assinatura da ferramenta de dev (IDE assistant, auditoria, automação de código) | **> R$ 1.100/mês** | **Não consome tokens da API** — é produto separado |
+| **Anthropic API** | Chamadas diretas de API pelo hivemind VPS | Variável (dentro dos ~R$ 247) | Cobrado por token |
+
+> 💡 São orçamentos distintos e devem ser monitorados separado. Claude Code Max é custo de "desenvolvedor AI" (substitui dev humano). Anthropic API é custo de "operação dos agentes".
 
 ### Ferramentas de Desenvolvimento IA
 | Ferramenta | Custo/mês | Uso | Status |
@@ -192,7 +204,7 @@ Todos os containers `plane-app-*` estão ativos há 7 dias. Inclui: web, api, ad
 
 ---
 
-## 8. Marketing & Ads
+## 8. Marketing & Ads & Automações
 
 | Plataforma | Clientes | Status |
 |------------|---------|--------|
@@ -203,8 +215,11 @@ Todos os containers `plane-app-*` estão ativos há 7 dias. Inclui: web, api, ad
 | LinkedIn Business | — | Cadastrado |
 | Google Analytics 4 | LPs e apps | ✅ |
 | GTM | LPs e apps | ✅ |
+| **Make.com** | Email + Meta Insights | ✅ **1 automação ativa (free)** — descoberto em 2026-04-16 |
 | **Agendamento social** | — | ❌ **Não existe** — tudo manual via Meta Business Suite |
 | **Email marketing (ESP)** | — | ❌ **Não existe** — gap estratégico |
+
+> 💡 **Make.com free:** 1 automação ativa de email/Meta Insights. Com n8n self-hosted já na VPS, vale migrar essa automação para n8n a médio prazo e concentrar tudo num lugar. Make free tem 1.000 ops/mês e 15 min de polling — bom para começar, pode virar gargalo com escala.
 
 ---
 
@@ -450,6 +465,71 @@ Todos os containers `plane-app-*` estão ativos há 7 dias. Inclui: web, api, ad
 
 ---
 
-*v3 — Atualizado com respostas diretas do Founder em 2026-04-16.*
+---
+
+## 18. Análise Estratégica — Pronto para Escalar?
+
+### Diagnóstico atual (Abr/2026)
+| Dimensão | Score | Observação |
+|----------|-------|------------|
+| Receita vs. custo de stack | ⚠️ 4/10 | MRR R$5.500 < custo stack ~R$1.700 + time |
+| Automação operacional | ✅ 7/10 | Hivemind rodando, 13 cron jobs, Sueli estruturada |
+| Infraestrutura técnica | ✅ 7/10 | VPS sólida, containers healthy, CI/CD parcial |
+| Cobrança/financeiro | ❌ 3/10 | PIX manual, sem NF automatizada, sem gateway recorrente |
+| Gestão de tarefas | ❌ 2/10 | Plane instalado mas não adotado |
+| Controle de pipeline/leads | ❌ 2/10 | WhatsApp informal, sem CRM operacional |
+| Comunicação profissional | ⚠️ 4/10 | Número pessoal, sem chip próprio, sem ESP |
+
+### Vercel vs. Wix vs. WordPress — qual usar?
+
+| Cenário | Recomendação |
+|---------|-------------|
+| Landing pages de campanha (Rose, Benditta, Young) | ✅ **Vercel (Next.js)** — melhor performance, GTM integrado, já está funcionando |
+| Site institucional Adventure Labs | 🤔 **WordPress** ou **Webflow** — se Igor/Rodrigo precisam editar sem dev. Vercel exige dev para cada mudança de copy |
+| Plataformas (LideraSpace, Young Talents, Admin) | ✅ **Vercel obrigatório** — são apps Next.js, não sites estáticos |
+| Blog / conteúdo editorial | 📝 **WordPress.com** (free) ou **Ghost** (self-hosted) — melhores para SEO e gestão de conteúdo |
+
+> **Conclusão:** Vercel fica para apps e LPs técnicas. Se quiser um site aventure-labs.com.br editável pelo time sem dev, considerar WordPress em subdomínio separado.
+
+### OpenRouter vs. OpenPanel
+| Ferramenta | O que é | Uso na Adventure |
+|------------|---------|-----------------|
+| **OpenRouter** | API gateway para múltiplos LLMs (Gemini, Claude, GPT, etc.) | ✅ **Em uso** — OpenClaw roteia modelos via OpenRouter |
+| **OpenPanel** | Painel de controle para VPS (alternativa ao cPanel) | ❌ **Não instalado, não necessário** — gerenciam VPS via SSH + Docker direto |
+
+### OpenClaw — está sendo bem aproveitado?
+**Resposta curta: não ainda.** Potencial vs. uso atual:
+
+| Capacidade | Potencial | Uso atual |
+|------------|-----------|-----------|
+| Telegram chatbot | Alto | ✅ Ativo (Buzz) |
+| WhatsApp Business | Alto | ❌ `enabled: false` |
+| Multi-agent routing | Alto | ❌ C-Suite roda via cron direto, não via OpenClaw |
+| Skills (SAG) | 19 elegíveis | ⚠️ Parcialmente configuradas |
+| Memória persistente | Alto | ⚠️ Memory write falhando |
+| Model routing | Configurado hoje | ✅ Gemini → Claude → GPT |
+
+> O maior potencial não aproveitado é **WhatsApp**: com chip próprio + Evolution API + OpenClaw, o Buzz poderia atender clientes, qualificar leads e responder perguntas no WhatsApp automaticamente — sem custo adicional de API de WhatsApp Business oficial.
+
+### Maiores atritos para escalar (ordenados por impacto)
+
+1. **🔴 Sem cobrança recorrente automática** — cada fatura é um PIX manual. Com 5 clientes ok; com 15-20 clientes vira gargalo.
+2. **🔴 MRR R$5.500 < break-even estimado ~R$10.000+** — empresa ainda não se paga sozinha. Escalar a stack antes de fechar essa conta pode piorar o caixa.
+3. **🔴 Rodrigo é gargalo** — faz estratégia + dev oversight + account management + operação. Sem delegação estruturada, crescimento tem teto humano.
+4. **🟡 Nenhum funil de aquisição automatizado** — sem ESP, sem lead nurturing, sem pipeline CRM. Novos clientes chegam via rede/indicação.
+5. **🟡 Plane instalado mas não adotado** — 12 containers de gestão de projetos sem usar = custo de RAM + zero benefício.
+6. **🟡 Vercel Hobby** — 5 projetos. Cada novo cliente webapp = novo projeto. Pro ($20/mês) se torna obrigatório ao 6º projeto ou se builds aumentarem.
+7. **🟢 Supabase Free** — 2 projetos. O 3º projeto ou crescimento de storage exige Pro ($25/mês).
+8. **🟢 VPS RAM pressionada** — 4.9G/7.8G. Adicionar mais agentes/containers requer upgrade para KVM4 (~$20/mês a mais).
+
+### O que seria o "próximo nível" de stack?
+Para ir de R$5.500 para R$20.000+ MRR sem travar:
+- [ ] Gateway de cobrança recorrente (Stripe ou Kiwify) → faturamento automático
+- [ ] Chip próprio + WhatsApp Business via OpenClaw → atendimento e qualificação automatizada
+- [ ] ESP básico (Brevo free ou Resend funcionando) → nurturing e comunicação em escala
+- [ ] Plane ou GitHub Issues adotado de verdade → delegação real para Igor/Mateus
+- [ ] NF automática via Omie + certificado integrado → formalização da receita
+
+*v5 — Atualizado com respostas diretas do Founder em 2026-04-16.*
 *Fontes: ACORE Constitution, wiki VPS, Claude Memory, auditoria ao vivo 2026-04-15/16, Rodrigo Ribas.*
 *Próxima revisão recomendada: 2026-05-01*
