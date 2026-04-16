@@ -1,0 +1,15 @@
+# HYDRA Venture Studio Engine — Python Dependencies
+# Install: pip install -r project_hydra/requirements.hydra.txt
+
+# Core (obrigatório)
+pydantic>=2.0
+python-dotenv>=1.0.0
+
+# LLM — Anthropic SDK (opcional: funciona em DRY_RUN sem)
+anthropic>=0.40.0
+
+# Database — Supabase (opcional: funciona em modo local sem)
+supabase>=2.0.0
+
+# HTTP — usado por Telegram notifier (opcional)
+httpx>=0.25.0
