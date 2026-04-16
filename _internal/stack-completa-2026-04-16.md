@@ -256,38 +256,49 @@
 
 ## 10. Devices & Ambiente Local
 
-| Device | Spec | Uso |
-|--------|------|-----|
-| MacBook Air M4 | 16GB RAM | Dev principal — Claude Code, Cursor, Ollama local |
-| iPhone 15 Pro Max | — | Telegram Founder, monitoramento |
-| VPS Hostinger | 8GB RAM / 96GB disk | Produção total |
+### Computadores
+| Device | Spec | Uso | Status |
+|--------|------|-----|--------|
+| MacBook Air M4 | Apple M4, 16GB RAM | Dev principal — Claude Code, Cursor, Ollama, Tailscale | ✅ Em uso |
+| Asus Vivobook M1502IA | AMD Ryzen + 12GB RAM (estimado), model EJ252 — SN: S1N0B601856203D, MDF: 2024-01 | Notebook secundário / disponível | 🟡 Disponível |
+| Beelink T4 Pro | Intel Celeron N3350, 4GB RAM, 64GB storage | Mini PC — disponível, nunca usado | 🟡 Nunca usado — potencial: node Ollama / agente dedicado |
+| VPS Hostinger | 8GB RAM / 96GB disk | Produção total (Docker + OpenClaw) | ✅ Em uso |
+
+### Smartphones
+| Device | Spec | Uso | Status |
+|--------|------|-----|--------|
+| iPhone 15 Pro Max | — | Telegram Founder, monitoramento | ✅ Em uso |
+| Motorola Moto G52 | (especificações a confirmar) | Disponível | 🟡 Disponível |
 
 ### Ferramentas Mac
-| Ferramenta | Versão/Status |
-|------------|---------------|
-| Claude Code Max | Ativo |
-| Cursor AI Pro | Ativo |
-| Ollama | Local (modelos a confirmar) |
-| Tailscale | VPN ativa → VPS |
-| pnpm | Gerenciador de pacotes padrão |
-| gh CLI | GitHub CLI configurado |
+| Ferramenta | Detalhe | Status |
+|------------|---------|--------|
+| Claude Code Max | > R$ 1.100/mês | ✅ Ativo |
+| Cursor AI Pro | Pago | ✅ Ativo |
+| Ollama | Instalado — modelos locais (vibecoding / fallback offline) | ✅ Instalado |
+| Tailscale | VPN ativa → VPS | ✅ Ativo |
+| pnpm | Gerenciador de pacotes padrão | ✅ |
+| gh CLI | GitHub CLI configurado | ✅ |
+
+> **Nota Beelink T4 Pro:** Mini PC com 4GB RAM + Celeron N3350 é fraco para LLMs médios, mas suficiente para rodar modelos quantizados pequenos via Ollama (ex: Qwen 0.5B, Phi-3 mini, Gemma 2B) ou como nó de automação leve (n8n worker, cron agent, proxy). Tailscale pode integrá-lo à rede sem expor porta pública.
 
 ---
 
-## 11. Orçamento Baseline (ACORE v1.0 — referência Mar/2026)
+## 11. Orçamento de Stack (atualizado Abr/2026)
 
-| Item | USD/mês | BRL/mês |
-|------|---------|---------|
-| VPS Hostinger | $10 | R$ 50 |
-| Supabase Pro | $25 | R$ 125 |
-| Cursor AI Pro | $20 | R$ 100 |
-| ElevenLabs | $5 | R$ 25 |
-| Vercel (Hobby = free) | $0 | — |
-| **Subtotal fixo** | **$60** | **R$ 300** |
-| APIs LLM (variável) | ~$20–50 | R$ 100–250 |
-| **Total estimado** | **~$80–110** | **R$ 400–550** |
+| Item | USD/mês | BRL/mês | Nota |
+|------|---------|---------|------|
+| VPS Hostinger | $10 | R$ 50 | Fixo |
+| Supabase Pro | $25 | R$ 125 | Fixo (quando ativo) |
+| Cursor AI Pro | $20 | R$ 100 | Fixo |
+| ElevenLabs | $5 | R$ 25 | Starter |
+| Vercel (Hobby = free) | $0 | — | Free tier |
+| **Subtotal fixo** | **$60** | **R$ 300** | |
+| APIs LLM (variável) | ~$20–50 | R$ 100–250 | OpenRouter + providers |
+| **Claude Code Max** | — | **> R$ 1.100** | Plano Max — maior custo individual |
+| **Total real estimado** | — | **~R$ 1.550–1.700** | |
 
-> *Cotação referência: US$ 1 = R$ 5,00 (Mar/2026). Claude Code Max não incluído acima — plano separado.*
+> *Cotação referência: US$ 1 = R$ 5,00. Claude Code Max é o maior item do orçamento de stack (~65% do total).*
 
 ---
 
