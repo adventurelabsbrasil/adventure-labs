@@ -4,6 +4,72 @@ Registro operacional para handoff entre Human, CTO (Torvalds) e agentes. Atualiz
 
 ---
 
+## 2026-04-16 — Auditoria completa VPS/GitHub/Stack + Relatório Estratégico
+
+### Feito
+
+**Infraestrutura VPS:**
+- Auditoria ao vivo de 20 containers, 13 cron jobs, OpenClaw/Buzz
+- OpenClaw model routing configurado: `google/gemini-3.1-pro-preview` → `claude-sonnet-4-6` → `gpt-5.4`
+- 18 scripts VPS versionados no GitHub em `tools/vps-infra/scripts/`
+- Branch protection ativada em `main` (require review + Gitleaks + Governance)
+- 30 branches locais órfãs deletadas (de 45 para 15)
+- 5 Vercel rootDirectory corrigidos (monorepo reorganização)
+- CI Gitleaks corrigido (scan apenas PRs novos, não histórico)
+
+**Documentos gerados (branch `claude/mercado-pago-integration-eHScy`):**
+- `_internal/stack-report-2026-04-16.md` — relatório operacional VPS/cloud/local
+- `_internal/stack-completa-2026-04-16.md` (v6) — inventário estratégico completo com custos, time, contratos, mapa de relacionamentos, análise de gaps, análise de escala
+- `_internal/relatorio-estrategico-2026-04-16.md` — relatório estratégico com diagnóstico financeiro Q1, riscos, recomendações 7/30/60-90 dias
+
+**Financeiro mapeado (atualizado com founder):**
+- MRR real: R$9.000 (Rose R$3,5k + Young R$3,5k + Benditta R$2k ⚠️ contrato teste)
+- Burn estimado: R$6.800–9.800/mês dependendo do pró-labore
+- Meta H1: R$100k acumulado → gap ~R$28.650/mês vs. MRR atual
+- Pró-labore definido: R$6.000 / realizado: R$3.000 (restrição de caixa)
+- Escritório: sala Young, sem aluguel, internet R$129/mês
+
+**Mapa de relacionamentos completo documentado:**
+Carlo Tebaldi (Young) → casado com Rose (cliente) → filho Eduardo (sócio Adventure) → Bruna Scopel (funcionária Rose, sócia Vaqeano) → Andressa Medeiros (tomou Vaqeano de Rodrigo, trabalha Lidera) → Rodrigo fundou Lidera com Charles Simon/Guilherme Emerim (sem participação ativa)
+
+### Bugs identificados (pendentes de correção)
+
+| Bug | Impacto | Status |
+|-----|---------|--------|
+| `mercadopago-sync.sh` — REPO_ROOT `/opt/adventure-labs/repo` não existe | Sem dados MP há ~1 dia. Sueli/Buffett cegos | ⏳ Claude corrige |
+| `hivemind-heartbeat.sh` — busca `adventure-plane`, correto é `plane-app-proxy-1` | Alertas falsos Telegram | ⏳ Claude corrige |
+| 5 `package-lock.json` proibidos pelo governance | Security Scan bloqueando todas as PRs | ⏳ Claude corrige |
+| Supabase memory write falhando (C-Suite) | Agentes sem persistência de memória | 🔍 Investigar |
+| Chave Supabase Lidera exposta em git | Segurança | ⏳ **Rodrigo** revoga + Claude atualiza VPS/.env |
+
+### Onde paramos
+
+- Bugs listados acima pendentes — serão resolvidos nesta mesma sessão ou na próxima
+- PRs #22 e #26 aguardando Vercel rate limit reset (~24h desde 15/04 18h BRT)
+- PR #23 aguardando rotação de chave Lidera (Rodrigo)
+- Branch `claude/mercado-pago-integration-eHScy` com 3 documentos novos — fazer merge ou manter como ref histórica
+
+### Estado da stack (snapshot 2026-04-16)
+
+```
+VPS:       ✅ 20/20 containers healthy | RAM 4.9G/7.8G ⚠️ | Disk 46G/96G
+Hivemind:  ✅ 13/13 cron jobs ativos | mercadopago-sync 🔴 BUG
+OpenClaw:  ✅ PID 1929603 | Routing Gemini→Claude→GPT | WhatsApp: disabled
+GitHub:    PRs #22 #23 #26 abertas | Security Scan ❌ (package-lock.json)
+Vercel:    Rate limited (reset ~17/04) | 5 projetos rootDirectory corrigido
+MRR:       R$9.000 (Rose+Young+Benditta) | Break-even ~R$8-11k/mês
+```
+
+### Para os agentes do hivemind
+
+- **Buffett (CFO):** MRR atualizado para R$9.000 (Young entrou como recorrente desde mar/2026). Pró-labore realizado R$3.000 vs. alvo R$6.000. Benditta em contrato de teste — monitorar renovação.
+- **Torvalds (CTO):** mercadopago-sync.sh com bug de REPO_ROOT. Heartbeat com nome de container errado. Security Scan 100% failing por package-lock.json. Branch protection ativa em main.
+- **Ogilvy (CMO):** Young é cliente E sócia (R$3.500/mês desde março). Campanha 99% autônoma em brainstorm — candidata a case de prova social para assessoria martech.
+- **Cagan (CPO):** ELITE pausado. Duas frentes ativas: assessoria martech MVP + micro-soluções IA/vibecoding. Sem tabela de precificação formal — oportunidade.
+- **Buzz:** contexto de relacionamentos atualizado — Rose = esposa Carlo Tebaldi (sócio via Eduardo). Lidera = pontual, ex-sócio, não tratar como cliente recorrente.
+
+---
+
 ## 2026-04-09 — Nova tabela adv_ads_daily_metrics (ad-level granularity)
 
 ### Feito
