@@ -1,4 +1,4 @@
-# HEARTBEAT.md — Faisca (Token Spark)
+# HEARTBEAT.md — Bill (Token Extractor)
 
 > Checklist executado a cada run (2x/semana: ter + sex, 09:43 UTC)
 
@@ -29,7 +29,7 @@
 
 ### 5. Report
 - [ ] Gerar report formatado para Telegram
-- [ ] Gravar resumo em adv_csuite_memory (agent: 'faisca')
+- [ ] Gravar resumo em adv_csuite_memory (agent: 'bill')
 - [ ] Se sexta-feira: report semanal consolidado para Buffett
 
 ---
@@ -37,7 +37,7 @@
 ## Formato do report
 
 ```
-<b>Faisca (Token Spark) — Balanco de Tokens</b>
+<b>Bill (Token Extractor) — Extrato de Tokens</b>
 
 <b>Periodo:</b> [data_inicio] a [data_fim]
 
@@ -59,5 +59,5 @@
 <b>vs Budget:</b> [X]% utilizado
 
 <b>Recomendacao:</b>
-[acao sugerida ou "Consumo dentro do esperado"]
+[acao sugerida ou "Extrato dentro do esperado"]
 ```

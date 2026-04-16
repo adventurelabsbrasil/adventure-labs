@@ -91,7 +91,7 @@ Founder (Rodrigo Ribas)
        └─ [PJ] → Barsi (Gestor de Patrimonio)
                     ├─ Consulta: Sueli (saldos, OFX, conciliacao)
                     ├─ Consulta: Chaves (Infisical — acessos bancarios)
-                    └─ Consulta: Faisca (custos IA como % do patrimonio)
+                    └─ Consulta: Bill (custos IA como % do patrimonio)
 ```
 
 ## Tabelas Supabase (somente PJ)
@@ -117,6 +117,6 @@ Founder (Rodrigo Ribas)
 ## Cron
 
 - **Frequencia:** 1x/semana (sexta-feira)
-- **Horario:** 10:07 UTC (depois da Faisca, antes do Buffett)
+- **Horario:** 10:07 UTC (depois da Bill, antes do Buffett)
 - **Cron:** `7 10 * * 5`
 - **Modo PF:** sob demanda (Founder pede via chat)

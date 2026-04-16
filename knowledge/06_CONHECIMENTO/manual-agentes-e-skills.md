@@ -101,7 +101,7 @@ Arquivos em **[apps/core/admin/agents/](../../apps/core/admin/agents/)** (submod
 Pacotes de agentes nomeados (pastas com `AGENT.md`): mesmo diretório, ex.: `andon_asana/`, `benchmark_adventure/`, `gerente_rose/`, etc.
 
 **Agentes de apoio financeiro:**
-- **Faísca (Token Spark)** — owner Buffett (CFO). "Sem faísca, sem aventura." Docs: [`agents/faisca/`](agents/faisca/). Script VPS: `faisca-token-treasurer.sh`. Tabelas: `adv_ai_providers`, `adv_token_usage`, `adv_token_alerts`.
+- **Bill (Token Extractor)** — owner Buffett (CFO). "O extrato tem que bater. Sempre." Docs: [`agents/bill/`](agents/bill/). Script VPS: `bill-token-treasurer.sh`. Tabelas: `adv_ai_providers`, `adv_token_usage`, `adv_token_alerts`.
 - **Barsi (Gestor de Patrimônio)** — owner Buffett (CFO) + Founder direto (PF). Dual-mode: Adventure (PJ) em Supabase + Personal (PF) em `personal/barsi-patrimonio-pf/`. Docs: [`agents/barsi/`](agents/barsi/). Script VPS: `barsi-patrimonio.sh`. Tabelas: `adv_patrimony_accounts`, `adv_patrimony_snapshots`, `adv_patrimony_movements`.
 
 ---

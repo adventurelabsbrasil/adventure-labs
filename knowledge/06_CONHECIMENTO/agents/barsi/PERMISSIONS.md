@@ -10,8 +10,8 @@
 | adv_patrimony_assets | Supabase | Inventario de bens fisicos e digitais |
 | adv_patrimony_asset_events | Supabase | Historico de eventos dos bens |
 | adv_stack_subscriptions | Supabase | Custos recorrentes (para calcular passivo recorrente) |
-| adv_ai_providers | Supabase | Custos de IA (via Faisca) |
-| adv_csuite_memory | Supabase | Ultimas decisoes do Buffett e Faisca |
+| adv_ai_providers | Supabase | Custos de IA (via Bill) |
+| adv_csuite_memory | Supabase | Ultimas decisoes do Buffett e Bill |
 | relatorio-dre-jan-mar-2026.md | knowledge/00_GESTAO_CORPORATIVA/operacao/ | DRE para calculo de resultado |
 | dre-jan-mar-2026.json | knowledge/00_GESTAO_CORPORATIVA/operacao/ | DRE estruturado |
 | plano-de-contas-categorias.md | knowledge/00_GESTAO_CORPORATIVA/checklists_config/ | Referencia de categorias |
@@ -49,7 +49,7 @@
 | Sueli (PJ) | Saldos bancarios, OFX conciliados, Omie | Base para foto PJ |
 | Sueli (PF) | Saldos Nubank, categorias, fatura | Base para foto PF |
 | Chaves (Infisical) | Status de acessos bancarios (online banking APIs) | Verificar se tem acesso automatico |
-| Faisca | Custos IA como % do patrimonio | Dimensionar peso da IA no balanco |
+| Bill | Custos IA como % do patrimonio | Dimensionar peso da IA no balanco |
 
 ## Proibicoes (DENY)
 

@@ -1,4 +1,4 @@
-# PERMISSIONS.md — Faisca (Token Spark)
+# PERMISSIONS.md — Bill (Token Extractor)
 
 ## Leitura (READ)
 

@@ -4,7 +4,7 @@
 # Cron:   7 10 * * 5  /opt/adventure-labs/scripts/agents/barsi-patrimonio.sh >> /opt/adventure-labs/logs/barsi.log 2>&1
 #
 # Missao: Fotografia patrimonial semanal da Adventure Labs (PJ).
-# Roda 10:07 UTC sexta-feira, depois da Faisca e antes do Buffett.
+# Roda 10:07 UTC sexta-feira, depois da Bill e antes do Buffett.
 # Owner: Buffett (CFO)
 #
 # NOTA: Este script roda SOMENTE o modo Adventure (PJ).
@@ -58,7 +58,7 @@ Sua missao: construir e manter a fotografia patrimonial completa da empresa.
 - Reporta ao Buffett (CFO) no modo PJ
 - Consulta Sueli para saldos e conciliacoes
 - Consulta Chaves para acessos bancarios
-- Consulta Faisca para custos IA como % patrimonio
+- Consulta Bill para custos IA como % patrimonio
 
 ## Formato do report
 <b>Barsi (Gestor de Patrimonio) — Foto Semanal</b>
@@ -154,7 +154,7 @@ WHERE is_active = true;
 
 SELECT 'CSUITE_MEMORY' as source, agent, summary, created_at
 FROM adv_csuite_memory
-WHERE agent IN ('buffett', 'barsi', 'faisca', 'ohno')
+WHERE agent IN ('buffett', 'barsi', 'bill', 'ohno')
 ORDER BY created_at DESC
 LIMIT 5;
 "

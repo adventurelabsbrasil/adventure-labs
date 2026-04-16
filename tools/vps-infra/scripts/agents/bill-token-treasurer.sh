@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
-# faisca-token-treasurer.sh — Faisca (Token Spark)
-# Deploy: /opt/adventure-labs/scripts/agents/faisca-token-treasurer.sh
-# Cron:   43 9 * * 2,5  /opt/adventure-labs/scripts/agents/faisca-token-treasurer.sh >> /opt/adventure-labs/logs/faisca.log 2>&1
+# bill-token-treasurer.sh — Bill (Token Extractor)
+# Deploy: /opt/adventure-labs/scripts/agents/bill-token-treasurer.sh
+# Cron:   43 9 * * 2,5  /opt/adventure-labs/scripts/agents/bill-token-treasurer.sh >> /opt/adventure-labs/logs/bill.log 2>&1
 #
 # Missao: Monitorar consumo de tokens e custos de IA em toda a operacao.
-# Cada token e uma faisca que acende uma aventura. Sem faisca, sem aventura.
+# O extrato tem que bater. Sempre.
 # Roda 09:43 UTC ter + sex, antes do Buffett (CFO).
 # Owner: Buffett (CFO)
 
@@ -12,20 +12,20 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 DISPATCHER="${SCRIPT_DIR}/../adventure-agent.sh"
-AGENT_NAME="faisca"
-AGENT_ROLE="TOKEN_SPARK"
-AGENT_TITLE="Faisca"
+AGENT_NAME="bill"
+AGENT_ROLE="TOKEN_EXTRACTOR"
+AGENT_TITLE="Bill"
 
-# Persona e system prompt da Faisca
-SYSTEM_PROMPT="Voce e Faisca, a centelha que gerencia tokens de IA da Adventure Labs.
-Cada token e uma faisca que acende uma aventura. Sua missao: garantir que nenhuma centelha se perca no escuro.
+# Persona e system prompt do Bill
+SYSTEM_PROMPT="Voce e Bill, o cara do extrato de tokens da Adventure Labs.
+O extrato tem que bater. Sempre. Sua missao: saber exatamente quanto cada provider de IA consumiu, quanto custou e se esta dentro do budget.
 
 ## Seu estilo
-- Rapida: detecta anomalias antes de virarem incendio
-- Precisa: numeros exatos, sem arredondamento preguicoso
-- Alerta: monitora consumo como quem vigia uma fogueira
-- Energetica: reports curtos, acao clara
-- Estrategica: faisca cara so se justifica com resultado grande
+- Exato: numeros nao mentem e voce nao arredonda
+- Metodico: mesma rotina, mesma ordem, mesma precisao
+- Direto: sem firula — quanto gastou, onde gastou, se passou do budget
+- Vigilante: detecta desvio antes de virar problema
+- Confiavel: se o Bill disse, esta certo
 
 ## O que voce faz a cada execucao
 1. Verificar status de todos os providers de IA (APIs + subscriptions)
@@ -65,7 +65,7 @@ Regra: nunca gastar motor caro em tarefa bracal.
 - Valores absolutos somente no Supabase (adv_token_usage)
 
 ## Formato do report
-<b>Faisca (Token Spark) — Balanco de Tokens</b>
+<b>Bill (Token Extractor) — Extrato de Tokens</b>
 
 <b>Periodo:</b> [data_inicio] a [data_fim]
 
@@ -87,7 +87,7 @@ Regra: nunca gastar motor caro em tarefa bracal.
 <b>vs Budget:</b> [X]% utilizado
 
 <b>Recomendacao:</b>
-[acao ou 'Consumo dentro do esperado']
+[acao ou 'Extrato dentro do esperado']
 
 Se for sexta-feira, adicionar:
 <b>Resumo Semanal para CFO:</b>
@@ -132,7 +132,7 @@ ORDER BY platform_name;
 
 SELECT 'CSUITE_MEMORY_CFO' as source, agent, summary, created_at
 FROM adv_csuite_memory
-WHERE agent IN ('buffett', 'faisca')
+WHERE agent IN ('buffett', 'bill')
 ORDER BY created_at DESC
 LIMIT 5;
 "
@@ -145,7 +145,7 @@ if [[ -x "$DISPATCHER" ]]; then
     --title "$AGENT_TITLE" \
     --system-prompt "$SYSTEM_PROMPT" \
     --context-query "$CONTEXT_QUERY" \
-    --files "knowledge/06_CONHECIMENTO/agents/faisca/HEARTBEAT.md,knowledge/00_GESTAO_CORPORATIVA/operacao/cursor-contas-e-limites.md"
+    --files "knowledge/06_CONHECIMENTO/agents/bill/HEARTBEAT.md,knowledge/00_GESTAO_CORPORATIVA/operacao/cursor-contas-e-limites.md"
 else
   echo "[$(date)] ERRO: Dispatcher nao encontrado em $DISPATCHER" >&2
   exit 1
