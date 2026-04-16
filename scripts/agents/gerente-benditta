@@ -1,0 +1,165 @@
+#!/usr/bin/env bash
+# gerente-benditta — Briefing semanal Benditta Marcenaria
+#
+# Roda toda quarta 12:19 UTC via cron na VPS:
+#   19 12 * * 3 /opt/adventure-labs/scripts/agents/gerente-benditta >> /var/log/adventure/gerente-benditta.log 2>&1
+#
+# Dependências: curl, jq, ANTHROPIC_API_KEY, META_SYSTEM_USER_TOKEN,
+#               TELEGRAM_BOT_TOKEN, SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY
+#
+# Sincronizar no repo:
+#   cp /opt/adventure-labs/scripts/agents/gerente-benditta \
+#      <repo>/scripts/agents/gerente-benditta && git commit
+
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
+ENV_FILE="/opt/adventure-labs/.env"
+LOG_PREFIX="[gerente-benditta $(date -u +%Y-%m-%dT%H:%M:%SZ)]"
+
+# ── Carregar .env se necessário ───────────────────────────────────────────────
+if [[ -f "$ENV_FILE" ]]; then
+  set -a; source "$ENV_FILE"; set +a
+fi
+
+ANTHROPIC_KEY="${ANTHROPIC_API_KEY:-}"
+META_TOKEN="${META_SYSTEM_USER_TOKEN:-}"
+TG_TOKEN="${TELEGRAM_BOT_TOKEN:-}"
+TG_CHAT="${TELEGRAM_CHAT_ID:-1069502175}"
+SUPA_URL="${SUPABASE_URL:-}"
+SUPA_KEY="${SUPABASE_SERVICE_ROLE_KEY:-}"
+
+if [[ -z "$ANTHROPIC_KEY" ]]; then
+  echo "$LOG_PREFIX ERRO: ANTHROPIC_API_KEY não definida" >&2; exit 1
+fi
+if [[ -z "$TG_TOKEN" ]]; then
+  echo "$LOG_PREFIX AVISO: TELEGRAM_BOT_TOKEN não definido — saída apenas no stdout"
+fi
+
+# ── KPIs Meta + Supabase ──────────────────────────────────────────────────────
+echo "$LOG_PREFIX Coletando KPIs Meta + Supabase..."
+
+KPI_SCRIPT="$REPO_ROOT/scripts/agents/utils/meta_weekly_kpis.sh"
+KPIS="{}"
+if [[ -f "$KPI_SCRIPT" && -n "$META_TOKEN" ]]; then
+  KPIS=$(bash "$KPI_SCRIPT" benditta --days 7 2>/dev/null || echo '{"erro":"meta_weekly_kpis falhou"}')
+else
+  echo "$LOG_PREFIX AVISO: meta_weekly_kpis.sh não encontrado ou META_TOKEN ausente"
+fi
+
+# ── Dados Supabase — leads individuais ───────────────────────────────────────
+LEADS_RESUMO="sem dados (Supabase não configurado)"
+if [[ -n "$SUPA_URL" && -n "$SUPA_KEY" ]]; then
+  CUTOFF=$(date -u -d "7 days ago" +%Y-%m-%dT%H:%M:%SZ 2>/dev/null || \
+           date -u -v-7d +%Y-%m-%dT%H:%M:%SZ)
+
+  LEADS_RAW=$(curl -s "${SUPA_URL}/rest/v1/adv_meta_leads" \
+    -H "apikey: ${SUPA_KEY}" \
+    -H "Authorization: Bearer ${SUPA_KEY}" \
+    -G \
+    --data-urlencode "select=mql,notificado_wa,orcamento,ticket_medio,created_at" \
+    --data-urlencode "client=eq.benditta" \
+    --data-urlencode "created_at=gte.${CUTOFF}" 2>/dev/null || echo "[]")
+
+  TOTAL=$(echo "$LEADS_RAW"   | jq 'length')
+  MQL=$(echo "$LEADS_RAW"     | jq '[.[] | select(.mql == true)] | length')
+  COLD=$(echo "$LEADS_RAW"    | jq '[.[] | select(.mql == false)] | length')
+  WA=$(echo "$LEADS_RAW"      | jq '[.[] | select(.notificado_wa == true)] | length')
+
+  LEADS_RESUMO="Total: ${TOTAL} | MQL: ${MQL} | Cold: ${COLD} | Notificados WA: ${WA}"
+fi
+
+# ── Contexto do briefing ──────────────────────────────────────────────────────
+DATA_HOJE=$(date -u +"%A, %d de %B de %Y" --locale=pt_BR 2>/dev/null || date -u +"%Y-%m-%d")
+
+CONTEXTO=$(cat <<EOF
+## Contexto Adventure Labs — Benditta Marcenaria
+Data: ${DATA_HOJE}
+
+### Campanha Ativa — Linha Essencial (Fase 2 | Abr 2026)
+- Campanha ID: 120241798663620353 | Status: ACTIVE
+- 2 públicos: Cliente Final (RMPA) + Arquitetos (RMPA + Litoral RS)
+- Plataforma: Instagram (reels, feed, story)
+- Budget: R\$25/dia por ad set (R\$50/dia total)
+- Meta App em processo de Business Verification (formulários ativos, automação webhook pendente)
+
+### KPIs Meta — últimos 7 dias
+$(echo "$KPIS" | jq -r '
+  "Investido: R$" + .meta.investido_brl +
+  " | Impressões: " + (.meta.impressoes | tostring) +
+  " | Cliques: " + (.meta.cliques | tostring) +
+  " | Leads Meta: " + (.meta.leads | tostring) +
+  " | CPL: R$" + .meta.cpl_brl
+' 2>/dev/null || echo "$KPIS")
+
+### Leads Supabase — últimos 7 dias
+${LEADS_RESUMO}
+
+### Responsáveis
+- AM: Laís Lima (wa: 5551998252983) — recebe notificação WA de leads MQL
+- Founder: Rodrigo Ribas
+- Igor: Estratégia de anúncios e atendimento
+EOF
+)
+
+# ── Prompt para Claude ────────────────────────────────────────────────────────
+SYSTEM_PROMPT="Você é o Gerente de Conta da Benditta Marcenaria na Adventure Labs. Seu trabalho é gerar briefings semanais concisos e acionáveis para o time. Use dados reais de performance e termine SEMPRE com 3 ações prioritárias para a semana. Escreva em português brasileiro. Formato: Telegram (sem tabelas, use listas com bullet). Máximo 400 palavras."
+
+USER_PROMPT="Gere o briefing semanal da Benditta Marcenaria com base no contexto abaixo. Inclua: situação da campanha, KPIs da semana, análise de leads (MQL vs cold), pontos de atenção e 3 próximas ações.
+
+${CONTEXTO}"
+
+# ── Chamada Anthropic API ─────────────────────────────────────────────────────
+echo "$LOG_PREFIX Gerando briefing com Claude..."
+
+ANTHROPIC_RESP=$(curl -s "https://api.anthropic.com/v1/messages" \
+  -H "x-api-key: ${ANTHROPIC_KEY}" \
+  -H "anthropic-version: 2023-06-01" \
+  -H "content-type: application/json" \
+  -d "$(jq -n \
+    --arg system "$SYSTEM_PROMPT" \
+    --arg user   "$USER_PROMPT" \
+    '{
+      model: "claude-sonnet-4-6",
+      max_tokens: 1024,
+      system: $system,
+      messages: [{ role: "user", content: $user }]
+    }')")
+
+BRIEFING=$(echo "$ANTHROPIC_RESP" | jq -r '.content[0].text // "Erro ao gerar briefing."')
+
+if echo "$BRIEFING" | grep -qi "erro\|error"; then
+  echo "$LOG_PREFIX Resposta API: $(echo "$ANTHROPIC_RESP" | jq -r '.error // empty')" >&2
+fi
+
+# ── Montar mensagem final ─────────────────────────────────────────────────────
+MENSAGEM=$(cat <<EOF
+🏗️ *Briefing Semanal — Benditta Marcenaria*
+_$(date -u +"%d/%m/%Y %H:%M") UTC_
+
+${BRIEFING}
+EOF
+)
+
+# ── Enviar ao Telegram ────────────────────────────────────────────────────────
+echo "$LOG_PREFIX Enviando ao Telegram (chat ${TG_CHAT})..."
+
+if [[ -n "$TG_TOKEN" ]]; then
+  TG_RESP=$(curl -s -X POST "https://api.telegram.org/bot${TG_TOKEN}/sendMessage" \
+    -H "Content-Type: application/json" \
+    -d "$(jq -n \
+      --arg chat_id "$TG_CHAT" \
+      --arg text    "$MENSAGEM" \
+      '{ chat_id: $chat_id, text: $text, parse_mode: "Markdown" }')")
+
+  if echo "$TG_RESP" | jq -e '.ok == true' >/dev/null 2>&1; then
+    echo "$LOG_PREFIX Briefing enviado com sucesso."
+  else
+    echo "$LOG_PREFIX AVISO: Telegram retornou erro: $(echo "$TG_RESP" | jq -r '.description // .')" >&2
+    echo "$MENSAGEM"
+  fi
+else
+  echo "=== BRIEFING ==="
+  echo "$MENSAGEM"
+fi
