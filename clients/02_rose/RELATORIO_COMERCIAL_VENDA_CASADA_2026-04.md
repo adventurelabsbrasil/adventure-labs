@@ -200,7 +200,36 @@ A campanha Meta está configurada **somente para RS** (confirmado no Ads Manager
 
 ---
 
-### 1.8 Ações Imediatas
+### 1.8 Separação de Clientes Ativos — Fluxo Pós-Venda
+
+Um problema que vai aparecer conforme o funil começa a converter: clientes com contrato assinado continuam no mesmo ambiente que os prospectos. Isso gera dois riscos:
+
+1. **Victor aborda cliente ativo como se fosse lead novo** (sem perceber que já está em processo)
+2. **Meta Ads entrega anúncio de captação para quem já é cliente** → cliente clica para perguntar sobre andamento → entra no funil → suja o pipeline com falsa oportunidade
+
+**Ação no CRM:** ao registrar um deal como ganho, aplicar a tag `cliente-ativo`. Isso serve de sinal para:
+- Não incluir em follow-up de prospecção
+- Exportar para Custom Audience de exclusão no Meta (semanalmente)
+- Redirecionar mensagens recebidas para um fluxo pós-venda separado (acompanhamento do processo jurídico)
+
+**Fluxo pós-venda sugerido (mínimo viável):**
+```
+Contrato assinado
+    ↓
+Tag: cliente-ativo no CRM
+    ↓
+WhatsApp automático: "Olá [nome], seu processo foi aberto. Prazo estimado de análise: X dias. Qualquer dúvida, pode me chamar aqui."
+    ↓
+Notificações de etapas (entrada no processo, análise concluída, resultado)
+    ↓
+Encerramento: "Processo finalizado. Aqui está o resumo do resultado."
+```
+
+Nesta fase, Victor atua como relações com o cliente — não como vendedor.
+
+---
+
+### 1.9 Ações Imediatas
 
 | Prioridade | Ação | Responsável |
 |-----------|------|-------------|
@@ -209,9 +238,11 @@ A campanha Meta está configurada **somente para RS** (confirmado no Ads Manager
 | 🔴 Urgente | Reabrir conversa com Dalmor Trevisan (conversa ativa encerrada por erro) | Victor |
 | 🟡 Esta semana | Unificar identidade nos templates (Victor ou Dra. Roselaine, não os dois) | Gestão |
 | 🟡 Esta semana | Criar campo de valor no deal com estimativa inicial por caso | Gestão CRM |
-| 🟡 Esta semana | Criar status "Contrato Assinado" no CRM | Gestão CRM |
+| 🟡 Esta semana | Criar status "Contrato Assinado" no CRM + tag `cliente-ativo` | Gestão CRM |
+| 🟡 Esta semana | Exportar lista de telefones CLT/Energia para Custom Audience de exclusão Meta | Gestão + TI |
 | 🟢 Próximos 15 dias | Montar formulário/link de coleta de documentos | Victor + TI |
 | 🟢 Próximos 15 dias | Revisar e atualizar todos os templates de mensagem | Victor + Dra. Roselaine |
+| 🟢 Próximos 15 dias | Criar fluxo pós-venda separado no CRM para clientes ativos | TI + Gestão |
 
 ---
 

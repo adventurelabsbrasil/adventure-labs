@@ -223,19 +223,102 @@ O fluxo está funcionando: anúncio → conversa WhatsApp → entrada no CRM. O 
 
 ---
 
+## PARTE 3 — EXCLUSÃO E REMARKETING
+
+### 3.1 Contexto — Por que exclusão é prioritária para a Rose
+
+A Rose Portal tem OAB-RS — só pode operar no Rio Grande do Sul. Já tem leads ativos de CLT (269 conversas) e Revisão Energia (87 conversas) circulando na mesma praça. Sem exclusão, a campanha de Seguro Indevido entrega anúncio para pessoas que:
+
+- Já são clientes ativos → sujarão o funil com re-entrada fora do contexto
+- Já viram outro produto (CLT/Energia) → o algoritmo confunde o sinal de conversão
+- Já converteram mas estão em acompanhamento → esperam contato pós-venda, não oferta
+
+O risco concreto: um cliente de CLT clica no anúncio de Seguro porque reconhece a Dra. Roselaine, entra no funil do Victor, e o CRM não sabe que é cliente ativo — gerando abordagem duplicada, confusão e risco reputacional.
+
+---
+
+### 3.2 Audiências de Exclusão — O que criar no Meta
+
+#### Exclusão 1 — Quem já interagiu com outros produtos (WhatsApp)
+
+O Meta rastreia nativamente quem iniciou conversa por produto via número de WhatsApp:
+
+| Número | Produto | Audiência a criar |
+|--------|---------|-------------------|
+| ...6598 | CLT | `Excl: Interagiram-CLT` |
+| ...9073 | Revisão Energia | `Excl: Interagiram-Energia` |
+| ...3714 | Seguro Indevido | `Excl: Interagiram-Seguro` (para evitar re-entrada no funil ativo) |
+
+**Como criar:** Meta Ads Manager → Públicos → Custom Audience → WhatsApp Business Account → selecionar número e período (90–180 dias).
+
+#### Exclusão 2 — Clientes ativos (lista de telefones do CRM)
+
+Exportar telefones de leads com status `active` no CRM Seguro + todos os leads de CLT e Energia → subir como Custom Audience de lista de contatos no Meta.
+
+```
+CRM export → CSV com coluna "phone" → Meta Custom Audience → "Customer list"
+Mínimo recomendado: 100 contatos para ativação
+Frequência: atualizar a cada 15 dias
+```
+
+**Aplicar como exclusão em:** todas as campanhas de prospecção.
+
+#### Exclusão 3 — Visitantes recorrentes (Pixel, se ativo)
+
+Se o Pixel Meta estiver instalado nas LPs da Rose: criar audiência de "visitou mas não converteu há mais de 30 dias" para excluir do prospecting e incluir no remarketing.
+
+> **Verificar:** se Pixel está instalado e ativo nas LPs da Rose antes de implementar.
+
+---
+
+### 3.3 Remarketing — Estrutura Recomendada
+
+#### Divisão de budget sugerida (após estabilizar prospecção)
+
+| Campanha | Budget | Objetivo |
+|----------|--------|---------|
+| Prospecção (cold) | 80% | Novos leads sem histórico |
+| Remarketing (warm) | 20% | Leads que entraram mas não avançaram |
+
+#### Público de remarketing para Seguro Indevido
+
+| Segmento | Como segmentar | Mensagem |
+|----------|---------------|---------|
+| Clicou no anúncio mas não abriu o WhatsApp | Meta retargeting: "engajou com anúncio" sem conversa | Versão mais direta do criativo, redutor de fricção |
+| Abriu WhatsApp mas não avançou no funil (etapas 1-2) | Lista de telefones do CRM nas etapas iniciais | Novo ângulo: caso concreto / prova social |
+| Abandonou na etapa 3-4 (estava qualificado) | Lista de telefones de leads `abandoned` qualificados | Urgência leve: "seu caso ainda pode ser analisado" |
+
+**Criativo de remarketing:** diferente do prospecting. Usar prova social (ex: "cliente do Banrisul recuperou R$X") ou argumento novo que não foi o primeiro contato.
+
+---
+
+### 3.4 Fluxo pós-conversão — Separar cliente ativo de prospecto
+
+Após o contrato assinado, o lead precisa sair do fluxo comercial e entrar em acompanhamento jurídico. No Meta, isso significa:
+
+1. Tag `cliente-ativo` no CRM ao registrar o deal como ganho
+2. Exportar esses contatos semanalmente para a Custom Audience de exclusão
+3. No WhatsApp/CRM: criar fluxo separado de acompanhamento (`funil_pós_venda`) com notificações de andamento do processo
+
+> Sem isso, clientes ativos continuam recebendo anúncios de captação — o que cria expectativa de novo produto onde há apenas acompanhamento.
+
+---
+
 ## Resumo de Ações por Prioridade
 
 | # | Ação | Campanha | Esforço | Impacto |
 |---|------|----------|---------|---------|
 | 1 | Corrigir interesses da audiência (remover imóveis/automóveis, adicionar INSS/consignado) | Seguro Indevido | Baixo | **Alto** |
 | 2 | Ampliar teto de idade para 45–70 (ou sem limite) | Seguro Indevido | Baixo | **Alto** |
-| 3 | Aguardar 5–7 dias de dados nos estáticos banco-específicos | Seguro Indevido | Zero | Alto |
-| 4 | Pausar Teste-BB-Bradesco-Azul (sem resultado) | Seguro Indevido | Baixo | Médio |
-| 5 | Testar novos bancos: Caixa, BMG, Safra, Banrisul | Seguro Indevido | Médio | Alto |
-| 6 | Configurar mensagem template inicial por criativo (BB, Bradesco, Servidor, Caixa) | Seguro Indevido | Baixo | Médio |
-| 7 | Revisar criativo + script Trabalhista ou pausar | Trabalhista | Médio | Médio |
-| 8 | Novo criativo Revisão Energia (prevenir fadiga) | Revisão Energia | Médio | Médio |
-| 9 | Manter CLT sem alterações | CLT | Zero | Manter |
+| 3 | Criar Custom Audiences de exclusão (6598-CLT, 9073-Energia, lista CRM) | Todas | Baixo | **Alto** |
+| 4 | Aguardar 5–7 dias de dados nos estáticos banco-específicos | Seguro Indevido | Zero | Alto |
+| 5 | Pausar Teste-BB-Bradesco-Azul (sem resultado) | Seguro Indevido | Baixo | Médio |
+| 6 | Testar novos bancos: Caixa, BMG, Safra, Banrisul | Seguro Indevido | Médio | Alto |
+| 7 | Configurar mensagem template inicial por criativo (BB, Bradesco, Servidor, Caixa) | Seguro Indevido | Baixo | Médio |
+| 8 | Montar campanha de remarketing (20% do budget) com criativos distintos | Seguro Indevido | Médio | Médio |
+| 9 | Revisar criativo + script Trabalhista ou pausar | Trabalhista | Médio | Médio |
+| 10 | Novo criativo Revisão Energia (prevenir fadiga) | Revisão Energia | Médio | Médio |
+| 11 | Manter CLT sem alterações | CLT | Zero | Manter |
 
 ---
 
