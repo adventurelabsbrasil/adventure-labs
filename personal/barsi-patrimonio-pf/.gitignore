@@ -1,0 +1,5 @@
+# Barsi PF — dados sensiveis nunca versionados
+snapshots/
+*.csv
+*.ofx
+*.pdf

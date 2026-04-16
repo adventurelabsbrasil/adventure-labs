@@ -78,6 +78,7 @@
 | gerente-young | `11 12 * * 2` | Briefing semanal Young | Telegram |
 | gerente-benditta | `19 12 * * 3` | Briefing semanal Benditta | Telegram |
 | tostao (Token Treasurer) | `43 9 * * 2,5` | Balanço de tokens e custos de IA (APIs + subscriptions) | Telegram |
+| barsi (Gestor Patrimônio) | `7 10 * * 5` | Foto patrimonial semanal PJ (saldos, investimentos, recebíveis, PL) | Telegram |
 | backup-vps | `30 6 * * *` | Backup VPS → Drive (n8n, Plane, Infisical, Vaultwarden, Supabase, configs) | Telegram |
 
 **Scripts:** `/opt/adventure-labs/scripts/agents/` (VPS)
@@ -142,6 +143,8 @@
 | Backup VPS | `gdrive-adventure:99_ARQUIVO/VPS_BACKUPS/` |
 | Memória do Claude | `.claude/memory/` (neste repo) |
 | Consumo de tokens IA | Supabase `adv_ai_providers`, `adv_token_usage`, `adv_token_alerts` |
+| Patrimônio PJ | Supabase `adv_patrimony_accounts`, `adv_patrimony_snapshots`, `adv_patrimony_movements` |
+| Patrimônio PF | `personal/barsi-patrimonio-pf/` (gitignored — somente Founder) |
 
 ---
 

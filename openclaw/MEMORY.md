@@ -80,6 +80,7 @@ Output: Telegram `ceo_buzz_Bot` com status e tamanhos.
 | gerente-young | `11 12 * * 2` | AM Young semanal |
 | gerente-benditta | `19 12 * * 3` | AM Benditta semanal |
 | tostao | `43 9 * * 2,5` | Token Treasurer: balanço tokens/custos IA |
+| barsi | `7 10 * * 5` | Gestor Patrimônio: foto semanal PJ (dual-mode PJ/PF) |
 
 Scripts: `/opt/adventure-labs/scripts/agents/`
 Dispatcher: `/opt/adventure-labs/scripts/adventure-agent.sh`
