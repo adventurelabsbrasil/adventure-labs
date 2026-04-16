@@ -140,9 +140,22 @@ Não pausar nem escalar nenhum criativo antes de **5–7 dias de dados**. Após 
 - Escalar o(s) de menor CPConv confirmado
 - Testar novos bancos: Caixa, BMG, Safra, Banrisul (maiores no consignado RS)
 
-#### Ação 4 — Adicionar UTM nos links de WhatsApp
+#### Ação 4 — Configurar mensagem template inicial por criativo
 
-Hoje não é possível saber qual criativo específico gerou leads que avançaram no CRM. Adicionar `?utm_content=servidor-publico` etc. no link de cada anúncio permite rastrear qual banco-específico converte melhor **dentro do funil**, não só no clique.
+UTM não se aplica a WhatsApp da mesma forma que URLs web. O tracking correto dentro do funil é via **mensagem inicial pré-preenchida** configurada no próprio anúncio (campo "mensagem inicial" no Meta Ads).
+
+Cada criativo banco-específico deve abrir o WhatsApp com uma mensagem diferente:
+
+| Criativo | Mensagem inicial sugerida |
+|----------|--------------------------|
+| BANCO-BB | `"Olá, vi o anúncio sobre empréstimo no Banco do Brasil"` |
+| BRADESCO | `"Olá, vi o anúncio sobre empréstimo no Bradesco"` |
+| SERVIDOR-PUBLICO | `"Olá, vi o anúncio sobre empréstimo de servidor público"` |
+| Caixa (futuro) | `"Olá, vi o anúncio sobre empréstimo na Caixa Econômica"` |
+
+Com isso, quando o lead chega no WhatsApp, Victor já sabe de qual criativo veio — sem precisar perguntar o banco, e podendo personalizar o primeiro contato imediatamente. O CRM também pode capturar e taggear automaticamente pela primeira mensagem recebida.
+
+> A contagem de conversas por criativo já é feita nativamente pelo Meta Ads Manager (a coluna `conversations` dos dados já reflete isso). A mensagem template fecha o loop **dentro do CRM** — rastreando qual criativo avança no funil além do primeiro clique.
 
 ---
 
@@ -219,7 +232,7 @@ O fluxo está funcionando: anúncio → conversa WhatsApp → entrada no CRM. O 
 | 3 | Aguardar 5–7 dias de dados nos estáticos banco-específicos | Seguro Indevido | Zero | Alto |
 | 4 | Pausar Teste-BB-Bradesco-Azul (sem resultado) | Seguro Indevido | Baixo | Médio |
 | 5 | Testar novos bancos: Caixa, BMG, Safra, Banrisul | Seguro Indevido | Médio | Alto |
-| 6 | Adicionar UTM por criativo nos links WhatsApp | Todas | Baixo | Médio |
+| 6 | Configurar mensagem template inicial por criativo (BB, Bradesco, Servidor, Caixa) | Seguro Indevido | Baixo | Médio |
 | 7 | Revisar criativo + script Trabalhista ou pausar | Trabalhista | Médio | Médio |
 | 8 | Novo criativo Revisão Energia (prevenir fadiga) | Revisão Energia | Médio | Médio |
 | 9 | Manter CLT sem alterações | CLT | Zero | Manter |

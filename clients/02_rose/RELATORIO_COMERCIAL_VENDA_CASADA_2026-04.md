@@ -196,7 +196,7 @@ Predominância **DDD 51 (Porto Alegre/RS)**, mas com leads de todo o Brasil:
 - **Nordeste:** 77 (BA)
 - **Norte:** 92 (AM)
 
-Campanha com alcance nacional sem segmentação regional aparente.
+A campanha Meta está configurada **somente para RS** (confirmado no Ads Manager). Leads de outros estados provavelmente vieram de uma fase anterior com segmentação nacional, ou por indicação/orgânico. Os novos leads tendem a ser predominantemente RS conforme a campanha avança.
 
 ---
 
@@ -217,62 +217,65 @@ Campanha com alcance nacional sem segmentação regional aparente.
 
 ## Parte 2 — Análise de Anúncios e Comunicação
 
-*(Análise qualitativa baseada nos dados do CRM. A ser cruzada com métricas do Meta Ads/Google Ads em etapa posterior.)*
+*(Cruzamento com relatório de Marketing Meta Ads — Adventure Labs, 16/04/2026)*
 
-### 2.1 O que os dados do CRM revelam sobre os anúncios
+### 2.1 O que os dados confirmam sobre os anúncios
 
-**Sinal positivo:** o último lead do período chegou com a mensagem *"Vi o anúncio sobre Venda Casada nos Empréstimos"* — o criativo está comunicando o produto com clareza e o lead chegou já nomeando o problema.
+**Confirmado positivo:** o último lead do período chegou com a mensagem *"Vi o anúncio sobre Venda Casada nos Empréstimos"* — o criativo comunica o produto com clareza. CTR de 1,33% está dentro do esperado para o setor.
 
-**Sinal de atenção:** com 66 leads em 14 dias e zero conversões registradas, a **qualidade do lead pode estar correta**, mas o **funil pós-clique não converte**. Mexer nos anúncios agora pode trazer mais leads para um funil ainda ineficiente. A prioridade deve ser corrigir o funil primeiro, depois escalar o investimento em mídia.
+**Confirmado como problema:** a análise cruzada dos dados de Meta Ads identificou dois problemas estruturais na campanha que impactam diretamente a qualidade dos leads que chegam ao Victor:
 
----
+**1. Audiência com interesses errados (imóveis/automóveis/investimento)**
+A campanha estava atingindo perfil de investidor/comprador de imóvel — não de tomador de consignado. Isso explica parte dos abandonos no funil: esses leads não tinham o problema que o anúncio resolve. A correção da audiência para INSS/consignado/aposentados/servidores deve melhorar a qualidade do lead que entra no CRM.
 
-### 2.2 Hipóteses para Melhorar Conversão
+**2. Teto de idade em 55 excluindo o público principal**
+Aposentados e pensionistas INSS — maior volume de consignado — têm em média 58–65 anos. Estavam fora da campanha. A ampliação para 45–70 (ou sem limite) trará leads com perfil mais qualificado para o produto.
 
-#### a) Desconexão entre anúncio e primeiro contato
-O anúncio fala em "Venda Casada" ou "seguro indevido no empréstimo". A primeira mensagem do Victor é genérica: *"Bom dia, sou o Victor. Como posso te ajudar?"*
-
-O lead chegou com contexto específico e se depara com uma pergunta aberta. Isso gera fricção e queda de engajamento.
-
-**Sugestão:** o primeiro contato deve espelhar o anúncio:
-> *"Olá! Você clicou no nosso anúncio sobre cobrança indevida de seguro em empréstimos — veio ao lugar certo. Você tem empréstimo consignado ativo?"*
-
-#### b) Audiência possivelmente ampla demais
-Base de leads com 15+ DDDs diferentes, distribuição nacional. O produto de Venda Casada em consignado tem maior concentração em perfis específicos:
-- Aposentados e pensionistas INSS (55+)
-- Servidores públicos com consignado
-- Trabalhadores CLT com crédito consignado privado
-
-Segmentar por faixa etária (50+) e interesses em crédito consignado/INSS pode reduzir custo por lead qualificado.
-
-#### c) Anúncio pode não estar pré-qualificando na origem
-Se o criativo não menciona que é necessário **ter empréstimo ativo com seguro cobrado**, ele atrai curiosos que não passam da primeira mensagem. Uma linha como *"Tem empréstimo consignado com seguro na parcela? Você pode ter direito à devolução"* filtra melhor antes do clique.
-
-#### d) Testar Lead Form vs WhatsApp direto
-O fluxo atual leva o lead direto ao WhatsApp sem nenhum filtro. Um **Meta Lead Form** com 2–3 perguntas antes de abrir o WhatsApp pode:
-- Reduzir volume de leads não qualificados
-- Aumentar taxa de resposta (lead já se comprometeu mais)
-- Entregar informação de qualificação para Victor antes da primeira mensagem
-
-#### e) Prova social (hipótese sem ver os criativos)
-O público-alvo — aposentados e servidores — responde bem a depoimentos reais e números concretos. Um criativo com *"Recuperamos R$X.XXX para [perfil/cidade]"* ou *"Mais de X clientes já reduziram suas parcelas"* pode aumentar CTR e qualidade do lead.
+> **Impacto esperado no CRM:** taxa de abandono deve cair após correção da audiência, pois menos leads "sem perfil" entrarão no funil.
 
 ---
 
-### 2.3 Dados Necessários para Análise Completa de Ads
+### 2.2 Desconexão entre anúncio e primeiro contato
 
-Para cruzar funil com performance de mídia:
+O anúncio chega com contexto específico (banco, tipo de empréstimo) e o lead abre o WhatsApp com isso na cabeça. A primeira mensagem do Victor é genérica: *"Bom dia, sou o Victor. Como posso te ajudar?"* — o lead precisa recontextualizar do zero.
 
-| Dado | Onde buscar |
-|------|-------------|
-| CPL (custo por lead) por criativo/conjunto | Meta Ads Manager |
-| Taxa clique → conversa WhatsApp iniciada | Meta Ads (eventos de conversa) |
-| Leads por campanha (UTM nos links) | Meta Ads + CRM |
-| Taxa de abertura da primeira mensagem | Evolution API / CRM |
-| Criativos ativos no período 02–16/04 | Meta Ads Manager |
-| Volume de impressões e frequência | Meta Ads Manager |
+**Solução em dois níveis:**
 
-Com esse cruzamento é possível identificar **qual criativo gera leads que realmente avançam no funil** versus quais geram volume sem qualidade — e realocar orçamento para o que converte.
+**Nível 1 — Mensagem template inicial no anúncio (Meta Ads)**
+Cada criativo banco-específico deve abrir o WhatsApp com mensagem pré-preenchida:
+- Criativo BB → *"Olá, vi o anúncio sobre empréstimo no Banco do Brasil"*
+- Criativo Bradesco → *"Olá, vi o anúncio sobre empréstimo no Bradesco"*
+- Criativo Servidor → *"Olá, vi o anúncio sobre empréstimo de servidor público"*
+
+Com isso Victor recebe o lead já identificado — sem precisar perguntar o banco — e pode personalizar o primeiro contato imediatamente.
+
+**Nível 2 — Primeiro contato do Victor espelhando o anúncio**
+> *"Olá, [nome]! Vi que você tem interesse em verificar a cobrança de seguro no seu empréstimo [banco se identificado]. Você ainda tem esse empréstimo ativo?"*
+
+---
+
+### 2.3 Sobre rastreamento de origem dentro do CRM
+
+UTM não se aplica a links de WhatsApp da mesma forma que URLs web. O tracking correto é:
+
+| Método | Como funciona | Onde ver |
+|--------|--------------|----------|
+| Meta nativo | Conta conversas por anúncio/conjunto automaticamente | Meta Ads Manager (coluna `conversations`) |
+| Mensagem template | Lead chega com texto identificando o banco/criativo | Primeira mensagem no CRM |
+| Número por produto | Cada produto já usa WhatsApp diferente (3714 = Seguro) | Identificado na estrutura de campanhas |
+
+Para fechar o loop CRM × criativo: configurar o CRM para taggear automaticamente o lead pela primeira mensagem recebida (ex: se contém "Banco do Brasil" → tag `origem:bb`).
+
+---
+
+### 2.4 Próximos passos em ads (resumo)
+
+| Ação | Impacto no funil comercial |
+|------|--------------------------|
+| Corrigir audiência (INSS/consignado, 45–70) | Menos leads sem perfil, menor abandono |
+| Mensagem template por banco nos criativos | Victor já sabe o banco na chegada, personaliza o contato |
+| Aguardar 5–7 dias dados estáticos banco-específicos | Identificar qual banco gera melhor lead para escalar |
+| Testar Caixa, BMG, Safra, Banrisul | Ampliar cobertura dos principais bancos do consignado RS |
 
 ---
 
@@ -280,10 +283,13 @@ Com esse cruzamento é possível identificar **qual criativo gera leads que real
 
 O funil tem potencial real. A campanha está ganhando tração, o produto tem demanda comprovada e o ticket jurídico por caso é relevante. O gargalo hoje é comercial, não de marketing: o processo entre "lead interessado" e "contrato assinado" está indefinido, centralizado em uma pessoa e sem rastreamento de resultado.
 
+A análise de ads confirmou que a qualidade do lead vai melhorar após correção de audiência (interesses e faixa etária). Isso reforça a urgência de estruturar o funil comercial **antes** de escalar o budget — mais leads com melhor perfil chegando em um funil sem qualificação é desperdício duplo.
+
 **Prioridade 1:** Recuperar os 3 leads quentes identificados hoje (Lead ".", Gustavo, Dalmor).
-**Prioridade 2:** Estruturar o funil com etapas de qualificação e coleta de documentos.
-**Prioridade 3:** Registrar conversões no CRM para ter números reais de fechamento.
-**Depois:** cruzar com métricas de ads para otimizar o investimento em mídia.
+**Prioridade 2:** Corrigir audiência nos ads (baixo esforço, alto impacto imediato na qualidade).
+**Prioridade 3:** Estruturar o funil com qualificação, mensagem template por banco e coleta de docs.
+**Prioridade 4:** Registrar conversões no CRM para ter números reais de fechamento.
+**Depois:** escalar budget com funil e tracking funcionando.
 
 ---
 
