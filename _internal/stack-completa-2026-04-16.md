@@ -268,7 +268,7 @@
 | Device | Spec | Uso | Status |
 |--------|------|-----|--------|
 | iPhone 15 Pro Max | — | Telegram Founder, monitoramento | ✅ Em uso |
-| Motorola Moto G52 | (especificações a confirmar) | Disponível | 🟡 Disponível |
+| Motorola Moto G52 | 4GB RAM / 128GB ROM, tela 2400×1080, NFC, dual chip, Android 13 — versão T2SRS33.72-22-4-11 — câm: frontal 16MP, traseira 50MP+8MP+2MP | Disponível | 🟡 Disponível |
 
 ### Ferramentas Mac
 | Ferramenta | Detalhe | Status |
