@@ -1,0 +1,292 @@
+{
+  "name": "Rose — Relatório Diário de Leads (Meta Ads) v1",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 3 * * *"
+            }
+          ]
+        }
+      },
+      "id": "a1b2c3d4-0001-0001-0001-000000000001",
+      "name": "Schedule 03:00 BRT",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [240, 0],
+      "notes": "Dispara diariamente às 03:00 (fuso VPS = America/Sao_Paulo)"
+    },
+    {
+      "parameters": {
+        "jsCode": "const now = new Date();\nconst saoPaulo = new Date(now.toLocaleString('en-US', { timeZone: 'America/Sao_Paulo' }));\nsaoPaulo.setDate(saoPaulo.getDate() - 1);\nconst pad = (n) => String(n).padStart(2, '0');\nconst yesterday = `${saoPaulo.getFullYear()}-${pad(saoPaulo.getMonth() + 1)}-${pad(saoPaulo.getDate())}`;\nreturn [{ json: { date: yesterday } }];"
+      },
+      "id": "a1b2c3d4-0002-0002-0002-000000000002",
+      "name": "Code: get yesterday (BRT)",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [460, 0],
+      "notes": "Retorna yesterday em YYYY-MM-DD no fuso America/Sao_Paulo"
+    },
+    {
+      "parameters": {
+        "url": "=https://graph.facebook.com/v21.0/act_{{ $env.META_ROSE_AD_ACCOUNT_ID }}/insights",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpQueryAuth",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "fields",
+              "value": "impressions,reach,clicks,spend,actions,campaign_name,adset_name,ad_name,objective"
+            },
+            {
+              "name": "time_range",
+              "value": "={\"since\":\"{{ $json.date }}\",\"until\":\"{{ $json.date }}\"}"
+            },
+            { "name": "time_increment", "value": "1" },
+            { "name": "level", "value": "ad" },
+            { "name": "limit", "value": "500" }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": { "neverError": true }
+          }
+        }
+      },
+      "id": "a1b2c3d4-0003-0003-0003-000000000003",
+      "name": "GET Meta Insights",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [680, 0],
+      "credentials": {
+        "httpQueryAuth": {
+          "id": "META_ROSE_CREDENTIAL_ID",
+          "name": "Meta Rose — access_token query param"
+        }
+      },
+      "notes": "Credencial: query param 'access_token' com META_ACCESS_TOKEN da conta Rose. Preencher no n8n após importar."
+    },
+    {
+      "parameters": {
+        "jsCode": "const item = $input.first().json;\nconst date = $('Code: get yesterday (BRT)').first().json.date;\nconst accountId = $env.META_ROSE_AD_ACCOUNT_ID || '499901480052479';\n\nif (item.error) {\n  throw new Error(`Meta API error: ${item.error.message || JSON.stringify(item.error)}`);\n}\n\nconst rawData = item.data || [];\n\nif (rawData.length === 0) {\n  return [{ json: { _no_data: true, date, accountId, message: `Sem dados Meta para ${date}` } }];\n}\n\nconst CONV_TYPES = [\n  'onsite_conversion.messaging_conversation_started_7d',\n  'onsite_conversion.messaging_conversation_started_1d',\n  'offsite_conversion.messaging_conversation_started_7d',\n  'messaging_conversation_started'\n];\n\nconst rows = rawData.map(row => {\n  const actions = Array.isArray(row.actions) ? row.actions : [];\n  const leads = actions.filter(a => a.action_type === 'lead')\n    .reduce((s, a) => s + (parseInt(a.value) || 0), 0);\n  const conversations = actions.filter(a => CONV_TYPES.includes(a.action_type))\n    .reduce((s, a) => s + (parseInt(a.value) || 0), 0);\n  return {\n    date,\n    client: 'rose',\n    account_id: accountId,\n    account_name: 'Rose Portal Advocacia',\n    campaign_name: (row.campaign_name || '').slice(0, 500),\n    adset_name: (row.adset_name || '').slice(0, 500),\n    ad_name: (row.ad_name || '').slice(0, 500),\n    objective: row.objective || null,\n    impressions: parseInt(row.impressions) || 0,\n    reach: parseInt(row.reach) || 0,\n    clicks: parseInt(row.clicks) || 0,\n    spend: parseFloat(row.spend) || 0,\n    conversations,\n    leads\n  };\n});\n\nreturn [{ json: { _no_data: false, date, rows } }];"
+      },
+      "id": "a1b2c3d4-0004-0004-0004-000000000004",
+      "name": "Code: parse Meta data",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [900, 0],
+      "notes": "Parseia insights do Meta. Retorna _no_data:true se vazio, ou rows[] para upsert."
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": { "caseSensitive": true, "leftValue": "", "typeValidation": "strict" },
+          "conditions": [
+            {
+              "id": "no-data-check",
+              "leftValue": "={{ $json._no_data }}",
+              "rightValue": true,
+              "operator": { "type": "boolean", "operation": "equal" }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "a1b2c3d4-0005-0005-0005-000000000005",
+      "name": "IF: sem dados?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [1120, 0],
+      "notes": "TRUE (output 0) → alerta sem dados. FALSE (output 1) → upsert + email."
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $env.TELEGRAM_CHAT_ID }}",
+        "text": "=⚠️ *Rose — Relatório Diário*\n\nSem dados Meta Ads para *{{ $('Code: get yesterday (BRT)').first().json.date }}*.\n\nPossíveis causas: campanhas pausadas ou erro no token.",
+        "additionalFields": { "parse_mode": "Markdown" }
+      },
+      "id": "a1b2c3d4-0006-0006-0006-000000000006",
+      "name": "Telegram: sem dados",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [1340, -160],
+      "credentials": {
+        "telegramApi": {
+          "id": "TELEGRAM_CREDENTIAL_ID",
+          "name": "Telegram ceo_buzz_Bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "={{ $env.SUPABASE_URL }}/rest/v1/adv_ads_daily_metrics",
+        "method": "POST",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "apikey", "value": "={{ $env.SUPABASE_SERVICE_ROLE_KEY }}" },
+            { "name": "Authorization", "value": "=Bearer {{ $env.SUPABASE_SERVICE_ROLE_KEY }}" },
+            { "name": "Content-Type", "value": "application/json" },
+            { "name": "Prefer", "value": "resolution=merge-duplicates,return=minimal" }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json.rows) }}",
+        "options": {
+          "response": {
+            "response": { "neverError": true }
+          }
+        }
+      },
+      "id": "a1b2c3d4-0007-0007-0007-000000000007",
+      "name": "Supabase: upsert adv_ads_daily_metrics",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1340, 120],
+      "notes": "UPSERT via REST com 'Prefer: resolution=merge-duplicates'. Nunca falha por chave duplicada (corrige o bug original de 'create')."
+    },
+    {
+      "parameters": {
+        "jsCode": "const res = $input.first().json;\nconst date = $('Code: get yesterday (BRT)').first().json.date;\nconst rows = $('Code: parse Meta data').first().json.rows || [];\n\nif (res.statusCode && res.statusCode >= 400) {\n  throw new Error(`Supabase upsert falhou ${res.statusCode}: ${JSON.stringify(res.body || res)}`);\n}\n\n// Agrega métricas por campanha\nconst byCampaign = {};\nfor (const row of rows) {\n  const key = row.campaign_name;\n  if (!byCampaign[key]) {\n    byCampaign[key] = { campaign_name: key, spend: 0, leads: 0, conversations: 0 };\n  }\n  byCampaign[key].spend += row.spend || 0;\n  byCampaign[key].leads += row.leads || 0;\n  byCampaign[key].conversations += row.conversations || 0;\n}\n\nconst campaigns = Object.values(byCampaign).sort((a, b) => b.spend - a.spend);\nconst totalSpend = campaigns.reduce((s, c) => s + c.spend, 0);\nconst totalLeads = campaigns.reduce((s, c) => s + c.leads + c.conversations, 0);\n\nreturn [{ json: { date, campaigns, totalSpend, totalLeads } }];"
+      },
+      "id": "a1b2c3d4-0008-0008-0008-000000000008",
+      "name": "Code: agregar por campanha",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1560, 120],
+      "notes": "Agrega spend + leads + conversas por campanha para o email"
+    },
+    {
+      "parameters": {
+        "jsCode": "const { date, campaigns, totalSpend, totalLeads } = $input.first().json;\n\nconst fmtBRL = (v) => `R$ ${Number(v).toFixed(2).replace('.', ',')}`;\n\nconst rows = campaigns.map(c => {\n  const leads = c.leads + c.conversations;\n  return `<tr>\n    <td style=\"padding:8px 12px;border-bottom:1px solid #eee;\">${c.campaign_name}</td>\n    <td style=\"padding:8px 12px;border-bottom:1px solid #eee;text-align:right;\">${fmtBRL(c.spend)}</td>\n    <td style=\"padding:8px 12px;border-bottom:1px solid #eee;text-align:center;\">${leads}</td>\n  </tr>`;\n}).join('\\n');\n\nconst html = `<!DOCTYPE html>\n<html>\n<head><meta charset=\"utf-8\"></head>\n<body style=\"font-family:Arial,sans-serif;color:#333;max-width:600px;margin:0 auto;padding:20px;\">\n  <h2 style=\"color:#1a1a2e;\">Relatório Diário de Leads - Rose Advocacia</h2>\n  <p>Aqui estão os resultados das campanhas no Meta Ads referentes a <strong>${date}</strong>:</p>\n  <table style=\"width:100%;border-collapse:collapse;margin:20px 0;\">\n    <thead>\n      <tr style=\"background:#1a1a2e;color:#fff;\">\n        <th style=\"padding:10px 12px;text-align:left;\">Campanha</th>\n        <th style=\"padding:10px 12px;text-align:right;\">Gasto (R$)</th>\n        <th style=\"padding:10px 12px;text-align:center;\">Leads / Conversas</th>\n      </tr>\n    </thead>\n    <tbody>\n${rows}\n      <tr style=\"background:#f5f5f5;font-weight:bold;\">\n        <td style=\"padding:10px 12px;\">TOTAL:</td>\n        <td style=\"padding:10px 12px;text-align:right;\">${fmtBRL(totalSpend)}</td>\n        <td style=\"padding:10px 12px;text-align:center;\">${totalLeads}</td>\n      </tr>\n    </tbody>\n  </table>\n  <p style=\"color:#888;font-size:12px;\">Gerado automaticamente por Adventure Labs.</p>\n  <hr style=\"border:none;border-top:1px solid #eee;\">\n  <p style=\"color:#aaa;font-size:11px;\">This email was sent automatically with n8n</p>\n</body>\n</html>`;\n\nreturn [{ json: { html, subject: `Relatório Diário de Leads - Rose Advocacia (${date})`, date } }];"
+      },
+      "id": "a1b2c3d4-0009-0009-0009-000000000009",
+      "name": "Code: build HTML email",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1780, 120],
+      "notes": "Monta HTML do email com tabela de campanhas idêntica ao formato anterior"
+    },
+    {
+      "parameters": {
+        "fromEmail": "contato@adventurelabs.com.br",
+        "toEmail": "={{ $env.ROSE_REPORT_RECIPIENTS }}",
+        "subject": "={{ $json.subject }}",
+        "emailType": "html",
+        "message": "={{ $json.html }}",
+        "options": {}
+      },
+      "id": "a1b2c3d4-0010-0010-0010-000000000010",
+      "name": "Send Email: relatório Rose",
+      "type": "n8n-nodes-base.sendEmail",
+      "typeVersion": 2.1,
+      "position": [2000, 120],
+      "credentials": {
+        "smtp": {
+          "id": "SMTP_CREDENTIAL_ID",
+          "name": "SMTP contato@adventurelabs.com.br"
+        }
+      },
+      "notes": "Destinatários em variável n8n ROSE_REPORT_RECIPIENTS (emails separados por vírgula)."
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $env.TELEGRAM_CHAT_ID }}",
+        "text": "=✅ *Rose — Relatório Diário Enviado*\n\nData: *{{ $('Code: agregar por campanha').first().json.date }}*\nTotal gasto: *{{ 'R$ ' + $('Code: agregar por campanha').first().json.totalSpend.toFixed(2).replace('.', ',') }}*\nLeads/conversas: *{{ $('Code: agregar por campanha').first().json.totalLeads }}*",
+        "additionalFields": { "parse_mode": "Markdown" }
+      },
+      "id": "a1b2c3d4-0011-0011-0011-000000000011",
+      "name": "Telegram: enviado com sucesso",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [2220, 120],
+      "credentials": {
+        "telegramApi": {
+          "id": "TELEGRAM_CREDENTIAL_ID",
+          "name": "Telegram ceo_buzz_Bot"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "id": "a1b2c3d4-0012-0012-0012-000000000012",
+      "name": "Error Trigger",
+      "type": "n8n-nodes-base.errorTrigger",
+      "typeVersion": 1,
+      "position": [240, 320],
+      "notes": "Captura erros de qualquer nó do workflow"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $env.TELEGRAM_CHAT_ID }}",
+        "text": "=🚨 *Rose — ERRO no Relatório Diário*\n\nNó com falha: *{{ $json.execution.error.node.name }}*\nErro: `{{ $json.execution.error.message }}`\n\nAcessar: flow.adventurelabs.com.br\nExecution: {{ $json.execution.id }}",
+        "additionalFields": { "parse_mode": "Markdown" }
+      },
+      "id": "a1b2c3d4-0013-0013-0013-000000000013",
+      "name": "Telegram: erro no workflow",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [460, 320],
+      "credentials": {
+        "telegramApi": {
+          "id": "TELEGRAM_CREDENTIAL_ID",
+          "name": "Telegram ceo_buzz_Bot"
+        }
+      },
+      "notes": "Alerta Telegram em qualquer falha do workflow — responde à pergunta 'por que não recebi notificação de erro?'"
+    }
+  ],
+  "connections": {
+    "Schedule 03:00 BRT": {
+      "main": [[{ "node": "Code: get yesterday (BRT)", "type": "main", "index": 0 }]]
+    },
+    "Code: get yesterday (BRT)": {
+      "main": [[{ "node": "GET Meta Insights", "type": "main", "index": 0 }]]
+    },
+    "GET Meta Insights": {
+      "main": [[{ "node": "Code: parse Meta data", "type": "main", "index": 0 }]]
+    },
+    "Code: parse Meta data": {
+      "main": [[{ "node": "IF: sem dados?", "type": "main", "index": 0 }]]
+    },
+    "IF: sem dados?": {
+      "main": [
+        [{ "node": "Telegram: sem dados", "type": "main", "index": 0 }],
+        [{ "node": "Supabase: upsert adv_ads_daily_metrics", "type": "main", "index": 0 }]
+      ]
+    },
+    "Supabase: upsert adv_ads_daily_metrics": {
+      "main": [[{ "node": "Code: agregar por campanha", "type": "main", "index": 0 }]]
+    },
+    "Code: agregar por campanha": {
+      "main": [[{ "node": "Code: build HTML email", "type": "main", "index": 0 }]]
+    },
+    "Code: build HTML email": {
+      "main": [[{ "node": "Send Email: relatório Rose", "type": "main", "index": 0 }]]
+    },
+    "Send Email: relatório Rose": {
+      "main": [[{ "node": "Telegram: enviado com sucesso", "type": "main", "index": 0 }]]
+    },
+    "Error Trigger": {
+      "main": [[{ "node": "Telegram: erro no workflow", "type": "main", "index": 0 }]]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "America/Sao_Paulo",
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "staticData": null,
+  "tags": [{ "name": "rose" }, { "name": "daily-report" }, { "name": "meta-ads" }],
+  "triggerCount": 1,
+  "updatedAt": "2026-04-16T06:00:00.000Z",
+  "versionId": "rose-daily-leads-report-v1"
+}
