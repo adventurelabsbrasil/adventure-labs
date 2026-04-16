@@ -184,8 +184,8 @@
       },
       "id": "a1b2c3d4-0010-0010-0010-000000000010",
       "name": "Send Email: relatório Rose",
-      "type": "n8n-nodes-base.sendEmail",
-      "typeVersion": 2.1,
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2,
       "position": [2000, 120],
       "credentials": {
         "smtp": {
