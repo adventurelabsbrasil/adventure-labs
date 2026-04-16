@@ -1,0 +1,54 @@
+#!/usr/bin/env bash
+# Adventure Labs — post-merge hook
+# Sincroniza openclaw/*.md para o workspace do Buzz após git pull.
+# Roda APENAS se o workspace do Buzz existir (seguro no Mac e em outros ambientes).
+#
+# Instalado via: git config core.hooksPath .githooks (scripts/setup.sh)
+
+set -euo pipefail
+
+BUZZ_WORKSPACE="/root/.openclaw/workspace"
+OPENCLAW_DIR="$(git rev-parse --show-toplevel)/openclaw"
+
+# Só executa na VPS onde o Buzz roda
+if [[ ! -d "$BUZZ_WORKSPACE" ]]; then
+  exit 0
+fi
+
+# Verifica se algum arquivo openclaw/*.md foi alterado neste pull
+CHANGED=$(git diff-tree -r --name-only --no-commit-id ORIG_HEAD HEAD 2>/dev/null | grep "^openclaw/.*\.md$" || true)
+
+if [[ -z "$CHANGED" ]]; then
+  exit 0
+fi
+
+echo "🤖 [Buzz Sync] Arquivos openclaw/*.md alterados — sincronizando workspace..."
+
+SYNCED=0
+FAILED=0
+
+for FILE in $CHANGED; do
+  BASENAME=$(basename "$FILE")
+  SRC="$OPENCLAW_DIR/$BASENAME"
+  DST="$BUZZ_WORKSPACE/$BASENAME"
+
+  if [[ -f "$SRC" ]]; then
+    if cp "$SRC" "$DST"; then
+      echo "  ✓ $BASENAME → $BUZZ_WORKSPACE/"
+      SYNCED=$((SYNCED + 1))
+    else
+      echo "  ✗ Falha ao copiar $BASENAME" >&2
+      FAILED=$((FAILED + 1))
+    fi
+  fi
+done
+
+if [[ $SYNCED -gt 0 ]]; then
+  echo "✅ [Buzz Sync] $SYNCED arquivo(s) sincronizado(s) com o workspace do Buzz."
+fi
+
+if [[ $FAILED -gt 0 ]]; then
+  echo "⚠️  [Buzz Sync] $FAILED arquivo(s) falharam — verifique permissões em $BUZZ_WORKSPACE" >&2
+fi
+
+exit 0
