@@ -106,7 +106,7 @@
     },
     {
       "parameters": {
-        "chatId": "={{ $env.TELEGRAM_CHAT_ID }}",
+        "chatId": "1069502175",
         "text": "=⚠️ *Rose — Relatório Diário*\n\nSem dados Meta Ads para *{{ $('Code: get yesterday (BRT)').first().json.date }}*.\n\nPossíveis causas: campanhas pausadas ou erro no token.",
         "additionalFields": { "parse_mode": "Markdown" }
       },
@@ -176,7 +176,7 @@
     {
       "parameters": {
         "fromEmail": "contato@adventurelabs.com.br",
-        "toEmail": "bruna@roseportaladvocacia.com.br,contato@roseportaladvocacia.com.br,clayton@roseportaladvocacia.com.br,victor@roseportaladvocacia.com.br,roselaine@roseportaladvocacia.com.br",
+        "toEmail": "brunascopel@roseportaladvocacia.com.br,contato@roseportaladvocacia.com.br,clayton@roseportaladvocacia.com.br,victor@roseportaladvocacia.com.br,roselaine@roseportaladvocacia.com.br",
         "subject": "={{ $json.subject }}",
         "emailType": "html",
         "message": "={{ $json.html }}",
@@ -199,7 +199,7 @@
     },
     {
       "parameters": {
-        "chatId": "={{ $env.TELEGRAM_CHAT_ID }}",
+        "chatId": "1069502175",
         "text": "=✅ *Rose — Relatório Diário Enviado*\n\nData: *{{ $('Code: agregar por campanha').first().json.date }}*\nTotal gasto: *{{ 'R$ ' + $('Code: agregar por campanha').first().json.totalSpend.toFixed(2).replace('.', ',') }}*\nLeads/conversas: *{{ $('Code: agregar por campanha').first().json.totalLeads }}*",
         "additionalFields": { "parse_mode": "Markdown" }
       },
@@ -226,7 +226,7 @@
     },
     {
       "parameters": {
-        "chatId": "={{ $env.TELEGRAM_CHAT_ID }}",
+        "chatId": "1069502175",
         "text": "=🚨 *Rose — ERRO no Relatório Diário*\n\nNó com falha: *{{ $json.execution.error.node.name }}*\nErro: `{{ $json.execution.error.message }}`\n\nAcessar: flow.adventurelabs.com.br\nExecution: {{ $json.execution.id }}",
         "additionalFields": { "parse_mode": "Markdown" }
       },
