@@ -42,11 +42,7 @@
               "name": "fields",
               "value": "impressions,reach,clicks,spend,actions,campaign_name,adset_name,ad_name,objective"
             },
-            {
-              "name": "time_range",
-              "value": "={\"since\":\"{{ $json.date }}\",\"until\":\"{{ $json.date }}\"}"
-            },
-            { "name": "time_increment", "value": "1" },
+            { "name": "date_preset", "value": "yesterday" },
             { "name": "level", "value": "ad" },
             { "name": "limit", "value": "500" }
           ]
@@ -106,6 +102,8 @@
     },
     {
       "parameters": {
+        "resource": "message",
+        "operation": "sendMessage",
         "chatId": "1069502175",
         "text": "=⚠️ *Rose — Relatório Diário*\n\nSem dados Meta Ads para *{{ $('Code: get yesterday (BRT)').first().json.date }}*.\n\nPossíveis causas: campanhas pausadas ou erro no token.",
         "additionalFields": { "parse_mode": "Markdown" }
@@ -153,7 +151,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const res = $input.first().json;\nconst date = $('Code: get yesterday (BRT)').first().json.date;\nconst rows = $('Code: parse Meta data').first().json.rows || [];\n\nif (res.statusCode && res.statusCode >= 400) {\n  throw new Error(`Supabase upsert falhou ${res.statusCode}: ${JSON.stringify(res.body || res)}`);\n}\n\n// Agrega métricas por campanha\nconst byCampaign = {};\nfor (const row of rows) {\n  const key = row.campaign_name;\n  if (!byCampaign[key]) {\n    byCampaign[key] = { campaign_name: key, spend: 0, leads: 0, conversations: 0 };\n  }\n  byCampaign[key].spend += row.spend || 0;\n  byCampaign[key].leads += row.leads || 0;\n  byCampaign[key].conversations += row.conversations || 0;\n}\n\nconst campaigns = Object.values(byCampaign).sort((a, b) => b.spend - a.spend);\nconst totalSpend = campaigns.reduce((s, c) => s + c.spend, 0);\nconst totalLeads = campaigns.reduce((s, c) => s + c.leads + c.conversations, 0);\n\nreturn [{ json: { date, campaigns, totalSpend, totalLeads } }];"
+        "jsCode": "const res = $input.first().json || {};\nconst date = $('Code: get yesterday (BRT)').first().json.date;\nconst rows = $('Code: parse Meta data').first().json.rows || [];\n\nif (res.statusCode && res.statusCode >= 400) {\n  throw new Error(`Supabase upsert falhou ${res.statusCode}: ${JSON.stringify(res.body || res)}`);\n}\n\n// Agrega métricas por campanha\nconst byCampaign = {};\nfor (const row of rows) {\n  const key = row.campaign_name;\n  if (!byCampaign[key]) {\n    byCampaign[key] = { campaign_name: key, spend: 0, leads: 0, conversations: 0 };\n  }\n  byCampaign[key].spend += row.spend || 0;\n  byCampaign[key].leads += row.leads || 0;\n  byCampaign[key].conversations += row.conversations || 0;\n}\n\nconst campaigns = Object.values(byCampaign).sort((a, b) => b.spend - a.spend);\nconst totalSpend = campaigns.reduce((s, c) => s + c.spend, 0);\nconst totalLeads = campaigns.reduce((s, c) => s + c.leads + c.conversations, 0);\n\nreturn [{ json: { date, campaigns, totalSpend, totalLeads } }];"
       },
       "id": "a1b2c3d4-0008-0008-0008-000000000008",
       "name": "Code: agregar por campanha",
@@ -199,6 +197,8 @@
     },
     {
       "parameters": {
+        "resource": "message",
+        "operation": "sendMessage",
         "chatId": "1069502175",
         "text": "=✅ *Rose — Relatório Diário Enviado*\n\nData: *{{ $('Code: agregar por campanha').first().json.date }}*\nTotal gasto: *{{ 'R$ ' + $('Code: agregar por campanha').first().json.totalSpend.toFixed(2).replace('.', ',') }}*\nLeads/conversas: *{{ $('Code: agregar por campanha').first().json.totalLeads }}*",
         "additionalFields": { "parse_mode": "Markdown" }
@@ -226,6 +226,8 @@
     },
     {
       "parameters": {
+        "resource": "message",
+        "operation": "sendMessage",
         "chatId": "1069502175",
         "text": "=🚨 *Rose — ERRO no Relatório Diário*\n\nNó com falha: *{{ $json.execution.error.node.name }}*\nErro: `{{ $json.execution.error.message }}`\n\nAcessar: flow.adventurelabs.com.br\nExecution: {{ $json.execution.id }}",
         "additionalFields": { "parse_mode": "Markdown" }

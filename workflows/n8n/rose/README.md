@@ -51,13 +51,25 @@ Após importar:
 2. Configurar as variáveis de ambiente no n8n (Settings → Variables)
 3. Ativar o workflow
 
-### Causa raiz do bug (2026-04-16)
+### Causa raiz dos bugs (2026-04-16)
 
+**Bug 1 — Supabase `create` → violação de chave única:**
 O workflow original usava o nó **Supabase com operação `create`** (INSERT simples).
 Quando a linha já existia em `adv_ads_daily_metrics` (ex: por dupla execução ou trigger manual),
 o nó lançava `duplicate key value violates unique constraint "uq_ads_daily_metrics"` e o
 workflow parava — o email nunca era enviado e **não havia notificação de erro**.
 
-Esta versão corrige ambos os problemas:
+**Bug 2 — Telegram `chat_id is empty`:**
+O nó `n8n-nodes-base.telegram` v1.2 exige os parâmetros `resource: "message"` e
+`operation: "sendMessage"` explícitos — sem eles o campo `chatId` é ignorado.
+
+**Bug 3 — Meta API `time_range` com `since == until`:**
+O parâmetro `time_range` com `since` igual a `until` pode retornar dados inconsistentes
+dependendo da versão da API. Substituído por `date_preset: yesterday`, que é a abordagem
+canônica para "dados de ontem" (igual ao agente Lara Meta Ads).
+
+Esta versão corrige todos os problemas:
 - **Upsert via REST API** com `Prefer: resolution=merge-duplicates` → nunca falha por duplicata
 - **Error Trigger** + Telegram → qualquer falha futura gera alerta imediato
+- **`resource` + `operation`** em todos os nós Telegram → `chatId` reconhecido corretamente
+- **`date_preset: yesterday`** → dados do dia anterior de forma inequívoca
