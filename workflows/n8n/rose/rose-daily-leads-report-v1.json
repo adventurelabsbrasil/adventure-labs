@@ -32,7 +32,7 @@
     },
     {
       "parameters": {
-        "url": "=https://graph.facebook.com/v21.0/act_{{ $env.META_ROSE_AD_ACCOUNT_ID }}/insights",
+        "url": "https://graph.facebook.com/v21.0/act_499901480052479/insights",
         "authentication": "genericCredentialType",
         "genericAuthType": "httpQueryAuth",
         "sendQuery": true,

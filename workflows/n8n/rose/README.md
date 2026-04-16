@@ -24,11 +24,12 @@ Workflows do n8n para o cliente **Rose Portal Advocacia**.
 
 | Variável | Descrição |
 |----------|-----------|
-| `META_ROSE_AD_ACCOUNT_ID` | ID da conta de anúncios Meta (ex: `499901480052479`) |
 | `SUPABASE_URL` | URL do projeto Supabase (ex: `https://xxx.supabase.co`) |
 | `SUPABASE_SERVICE_ROLE_KEY` | Service Role Key do Supabase |
 | `ROSE_REPORT_RECIPIENTS` | Emails dos destinatários separados por vírgula |
 | `TELEGRAM_CHAT_ID` | Chat ID do Telegram (ex: `1069502175`) |
+
+> **Nota:** `META_ROSE_AD_ACCOUNT_ID` está hardcoded na URL do workflow (`act_499901480052479`) pois não é dado sensível.
 
 ### Credenciais n8n necessárias
 
