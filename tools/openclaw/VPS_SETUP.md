@@ -47,12 +47,18 @@ O OpenClaw troca de modelo automaticamente ao detectar **429 / quota esgotada / 
 
 ### Cadeia configurada
 
+> **Atualizado 2026-04-16:** modelo primário trocado para Mistral via `openclaw doctor --fix`
+> (Google estava em rate limit de embeddings).
+
 ```
-Primary:     google/gemini-3.1-pro-preview
+Primary:     mistral/mistral-large-latest     ← atual (desde 2026-04-16)
 Fallback 1:  anthropic/claude-sonnet-4-6
 Fallback 2:  openai/gpt-5.4
 Fallback 3:  google/gemini-3.1-pro-preview   (retry após cooldown)
 ```
+
+> Para reverter para Gemini como primário: `openclaw configure → Model`
+> ou editar `/root/.openclaw/openclaw.json` → `agents.defaults.model.primary`.
 
 ### Arquivo de config
 

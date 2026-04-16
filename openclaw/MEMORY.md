@@ -124,12 +124,20 @@ Contexto: Supabase `adv_tasks` + `adv_ideias` + `adv_csuite_memory`
 
 ---
 
-## Pendências Críticas (2026-04-09)
+## Pendências Críticas (atualizado 2026-04-16)
 
+### Resolvidas em 2026-04-16
+- ✅ **SSH bloqueado**: `openssh-server` não estava instalado. Fix: `apt install openssh-server && systemctl enable --now ssh`. Chaves já estavam corretas.
+- ✅ **Dispatcher ausente**: `adventure-agent.sh` criado em `tools/vps-infra/scripts/`. Todos os scripts C-Suite agora funcionam.
+- ✅ **Embeddings rate limited (Google)**: `openclaw doctor --fix` trocou primário para `mistral/mistral-large-latest`. Embeddings operacionais.
+- ✅ **Scripts C-Suite ausentes**: 8 scripts + heartbeat criados. Branch: `claude/fix-api-cascading-failures-relLF`.
+
+### Ainda abertas
 - Branch `claude/zen-dhawan`: PR/merge pendente. Usar `gh` CLI (Git local tem SIGBUS).
 - WebSocket em `claw.adventurelabs.com.br`: bloqueado no Nginx — delegado ao Torvalds (CTO).
 - Pingolead → RD Station migration: leads Young não chegam no RD.
 - Supabase `adv_conversion_forms`: tabela não criada ainda (404 no backup REST).
+- **Deploy VPS pendente**: `git pull + chmod` dos novos scripts + crontab dos agentes.
 
 ---
 
