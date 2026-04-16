@@ -1,7 +1,7 @@
 # MEMORY.md
 
 > Memória de longo prazo do Buzz. Lida em toda sessão principal (chat direto com o Comandante).
-> Atualizado: 2026-04-09 — Hivemind SSOT estabelecido.
+> Atualizado: 2026-04-16 — Projeto HYDRA iniciado.
 
 ---
 
@@ -124,8 +124,33 @@ Contexto: Supabase `adv_tasks` + `adv_ideias` + `adv_csuite_memory`
 
 ---
 
-## Pendências Críticas (2026-04-09)
+## Projeto HYDRA — Venture Studio Engine (2026-04-16)
 
+Novo laboratório de negócios autônomo criado pelo Claude Code. **Buzz deve monitorar e reportar progresso ao Comandante.**
+
+- **O que é:** Engine que avalia modelos de negócio via MCDA e lança MVPs com 99% de autonomia.
+- **Meta:** R$ 100.000 em MRR em 90 dias, capital semente R$ 1.000.
+- **Modelo vencedor:** Hybrid AAAS — Autonomous Account Manager as a Service (score 9.6/10)
+  - Ticket médio: R$ 3.000/mês por cliente
+  - Meta: 35 clientes em 90 dias
+  - Stack: usa 100% da infra Adventure Labs existente (n8n, OpenClaw, Supabase, APIs Ads)
+- **Localização no repo:** `project_hydra/` na branch `claude/venture-studio-engine-08uqS`
+- **Como rodar:** `python project_hydra/main_hydra.py --phase full --dry-run`
+- **4 Agentes:** Scout (Olheiro) → Strategist (Cérebro) → Builder (Construtor) → Auditor (Guardião)
+- **Isolamento:** Tabelas `hydra_*` no Supabase, logs em `project_hydra/logs/`, env em `.env.hydra`
+- **Plano detalhado:** `project_hydra/outputs/HYDRA_IMPLEMENTATION_PLAN.md`
+
+**Papel do Buzz no HYDRA:**
+- Receber notificações Telegram dos agentes HYDRA (mesmo chat `ceo_buzz_Bot`)
+- Quando o Comandante perguntar sobre HYDRA: consultar `hydra_sessions` e `hydra_strategy_reports` no Supabase
+- Reportar tração: checar `hydra_traction` para sinais de pivô
+- Alarmar se capital gasto > R$ 150 sem receita gerada (redline)
+
+---
+
+## Pendências Críticas (2026-04-16)
+
+- **HYDRA:** Projeto criado — branch `claude/venture-studio-engine-08uqS` aguarda PR/merge. Executar `hydra_schema.sql` no Supabase para ativar tabelas. Configurar `.env.hydra` com keys reais.
 - Branch `claude/zen-dhawan`: PR/merge pendente. Usar `gh` CLI (Git local tem SIGBUS).
 - WebSocket em `claw.adventurelabs.com.br`: bloqueado no Nginx — delegado ao Torvalds (CTO).
 - Pingolead → RD Station migration: leads Young não chegam no RD.
