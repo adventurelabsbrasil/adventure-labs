@@ -1,0 +1,94 @@
+{
+  "_meta": {
+    "version": "1.0.0",
+    "description": "Pesos para análise MCDA (Multi-Criteria Decision Analysis) do HYDRA Strategist",
+    "total_weight": 1.0,
+    "context": "Restrições: capital semente R$1.000, custo MVP máx R$200, 90 dias para R$100k, 99% autonomia"
+  },
+  "criteria": {
+    "time_to_revenue": {
+      "weight": 0.30,
+      "description": "Velocidade para o primeiro real faturado. Score 10 = revenue em ≤3 dias. Score 1 = >30 dias.",
+      "inversion_note": "Quanto menor o tempo, maior o score",
+      "benchmark": {
+        "score_10": "≤3 dias",
+        "score_7": "4-7 dias",
+        "score_5": "8-14 dias",
+        "score_3": "15-30 dias",
+        "score_1": ">30 dias"
+      },
+      "rationale": "Com capital limitado (R$1.000), velocidade de retorno é o fator mais crítico. Cada dia sem receita queima do capital semente."
+    },
+    "launch_cost": {
+      "weight": 0.20,
+      "description": "Custo total de lançamento do MVP. Score 10 = R$0-50. Score 1 = >R$500.",
+      "inversion_note": "Quanto menor o custo, maior o score",
+      "benchmark": {
+        "score_10": "R$0-50",
+        "score_9": "R$51-100",
+        "score_7": "R$101-150",
+        "score_5": "R$151-200",
+        "score_3": "R$201-350",
+        "score_1": ">R$500"
+      },
+      "rationale": "Capital semente é R$1.000 com teto de R$200 para MVP. Custo baixo preserva capital para escala."
+    },
+    "automation_potential": {
+      "weight": 0.25,
+      "description": "% das operações que podem rodar sem intervenção humana. Score 10 = 95-100% automatizável.",
+      "benchmark": {
+        "score_10": "95-100% automatizável",
+        "score_8": "80-94%",
+        "score_6": "60-79%",
+        "score_4": "40-59%",
+        "score_2": "<40%"
+      },
+      "rationale": "North Star: 99% de autonomia. O negócio precisa rodar sem o Founder. Peso alto porque é meta estrutural."
+    },
+    "scalability": {
+      "weight": 0.15,
+      "description": "Potencial de receita em 90 dias reinvestindo lucro. Score 10 = ≥R$100k/mês.",
+      "benchmark": {
+        "score_10": "≥R$100k/mês em 90 dias",
+        "score_8": "R$50k-99k/mês",
+        "score_6": "R$20k-49k/mês",
+        "score_4": "R$5k-19k/mês",
+        "score_2": "<R$5k/mês"
+      },
+      "rationale": "BHAG de R$100k em 90 dias exige modelo com potencial de escala rápida. Peso moderado pois escala sem base é ilusória."
+    },
+    "stack_alignment": {
+      "weight": 0.10,
+      "description": "Alinhamento com a stack Adventure Labs existente. Score 10 = usa 100% da infra disponível.",
+      "benchmark": {
+        "score_10": "100% infra existente — deploy imediato",
+        "score_8": "80-99% — ajustes mínimos",
+        "score_6": "60-79% — algumas novas integrações",
+        "score_4": "40-59% — requer construção significativa",
+        "score_2": "<40% — stack completamente nova"
+      },
+      "rationale": "Aproveitar a infra existente (n8n, OpenClaw, Supabase, APIs) reduz custo e tempo. Peso menor pois não é o único fator."
+    }
+  },
+  "scoring_rules": {
+    "minimum_viable_score": 6.5,
+    "pivot_threshold_48h": {
+      "clicks": 0,
+      "leads": 0,
+      "sales": 0
+    },
+    "redline_capital_burn": 200,
+    "winner_selection": "highest_weighted_score",
+    "tiebreaker": "time_to_revenue"
+  },
+  "redlines": {
+    "max_launch_spend_brl": 200,
+    "min_margin_per_client_brl": 2000,
+    "max_api_cost_per_client_brl": 150,
+    "min_revenue_signal_48h": "ao menos 1 lead ou 1 clique em oferta",
+    "pivot_trigger": "zero tração em 48h pós-lançamento",
+    "capital_burn_alert_pct": 0.50,
+    "lgpd_required": true,
+    "no_guaranteed_results_promise": true
+  }
+}

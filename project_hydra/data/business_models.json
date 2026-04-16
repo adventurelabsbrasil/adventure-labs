@@ -1,0 +1,211 @@
+{
+  "_meta": {
+    "version": "1.0.0",
+    "last_updated": "2026-04-16",
+    "author": "HYDRA Decision Engine",
+    "description": "Modelos de negócio candidatos ao MVP de 7 dias. Scores aplicados pelo Strategist Agent.",
+    "scoring_scale": "1-10 (maior = melhor)"
+  },
+  "models": [
+    {
+      "id": "micro_saas",
+      "name": "Micro-SaaS de Função Única",
+      "tagline": "Resolva uma dor técnica específica com software simples e recorrente",
+      "description": "SaaS mínimo resolvendo uma dor técnica imediata do mercado B2B/B2C. Ex: gerador de criativos para Meta Ads, auditoria automatizada de Google Ads, validador de landing pages.",
+      "examples_br": [
+        "Gerador de copy para Meta Ads em português",
+        "Auditoria automática de conta Google Ads",
+        "Criador de relatórios de campanha white-label",
+        "Monitor de concorrentes em e-commerce"
+      ],
+      "revenue_model": "Assinatura mensal (R$ 97-497/mês por usuário)",
+      "criteria_scores": {
+        "time_to_revenue": 5,
+        "launch_cost": 7,
+        "automation_potential": 8,
+        "scalability": 9,
+        "stack_alignment": 9
+      },
+      "launch_cost_brl": 150,
+      "days_to_first_revenue": 14,
+      "monthly_revenue_potential_day90_brl": 15000,
+      "risk_level": "medium",
+      "stack_fit": "high",
+      "upsides": [
+        "Receita recorrente previsível",
+        "Stack já disponível (Next.js + Supabase + Vercel)",
+        "Potencial de escala horizontal ilimitado"
+      ],
+      "downsides": [
+        "Exige desenvolvimento de produto (2-4 semanas)",
+        "Necessita product-market fit (risco de pivô tarde)",
+        "Competição alta em SaaS genérico"
+      ],
+      "redlines": [
+        "Não lançar sem ao menos 10 usuários beta confirmados",
+        "Mínimo R$ 50/mês por usuário para cobrir custos de API"
+      ]
+    },
+    {
+      "id": "infoprodutos",
+      "name": "Infoprodutos Dinâmicos / Curadoria de Dados",
+      "tagline": "Arbitragem de informação premium em mercados mal atendidos",
+      "description": "Reports curados por IA, newsletters premium, bases de dados de leads/tendências, cursos gerados dinamicamente. Arbitragem de informação entre fontes públicas e compradores com disposição a pagar.",
+      "examples_br": [
+        "Report semanal de tendências Meta Ads Brasil",
+        "Base de dados de e-commerces por nicho/faturamento",
+        "Newsletter premium sobre Google Ads para PMEs",
+        "Benchmark de criativos por vertical (atualizado mensalmente)"
+      ],
+      "revenue_model": "Venda pontual (R$ 97-997) + assinatura (R$ 47-197/mês)",
+      "criteria_scores": {
+        "time_to_revenue": 7,
+        "launch_cost": 9,
+        "automation_potential": 7,
+        "scalability": 6,
+        "stack_alignment": 5
+      },
+      "launch_cost_brl": 80,
+      "days_to_first_revenue": 7,
+      "monthly_revenue_potential_day90_brl": 8000,
+      "risk_level": "medium",
+      "stack_fit": "medium",
+      "upsides": [
+        "Custo de lançamento muito baixo",
+        "Pode gerar primeira venda em 3-5 dias",
+        "Não exige infraestrutura complexa"
+      ],
+      "downsides": [
+        "Teto de receita baixo sem audiência prévia",
+        "Alta dependência de distribuição (lista, tráfego pago)",
+        "Produto perecível — precisa atualização constante"
+      ],
+      "redlines": [
+        "Não investir em tráfego pago sem validar produto organicamente primeiro",
+        "Cuidado com LGPD ao comercializar bases de dados de pessoas"
+      ]
+    },
+    {
+      "id": "b2b_agents",
+      "name": "Agentes de Serviço B2B",
+      "tagline": "Automação de processos operacionais para terceiros via agentes de IA",
+      "description": "Venda de agentes de IA que automatizam processos de marketing, vendas, ops para empresas. Entrega como serviço gerenciado ou white-label. Ex: agente de gestão de tráfego, agente de CRM, agente de relatórios.",
+      "examples_br": [
+        "Agente gestor de tráfego pago (Meta + Google) autônomo",
+        "Agente de relatórios automáticos para agências",
+        "Agente de atendimento WhatsApp para serviços locais",
+        "Agente de prospecção e follow-up B2B"
+      ],
+      "revenue_model": "Contrato recorrente mensal (R$ 1.500-5.000/mês por cliente)",
+      "criteria_scores": {
+        "time_to_revenue": 9,
+        "launch_cost": 7,
+        "automation_potential": 8,
+        "scalability": 8,
+        "stack_alignment": 10
+      },
+      "launch_cost_brl": 120,
+      "days_to_first_revenue": 5,
+      "monthly_revenue_potential_day90_brl": 45000,
+      "risk_level": "low",
+      "stack_fit": "high",
+      "upsides": [
+        "Infraestrutura 100% disponível (n8n, OpenClaw, Supabase, APIs ads)",
+        "Adventure Labs JÁ É a prova de conceito",
+        "Ticket alto por cliente (R$ 2-5k/mês)",
+        "Demanda validada no mercado brasileiro"
+      ],
+      "downsides": [
+        "Requer vendas ativas (não escala passivamente no início)",
+        "Dependência de relacionamento com cliente",
+        "Capacidade limitada sem automação de onboarding"
+      ],
+      "redlines": [
+        "Máximo 10 clientes sem sistema de onboarding automatizado",
+        "Nunca prometer SLA sem ter o sistema monitorado (Uptime Kuma)"
+      ]
+    },
+    {
+      "id": "community",
+      "name": "Ecossistemas Gamificados / Comunidades de Nicho",
+      "tagline": "Engajamento recorrente em comunidades com monetização por camadas",
+      "description": "Comunidade paga em Discord/Telegram com gamificação, rankings, acesso a ferramentas exclusivas, e learning by doing. Foco em nichos com alta afinidade: marketing digital, empreendedorismo, tráfego pago.",
+      "examples_br": [
+        "Comunidade de gestores de tráfego com tools exclusivas",
+        "Programa de rankings gamificado para vendedores B2B",
+        "Squad de growth hackers com projetos colaborativos",
+        "Laboratório de IA aplicada ao marketing"
+      ],
+      "revenue_model": "Assinatura mensal (R$ 97-297) + upsell premium (R$ 997+)",
+      "criteria_scores": {
+        "time_to_revenue": 3,
+        "launch_cost": 5,
+        "automation_potential": 5,
+        "scalability": 9,
+        "stack_alignment": 4
+      },
+      "launch_cost_brl": 200,
+      "days_to_first_revenue": 30,
+      "monthly_revenue_potential_day90_brl": 25000,
+      "risk_level": "high",
+      "stack_fit": "low",
+      "upsides": [
+        "Teto de receita potencialmente muito alto (efeito rede)",
+        "Ativo de longo prazo (lista + relacionamento)",
+        "Pode ser um moat competitivo forte"
+      ],
+      "downsides": [
+        "Construção de audiência leva meses",
+        "Exige presença constante do Founder no início",
+        "30+ dias para primeiro faturamento relevante"
+      ],
+      "redlines": [
+        "Não alocar capital semente em comunidade — risco muito alto",
+        "Founder não pode gastar mais de 1% do tempo neste modelo"
+      ]
+    },
+    {
+      "id": "hybrid_aaas",
+      "name": "Hybrid AAAS — Autonomous Account Manager as a Service",
+      "tagline": "O agente de IA que substitui o account manager humano por 60% do custo",
+      "description": "Serviço-produto híbrido: HYDRA gerencia campanhas, otimizações, relatórios e comunicação de cliente de forma autônoma. Oferecido como serviço recorrente white-label para PMEs brasileiras. A Adventure Labs já É o MVP vivo — basta produtizar e vender.",
+      "examples_br": [
+        "HYDRA Account Manager para clínicas odontológicas",
+        "HYDRA Account Manager para imobiliárias",
+        "HYDRA Account Manager para infoprodutores",
+        "HYDRA para agências (white-label das automações)"
+      ],
+      "revenue_model": "Contrato MRR (R$ 2.500-3.500/mês por cliente)",
+      "criteria_scores": {
+        "time_to_revenue": 10,
+        "launch_cost": 9,
+        "automation_potential": 10,
+        "scalability": 9,
+        "stack_alignment": 10
+      },
+      "launch_cost_brl": 100,
+      "days_to_first_revenue": 3,
+      "monthly_revenue_potential_day90_brl": 105000,
+      "risk_level": "low",
+      "stack_fit": "perfect",
+      "upsides": [
+        "Zero desenvolvimento de produto — infraestrutura já existe",
+        "Adventure Labs é a prova de conceito viva (Rose, Young, Benditta)",
+        "Ticket médio alto: R$ 3.000/mês × 35 clientes = R$ 105k/mês",
+        "Altamente automatizável com a stack atual (n8n + OpenClaw + APIs)",
+        "Founder já conhece o mercado intimamente",
+        "Pode escalar sem aumentar headcount humano"
+      ],
+      "downsides": [
+        "Exige processo comercial ativo no início",
+        "Gestão de múltiplos clientes exige orquestração robusta",
+        "Qualidade depende da performance das campanhas"
+      ],
+      "redlines": [
+        "Não prometer resultados garantidos (violação do CONAR)",
+        "Auditor HYDRA deve revisar cada nova conta antes de onboarding",
+        "Custo de API por cliente não pode exceder R$ 150/mês (margem mínima de R$ 2.350)"
+      ]
+    }
+  ]
+}
