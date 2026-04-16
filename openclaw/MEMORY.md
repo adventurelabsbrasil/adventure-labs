@@ -131,13 +131,17 @@ Contexto: Supabase `adv_tasks` + `adv_ideias` + `adv_csuite_memory`
 - ✅ **Dispatcher ausente**: `adventure-agent.sh` criado em `tools/vps-infra/scripts/`. Todos os scripts C-Suite agora funcionam.
 - ✅ **Embeddings rate limited (Google)**: `openclaw doctor --fix` trocou primário para `mistral/mistral-large-latest`. Embeddings operacionais.
 - ✅ **Scripts C-Suite ausentes**: 8 scripts + heartbeat criados. Branch: `claude/fix-api-cascading-failures-relLF`.
+- ✅ **Deploy VPS**: scripts copiados para `/opt/adventure-labs/scripts/`, `chmod +x` aplicado, `postgresql-client` instalado.
+- ✅ **Crontab**: 13 entradas configuradas (C-Suite + gerentes + heartbeat + backup). Verificado com `crontab -l`.
+- ✅ **SUPABASE_DB_URL bash expansion**: senha continha `$@` que bash expandia. Fix: valor entre aspas simples no `.env`.
 
 ### Ainda abertas
 - Branch `claude/zen-dhawan`: PR/merge pendente. Usar `gh` CLI (Git local tem SIGBUS).
 - WebSocket em `claw.adventurelabs.com.br`: bloqueado no Nginx — delegado ao Torvalds (CTO).
 - Pingolead → RD Station migration: leads Young não chegam no RD.
 - Supabase `adv_conversion_forms`: tabela não criada ainda (404 no backup REST).
-- **Deploy VPS pendente**: `git pull + chmod` dos novos scripts + crontab dos agentes.
+- `adv_csuite_memory` embedding: coluna é `vector(3072)`, Mistral retorna 1024-dim. Opção 2 escolhida: embeddings novos gravados como NULL. Migração `ALTER COLUMN ... TYPE vector(1024)` adiada.
+- VPS kernel reboot pendente: `6.8.0-107-generic` (baixa urgência, sem janela definida).
 
 ---
 

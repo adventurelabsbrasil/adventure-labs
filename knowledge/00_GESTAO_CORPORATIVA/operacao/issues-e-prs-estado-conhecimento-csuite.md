@@ -2,13 +2,14 @@
 
 **Objetivo:** Referência para o C-Suite: **não gerar avisos nem novas issues** sobre os itens abaixo; já resolvidos ou já tratados. Usar este documento para evitar feedback duplicado sobre temas encerrados.
 
-**Última atualização:** 2026-03-13  
+**Última atualização:** 2026-04-16  
 **Referência detalhada:** `apps/core/admin/docs/admin-issues-pendencias.md`, `apps/core/admin/docs/admin-issues-checklist-conclusao.md`
 
 ---
 
 ## Já resolvidos (não alertar)
 
+- **Cascading API Failures VPS (2026-04-16)** — falhas em cascata nos agentes C-Suite resolvidas: (a) `openssh-server` instalado (SSH restaurado), (b) `adventure-agent.sh` criado do zero, (c) 8 scripts C-Suite + heartbeat criados, (d) embeddings Mistral substituindo Google rate-limited, (e) `SUPABASE_DB_URL` corrigido (single quotes no .env), (f) crontab com 13 entradas configurado. Branch: `claude/fix-api-cascading-failures-relLF`. Reg: `registro-fix-cascading-failures-openclaw-2026-04-16.md`.
 - **Deploy Admin no Vercel** — concluído; issue #1 fechada.
 - **Domínio admin.adventurelabs.com.br** — configurado; issue #2 fechada.
 - **Permissões por responsável ou perfil (RLS)** — implementado em `20260308100001_adv_rls_by_role.sql`; issue #7 fechada.
