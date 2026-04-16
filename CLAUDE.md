@@ -77,6 +77,7 @@
 | gerente-rose | `33 10 * * 1-5` | Briefing diário conta Rose | Telegram |
 | gerente-young | `11 12 * * 2` | Briefing semanal Young | Telegram |
 | gerente-benditta | `19 12 * * 3` | Briefing semanal Benditta | Telegram |
+| tostao (Token Treasurer) | `43 9 * * 2,5` | Balanço de tokens e custos de IA (APIs + subscriptions) | Telegram |
 | backup-vps | `30 6 * * *` | Backup VPS → Drive (n8n, Plane, Infisical, Vaultwarden, Supabase, configs) | Telegram |
 
 **Scripts:** `/opt/adventure-labs/scripts/agents/` (VPS)
@@ -121,6 +122,7 @@
 | Dados operacionais (tasks, leads) | Supabase `adv_*` tables |
 | Senhas, credenciais | Vaultwarden (pw.adventurelabs.com.br) |
 | Decisões finais | Founder (Rodrigo Ribas) |
+| Tokens e custos de IA | Tostão (Token Treasurer) → Buffett (CFO) |
 | Reportar urgências | Telegram ceo_buzz_Bot |
 
 **Princípio:** A partir de 2026-04-09, não existe pergunta sobre algo interno sem resposta. Qualquer entidade — humana ou agente — que interaja com a Adventure Labs começa por aqui.
@@ -139,6 +141,7 @@
 | Segredos e env vars | Infisical (vault.adventurelabs.com.br) |
 | Backup VPS | `gdrive-adventure:99_ARQUIVO/VPS_BACKUPS/` |
 | Memória do Claude | `.claude/memory/` (neste repo) |
+| Consumo de tokens IA | Supabase `adv_ai_providers`, `adv_token_usage`, `adv_token_alerts` |
 
 ---
 

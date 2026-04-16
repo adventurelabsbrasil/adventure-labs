@@ -100,6 +100,9 @@ Arquivos em **[apps/core/admin/agents/](../../apps/core/admin/agents/)** (submod
 
 Pacotes de agentes nomeados (pastas com `AGENT.md`): mesmo diretório, ex.: `andon_asana/`, `benchmark_adventure/`, `gerente_rose/`, etc.
 
+**Agente de apoio financeiro:**
+- **Tostão (Token Treasurer)** — owner Buffett (CFO). Docs: [`agents/tostao/`](agents/tostao/). Script VPS: `tostao-token-treasurer.sh`. Tabelas: `adv_ai_providers`, `adv_token_usage`, `adv_token_alerts`.
+
 ---
 
 ## Resumo

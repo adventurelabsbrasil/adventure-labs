@@ -34,6 +34,8 @@ Exemplo de agente de apoio completo: [`apps/core/admin/agents/andon_asana/`](app
 
 **Nota ATS Young Talents:** o código do ATS (`apps/clientes/young-talents/plataforma`) está no monorepo como **projeto de cliente entregue** (propriedade Young Empreendimentos), para histórico técnico/handoff; governança em [`docs/YOUNG_TALENTS_PROJETO_ENTREGUE.md`](docs/YOUNG_TALENTS_PROJETO_ENTREGUE.md). O `gerente_young` continua a cobrir **relação e contexto com Young Empreendimentos**.
 
+**Tostão (Token Treasurer):** agente de apoio financeiro/operacional — owner Buffett (CFO). Monitora consumo de tokens e custos de IA em toda a operação (APIs: Anthropic, Gemini, OpenAI; subscriptions: Claude Pro/Max, Cursor AI, ElevenLabs). Skills: inventário de providers, coleta de consumo, análise de anomalias, reconciliação com Sueli, consulta ao Chaves (Infisical). Acionado por cron 2x/semana (ter + sex 09:43 UTC). Tabelas: `adv_ai_providers`, `adv_token_usage`, `adv_token_alerts`. Docs: `knowledge/06_CONHECIMENTO/agents/tostao/`.
+
 **Benchmark martech (três agentes de apoio):**
 - **benchmark_adventure** (owner Ogilvy/CMO): exclusivo para a Adventure — tendências martech, concorrentes, dashboards/BI/automações, SaaS/microsaas. Skills: `benchmark-martech-tendencias`, `benchmark-concorrentes-adventure`, `benchmark-dashboards-bi-automacoes`. Acionado pelo Grove ou Ogilvy para inovação interna.
 - **benchmark_clientes** (owner Cagan/CPO): exclusivo para clientes da Adventure — mercado/setor/nicho do cliente, concorrência no setor, tendências por nicho. Skills: `benchmark-mercado-setor-cliente`, `benchmark-concorrencia-setor`, `benchmark-tendencias-por-nicho`. Acionado pelo Grove, Cagan ou gerentes de conta.
