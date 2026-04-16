@@ -105,7 +105,6 @@ def get_campaign_insights(ad_account_id: str, days: int = 7) -> list:
         level="campaign",
         fields="campaign_name,impressions,reach,clicks,spend,actions",
         time_range=json.dumps({"since": since, "until": until}),
-        filtering=json.dumps([{"field": "effective_status", "operator": "IN", "value": ["ACTIVE", "PAUSED"]}]),
     )
     return result.get("data", [])
 
@@ -126,7 +125,7 @@ def get_lead_count(ad_account_id: str, days: int = 7) -> dict:
     for row in result.get("data", []):
         actions = row.get("actions", [])
         for act in actions:
-            if act.get("action_type") == "leadgen_grouped":
+            if act.get("action_type") in ("leadgen_grouped", "onsite_conversion.lead_grouped"):
                 adset = row.get("adset_name", "")
                 leads_by_adset[adset] = leads_by_adset.get(adset, 0) + int(act.get("value", 0))
     return leads_by_adset
