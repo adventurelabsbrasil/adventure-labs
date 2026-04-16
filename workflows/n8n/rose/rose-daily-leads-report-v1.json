@@ -176,11 +176,13 @@
     {
       "parameters": {
         "fromEmail": "contato@adventurelabs.com.br",
-        "toEmail": "={{ $env.ROSE_REPORT_RECIPIENTS }}",
+        "toEmail": "bruna@roseportaladvocacia.com.br,contato@roseportaladvocacia.com.br,clayton@roseportaladvocacia.com.br,victor@roseportaladvocacia.com.br,roselaine@roseportaladvocacia.com.br",
         "subject": "={{ $json.subject }}",
         "emailType": "html",
         "message": "={{ $json.html }}",
-        "options": {}
+        "options": {
+          "bccEmail": "contato@adventurelabs.com.br"
+        }
       },
       "id": "a1b2c3d4-0010-0010-0010-000000000010",
       "name": "Send Email: relatório Rose",
