@@ -68,8 +68,16 @@ O parâmetro `time_range` com `since` igual a `until` pode retornar dados incons
 dependendo da versão da API. Substituído por `date_preset: yesterday`, que é a abordagem
 canônica para "dados de ontem" (igual ao agente Lara Meta Ads).
 
+**Bug 4 — emailSend typeVersion 2.x: body HTML chega vazio (`messageSize: 895`):**
+O nó `emailSend` typeVersion 2/2.1 usa `parameters.message` para o corpo do email. Em n8n
+v2.14.x, expressões neste campo retornam vazio para conteúdo HTML (o `subject` no mesmo
+`$json` funciona normalmente). A causa exata é um bug na resolução de expressões longas no
+campo `message` do typeVersion 2.x. Fix: usar **typeVersion 1** com `options.html` —
+código path completamente diferente, sem o bug.
+
 Esta versão corrige todos os problemas:
 - **Upsert via REST API** com `Prefer: resolution=merge-duplicates` → nunca falha por duplicata
 - **Error Trigger** + Telegram → qualquer falha futura gera alerta imediato
 - **`resource` + `operation`** em todos os nós Telegram → `chatId` reconhecido corretamente
 - **`date_preset: yesterday`** → dados do dia anterior de forma inequívoca
+- **`emailSend typeVersion 1` com `options.html`** → body HTML enviado corretamente

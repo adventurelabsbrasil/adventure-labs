@@ -176,16 +176,16 @@
         "fromEmail": "contato@adventurelabs.com.br",
         "toEmail": "brunascopel@roseportaladvocacia.com.br,contato@roseportaladvocacia.com.br,clayton@roseportaladvocacia.com.br,victor@roseportaladvocacia.com.br,roselaine@roseportaladvocacia.com.br",
         "subject": "={{ $json.subject }}",
-        "emailType": "html",
-        "message": "={{ $json.html_report }}",
+        "text": "",
         "options": {
-          "bccEmail": "contato@adventurelabs.com.br"
+          "html": "={{ $json.html_report }}",
+          "bcc": "contato@adventurelabs.com.br"
         }
       },
       "id": "a1b2c3d4-0010-0010-0010-000000000010",
       "name": "Send Email: relatório Rose",
       "type": "n8n-nodes-base.emailSend",
-      "typeVersion": 2.1,
+      "typeVersion": 1,
       "position": [2000, 120],
       "credentials": {
         "smtp": {
@@ -193,7 +193,7 @@
           "name": "SMTP contato@adventurelabs.com.br"
         }
       },
-      "notes": "Destinatários em variável n8n ROSE_REPORT_RECIPIENTS (emails separados por vírgula)."
+      "notes": "typeVersion 1 usa options.html (não parameters.message) — corrige body vazio em v2.14.x."
     },
     {
       "parameters": {
@@ -291,6 +291,6 @@
   "staticData": null,
   "tags": [{ "name": "rose" }, { "name": "daily-report" }, { "name": "meta-ads" }],
   "triggerCount": 1,
-  "updatedAt": "2026-04-16T06:00:00.000Z",
+  "updatedAt": "2026-04-16T18:00:00.000Z",
   "versionId": "rose-daily-leads-report-v1"
 }
