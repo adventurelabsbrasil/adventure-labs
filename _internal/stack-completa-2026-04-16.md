@@ -94,7 +94,7 @@ Todos os containers `plane-app-*` estão ativos há 7 dias. Inclui: web, api, ad
 
 | Ferramenta | Plano | Custo/mês | Uso real | Status |
 |------------|-------|-----------|----------|--------|
-| Google Workspace Business Standard | Annual (monthly payment) | $2.20/usuário × 2 = **$4.40 (~R$ 22)** | Email, Drive, Docs, Chat interno | ✅ Ativo |
+| Google Workspace Business Standard | Annual (monthly payment) — 2 licenças atribuídas | $2.20/usuário × 2 = **$4.40 (~R$ 22)** | Email, Drive, Docs, Chat interno, Gemini AI | ✅ Ativo |
 | Plane (self-hosted) | Free (self-hosted) | R$ 0 (custo = RAM VPS) | Tentativa de uso, sem monitoramento efetivo | ⚠️ Subutilizado |
 | Omie ERP | Pago (só Rose por ora) | A confirmar com Sueli | NF + financeiro. Certificado A3/A1 não integrado | ⚠️ Parcial |
 | GitHub | Free | R$ 0 | Código + CI + wiki | ✅ |
@@ -247,32 +247,98 @@ Todos os containers `plane-app-*` estão ativos há 7 dias. Inclui: web, api, ad
 
 ## 11. Financeiro & Pagamentos
 
+### Dados Corporativos
+| Item | Detalhe |
+|------|---------|
+| Razão Social | ADVENTURE COMUNICACOES LTDA |
+| CNAE Principal | 73.19-0-04 — Consultoria em publicidade |
+| CNAEs Secundários | 73.11-4-00 (Agências de publicidade) · 70.20-4-00 (Consultoria em gestão empresarial) |
+| Regime Tributário | Lucro Real |
+| Sede | Santo Antônio da Patrulha / RS |
+| Início da operação | 02/01/2026 |
+| Sociedade | Rodrigo Ribas Ferreira (sócio administrador) + Young Empreendimentos (Eduardo Tebaldi) |
+
+> ⚠️ **Young é sócia E cliente.** Eduardo Tebaldi criou o Pingolead e montou n8n. Essa dupla relação exige cuidado na separação de receita de serviço vs. movimentações societárias.
+
 ### Bancos PJ
-| Banco | Tipo | Status |
-|-------|------|--------|
-| Sicredi | PJ | ✅ Ativo |
-| Inter | PJ | ✅ Ativo |
-| C6 Bank | PJ | 🟡 Abertura em andamento |
+| Banco | Status | Uso |
+|-------|--------|-----|
+| Sicredi | ✅ Conta principal | OFX disponível para conciliação (jan–mar/2026) |
+| Inter | ✅ Ativo | CDB aplicação + operacional |
+| C6 Bank | 🟡 Abertura em andamento | — |
 
 ### Processadores de Pagamento
-| Plataforma | Status | Uso atual |
-|------------|--------|-----------|
-| Mercado Pago | ✅ Cadastrado — sync parcial no Supabase | Cartão virtual/débito apenas. Pagamentos não configurados |
-| Kiwify | ⚠️ Legado — cadastro existente | Sem uso ativo |
-| Stripe | ⚠️ Legado — cadastro existente | Sem uso ativo |
+| Plataforma | Status | Observação |
+|------------|--------|------------|
+| Mercado Pago | ✅ Cadastrado + sync Supabase | Cartão virtual/débito. Cobrança de clientes **não configurada** |
+| Kiwify | ⚠️ Legado | Sem uso ativo |
+| Stripe | ⚠️ Legado | Sem uso ativo |
 
-> ⚠️ **Nenhum gateway de pagamento operacional para recebimento de clientes.** Kiwify e Stripe são cadastros legados. Mercado Pago tem integração de dados (Sueli/Buffett), mas o fluxo de cobrança de clientes não está automatizado.
+> ⚠️ **Nenhum gateway operacional para cobranças recorrentes de clientes.** Recebimentos atualmente via PIX/TED avulsos. Automação de cobrança = gap.
+
+### DRE Consolidado — Jan a Mar 2026
+*Fonte: OFX Sicredi + CSV POP_Controle_Financeiro. Elaborado pela Sueli.*
+
+| Período | Receita Operacional | Despesas | Resultado Op. |
+|---------|-------------------|----------|---------------|
+| Jan/2026 | R$ 940,00 ¹ | R$ 1.721,10 | -R$ 781 |
+| Fev/2026 | R$ 6.358,33 | R$ 11.310,22 ² | -R$ 4.952 |
+| Mar/2026 | R$ 6.750,00 | R$ 8.156,85 | -R$ 1.407 |
+| **Q1 total** | **R$ 14.048,33** | **~R$ 21.188** | **-R$ 7.140** |
+
+> ¹ Janeiro sem contar integralização Young R$50k (movimento societário)
+> ² Fevereiro sem CDB R$40k (investimento/transferência entre contas)
+
+### Receita por Cliente — Março 2026 (mês mais recente)
+| Cliente | Valor | Tipo |
+|---------|-------|------|
+| Rose Portal Advocacia | R$ 3.500,00 | Recorrente |
+| Benditta Marcenaria | R$ 2.000,00 | Recorrente |
+| Lidera | R$ 450,00 | Pontual |
+| ITY / Young | R$ 800,00 | Pontual |
+| **Total março** | **R$ 6.750,00** | |
+
+### MRR (Março 2026 — contratos recorrentes)
+| Cliente | MRR |
+|---------|-----|
+| Rose Portal Advocacia | R$ 3.500 |
+| Benditta Marcenaria | R$ 2.000 |
+| **MRR Base** | **R$ 5.500** |
+
+> ⚠️ **MRR de R$5.500 não cobre os custos operacionais de ~R$8.000+/mês.** A empresa ainda depende de serviços pontuais e da execução do plano 100k/trimestre para fechar o break-even.
+
+### Despesas Operacionais Recorrentes Identificadas
+| Fornecedor | Custo/mês | Categoria |
+|------------|-----------|-----------|
+| Omie ERP | R$ 247,20 | Adm |
+| Hostinger VPS | R$ 70,99 | Adm (infra) |
+| Google Cloud/Ads | ~R$ 265 | Adm + Marketing |
+| Rupe Creative | R$ 562–1.187 | Marketing (criativos) |
+| Meta Ads (mídia clientes) | ~R$ 200–800 | Marketing |
+| Pró-labore Rodrigo | R$ 3.000–6.000 | Pessoal |
+
+### Cartão Nubank PF — Despesas Adventure (jan–mar/2026)
+| Item | Valor | Categoria |
+|------|-------|-----------|
+| Cursor (2 cobranças) | R$ 224,84 | Adm |
+| Google Ads Rose (reembolso via NF) | R$ 400,00 | Marketing |
+| Adobe Illustrator (1 mês — **cancelar**) | R$ 98,00 | Adm |
+| IOF | R$ 7,86 | Financeiro |
+| **Total** | **R$ 730,70** | Custo real da empresa via PF |
+
+> 💡 Lançar como passivo com sócio (reembolso a pagar) para não distorcer DRE.
 
 ### Contabilidade & Fiscal
 | Item | Detalhe | Status |
 |------|---------|--------|
 | Contadora | Claudia — Procor | ✅ Ativa |
-| Certificado Digital | A3 + A1 (Claudia) | ✅ Disponível |
-| ERP | Omie | ⚠️ Pago só para Rose (CRM jurídico). Certificado não integrado ainda |
-| Conciliação bancária | Sueli (AI) + Buffett (CFO) + OFX/recibos | 🟡 Estruturado, não totalmente automatizado |
-| Destino único de OFX/recibos | Não configurado ainda | ❌ Gap |
+| Certificado Digital | A3 + A1 (Claudia + empresa) | ✅ Disponível — **não integrado ao Omie ainda** |
+| ERP Omie | R$ 247,20/mês | ⚠️ Assinatura ativa, uso parcial |
+| Conciliação bancária | Sueli (AI) + Buffett (CFO) | 🟡 Estruturado — OFX jan–mar processado |
+| Destino único de OFX/recibos | ❌ Não configurado | Pipeline OFX → Supabase pendente |
+| Emissão de NF | ❌ Manual / pendente integração Omie | Bloqueado por certificado não integrado |
 
-> 💡 **Prioridade:** Integrar certificado A3/A1 ao Omie + definir pipeline OFX → Supabase → Sueli para conciliação automática. Dados já existem (OFX, recibos, adv_mp_payments).
+> 💡 **Prioridade financeira:** Integrar certificado A3/A1 ao Omie → habilitar NF automática → melhorar Receita formal no DRE.
 
 ---
 
