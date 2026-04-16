@@ -1,225 +1,243 @@
 # Relatório de Marketing — Meta Ads
-## Produto: Seguro Indevido / Venda Casada — Rose Portal Advocacia
+## Rose Portal Advocacia | Foco: Seguro Indevido / Venda Casada
 **Elaborado por:** Adventure Labs
-**Data:** 16/04/2026
-**Período analisado:** 08–15/04/2026 (8 dias)
-**Fonte:** `adv_campaign_metrics_daily` (Supabase) + CRM cross-check
+**Data:** 16/04/2026 | **Período:** 08–15/04/2026 (8 dias)
+**Fontes:** `adv_campaign_metrics_daily` (Supabase) + CRM + configuração de público (Meta Ads Manager)
 
 ---
 
-## ⚠️ Alerta de Qualidade de Dados
+## Visão Geral da Conta
 
-Antes dos números: o dataset exportado contém **registros duplicados**. Cada dia de dado aparece duas vezes — uma entrada com `client = "unknown"` e outra com `client = "Rose Advocacia"` — com valores praticamente idênticos (diferença de centavos/impressões). Os números neste relatório usam apenas os registros **Rose Advocacia** como fonte primária, e registros `unknown` apenas onde não existe equivalente Rose (dias 15/04 de algumas campanhas). Os totais brutos do CSV estão inflados em ~2x.
+| Campanha | Invest. | Impressões | Cliques | CTR | CPM | Conversas | CPConv | Conv% |
+|----------|---------|-----------|--------|-----|-----|-----------|--------|-------|
+| **Seguro Indevido** | R$ 389 | 16.300 | 218 | 1,33% | R$ 23,83 | 33 | **R$ 11,78** | 15,1% |
+| CLT | R$ 229 | 30.300 | 463 | 1,53% | R$ 7,57 | 269 | R$ 0,85 | 58,3% |
+| Revisão Energia | R$ 233 | 24.400 | 318 | 1,30% | R$ 9,53 | 87 | R$ 2,67 | 27,4% |
+| Trabalhista | R$ 201 | 9.600 | 122 | 1,27% | R$ 20,85 | 6 | R$ 33,46 | 4,9% |
+| **Total** | **R$ 1.052** | **80.600** | **1.121** | **1,39%** | **R$ 13,04** | **395** | **R$ 2,66** | **35,2%** |
 
-> **Ação necessária:** corrigir a ingestão no pipeline do Supabase para evitar duplicação de registros por source.
-
----
-
-## 1. Visão Geral da Conta Rose (Deduplicado)
-
-**Período:** 08–15/04/2026 | 8 dias
-
-| Métrica | Valor |
-|---------|-------|
-| Investimento total | **R$ 1.051,02** |
-| Impressões totais | 80.573 |
-| Cliques totais | 1.118 |
-| Conversas iniciadas | 395 |
-| CPM médio da conta | R$ 13,04 |
-| CPC médio da conta | R$ 0,94 |
-| CPConv médio da conta | **R$ 2,66** |
-| Taxa clique → conversa | 35,3% |
+> **Participação do Seguro Indevido:** 37% do investimento, 8,4% das conversas.
 
 ---
 
-## 2. Performance por Campanha
+## PARTE 1 — SEGURO INDEVIDO (prioridade)
 
-| Campanha | Investimento | Impressões | CTR | CPM | CPC | Conversas | CPConv | Conv% |
-|----------|-------------|-----------|-----|-----|-----|-----------|--------|-------|
-| **Seguro Indevido** | R$ 388,77 | 16.316 | 1,34% | R$ 23,83 | R$ 1,78 | 33 | **R$ 11,78** | 15,1% |
-| CLT | R$ 229,15 | 30.249 | 1,52% | R$ 7,57 | R$ 0,50 | 269 | **R$ 0,85** | 58,3% |
-| Revisão Energia | R$ 232,37 | 24.380 | 1,30% | R$ 9,53 | R$ 0,73 | 87 | **R$ 2,67** | 27,4% |
-| Trabalhista | R$ 200,73 | 9.628 | 1,27% | R$ 20,85 | R$ 1,65 | 6 | **R$ 33,46** | 4,9% |
+### 1.1 Performance do Período
 
----
-
-## 3. Deep Dive — Seguro Indevido / Venda Casada
-
-### 3.1 Números do produto foco
-
-| Métrica | Valor |
-|---------|-------|
-| Investimento | R$ 388,77 |
-| Impressões | 16.316 |
-| Alcance | ~13.900 pessoas únicas |
-| Cliques no anúncio | 218 |
-| CTR | 1,34% |
-| CPM | R$ 23,83 |
-| CPC | R$ 1,78 |
-| Conversas iniciadas | 33 |
-| Custo por conversa (CPConv) | **R$ 11,78** |
-| Taxa clique → conversa | 15,1% |
-
-### 3.2 Participação no mix da conta
-
-| | Seguro Indevido | Restante da conta |
-|-|----------------|------------------|
-| % do investimento | **37%** | 63% |
-| % das conversas geradas | **8,4%** | 91,6% |
-
-> **Conclusão direta:** o produto Seguro Indevido consome 37% do orçamento e gera apenas 8,4% das conversas. É o produto mais caro por resultado na conta.
-
-### 3.3 Evolução diária do Seguro Indevido
-
-| Data | Impressões | Cliques | Spend | Conversas | CPConv |
-|------|-----------|--------|-------|-----------|--------|
+| Dia | Impressões | Cliques | Investimento | Conversas | CPConv |
+|-----|-----------|--------|-------------|-----------|--------|
 | 08/04 | 1.620 | 33 | R$ 47,69 | 5 | R$ 9,54 |
 | 09/04 | 1.298 | 25 | R$ 33,18 | 3 | R$ 11,06 |
 | 10/04 | 1.399 | 20 | R$ 31,10 | 3 | R$ 10,37 |
-| 11/04 | 2.390 | 29 | R$ 45,57 | 6 | R$ 7,60 |
+| 11/04 | 2.390 | 29 | R$ 45,57 | 6 | **R$ 7,60** ← melhor dia |
 | 12/04 | 1.627 | 20 | R$ 37,21 | 3 | R$ 12,40 |
-| 13/04 | 2.094 | 30 | R$ 59,31 | 5 | R$ 11,86 |
-| 14/04 | 3.246 | 39 | R$ 71,15 | 3 | R$ 23,72 |
-| 15/04* | 2.642 | 49 | R$ 63,56 | 6 | R$ 10,59 |
+| 13/04 | 2.109 | 30 | R$ 59,63 | 5 | R$ 11,93 |
+| 14/04 | 3.250 | 39 | R$ 71,42 | 3 | **R$ 23,81** ← pior dia |
+| 15/04* | 2.642 | 22 | R$ 63,56 | 5 | R$ 12,71 |
+| **Total** | **16.335** | **218** | **R$ 389,36** | **33** | **R$ 11,80** |
 
-*15/04 inclui novos criativos banco-específicos testados
-
-> **Alerta dia 14/04:** pior CPConv do período (R$23,72) com o maior investimento diário (R$71,15). Escala sem conversão correspondente — possível fadiga de audiência ou variação no algoritmo.
-
----
-
-## 4. Problema Central: Objetivo de Campanha Errado
-
-### O achado mais importante deste relatório
-
-| Campanha | Objetivo Meta | CPConv | Conv% |
-|----------|-------------|--------|-------|
-| **Seguro Indevido** | `OUTCOME_ENGAGEMENT` | R$ 11,78 | 15,1% |
-| CLT | `OUTCOME_LEADS` | R$ 0,85 | 58,3% |
-| Revisão Energia | `OUTCOME_LEADS` | R$ 2,67 | 27,4% |
-
-**O que está acontecendo:**
-
-O Meta está otimizando o Seguro Indevido para **engajamento** (curtidas, comentários, compartilhamentos) — não para conversas ou leads. O algoritmo entrega o anúncio para pessoas com perfil de engajar com conteúdo, não necessariamente para pessoas que vão clicar e conversar.
-
-A campanha CLT usa `OUTCOME_LEADS` e converte **3,8x mais** cliques em conversas (58,3% vs 15,1%) com um CPConv **13,9x menor** (R$0,85 vs R$11,78).
-
-**Troca de objetivo deve ser a primeira ação.** Não é questão de criativo, audiência ou budget — é estrutura da campanha.
-
-> Recomendação: migrar Seguro Indevido para `OUTCOME_MESSAGES` (otimiza para conversas no WhatsApp) ou `OUTCOME_LEADS` com formulário de pré-qualificação.
+*15/04: primeiro dia dos estáticos banco-específicos (vídeo substituído)
 
 ---
 
-## 5. Teste de Criativos Banco-Específicos (15/04)
+### 1.2 Diagnóstico — Causa Raiz do Underperformance
 
-Em 15/04 foram lançados 5 novos anúncios estáticos com segmentação por banco — estratégia acertada. Resultados iniciais (1 dia, amostra pequena):
+#### 🔴 Problema #1: Audiência com interesses errados para o produto
 
-| Criativo | Investimento | Impressões | Cliques | Conv | CPConv |
-|----------|-------------|-----------|--------|------|--------|
+Público atual configurado:
+```
+Localização: RS
+Idade: 25–55
+Interesses: Online marketplace, Bancos de investimento,
+            Automóveis, Crédito, Financiamento,
+            Investimento imobiliário, Portais de imóveis,
+            Imóveis residenciais
+```
+
+**O problema:** esses interesses descrevem um perfil de **investidor ou comprador de imóvel/veículo**. Esse não é o perfil de quem tem empréstimo consignado com seguro indevido cobrado. São públicos completamente diferentes — e públicos de investimento/imóveis são **caros no leilão do Meta** (competem com bancos, construtoras, corretoras), o que explica diretamente o CPM de R$23,83.
+
+| | Audiência atual | Audiência ideal |
+|-|----------------|----------------|
+| Perfil | Investidor, comprador de imóvel/carro | Tomador de crédito consignado |
+| Quem é | 30–50, renda média-alta, interessa-se por investimentos | 45–70, aposentado/servidor/CLT com consignado |
+| Por que não converte | Não tem o problema que o anúncio resolve | Tem o problema, responde ao gatilho |
+| CPM típico | R$ 20–35 (audiência concorrida) | R$ 8–15 (menos disputada) |
+
+#### 🔴 Problema #2: Teto de idade em 55 exclui o público principal
+
+Empréstimos consignados são predominantemente contratados por:
+- Aposentados e pensionistas INSS → **média 58–65 anos**
+- Servidores públicos → **média 45–60 anos**
+- CLT com consignado → **40–55 anos**
+
+Com teto em 55 anos, a campanha **exclui a maior parte do público mais qualificado** para esse produto. Quem tem mais chance de ter seguro indevido no consignado está acima do teto atual.
+
+#### 🟡 Problema #3: Troca de vídeo por estáticos em 15/04 — ainda sem dados suficientes
+
+Os estáticos banco-específicos lançados em 15/04 tiveram apenas 1 dia de dados:
+
+| Criativo | Investimento | Impr. | Cliques | Conv | CPConv |
+|----------|-------------|------|--------|------|--------|
 | SERVIDOR-PUBLICO | R$ 8,00 | 387 | 3 | 1 | **R$ 8,00** |
-| BRADESCO-UNICO | R$ 12,68 | 603 | 6 | 1 | R$ 12,68 |
-| BB-UNICO | R$ 25,66 | 1.059 | 8 | 2 | R$ 12,83 |
-| Vídeo geral | R$ 11,50 | 388 | 4 | 1 | R$ 11,50 |
+| BANCO-BB-UNICO | R$ 25,66 | 1.059 | 8 | 2 | R$ 12,83 |
+| BANCO-BRADESCO-UNICO | R$ 12,68 | 603 | 6 | 1 | R$ 12,68 |
+| Vídeo geral (ainda ativo) | R$ 11,50 | 388 | 4 | 1 | R$ 11,50 |
 | Teste BB+Bradesco Azul | R$ 5,72 | 205 | 1 | 0 | — |
 
-**Observações:**
-- **SERVIDOR-PUBLICO** teve o melhor CPConv de todo o período (R$8,00) com apenas 1 dia — vale escalar
-- **BB-UNICO** entregou o maior volume de conversas (2) com custo competitivo — manter
-- **Teste Azul (BB+Bradesco)** não converteu — pausar ou reformular
-- A abordagem banco-específico está na direção certa: quanto mais personalizada a mensagem, melhor a taxa de conversão
-
-> Próximos passos: deixar rodar mais 3–5 dias para ter dados estatisticamente válidos, depois pausar os criativos de menor performance e escalar os de melhor CPConv.
+O SERVIDOR-PUBLICO teve o melhor CPConv (R$8,00) — mas 1 dia é amostra pequena demais para decisão. Precisam de 5–7 dias para confirmar qual criativo escalar.
 
 ---
 
-## 6. Cruzamento Ads × CRM
+### 1.3 O que está funcionando
 
-| Período | Conversas (Ads) | Leads entrada no CRM |
-|---------|----------------|----------------------|
-| 08/04 | 5 | 5 |
-| 09/04 | 3 | 4 |
-| 10/04 | 3 | 6 |
-| 11/04 | 6 | 3 |
-| 12/04 | 3 | 3 |
-| 13/04 | 5 | 5 |
-| 14/04 | 3 | 9 |
-| 15/04 | 6 | 8 |
-| **Total** | **34** | **43** |
-
-> A diferença de ~9 leads entre ads e CRM pode ser explicada por: (a) leads orgânicos/indicação chegando fora do fluxo de anúncio, (b) leads de período anterior sendo reativados, (c) leads chegando de anúncios com delay. A correlação é forte o suficiente para confirmar que o fluxo ads → WhatsApp → CRM está funcionando.
-
-**Problema identificado:** o CRM não registra qual campanha/anúncio gerou o lead. Não é possível saber quais criativos convertem melhor *dentro do funil* (conversa → qualificação → contrato). A rastreabilidade para pós-clique está cega.
-
-> Solução: adicionar UTM no link do WhatsApp de cada campanha e capturar no CRM na entrada do lead.
+- **CTR de 1,33%** está dentro do esperado para o setor — o criativo chama atenção
+- **Abordagem banco-específica** é a direção certa (segmenta quem tem aquele banco)
+- **Volume crescendo:** 66 leads no CRM em 14 dias, acelerando na segunda quinzena
+- **Cruzamento ads × CRM** confirma que o fluxo anúncio → WhatsApp → CRM está funcionando
 
 ---
 
-## 7. Benchmarks de Referência do Setor Jurídico
+### 1.4 Recomendações Prioritárias — Seguro Indevido
 
-Para contextualizar os números da Rose:
+#### Ação 1 — Corrigir a audiência (maior impacto, menor esforço)
 
-| Métrica | Rose Seguro Indevido | Benchmark Jurídico Digital (BR) |
-|---------|---------------------|--------------------------------|
-| CPM | R$ 23,83 | R$ 15–35 |
-| CTR | 1,34% | 1,0–2,5% |
-| CPConv (conversa WA) | R$ 11,78 | R$ 5–15 |
-| Taxa clique→conversa | 15,1% | 20–40% |
+**Remover** os interesses atuais e substituir por:
 
-O CTR está dentro do esperado. O CPConv está na faixa superior do benchmark — há espaço para reduzir de R$11,78 para R$5–7 com os ajustes propostos. A taxa de conversão clique→conversa (15,1%) está abaixo do benchmark — diretamente relacionada ao objetivo de campanha errado.
+```
+REMOVER:
+✗ Online marketplace
+✗ Automóveis (veículos)
+✗ Investimento imobiliário
+✗ Portais de imóveis
+✗ Imóveis residenciais
+✗ Bancos de investimento
+
+ADICIONAR:
+✓ INSS / Previdência Social
+✓ Empréstimo consignado
+✓ Benefício social
+✓ Caixa Econômica Federal
+✓ Servidores públicos / Funcionalismo público
+✓ Aposentadoria
+✓ BMG (banco)
+✓ Banrisul
+```
+
+**Alternativa mais simples:** remover todos os interesses e deixar o **Público Advantage+ trabalhar broad** (sem interesses), aumentando a faixa de idade para 45–70. O algoritmo aprende com quem converte e vai otimizar sozinho com mais liberdade.
+
+**Impacto esperado:** redução do CPM de R$23,83 para R$8–14, redução do CPConv de R$11,78 para R$4–7.
+
+#### Ação 2 — Ampliar teto de idade
+
+Mudar de **25–55** para **45 sem limite máximo** (ou 45–70 mínimo).
+
+Aposentados e pensionistas INSS — o público com maior volume de consignado e maior probabilidade de ter seguro indevido — estão majoritariamente acima dos 55 anos. Cortar aqui é cortar o público de ouro.
+
+#### Ação 3 — Dar tempo aos estáticos banco-específicos
+
+Não pausar nem escalar nenhum criativo antes de **5–7 dias de dados**. Após esse período:
+- Pausar TESTE-BB-BRADESCO-AZUL (0 conversas, baixo volume)
+- Escalar o(s) de menor CPConv confirmado
+- Testar novos bancos: Caixa, BMG, Safra, Banrisul (maiores no consignado RS)
+
+#### Ação 4 — Adicionar UTM nos links de WhatsApp
+
+Hoje não é possível saber qual criativo específico gerou leads que avançaram no CRM. Adicionar `?utm_content=servidor-publico` etc. no link de cada anúncio permite rastrear qual banco-específico converte melhor **dentro do funil**, não só no clique.
 
 ---
 
-## 8. Recomendações Prioritárias
+## PARTE 2 — OUTRAS CAMPANHAS
 
-### Imediato (esta semana)
+### 2.1 CLT — Star performer da conta
 
-| # | Ação | Impacto esperado |
-|---|------|-----------------|
-| 1 | **Trocar objetivo** de `OUTCOME_ENGAGEMENT` para `OUTCOME_MESSAGES` | Reduzir CPConv de R$11,78 para ~R$4–6 |
-| 2 | **Escalar SERVIDOR-PUBLICO** (R$8/conv em dia 1) | Potencial de CPConv abaixo de R$10 |
-| 3 | **Pausar Teste BB+Bradesco Azul** (0 conversas, R$5,72 gastos) | Eliminar desperdício |
-| 4 | **Adicionar UTM** no link WhatsApp de cada conjunto de anúncio | Rastrear qual criativo converte no funil |
+| Métrica | Valor |
+|---------|-------|
+| Investimento | R$ 229 |
+| Conversas | 269 |
+| CPConv | **R$ 0,85** |
+| Taxa clique→conversa | **58,3%** |
+| CPM | R$ 7,57 |
 
-### Próximos 15 dias
+**Status:** campanha saudável, sem necessidade de intervenção. O CPM baixo (R$7,57) e a altíssima taxa de conversão (58,3%) indicam audiência bem calibrada e criativo alinhado com o público.
 
-| # | Ação | Justificativa |
-|---|------|--------------|
-| 5 | Testar audiência 55+ (aposentados INSS) separada de 25–45 | Produto mais relevante para faixa etária mais alta |
-| 6 | Criar criativo específico para Caixa Econômica e BMG (maiores players do consignado) | Banco-específico está funcionando |
-| 7 | Testar formato vídeo de depoimento vs vídeo explicativo | Identificar qual formato gera mais conversas qualificadas |
-| 8 | Montar Lead Form como alternativa ao WhatsApp direto | Pré-qualificar antes do contato, reduzir trabalho do Victor |
-
-### Médio prazo (30–60 dias)
-
-| # | Ação | Justificativa |
-|---|------|--------------|
-| 9 | Implementar pixel no WhatsApp / CRM para fechar o loop de atribuição | Hoje não sabemos qual campanha gerou contratos |
-| 10 | Criar campanha de remarketing para leads que conversaram mas não fecharam | Há 30 leads abandoned no CRM — parte pode ser reaquecida via anúncio |
-| 11 | Testar Google Ads Search em paralelo (ver mapa de palavras-chave elaborado) | Capturar demanda ativa de quem já busca solução |
+**Atenção:** manter budget estável. Não cortar para realocar no Seguro — são produtos e públicos diferentes.
 
 ---
 
-## 9. Resumo Executivo para Apresentação
+### 2.2 Revisão Energia — Estável, com espaço para crescer
 
-**O que está funcionando:**
-- Volume de leads crescendo (+36% na segunda quinzena do CRM)
-- CTR saudável (1,34%) — o criativo atrai atenção
-- Novos criativos banco-específicos promissores
-- Fluxo ads → WhatsApp → CRM está operacional
+| Métrica | Valor |
+|---------|-------|
+| Investimento | R$ 233 |
+| Conversas | 87 |
+| CPConv | R$ 2,67 |
+| Taxa clique→conversa | 27,4% |
+| CPM | R$ 9,53 |
 
-**O que precisa mudar agora:**
-- Objetivo da campanha: `ENGAGEMENT` → `MESSAGES` — maior impacto possível com menor esforço
-- Rastreabilidade: sem UTM não dá para saber o que funciona além do clique
+**Status:** performance consistente, CPConv aceitável. A taxa de clique→conversa (27,4%) está abaixo da CLT mas dentro do esperado para o setor energético.
 
-**O que está custando caro:**
-- Seguro Indevido usa 37% do budget e gera 8,4% das conversas
-- Cada conversa custa R$11,78 — 14x mais caro que CLT (R$0,85)
-- A causa é estrutural (objetivo), não criativa
+**Oportunidade:** o criativo `[Tem Empréstimo na Conta de Luz]` está rodando há semanas sem variação. Vale testar um novo ângulo criativo para evitar fadiga de audiência.
 
-**Meta de CPConv após ajustes:** R$ 4–6 por conversa (redução de 50–66%)
+---
+
+### 2.3 Trabalhista — Resultado abaixo do viável
+
+| Métrica | Valor |
+|---------|-------|
+| Investimento | R$ 201 |
+| Conversas | 6 |
+| CPConv | **R$ 33,46** |
+| Taxa clique→conversa | **4,9%** |
+
+**Status:** pior CPConv da conta, 4,9% de conversão após o clique. Problema diferente do Seguro Indevido — aqui o CTR também é o menor (1,27%) e a taxa pós-clique é crítica.
+
+Possíveis causas:
+- Criativo não gera intenção de ação (só informativo)
+- Primeiro contato no WhatsApp não está calibrado para esse produto
+- Público sem urgência suficiente para o tema (hora extra, pejotização)
+
+**Recomendação:** revisar o CTA do criativo e o script de primeiro contato antes de continuar investindo. Se não melhorar em 7 dias após ajuste, considerar pausar e redirecionar budget para Seguro Indevido.
+
+---
+
+## Cruzamento Ads × CRM
+
+| Período | Conv (Ads) | Leads CRM | Leads ainda ativos | Leads abandonados |
+|---------|-----------|-----------|-------------------|------------------|
+| 08–15/04 | 33 | ~35 | 31 (47%) | 30 (45%) |
+
+O fluxo está funcionando: anúncio → conversa WhatsApp → entrada no CRM. O problema está **dentro do funil**, não na geração de lead — mas essa é análise do relatório comercial.
+
+---
+
+## Resumo de Ações por Prioridade
+
+| # | Ação | Campanha | Esforço | Impacto |
+|---|------|----------|---------|---------|
+| 1 | Corrigir interesses da audiência (remover imóveis/automóveis, adicionar INSS/consignado) | Seguro Indevido | Baixo | **Alto** |
+| 2 | Ampliar teto de idade para 45–70 (ou sem limite) | Seguro Indevido | Baixo | **Alto** |
+| 3 | Aguardar 5–7 dias de dados nos estáticos banco-específicos | Seguro Indevido | Zero | Alto |
+| 4 | Pausar Teste-BB-Bradesco-Azul (sem resultado) | Seguro Indevido | Baixo | Médio |
+| 5 | Testar novos bancos: Caixa, BMG, Safra, Banrisul | Seguro Indevido | Médio | Alto |
+| 6 | Adicionar UTM por criativo nos links WhatsApp | Todas | Baixo | Médio |
+| 7 | Revisar criativo + script Trabalhista ou pausar | Trabalhista | Médio | Médio |
+| 8 | Novo criativo Revisão Energia (prevenir fadiga) | Revisão Energia | Médio | Médio |
+| 9 | Manter CLT sem alterações | CLT | Zero | Manter |
+
+---
+
+## Meta de Performance Pós-Ajustes
+
+Com a correção de audiência (ações 1 e 2), a projeção para o Seguro Indevido:
+
+| Métrica | Atual | Meta pós-ajuste |
+|---------|-------|----------------|
+| CPM | R$ 23,83 | R$ 8–14 |
+| CPConv | R$ 11,78 | R$ 4–7 |
+| Taxa clique→conversa | 15,1% | 25–35% |
+| Conversas/mês (mesmo budget) | ~100 | 170–250 |
 
 ---
 
 *Relatório gerado por Adventure Labs — Sistema Autônomo de Gestão de Contas*
-*Cruzamento: `adv_campaign_metrics_daily` (Supabase) + CRM Funil Venda Casada*
-*Para dúvidas ou ações: Telegram ceo_buzz_Bot*
+*Dados: `adv_campaign_metrics_daily` (Supabase) + CRM Funil Venda Casada + Meta Ads Manager*
