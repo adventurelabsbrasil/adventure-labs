@@ -6,77 +6,139 @@
 
 ---
 
-## 1. Matriz de Decisão — Qual Ferramenta Usar
+## 1. Separação de Responsabilidades (evite confusão)
 
-| Tipo de Demanda | Ferramenta | Por quê |
-|----------------|-----------|---------|
-| Projeto de cliente (Rosa, Young, Benditta) | **Plane** `tasks.adventurelabs.com.br` | SSOT operacional de clientes |
-| Projeto interno (LideraSpace, ACORE, labs) | **Plane** (board LABS / CORE) | SSOT operacional interno |
-| Bug de código, feature técnica, infra, CI/CD | **GitHub Issues** + Claude Code | Rastreabilidade técnica no repo |
-| Automação de marketing (fluxo n8n, workflow) | **Plane** → n8n executa | n8n orquestra, Plane rastreia |
-| Tarefa de IA de longa duração (análise, redação, pesquisa) | **Beelink** via `beelink-delegate.sh` | Async, libera Mac/VPS |
-| Urgência operacional (container caído, deploy quebrado) | **Telegram** → Buzz escalona | Canal de alerta já configurado |
-| Campanha nova / briefing de cliente | **Plane** → gerente-agente executa | Agentes AM leem Plane |
-| Segredo ou credencial nova | **Infisical Cloud** → Plane rastreia | Vault centralizado |
-| Ideia / braindump / insight estratégico | **ROADMAP_IDEAS.md** ou `adv_ideias` (Supabase) | DaVinci (CINO) varre diariamente |
+| Ferramenta | Para quê serve | Quem lê |
+|-----------|---------------|---------|
+| **GitHub Issues** | Código, infra, CI/CD, bugs, features técnicas, delegações ao Beelink | Devs, Claude Code, histórico do repo |
+| **Plane** | Projetos de cliente, projetos operacionais, roadmap de produto, campanhas | Humanos (Rodrigo, Igor) |
+| **Supabase `adv_tasks`** | Contexto de execução dos agentes autônomos (VPS cron) | Agentes VPS (gerentes, C-Suite) |
+| **Supabase `adv_csuite_memory`** | Memória de decisões do C-Suite | Agentes VPS, Buzz |
+| **Telegram / OpenClaw** | Entrada de demandas urgentes ou conversacionais; canal de retorno de resultados | Rodrigo, Igor, Buzz |
+
+### Regra de ouro de classificação
+
+> **Resulta em commit/PR?** → GitHub Issue  
+> **Resulta em entrega de cliente ou decisão de negócio?** → Plane  
+> **É urgente ou precisa de resposta agora?** → Telegram → Buzz roteia
 
 ---
 
-## 2. Fluxograma de Decisão
+## 2. Matriz de Decisão — Qual Ferramenta Usar
+
+| Tipo de Demanda | Ferramenta principal | Ferramenta secundária |
+|----------------|--------------------|--------------------|
+| Bug de código, feature técnica, CI/CD, infra | **GitHub Issue** | Claude Code executa |
+| Config de workflow n8n (requer edição de código/flow) | **GitHub Issue** | n8n executa |
+| Campanha de cliente (Rose, Young, Benditta) | **Plane** (board do cliente) | Gerente-agente executa via `adv_tasks` |
+| Projeto de produto (LideraSpace — roadmap, épicos) | **Plane** (board LABS) | — |
+| Bug ou feature do LideraSpace (código) | **GitHub Issue** | Claude Code executa |
+| Projeto interno operacional (ACORE, processos) | **Plane** (board CORE) | — |
+| Tarefa de IA async longa (análise, pesquisa, auditoria) | **GitHub Issue** → Beelink executa | Resultado fecha a Issue |
+| Automação de marketing já existente (rodar workflow) | Supabase `adv_tasks` | Agente VPS executa |
+| Ideia / braindump / insight estratégico | **ROADMAP_IDEAS.md** ou `adv_ideias` | DaVinci (CINO) varre diariamente |
+| Segredo ou credencial nova | **Infisical Cloud** | Plane ou Issue rastreia a tarefa |
+| Urgência operacional (container caído, deploy quebrado) | **Telegram** → Buzz escalona | GitHub Issue abre após resolução |
+| Demanda via Telegram/OpenClaw | **Telegram** → Buzz classifica → roteia | Ver Seção 5 |
+
+---
+
+## 3. Fluxograma de Decisão
 
 ```
 Chegou uma demanda?
 │
-├── É sobre código, bug, deploy, CI, infra?
+├── Chega via Telegram / WhatsApp (Buzz)?
+│   └── → Seção 5 — Buzz roteia
+│
+├── É sobre código, bug, deploy, CI, infra, config de workflow?
 │   └── → GitHub Issue + Claude Code (Mac ou Beelink)
 │
-├── É sobre cliente (campanha, entrega, resultado)?
-│   └── → Plane (board do cliente) + gerente-agente
+├── É sobre cliente (campanha, entrega, resultado, briefing)?
+│   └── → Plane (board do cliente) + sincronizar adv_tasks para agente executar
 │
-├── É sobre projeto interno / produto (LideraSpace, etc)?
-│   └── → Plane (board LABS/CORE)
+├── É sobre produto (LideraSpace roadmap)?
+│   └── → Plane (board LABS)
+│       → Se virar código: GitHub Issue
 │
-├── É uma análise, pesquisa ou tarefa de IA demorada?
-│   └── → beelink-delegate.sh (async, sem bloquear Mac)
+├── É uma análise, pesquisa ou tarefa de IA demorada (>5 min)?
+│   └── → GitHub Issue → beelink-delegate.sh → fecha Issue com resultado
 │
-├── É uma automação / workflow de marketing?
-│   └── → n8n (criar/ajustar flow) + Plane rastreia
+├── É uma automação recorrente que já existe no n8n?
+│   └── → adv_tasks (Supabase) → agente VPS ou n8n executa
 │
 ├── É um segredo, senha ou credencial?
-│   └── → Infisical Cloud (vault.adventurelabs.com.br → Cloud)
+│   └── → Infisical Cloud
 │
 ├── É uma ideia ou insight não urgente?
-│   └── → ROADMAP_IDEAS.md ou Supabase adv_ideias
+│   └── → ROADMAP_IDEAS.md ou adv_ideias (Supabase)
 │
-└── É uma urgência (sistema fora do ar)?
-    └── → Telegram ceo_buzz_Bot (Buzz escalona)
+└── É urgência (sistema fora do ar, erro em produção)?
+    └── → Telegram ceo_buzz_Bot → Buzz escalona → GitHub Issue após resolução
 ```
 
 ---
 
-## 3. Dispositivos — Quem Faz o Quê
+## 4. Dispositivos — Quem Faz o Quê
 
 | Device | Quem usa | Quando | Tipo de trabalho |
 |--------|----------|--------|-----------------|
-| **MacBook Air M4** (Rodrigo) | Rodrigo | Manhã / tarde — sessões interativas | Claude Code Max: código, decisões, arquitetura, PRs |
-| **Asus** (Igor) | Igor | Tardes | Claude Code: tarefas de marketing-tech, criação de conteúdo, análise |
-| **Beelink T4 Pro** | Agentes (autônomo) | 24/7 — proativo | Claude Code CLI: tarefas longas delegadas por n8n, OpenClaw, cron |
+| **MacBook Air M4** (Rodrigo) | Rodrigo | Manhã / tarde — sessões interativas | Claude Code Max: código, decisões, PRs, arquitetura |
+| **Asus** (Igor) | Igor | Tardes | Claude Code: tarefas marketing-tech, análise, conteúdo |
+| **Beelink T4 Pro** | Agentes (autônomo) | 24/7 — proativo | Claude Code CLI: tarefas longas delegadas por n8n/OpenClaw/cron |
 | **VPS Hostinger** | Agentes cron | 24/7 — scheduled | C-Suite, gerentes, hivemind, backup, mercadopago-sync |
 
 ### Regra de Ouro dos Devices
 
-> **Mac = decisão e interação.  VPS = agentes 24/7.  Beelink = delegação async.**
-
-Nunca use o Mac para tarefas que podem rodar offline no Beelink. Nunca coloque no Beelink o que precisa de resposta imediata (use Mac). Nunca mova agentes de produção para o Beelink (VPS é mais estável para 24/7).
+> **Mac = decisão e interação interativa.**  
+> **VPS = agentes scheduled 24/7.**  
+> **Beelink = delegação async de Claude Code.**  
+> **Nunca mova agentes de produção para o Beelink (VPS é mais estável). Nunca use Mac para tarefas que podem rodar async no Beelink.**
 
 ---
 
-## 4. Padrão de Delegação para o Beelink
+## 5. Telegram / OpenClaw — Entrada e Monitoramento
 
-### Quando delegar para o Beelink?
+### Fluxo de entrada via Telegram
+
+```
+Rodrigo ou Igor envia mensagem ao Buzz (Telegram/WhatsApp)
+│
+├── Urgente / conversacional → Buzz responde direto
+│
+├── Tarefa de código / infra / técnica
+│   └── Buzz cria GitHub Issue
+│       → (se delegável) aciona beelink-delegate.sh
+│       → Telegram confirma: "Issue #XX criada, Beelink executando"
+│       → Resultado: Telegram notifica + Issue fechada com resultado
+│
+└── Tarefa operacional / cliente / produto
+    └── Buzz cria task no Plane
+        → sincroniza em adv_tasks (para agente executar, se aplicável)
+        → Telegram confirma: "Task criada no Plane: [título]"
+        → Resultado: agente executa + Telegram notifica conclusão
+```
+
+### Como monitorar o que foi solicitado via Telegram
+
+| O que monitorar | Onde ver |
+|----------------|---------|
+| Tarefas técnicas enviadas via Telegram | GitHub Issues (label `via-telegram`) |
+| Tarefas operacionais enviadas via Telegram | Plane (board correspondente) |
+| Status de execução do Beelink | Telegram — Buzz notifica início e fim |
+| Resultados dos agentes VPS | Telegram `ceo_buzz_Bot` |
+| Histórico de decisões do C-Suite | Supabase `adv_csuite_memory` |
+
+> **Regra:** Toda demanda recebida via Telegram deve gerar um artefato rastreável (Issue ou task no Plane). Telegram é canal de entrada e de retorno — não é SSOT de tarefas.
+
+---
+
+## 6. Padrão de Delegação para o Beelink
+
+### Quando delegar ao Beelink?
 
 - Tarefa leva mais de 5 minutos no Mac e não precisa de resposta imediata
-- Análise de código grande, geração de docs, auditoria de arquivos
+- Análise de código, geração de docs, auditoria de arquivos
 - Tarefas disparadas por n8n, OpenClaw, ou cron (proativo)
 - Tarefas paralelas enquanto o Mac está em reunião ou outra sessão
 
@@ -84,87 +146,86 @@ Nunca use o Mac para tarefas que podem rodar offline no Beelink. Nunca coloque n
 
 ```bash
 # Sintaxe:
-./tools/scripts/beelink-delegate.sh "descrição da tarefa" "prompt para Claude"
+./tools/scripts/beelink-delegate.sh "título da tarefa" "prompt para Claude" [número-da-issue]
 
 # Exemplos:
 ./tools/scripts/beelink-delegate.sh \
   "auditoria _internal/" \
-  "Audite todos os arquivos em _internal/ e liste inconsistências com o CLAUDE.md"
+  "Audite todos os arquivos em _internal/ e liste inconsistências com o CLAUDE.md" \
+  42
 
 ./tools/scripts/beelink-delegate.sh \
   "análise logs n8n" \
-  "Leia os últimos erros de n8n em /opt/adventure-labs/logs/ e sugira fixes"
+  "Leia os últimos erros de n8n e sugira fixes"
 ```
 
-### Fluxo automático (Beelink proativo)
+O script:
+1. Abre (ou usa) uma GitHub Issue para rastrear
+2. SSH no Beelink + sync do repo
+3. Executa `claude -p` com o prompt
+4. Notifica Telegram com resultado
+5. Fecha a Issue com o resultado
+
+### Fluxo proativo (Beelink acionado automaticamente)
 
 ```
-n8n workflow detecta evento
-   → chama beelink-delegate.sh via SSH
-      → Claude Code executa no Beelink
-         → resultado salvo em adv_csuite_memory (Supabase)
-            → Telegram notifica Buzz/Rodrigo
+n8n workflow / OpenClaw / cron VPS
+   → SSH beelink + beelink-delegate.sh
+      → Claude Code executa
+         → GitHub Issue atualizada com resultado
+            → Telegram notifica Rodrigo
 ```
-
-O Beelink também pode ser acionado por:
-- **OpenClaw** (Buzz recebe mensagem no Telegram → roteia para Beelink)
-- **Cron VPS** (tarefas agendadas que requerem Claude Code)
-- **n8n webhook** (evento externo → delegação automática)
 
 ---
 
-## 5. OpenClaw (Buzz) — Além da Conversa
+## 7. OpenClaw (Buzz) — Além da Conversa
 
-O Buzz não é apenas um chatbot. Capacidades subutilizadas:
+O Buzz não é apenas um chatbot. Capacidades a explorar:
 
 | Capacidade | Como usar |
 |-----------|-----------|
-| **Inbox routing** | Buzz recebe mensagem → decide se responde, escalona para humano, ou delega para Beelink |
-| **Delegação para Claude Code** | Buzz pode acionar `beelink-delegate.sh` via SSH do VPS |
-| **Plugin ecosystem** | Buzz tem acesso a plugins configuráveis — mapear quais estão ativos |
-| **Dual-Mode** | Workspace `adventure/` (profissional) e `personal/` (pessoal) — evita ruído cross-contexto |
-| **Memória persistente** | `adv_csuite_memory` + `/root/.openclaw/workspace/MEMORY.md` — contexto sempre atualizado |
+| **Inbox routing** | Buzz recebe mensagem → classifica → cria Issue (código) ou Plane task (ops) |
+| **Delegação ao Beelink** | Buzz aciona `beelink-delegate.sh` via SSH do VPS para tarefas técnicas |
+| **Plugin ecosystem** | Mapear plugins ativos — oportunidade de integração n8n, Plane, GitHub |
+| **Dual-Mode** | Workspace `adventure/` (profissional) e `personal/` (pessoal) |
+| **Memória persistente** | `adv_csuite_memory` + `/root/.openclaw/workspace/MEMORY.md` |
 
-**Próxima exploração:** mapear todos os plugins ativos do OpenClaw e criar fluxo Buzz→Beelink para tarefas técnicas que chegam via Telegram.
+**Próxima exploração:** fluxo Buzz → cria GitHub Issue → aciona Beelink → fecha Issue com resultado → notifica Telegram.
 
 ---
 
-## 6. n8n — Orquestrador Subutilizado
-
-O n8n é o cérebro das automações. Capacidades não exploradas:
+## 8. n8n — Orquestrador Subutilizado
 
 | Oportunidade | Descrição |
 |-------------|-----------|
-| **Gatilho → Beelink** | n8n detecta evento → SSH para Beelink → Claude Code executa |
-| **Intake de tarefas** | Formulário/webhook → cria task no Plane automaticamente |
-| **Relatório automático** | n8n agrega métricas de ads → gera relatório → envia ao Telegram |
-| **Sync bidirecional** | n8n como ponte entre Supabase ↔ Plane ↔ GitHub Issues |
-| **Alert inteligente** | n8n monitora Supabase → detecta anomalia → aciona C-Suite ou Buzz |
-
-**Próxima exploração:** mapear os workflows ativos no n8n e identificar os 3 que trariam mais valor se completados.
+| **Plane → adv_tasks sync** | Task criada no Plane → n8n webhook → insere em adv_tasks para agentes |
+| **Gatilho → Beelink** | n8n detecta evento → SSH Beelink → Claude Code executa |
+| **GitHub Issue intake** | Formulário/webhook → cria GitHub Issue automaticamente |
+| **Alert inteligente** | n8n monitora Supabase → anomalia → aciona C-Suite ou Buzz |
+| **Relatório automático** | n8n agrega métricas de ads → Telegram com resumo diário |
 
 ---
 
-## 7. Gestão de Segredos — Fluxo Correto
+## 9. Gestão de Segredos — Fluxo Correto
 
-> O gargalo das vaults resolve 80% dos problemas repetitivos de credencial.
+> O gargalo das vaults resolve ~80% dos problemas repetitivos de credencial.
 
 ### Estado Atual (2026-04-17)
 
 | Vault | Status | Uso |
 |-------|--------|-----|
-| **Infisical Cloud** | ✅ Ativo (44 secrets em `dev`, 2 em `prod`) | SSOT de segredos |
-| **Infisical self-hosted** | ⚠️ Google OAuth quebrado — migrar de volta ao Cloud | Desativar |
+| **Infisical Cloud** | ✅ Ativo (44 secrets em `dev`, 2 em `prod`) | SSOT de segredos — usar sempre |
+| **Infisical self-hosted** | ⚠️ Google OAuth quebrado — Issue #33 | Desativar após migração |
 | **Vaultwarden** | ✅ Ativo | Senhas pessoais + clientes (71 entradas) |
 
-### Fluxo Correto de Segredos
+### Fluxo Correto
 
 ```
 Novo segredo criado
    → Infisical Cloud (ambiente correto: prod para VPS, dev para local)
-      → Path organizado: /llm/, /google/, /vps/, /supabase/, /mcp/, /n8n/
-         → Sync automático via Infisical CLI ou Vercel integration
-            → NUNCA hardcoded em .env commitado
+      → Path organizado (/llm/, /google/, /vps/, /supabase/, /mcp/, /n8n/)
+         → Sync via Infisical CLI ou integração Vercel/GitHub
+            → NUNCA hardcoded ou commitado
 ```
 
 ### Paths Planejados no Infisical Cloud
@@ -179,24 +240,23 @@ Novo segredo criado
 | `/n8n/` | OPENAI_N8N, credenciais ads |
 | `/x/` | X_* (Twitter/X API) |
 | `/linkedin/` | LINKEDIN_* |
-| `/apis/` | CEREBRAS, MAKE, MANUS (revogar), RESEND_*, TWILIO |
+| `/apis/` | CEREBRAS, MAKE, RESEND_*, TWILIO (revogar MANUS) |
 
-**Issue rastreando:** #33 (Infisical Cloud migration)
+**Issue rastreando:** #33
 
 ---
 
-## 8. Checklist de Início de Sessão
+## 10. Checklist de Início de Sessão
 
 ### Rodrigo (manhã — Mac)
-- [ ] Abrir Claude Code: `claude` na raiz do repo
-- [ ] Verificar Telegram: urgências do Buzz / alertas do hivemind?
-- [ ] Verificar Plane: tasks `in_progress` com prazo hoje
+- [ ] Verificar Telegram: urgências do Buzz / alertas hivemind?
 - [ ] `git log --oneline -5` — o que mudou overnight no Beelink?
+- [ ] Verificar Plane: tasks `in_progress` com prazo hoje
+- [ ] Verificar GitHub Issues abertas com label `via-telegram`
 
 ### Igor (tarde — Asus)
-- [ ] Abrir Claude Code no repo adventure-labs
 - [ ] Ver tasks do Plane atribuídas a Igor
-- [ ] Executar tarefas de marketing-tech via Claude Code
+- [ ] Executar tarefas via Claude Code no repo adventure-labs
 - [ ] Registrar resultados no Plane (não no WhatsApp)
 
 ### Qualquer agente autônomo (VPS/Beelink)
@@ -208,4 +268,4 @@ Novo segredo criado
 ---
 
 *Gerado em 2026-04-17 pelo Commander (Claude Code). Revisado com Founder.*
-*Próxima atualização: quando o fluxo Beelink→n8n→OpenClaw estiver operacional.*
+*Próxima atualização: quando o fluxo Buzz→GitHub Issue→Beelink→Telegram estiver operacional.*
