@@ -32,18 +32,8 @@ jobs:
         with:
           version: latest
 
-      - name: Verificar package-lock.json proibidos
-        run: |
-          FOUND=$(find . -name "package-lock.json" \
-            -not -path "./.git/*" \
-            -not -path "*/node_modules/*" \
-            -not -path "*/.next/*" | head -20)
-          if [ -n "$FOUND" ]; then
-            echo "❌ package-lock.json encontrado(s) — apenas pnpm-lock.yaml é permitido:"
-            echo "$FOUND"
-            exit 1
-          fi
-          echo "✅ Nenhum package-lock.json encontrado."
+      - name: Verificar package-lock.json (allowlist em monorepo-governance.yml)
+        run: bash tools/scripts/check-repo-governance.sh
 
       - name: Verificar yarn.lock proibidos
         run: |
