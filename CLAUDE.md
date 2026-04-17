@@ -78,6 +78,7 @@
 | gerente-young | `11 12 * * 2` | Briefing semanal Young | Telegram |
 | gerente-benditta | `19 12 * * 3` | Briefing semanal Benditta | Telegram |
 | backup-vps | `30 6 * * *` | Backup VPS → Drive (n8n, Plane, Infisical, Vaultwarden, Supabase, configs) | Telegram |
+| claude-yesterday-log | `0 3 * * *` (00:00 BRT) | Varre `~/.claude/projects/*/*.jsonl` do dia anterior, agrega sessões/tokens/ferramentas, detecta mudanças em `.claude/settings*.json` + arquivos alterados via `git log` | MD em `_internal/claude-logs/YYYY-MM-DD.md` + row em `adv_claude_daily_logs` (Supabase) + Telegram |
 
 **Scripts:** `/opt/adventure-labs/scripts/agents/` (VPS)
 **Dispatcher:** `/opt/adventure-labs/scripts/adventure-agent.sh` (Supabase context + Anthropic API + Telegram)
@@ -139,6 +140,7 @@
 | Segredos e env vars | Infisical (vault.adventurelabs.com.br) |
 | Backup VPS | `gdrive-adventure:99_ARQUIVO/VPS_BACKUPS/` |
 | Memória do Claude | `.claude/memory/` (neste repo) |
+| O que o Claude fez ontem (boot-check) | `_internal/claude-logs/YYYY-MM-DD.md` + Supabase `adv_claude_daily_logs` |
 
 ---
 
