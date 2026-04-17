@@ -138,10 +138,10 @@ Contexto: Supabase `adv_tasks` + `adv_ideias` + `adv_csuite_memory`
 
 | Item | Prioridade | Responsável |
 |------|-----------|-------------|
-| Vercel errors: adventure-labs-app, adventure-xpostr, xpostr | 🟡 P2 | Claude Code |
-| Credenciais Meta Ads + Google Ads no n8n (workflow ads-daily-metrics-v1 inativo) | 🟡 P2 | Rodrigo/Buzz |
+| Issue #32 — Rate limit Vercel adventure-labs-app (Benditta) | 🟡 P2 | Claude Code (aguardar 24h reset) |
+| Issue #33 — Recuperar acesso Infisical vault.adventurelabs.com.br | 🟡 P2 | Rodrigo |
+| Issue #34 — Credenciais Meta + Google Ads no n8n | 🟡 P2 | Rodrigo + Igor |
 | Chip físico Moto G52 → WhatsApp Business autônomo | 🟡 P2 | Rodrigo |
-| Infisical vault.adventurelabs.com.br — Rodrigo perdeu acesso (email/senha) | 🟡 P2 | Rodrigo |
 
 **Resolvidas nesta sessão (2026-04-17):**
 - ✅ Branch `claude/zen-dhawan` mergeada (PR #22)
