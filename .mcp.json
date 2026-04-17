@@ -1,0 +1,21 @@
+{
+  "mcpServers": {
+    "github": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-github"],
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "${GITHUB_MCP_TOKEN}"
+      }
+    },
+    "supabase": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@supabase/mcp-server-supabase@latest", "--read-only"],
+      "env": {
+        "SUPABASE_URL": "${SUPABASE_ADV_URL}",
+        "SUPABASE_SERVICE_ROLE_KEY": "${SUPABASE_ADV_SERVICE_ROLE_KEY}"
+      }
+    }
+  }
+}
