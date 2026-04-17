@@ -72,13 +72,8 @@ knowledge/00_GESTAO_CORPORATIVA/operacao/asana/audio-relatorio-comando-estelar-*
 knowledge/00_GESTAO_CORPORATIVA/operacao/asana/audio-relatorio-comando-estelar-*.m4a
 knowledge/00_GESTAO_CORPORATIVA/operacao/asana/audio-relatorio-comando-estelar-*-script.txt
 
-# ─── HIVE MIND — Cérebro Privado (NUNCA no Git) ───────────────────────────────
-# Regra absoluta: toda a pasta _internal/ fica fora do repositório
-_internal/
-
-# Docs privados do founder e de clientes
+# ─── Docs privados do founder e de clientes (não versionar) ───────────────────
 docs/braindump/
-docs/*SAUDE_FINANCEIRA*
 docs/CSuite_relatorios*
 docs/google-ads/reports/
 docs/planejamento/Assessoria*
