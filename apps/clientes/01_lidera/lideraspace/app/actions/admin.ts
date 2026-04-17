@@ -1,6 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { getUserRole } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
@@ -21,7 +22,8 @@ export async function createProgram(formData: FormData) {
   const description = formData.get("description") as string;
   const cover_url = (formData.get("cover_url") as string) || null;
 
-  const { data, error } = await supabase
+  // Insert without RETURNING to avoid RLS conflicts on the select clause
+  const { error } = await supabase
     .from("lms_programs")
     .insert({
       tenant_id: DEFAULT_TENANT.id,
@@ -30,14 +32,12 @@ export async function createProgram(formData: FormData) {
       cover_url,
       published: false,
       order: 0,
-    })
-    .select("id")
-    .single();
+    });
 
   if (error) throw new Error(error.message);
 
   revalidatePath("/dashboard/admin/programs");
-  redirect(`/dashboard/admin/programs/${data.id}`);
+  redirect("/dashboard/admin/programs");
 }
 
 export async function updateProgram(programId: string, formData: FormData) {
@@ -221,6 +221,48 @@ export async function deleteLesson(lessonId: string, programId: string) {
   if (error) throw new Error(error.message);
 
   revalidatePath(`/dashboard/admin/programs/${programId}`);
+}
+
+// ─── Users ───────────────────────────────────────────────────────────────────
+
+export async function inviteUser(formData: FormData) {
+  await assertAdmin();
+  const email = formData.get("email") as string;
+  const name = (formData.get("name") as string) || "";
+  const role = (formData.get("role") as string) || "member";
+
+  if (!email) throw new Error("E-mail obrigatório");
+
+  const admin = createAdminClient();
+
+  // Try to invite — if user already exists, skip invite and just update lms_users
+  const { error: inviteError } = await admin.auth.admin.inviteUserByEmail(email, {
+    data: { name, role },
+  });
+
+  const alreadyExists =
+    inviteError?.message?.toLowerCase().includes("already") ||
+    inviteError?.message?.toLowerCase().includes("registered");
+
+  if (inviteError && !alreadyExists) throw new Error(inviteError.message);
+
+  // Find the auth user (existing or just created) and upsert lms_users
+  const { data: authUser } = await admin.auth.admin.listUsers();
+  const targetUser = authUser?.users.find((u) => u.email === email);
+  if (targetUser) {
+    await admin.from("lms_users").upsert(
+      {
+        id: targetUser.id,
+        email,
+        name: name || targetUser.user_metadata?.name || email.split("@")[0],
+        role,
+        tenant_id: DEFAULT_TENANT.id,
+      },
+      { onConflict: "id" }
+    );
+  }
+
+  revalidatePath("/dashboard/admin/members");
 }
 
 // ─── Enrollments ─────────────────────────────────────────────────────────────
