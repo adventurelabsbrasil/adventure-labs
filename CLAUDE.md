@@ -36,6 +36,8 @@
 
 **Contexto detalhado de contas:** `clients/02_rose/`, `clients/03_young/`
 
+**Projetos arquivados:** ver `_internal/projetos-arquivados/` (xpostr, elite)
+
 ---
 
 ## Arquitetura do Sistema
