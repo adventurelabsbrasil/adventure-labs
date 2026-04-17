@@ -130,7 +130,7 @@ Contexto: Supabase `adv_tasks` + `adv_ideias` + `adv_csuite_memory`
 |--------|-------------|--------|--------|
 | VPS Hostinger | 187.77.251.199 (público) | SSH root | ✅ Produção |
 | MacBook Air M4 (Rodrigo) | — | Local | ✅ Dev principal |
-| Beelink T4 Pro | 100.110.39.45 | `ssh adventurelabs@100.110.39.45` | ✅ NOVO — Ubuntu 24.04, SSH key instalada |
+| Beelink T4 Pro | 100.110.39.45 | `ssh beelink` | ✅ Always-on — Docker 29.4, Node 24.14, Claude Code 2.1.112, repo ~/adventure-labs |
 
 ---
 
@@ -138,13 +138,10 @@ Contexto: Supabase `adv_tasks` + `adv_ideias` + `adv_csuite_memory`
 
 | Item | Prioridade | Responsável |
 |------|-----------|-------------|
-| Atualizar `SUPABASE_SERVICE_ROLE_KEY` Lidera na VPS `.env` e Vercel `lideraspace` | 🔴 P1 | Rodrigo ou Claude SSH |
-| Fix `mercadopago-sync.sh` REPO_ROOT — Sueli/Buffett sem dados MP | 🔴 P1 | Claude Code |
-| Fix `hivemind-heartbeat.sh` nome container Plane — alertas falsos | 🔴 P1 | Claude Code |
-| Beelink T4 Pro setup completo (disable password, Cursor Remote, uso definido) | 🟡 P2 | Claude Code + Rodrigo |
 | Vercel errors: adventure-labs-app, adventure-xpostr, xpostr | 🟡 P2 | Claude Code |
 | Credenciais Meta Ads + Google Ads no n8n (workflow ads-daily-metrics-v1 inativo) | 🟡 P2 | Rodrigo/Buzz |
 | Chip físico Moto G52 → WhatsApp Business autônomo | 🟡 P2 | Rodrigo |
+| Infisical vault.adventurelabs.com.br — Rodrigo perdeu acesso (email/senha) | 🟡 P2 | Rodrigo |
 
 **Resolvidas nesta sessão (2026-04-17):**
 - ✅ Branch `claude/zen-dhawan` mergeada (PR #22)
@@ -152,6 +149,10 @@ Contexto: Supabase `adv_tasks` + `adv_ideias` + `adv_csuite_memory`
 - ✅ CI Security Scan desbloqueado (PR #29) — falhava 100% há semanas
 - ✅ SSOT docs consolidados em `_internal/` (PR #28)
 - ✅ n8n ads daily metrics (PR #26)
+- ✅ Fix `mercadopago-sync.sh` REPO_ROOT — Sueli/Buffett voltam a ter dados MP
+- ✅ Fix `hivemind-heartbeat.sh` containers Plane — alertas falsos eliminados
+- ✅ Beelink T4 Pro: Docker, Node, Claude Code instalados, repo clonado, always-on
+- ✅ `SUPABASE_SERVICE_ROLE_KEY` Lidera/Vercel — confirmado já sincronizado (não precisou atualizar)
 
 ---
 
