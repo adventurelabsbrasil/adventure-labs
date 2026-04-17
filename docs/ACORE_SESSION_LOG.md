@@ -4,6 +4,53 @@ Registro operacional para handoff entre Human, CTO (Torvalds) e agentes. Atualiz
 
 ---
 
+## 2026-04-17 — Missão SSOT-CONSOLIDATION: 5 PRs mergeadas + Beelink T4 Pro + CI fix
+
+**De:** Commander (Claude Code)
+**Para:** Buzz, Rodrigo, C-Suite, Torvalds
+**Refs:** PRs #23, #22, #26, #28, #29 | Issue #27
+
+### Feito
+
+**CI desbloqueado globalmente (PR #29):**
+`security-scan.yml` tinha ban total de `package-lock.json` conflitando com allowlist de `monorepo-governance.yml` — Security Scan falhava 100% em todos os branches há semanas. Fix: chamada ao script compartilhado `tools/scripts/check-repo-governance.sh`.
+
+**SSOT consolidado (PR #28):**
+5 documentos estratégicos (auditoria monorepo 15/04, relatório estratégico 16/04, stack completa 16/04, stack report 16/04, análise Buzz Issue #27) trazidos para `main` em `_internal/`.
+
+**n8n Ads Daily Metrics (PR #26):** mergeado após rebase + resolução de conflito no session log.
+
+**zen-dhawan infra + limpeza (PR #22):**
+- docker-compose: Evolution API 2.3.7, N8N_SECURE_COOKIE=true, fix porta 8080
+- nginx/adventure-labs.conf: config de todos os serviços versionada
+- Decisão: `_internal/` NÃO gitignore (é SSOT). Docs privados (braindump, CSuite_relatorios, google-ads/reports) gitignore + deletados
+- Plano de Mídia 90d migrado para `adventure_knowledge` (Supabase) via migration `20260417000000_seed_plano_midia_90d_knowledge.sql`
+- `docs/RELATORIO_SAUDE_FINANCEIRA_ADVENTURE_Q2_2026.md` mantido
+
+**LideraSpace handoff final (PR #23):**
+- Rodrigo revogou PREVIOUS KEY HS256 Supabase Lidera + forneceu nova service_role
+- PR squashado em 1 commit limpo (credencial eliminada do histórico)
+- Deploy automático via GitHub Actions ativo. Handoff em `apps/clientes/01_lidera/lideraspace/docs/HANDOFF_LIDERASPACE.md`
+
+**Beelink T4 Pro:**
+- Ubuntu 24.04 LTS na Tailnet: `100.110.39.45` / `beelinkt4pro.tailf7a1ad.ts.net`
+- SSH key do Mac instalada. Acesso: `ssh adventurelabs@100.110.39.45`
+
+### Próximos (Claude Code)
+
+1. Fix `mercadopago-sync.sh` — `REPO_ROOT` errado (Sueli + Buffett sem dados MP)
+2. Fix `hivemind-heartbeat.sh` — nome container Plane (alertas falsos Telegram)
+3. Beelink T4 Pro setup completo (disable password auth, SSH config, CLAUDE.md, Cursor Remote)
+4. Vercel errors: `adventure-labs-app`, `adventure-xpostr`, `xpostr`
+5. Atualizar `SUPABASE_SERVICE_ROLE_KEY` Lidera na VPS `.env` e Vercel
+
+### Bloqueios
+
+- Credenciais Meta Ads + Google Ads para ativar workflow n8n ads-daily-metrics-v1 (Rodrigo/Buzz)
+- Chip físico para Moto G52 (Rodrigo) — WhatsApp Business autônomo
+
+---
+
 ## 2026-04-13 — Missão N8N-METRICS-2604: Database Recovery + Ads Daily Metrics Ingestion
 
 **Protocolo:** N8N-METRICS-2604
