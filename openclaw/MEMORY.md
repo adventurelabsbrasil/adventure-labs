@@ -1,7 +1,7 @@
 # MEMORY.md
 
 > Memória de longo prazo do Buzz. Lida em toda sessão principal (chat direto com o Comandante).
-> Atualizado: 2026-04-09 — Hivemind SSOT estabelecido.
+> Atualizado: 2026-04-17 — 5 PRs mergeadas, CI desbloqueado, Beelink T4 Pro na Tailnet.
 
 ---
 
@@ -124,12 +124,35 @@ Contexto: Supabase `adv_tasks` + `adv_ideias` + `adv_csuite_memory`
 
 ---
 
-## Pendências Críticas (2026-04-09)
+## Devices na Tailnet (atualizado 2026-04-17)
 
-- Branch `claude/zen-dhawan`: PR/merge pendente. Usar `gh` CLI (Git local tem SIGBUS).
-- WebSocket em `claw.adventurelabs.com.br`: bloqueado no Nginx — delegado ao Torvalds (CTO).
-- Pingolead → RD Station migration: leads Young não chegam no RD.
-- Supabase `adv_conversion_forms`: tabela não criada ainda (404 no backup REST).
+| Device | IP Tailscale | Acesso | Status |
+|--------|-------------|--------|--------|
+| VPS Hostinger | 187.77.251.199 (público) | SSH root | ✅ Produção |
+| MacBook Air M4 (Rodrigo) | — | Local | ✅ Dev principal |
+| Beelink T4 Pro | 100.110.39.45 | `ssh beelink` | ✅ Always-on — Docker 29.4, Node 24.14, Claude Code 2.1.112, repo ~/adventure-labs |
+
+---
+
+## Pendências Críticas (2026-04-17)
+
+| Item | Prioridade | Responsável |
+|------|-----------|-------------|
+| Issue #32 — Rate limit Vercel adventure-labs-app (Benditta) | 🟡 P2 | Claude Code (aguardar 24h reset) |
+| Issue #33 — Recuperar acesso Infisical vault.adventurelabs.com.br | 🟡 P2 | Rodrigo |
+| Issue #34 — Credenciais Meta + Google Ads no n8n | 🟡 P2 | Rodrigo + Igor |
+| Chip físico Moto G52 → WhatsApp Business autônomo | 🟡 P2 | Rodrigo |
+
+**Resolvidas nesta sessão (2026-04-17):**
+- ✅ Branch `claude/zen-dhawan` mergeada (PR #22)
+- ✅ LideraSpace mergeado (PR #23) — credencial rotacionada + histórico limpo
+- ✅ CI Security Scan desbloqueado (PR #29) — falhava 100% há semanas
+- ✅ SSOT docs consolidados em `_internal/` (PR #28)
+- ✅ n8n ads daily metrics (PR #26)
+- ✅ Fix `mercadopago-sync.sh` REPO_ROOT — Sueli/Buffett voltam a ter dados MP
+- ✅ Fix `hivemind-heartbeat.sh` containers Plane — alertas falsos eliminados
+- ✅ Beelink T4 Pro: Docker, Node, Claude Code instalados, repo clonado, always-on
+- ✅ `SUPABASE_SERVICE_ROLE_KEY` Lidera/Vercel — confirmado já sincronizado (não precisou atualizar)
 
 ---
 

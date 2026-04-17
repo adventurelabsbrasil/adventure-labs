@@ -28,10 +28,6 @@ package-lock.json
 yarn.lock
 
 # Temp e archive (clones pesados, sub-repos)
-_internal/temp/
-_internal/archive/*
-_internal/audit-secrets-report.md
-!_internal/archive/README.md
 
 # Railway CLI (link local; não versionar)
 .railway/
@@ -75,3 +71,9 @@ apps/labs/minha-app/.cursor/
 knowledge/00_GESTAO_CORPORATIVA/operacao/asana/audio-relatorio-comando-estelar-*.aiff
 knowledge/00_GESTAO_CORPORATIVA/operacao/asana/audio-relatorio-comando-estelar-*.m4a
 knowledge/00_GESTAO_CORPORATIVA/operacao/asana/audio-relatorio-comando-estelar-*-script.txt
+
+# ─── Docs privados do founder e de clientes (não versionar) ───────────────────
+docs/braindump/
+docs/CSuite_relatorios*
+docs/google-ads/reports/
+docs/planejamento/Assessoria*

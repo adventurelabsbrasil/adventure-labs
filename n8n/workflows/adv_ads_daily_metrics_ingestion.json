@@ -1,0 +1,288 @@
+{
+  "id": "ads-daily-metrics-v1",
+  "name": "[ACORE] Ads Daily Metrics — Meta + Google → Supabase",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [{ "field": "hours", "hoursInterval": 6 }]
+        }
+      },
+      "id": "cron-trigger",
+      "name": "Cron 6h",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [220, 300]
+    },
+    {
+      "parameters": {},
+      "id": "manual-trigger",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [220, 500]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            { "id": "date_range", "name": "date_range", "value": "={{ $now.minus(1, 'day').format('yyyy-MM-dd') }}", "type": "string" },
+            { "id": "today", "name": "today", "value": "={{ $now.format('yyyy-MM-dd') }}", "type": "string" }
+          ]
+        },
+        "options": {}
+      },
+      "id": "set-dates",
+      "name": "Set Date Range",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [440, 400]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "=https://graph.facebook.com/v22.0/act_{{ $json.meta_account_id }}/insights",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpQueryAuth",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            { "name": "level", "value": "ad" },
+            { "name": "fields", "value": "campaign_name,adset_name,ad_name,objective,impressions,reach,clicks,spend,actions" },
+            { "name": "time_range", "value": "={\"since\":\"{{ $('Set Date Range').item.json.date_range }}\",\"until\":\"{{ $('Set Date Range').item.json.date_range }}\"}" },
+            { "name": "limit", "value": "500" }
+          ]
+        },
+        "options": {
+          "response": { "response": { "fullResponse": false } }
+        }
+      },
+      "id": "meta-ads-fetch",
+      "name": "Meta Ads — Fetch Insights",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [700, 260],
+      "notes": "CREDENCIAL PENDENTE: Criar credencial 'Meta Ads Access Token' tipo HTTP Query Auth (name=access_token). Precisa do token de longa duração da conta Meta Business.\n\nPara múltiplas contas, substituir este nó por um SplitInBatches que itera sobre uma lista de account_ids (pode vir do Supabase adv_client_meta_accounts)."
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "=https://googleads.googleapis.com/v19/customers/{{ $json.google_customer_id }}/googleAds:searchStream",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "developer-token", "value": "={{$json.google_developer_token}}" },
+            { "name": "login-customer-id", "value": "={{$json.google_mcc_id}}" }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "query",
+              "value": "SELECT campaign.name, ad_group.name, ad_group_ad.ad.name, campaign.advertising_channel_type, metrics.impressions, metrics.clicks, metrics.cost_micros, metrics.conversions FROM ad_group_ad WHERE segments.date = '{{ $('Set Date Range').item.json.date_range }}' AND campaign.status = 'ENABLED' AND ad_group.status = 'ENABLED' AND ad_group_ad.status = 'ENABLED'"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "google-ads-fetch",
+      "name": "Google Ads — Fetch Metrics",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [700, 540],
+      "notes": "CREDENCIAL PENDENTE: Criar credencial Google Ads OAuth2 ou usar HTTP Header Auth com Bearer token. Precisa de: (1) Developer Token, (2) OAuth2 refresh token, (3) MCC Customer ID.\n\nA query GAQL acima busca métricas por ad_group_ad (nível anúncio). Ajustar customer_id por conta."
+    },
+    {
+      "parameters": {
+        "jsCode": "// === META ADS TRANSFORM ===\n// Input: array de insights da Meta Graph API\n// Output: rows prontas para upsert na adv_ads_daily_metrics\n\nconst metaItems = $('Meta Ads — Fetch Insights').all();\nconst rows = [];\n\nfor (const item of metaItems) {\n  const data = item.json.data || [item.json];\n  for (const insight of data) {\n    // Extrair conversions e leads das actions\n    let conversations = 0;\n    let leads = 0;\n    if (insight.actions) {\n      for (const action of insight.actions) {\n        if (action.action_type === 'onsite_conversion.messaging_conversation_started_7d') {\n          conversations = parseInt(action.value) || 0;\n        }\n        if (action.action_type === 'lead') {\n          leads = parseInt(action.value) || 0;\n        }\n      }\n    }\n\n    rows.push({\n      json: {\n        date: insight.date_start || $('Set Date Range').first().json.date_range,\n        client: 'META_CLIENT_SLUG',  // TODO: mapear via adv_client_meta_accounts\n        account_id: insight.account_id || 'act_PENDING',\n        account_name: insight.account_name || null,\n        campaign_name: insight.campaign_name || 'unknown',\n        adset_name: insight.adset_name || 'unknown',\n        ad_name: insight.ad_name || 'unknown',\n        objective: insight.objective || null,\n        impressions: parseInt(insight.impressions) || 0,\n        reach: parseInt(insight.reach) || 0,\n        clicks: parseInt(insight.clicks) || 0,\n        spend: parseFloat(insight.spend) || 0,\n        conversations: conversations,\n        leads: leads\n      }\n    });\n  }\n}\n\nreturn rows.length > 0 ? rows : [{ json: { _empty: true, _source: 'meta' } }];"
+      },
+      "id": "transform-meta",
+      "name": "Transform Meta Ads",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [960, 260]
+    },
+    {
+      "parameters": {
+        "jsCode": "// === GOOGLE ADS TRANSFORM ===\n// Input: searchStream response do Google Ads API\n// Output: rows prontas para upsert na adv_ads_daily_metrics\n\nconst googleItems = $('Google Ads — Fetch Metrics').all();\nconst rows = [];\n\nfor (const item of googleItems) {\n  const results = item.json.results || [item.json];\n  for (const row of results) {\n    const campaign = row.campaign || {};\n    const adGroup = row.adGroup || row.ad_group || {};\n    const ad = row.adGroupAd?.ad || row.ad_group_ad?.ad || {};\n    const metrics = row.metrics || {};\n\n    rows.push({\n      json: {\n        date: $('Set Date Range').first().json.date_range,\n        client: 'GOOGLE_CLIENT_SLUG',  // TODO: mapear via config\n        account_id: item.json.customer_id || 'PENDING',\n        account_name: null,\n        campaign_name: campaign.name || 'unknown',\n        adset_name: adGroup.name || 'unknown',\n        ad_name: ad.name || 'unknown',\n        objective: campaign.advertisingChannelType || campaign.advertising_channel_type || null,\n        impressions: parseInt(metrics.impressions) || 0,\n        reach: 0,  // Google Ads não tem 'reach' direto neste endpoint\n        clicks: parseInt(metrics.clicks) || 0,\n        spend: (parseInt(metrics.costMicros || metrics.cost_micros) || 0) / 1000000,\n        conversations: 0,\n        leads: parseInt(metrics.conversions) || 0\n      }\n    });\n  }\n}\n\nreturn rows.length > 0 ? rows : [{ json: { _empty: true, _source: 'google' } }];"
+      },
+      "id": "transform-google",
+      "name": "Transform Google Ads",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [960, 540]
+    },
+    {
+      "parameters": {
+        "mode": "append",
+        "options": {}
+      },
+      "id": "merge-sources",
+      "name": "Merge Meta + Google",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3,
+      "position": [1200, 400]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": { "caseSensitive": true, "leftValue": "" },
+          "conditions": [
+            {
+              "id": "filter-empty",
+              "leftValue": "={{ $json._empty }}",
+              "rightValue": true,
+              "operator": { "type": "boolean", "operation": "notTrue" }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "filter-empty",
+      "name": "Filter Empty",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2,
+      "position": [1400, 400]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://ftctmseyrqhckutpfdeq.supabase.co/rest/v1/adv_ads_daily_metrics",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "apikey", "value": "={{$credentials.httpHeaderAuth.value}}" },
+            { "name": "Content-Type", "value": "application/json" },
+            { "name": "Prefer", "value": "resolution=merge-duplicates" }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({\n  date: $json.date,\n  client: $json.client,\n  account_id: $json.account_id,\n  account_name: $json.account_name,\n  campaign_name: $json.campaign_name,\n  adset_name: $json.adset_name,\n  ad_name: $json.ad_name,\n  objective: $json.objective,\n  impressions: $json.impressions,\n  reach: $json.reach,\n  clicks: $json.clicks,\n  spend: $json.spend,\n  conversations: $json.conversations,\n  leads: $json.leads\n}) }}",
+        "options": {
+          "batching": { "batch": { "batchSize": 50, "batchInterval": 500 } },
+          "response": { "response": { "fullResponse": true } }
+        }
+      },
+      "id": "supabase-upsert",
+      "name": "Supabase Upsert",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1620, 400],
+      "credentials": {
+        "httpHeaderAuth": { "id": "cLFM50habs3piGIR", "name": "Supabase REST — Service Role" }
+      },
+      "notes": "Upsert via PostgREST: header 'Prefer: resolution=merge-duplicates' faz ON CONFLICT UPDATE na unique constraint uq_ads_daily_metrics (date, account_id, campaign_name, adset_name, ad_name).\n\nA credencial 'Supabase REST — Service Role' já está configurada no n8n."
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": { "caseSensitive": true, "leftValue": "" },
+          "conditions": [
+            {
+              "id": "check-error",
+              "leftValue": "={{ $json.statusCode }}",
+              "rightValue": 299,
+              "operator": { "type": "number", "operation": "gt" }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "check-errors",
+      "name": "Has Errors?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [1840, 400]
+    },
+    {
+      "parameters": {
+        "chatId": "1069502175",
+        "text": "=\u2705 **Ads Daily Metrics Ingestion**\nData: {{ $('Set Date Range').item.json.date_range }}\nRows inseridas: {{ $('Filter Empty').all().length }}\nFontes: Meta + Google\nStatus: Sucesso",
+        "additionalFields": { "parse_mode": "Markdown" }
+      },
+      "id": "telegram-success",
+      "name": "Telegram Success",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [2060, 320],
+      "credentials": {
+        "telegramApi": { "id": "9vM0wAcplvnFSMfe", "name": "Telegram Buzz" }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "1069502175",
+        "text": "=\u26a0\ufe0f **Ads Daily Metrics — ERRO**\nData: {{ $('Set Date Range').item.json.date_range }}\nStatus: {{ $json.statusCode }}\nBody: {{ JSON.stringify($json.body).substring(0, 500) }}",
+        "additionalFields": { "parse_mode": "Markdown" }
+      },
+      "id": "telegram-error",
+      "name": "Telegram Error",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [2060, 500],
+      "credentials": {
+        "telegramApi": { "id": "9vM0wAcplvnFSMfe", "name": "Telegram Buzz" }
+      }
+    }
+  ],
+  "connections": {
+    "Cron 6h": {
+      "main": [[{ "node": "Set Date Range", "type": "main", "index": 0 }]]
+    },
+    "Manual Trigger": {
+      "main": [[{ "node": "Set Date Range", "type": "main", "index": 0 }]]
+    },
+    "Set Date Range": {
+      "main": [
+        [
+          { "node": "Meta Ads — Fetch Insights", "type": "main", "index": 0 },
+          { "node": "Google Ads — Fetch Metrics", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Meta Ads — Fetch Insights": {
+      "main": [[{ "node": "Transform Meta Ads", "type": "main", "index": 0 }]]
+    },
+    "Google Ads — Fetch Metrics": {
+      "main": [[{ "node": "Transform Google Ads", "type": "main", "index": 0 }]]
+    },
+    "Transform Meta Ads": {
+      "main": [[{ "node": "Merge Meta + Google", "type": "main", "index": 0 }]]
+    },
+    "Transform Google Ads": {
+      "main": [[{ "node": "Merge Meta + Google", "type": "main", "index": 1 }]]
+    },
+    "Merge Meta + Google": {
+      "main": [[{ "node": "Filter Empty", "type": "main", "index": 0 }]]
+    },
+    "Filter Empty": {
+      "main": [[{ "node": "Supabase Upsert", "type": "main", "index": 0 }]]
+    },
+    "Supabase Upsert": {
+      "main": [[{ "node": "Has Errors?", "type": "main", "index": 0 }]]
+    },
+    "Has Errors?": {
+      "main": [
+        [{ "node": "Telegram Error", "type": "main", "index": 0 }],
+        [{ "node": "Telegram Success", "type": "main", "index": 0 }]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromSameOwner",
+    "errorWorkflow": ""
+  },
+  "staticData": null,
+  "tags": [{ "name": "ads" }, { "name": "metrics" }, { "name": "acore" }],
+  "pinData": {}
+}

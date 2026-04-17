@@ -4,6 +4,129 @@ Registro operacional para handoff entre Human, CTO (Torvalds) e agentes. Atualiz
 
 ---
 
+## 2026-04-17 — Missão SSOT-CONSOLIDATION: 5 PRs mergeadas + Beelink T4 Pro + CI fix
+
+**De:** Commander (Claude Code)
+**Para:** Buzz, Rodrigo, C-Suite, Torvalds
+**Refs:** PRs #23, #22, #26, #28, #29 | Issue #27
+
+### Feito
+
+**CI desbloqueado globalmente (PR #29):**
+`security-scan.yml` tinha ban total de `package-lock.json` conflitando com allowlist de `monorepo-governance.yml` — Security Scan falhava 100% em todos os branches há semanas. Fix: chamada ao script compartilhado `tools/scripts/check-repo-governance.sh`.
+
+**SSOT consolidado (PR #28):**
+5 documentos estratégicos (auditoria monorepo 15/04, relatório estratégico 16/04, stack completa 16/04, stack report 16/04, análise Buzz Issue #27) trazidos para `main` em `_internal/`.
+
+**n8n Ads Daily Metrics (PR #26):** mergeado após rebase + resolução de conflito no session log.
+
+**zen-dhawan infra + limpeza (PR #22):**
+- docker-compose: Evolution API 2.3.7, N8N_SECURE_COOKIE=true, fix porta 8080
+- nginx/adventure-labs.conf: config de todos os serviços versionada
+- Decisão: `_internal/` NÃO gitignore (é SSOT). Docs privados (braindump, CSuite_relatorios, google-ads/reports) gitignore + deletados
+- Plano de Mídia 90d migrado para `adventure_knowledge` (Supabase) via migration `20260417000000_seed_plano_midia_90d_knowledge.sql`
+- `docs/RELATORIO_SAUDE_FINANCEIRA_ADVENTURE_Q2_2026.md` mantido
+
+**LideraSpace handoff final (PR #23):**
+- Rodrigo revogou PREVIOUS KEY HS256 Supabase Lidera + forneceu nova service_role
+- PR squashado em 1 commit limpo (credencial eliminada do histórico)
+- Deploy automático via GitHub Actions ativo. Handoff em `apps/clientes/01_lidera/lideraspace/docs/HANDOFF_LIDERASPACE.md`
+
+**Beelink T4 Pro:**
+- Ubuntu 24.04 LTS na Tailnet: `100.110.39.45` / `beelinkt4pro.tailf7a1ad.ts.net`
+- SSH key do Mac instalada. Acesso: `ssh adventurelabs@100.110.39.45`
+
+### Próximos (Claude Code)
+
+1. Fix `mercadopago-sync.sh` — `REPO_ROOT` errado (Sueli + Buffett sem dados MP)
+2. Fix `hivemind-heartbeat.sh` — nome container Plane (alertas falsos Telegram)
+3. Beelink T4 Pro setup completo (disable password auth, SSH config, CLAUDE.md, Cursor Remote)
+4. Vercel errors: `adventure-labs-app`, `adventure-xpostr`, `xpostr`
+5. Atualizar `SUPABASE_SERVICE_ROLE_KEY` Lidera na VPS `.env` e Vercel
+
+### Bloqueios
+
+- Credenciais Meta Ads + Google Ads para ativar workflow n8n ads-daily-metrics-v1 (Rodrigo/Buzz)
+- Chip físico para Moto G52 (Rodrigo) — WhatsApp Business autônomo
+
+---
+
+## 2026-04-13 — Missão N8N-METRICS-2604: Database Recovery + Ads Daily Metrics Ingestion
+
+**Protocolo:** N8N-METRICS-2604
+**De:** Claude Code (worktree `ecstatic-blackwell`)
+**Para:** Buzz, Rodrigo, C-Suite
+**Branch:** `claude/ecstatic-blackwell`
+**PR:** adventurelabsbrasil/adventure-labs#26
+
+### Contexto
+
+O Buzz reportou `SQLITE_CORRUPT: database disk image is malformed` ao tentar acessar a API do n8n para criar o workflow de ingestão de métricas de Ads. Missão dividida em duas fases: (1) recuperar o banco corrompido, (2) criar e importar o workflow.
+
+### Feito
+
+**Fase 1 — n8n Database Recovery**
+- Banco SQLite do n8n (`/var/lib/docker/volumes/adventure-labs_n8n_data/_data/database.sqlite`) confirmado corrompido: páginas referenciadas 2x, rows com NULL ids em `workflow_entity`, múltiplos erros de integridade
+- **Recuperação via dump+rebuild:** `sqlite3 database.sqlite ".dump" | sqlite3 recovered.sqlite` — banco reconstruído com integrity check `ok`
+- Cópia direta (`cp`) falhou (filesystem do volume Docker manteve corrupção); solução final foi dump direto no path do volume
+- **9 workflows** e **10 credentials** preservados. 1 workflow perdido (rows com NULL id irrecuperáveis — provavelmente transações incompletas, não workflow real)
+- Container `adventure-n8n` reiniciado: **Up, Healthy**, `n8n ready on port 5678`
+- Backups corrompidos preservados em `database.sqlite.corrupt.*`
+
+**Fase 2 — Workflow Ads Daily Metrics**
+- Workflow `[ACORE] Ads Daily Metrics — Meta + Google → Supabase` criado e importado no n8n (ID: `ads-daily-metrics-v1`)
+- **Arquitetura do fluxo:**
+  - `Cron 6h` + `Manual Trigger` → `Set Date Range` (D-1)
+  - → `Meta Ads Fetch` (Graph API v22, level=ad) ‖ `Google Ads Fetch` (GAQL searchStream)
+  - → `Transform Meta` + `Transform Google` (Code nodes com mapeamento completo)
+  - → `Merge` → `Filter Empty` → `Supabase Upsert` (PostgREST, `Prefer: resolution=merge-duplicates`)
+  - → `Has Errors?` → `Telegram Success` ou `Telegram Error` (chat Buzz 1069502175)
+- **Upsert idempotente** usando unique constraint `uq_ads_daily_metrics (date, account_id, campaign_name, adset_name, ad_name)` — conforme PR #25
+- **Credenciais vinculadas:** Supabase REST Service Role (`cLFM50habs3piGIR`), Telegram Buzz (`9vM0wAcplvnFSMfe`)
+- JSON versionado em `n8n/workflows/adv_ads_daily_metrics_ingestion.json`
+
+### Workflows n8n recuperados (9/10)
+
+| ID | Nome |
+|----|------|
+| 02f8f5ce... | Young — Lead Hub Auditoria → Sheets + Pingolead |
+| 3NxJkjSn... | Dual-mode VPS |
+| 5f198f3d... | Sincronizador SSOT — Google Drive → Supabase Vector |
+| 7c72a695... | Isca — Roteirista de Vídeo |
+| UsCagpDj... | [ACORE] Extrator Diário Meta Ads (Rose) |
+| cd27dc25... | Young — Nova Venda Realizada → Notificação Financeiro |
+| csuite-v3... | C-Suite Autonomous Loop (v3 Roteador) |
+| dc054a13... | Transcrição de Áudio WhatsApp → Asana |
+| h0iqnZTY... | C-Suite Autonomous Loop — Adventure Labs |
+
+### Próximos (ação humana / Buzz)
+
+| # | Ação | Responsável | Onde |
+|---|------|------------|------|
+| 1 | Criar credencial Meta Ads (HTTP Query Auth, `access_token` = token longa duração) e vincular ao nó "Meta Ads — Fetch Insights" | Buzz / Rodrigo | n8n UI → Credentials |
+| 2 | Criar credencial Google Ads (OAuth2 + Developer Token + MCC ID) e vincular ao nó "Google Ads — Fetch Metrics" | Buzz / Rodrigo | n8n UI → Credentials |
+| 3 | Substituir `META_CLIENT_SLUG` / `GOOGLE_CLIENT_SLUG` nos Code nodes pelo slug real do cliente (ex: `rose`, `young`) | Buzz | n8n UI → Code nodes |
+| 4 | Substituir `meta_account_id` no nó Meta Ads pelo `act_ID` real (ou criar SplitInBatches iterando `adv_client_meta_accounts`) | Buzz | n8n UI |
+| 5 | Ativar workflow e rodar manualmente para validação end-to-end | Buzz | n8n UI → Toggle Active |
+| 6 | Merge PR #26 | Rodrigo | GitHub |
+
+### Bloqueios
+
+- **Credenciais Meta/Google Ads** — workflow importado mas **inativo** até tokens serem configurados no n8n. Sem eles, o cron não faz fetch.
+- **Tokens Infisical** — Buzz mencionou que inseriu a chave do Google Drive no cofre, mas Meta Ads token e Google Ads OAuth2 ainda não estão no n8n.
+
+### Artefatos
+
+| Artefato | Path / URL |
+|----------|-----------|
+| Workflow JSON | `n8n/workflows/adv_ads_daily_metrics_ingestion.json` |
+| PR | adventurelabsbrasil/adventure-labs#26 |
+| Migration da tabela | `supabase/migrations/20260409100000_adv_ads_daily_metrics.sql` (PR #25) |
+| Banco corrompido (backup) | VPS: `database.sqlite.corrupt.*` no volume n8n |
+| n8n live | flow.adventurelabs.com.br |
+
+---
+
 ## 2026-04-09 — Nova tabela adv_ads_daily_metrics (ad-level granularity)
 
 ### Feito
