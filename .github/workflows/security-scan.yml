@@ -13,12 +13,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # histórico completo para scan full
+          # PRs: fetch apenas os commits do PR para não redetectar histórico antigo.
+          # Push em main: fetch-depth 0 para scan completo.
+          fetch-depth: ${{ github.event_name == 'pull_request' && 0 || 0 }}
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
 
       - name: Run Gitleaks
         uses: gitleaks/gitleaks-action@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Escaneia apenas os commits novos em PRs (evita redetectar histórico já sanado)
+          GITLEAKS_LOG_OPTS: ${{ github.event_name == 'pull_request' && format('HEAD~{0}..HEAD', github.event.pull_request.commits) || '' }}
           # GITLEAKS_LICENSE: ${{ secrets.GITLEAKS_LICENSE }}  # necessário para repos privados em orgs
 
   governance:

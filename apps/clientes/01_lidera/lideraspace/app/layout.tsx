@@ -7,6 +7,7 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "Lidera Space — Área de Membros",
   description: "Plataforma de desenvolvimento para líderes",
+  icons: { icon: "/favicon.svg" },
 };
 
 export default function RootLayout({

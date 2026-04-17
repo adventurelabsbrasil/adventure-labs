@@ -1,8 +1,8 @@
 import { createClient } from "@/lib/supabase/server";
 import { Header } from "@/components/layout/Header";
 import { Badge } from "@/components/ui/badge";
-import { enrollMember, unenrollMember } from "@/app/actions/admin";
-import { Users, CheckCircle2, Circle } from "lucide-react";
+import { enrollMember, unenrollMember, inviteUser } from "@/app/actions/admin";
+import { Users, CheckCircle2, Circle, UserPlus } from "lucide-react";
 import { DEFAULT_TENANT } from "@/lib/tenant";
 
 async function getData() {
@@ -50,6 +50,55 @@ export default async function AdminMembersPage() {
       <Header title="Admin — Membros" />
 
       <div className="flex-1 p-6 space-y-6">
+        {/* Invite user */}
+        <div className="rounded-xl border border-border bg-navy-900 overflow-hidden">
+          <div className="bg-navy-900/60 px-4 py-3 border-b border-border flex items-center gap-2">
+            <UserPlus className="h-4 w-4 text-muted-foreground" />
+            <h2 className="text-sm font-semibold text-foreground">Convidar novo usuário</h2>
+          </div>
+          <form action={inviteUser} className="p-4 flex flex-wrap gap-3 items-end">
+            <div className="flex flex-col gap-1 flex-1 min-w-[180px]">
+              <label className="text-xs text-muted-foreground">E-mail *</label>
+              <input
+                name="email"
+                type="email"
+                required
+                placeholder="nome@email.com"
+                className="h-9 rounded-lg border border-border bg-navy-950/60 px-3 text-sm text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-gold-400/30"
+              />
+            </div>
+            <div className="flex flex-col gap-1 flex-1 min-w-[140px]">
+              <label className="text-xs text-muted-foreground">Nome</label>
+              <input
+                name="name"
+                type="text"
+                placeholder="Nome completo"
+                className="h-9 rounded-lg border border-border bg-navy-950/60 px-3 text-sm text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-gold-400/30"
+              />
+            </div>
+            <div className="flex flex-col gap-1">
+              <label className="text-xs text-muted-foreground">Tipo</label>
+              <select
+                name="role"
+                className="h-9 rounded-lg border border-border bg-navy-950/60 px-3 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-gold-400/30"
+              >
+                <option value="member">Membro</option>
+                <option value="admin">Admin</option>
+              </select>
+            </div>
+            <button
+              type="submit"
+              className="h-9 px-4 rounded-lg bg-gold-400 text-navy-950 text-sm font-semibold hover:bg-gold-500 transition-colors"
+            >
+              Enviar convite
+            </button>
+          </form>
+          <p className="px-4 pb-3 text-xs text-muted-foreground">
+            O usuário receberá um e-mail de convite com link para definir a senha. Requer{" "}
+            <code className="bg-navy-800 px-1 rounded">SUPABASE_SERVICE_ROLE_KEY</code> configurada no Vercel.
+          </p>
+        </div>
+
         {/* Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <div className="rounded-xl border border-border bg-navy-900 p-4">
