@@ -1,7 +1,7 @@
 # Adventure Labs — Cérebro Estável (SSOT para Claude Code e Cursor)
 
 > **Leia este arquivo antes de qualquer tarefa.** É o ponto de entrada de toda entidade que interage com a Adventure Labs.
-> Atualizado: 2026-04-09
+> Atualizado: 2026-04-17
 
 ---
 
@@ -54,12 +54,13 @@
 | Status | Uptime Kuma | status.adventurelabs.com.br | Monitor de uptime dos serviços |
 | Mídia/Backup | Google Drive | `gdrive-adventure:` (rclone) | Assets, backups diários, arquivos |
 | Infraestrutura | VPS Hostinger | 187.77.251.199 | Todos os serviços Docker + crons |
+| Nó Edge AI | Beelink T4 Pro | `ssh beelink` (100.110.39.45 Tailscale) | Claude Code always-on, repo clonado em `~/adventure-labs` |
 
 ### ⚠️ Regras Operacionais Críticas de Infra
 
 1. **`INFISICAL_TOKEN` do n8n** é gerenciado somente via `docker-compose environment` — nunca editar direto no n8n UI (a opção Variables não existe no community edition)
 2. **Plane.so** nunca usa `SITE_ADDRESS=:3003` — usa sempre porta 80 (Caddy interno); `--env-file` é **obrigatório** em todo deploy. `LISTEN_HTTP_PORT=3003` é o mapeamento host→container
-3. **Branch `claude/zen-dhawan`** existe com alterações pendentes — verificar antes de qualquer merge/push para evitar conflito. Usar `gh` CLI (Git local tem erro SIGBUS)
+3. **Beelink T4 Pro** — nó edge AI always-on (Tailscale `100.110.39.45`). User: `adventurelabs`. Repo em `~/adventure-labs`. Acesso: `ssh beelink` (após configurar `~/.ssh/config`)
 
 ---
 
@@ -142,6 +143,6 @@
 
 ---
 
-## Branch Ativa com Pendências
+## Branches Ativas
 
-- **`claude/zen-dhawan`** — tem alterações pendentes. Fazer PR/merge antes de criar branches novas que toquem nos mesmos arquivos. Usar `gh pr create` (Git local tem erro SIGBUS).
+- **`fix/vps-scripts-p1`** — fix mercadopago-sync REPO_ROOT + hivemind containers Plane (aplicados na VPS, PR pendente)
