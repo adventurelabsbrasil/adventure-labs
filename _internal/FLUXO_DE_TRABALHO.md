@@ -84,7 +84,7 @@ Chegou uma demanda?
 | Device | Quem usa | Quando | Tipo de trabalho |
 |--------|----------|--------|-----------------|
 | **MacBook Air M4** (Rodrigo) | Rodrigo | Manhã / tarde — sessões interativas | Claude Code Max: código, decisões, PRs, arquitetura |
-| **Asus** (Igor) | Igor | Tardes | Claude Code: tarefas marketing-tech, análise, conteúdo |
+| **Asus** (Igor) | Igor | Manhãs (padrão) — tardes/noites em remoto (exceções) | Claude Code: tarefas marketing-tech, análise, conteúdo |
 | **Beelink T4 Pro** | Agentes (autônomo) | 24/7 — proativo | Claude Code CLI: tarefas longas delegadas por n8n/OpenClaw/cron |
 | **VPS Hostinger** | Agentes cron | 24/7 — scheduled | C-Suite, gerentes, hivemind, backup, mercadopago-sync |
 
@@ -254,7 +254,7 @@ Novo segredo criado
 - [ ] Verificar Plane: tasks `in_progress` com prazo hoje
 - [ ] Verificar GitHub Issues abertas com label `via-telegram`
 
-### Igor (tarde — Asus)
+### Igor (manhã — Asus; tardes/noites em remoto)
 - [ ] Ver tasks do Plane atribuídas a Igor
 - [ ] Executar tarefas via Claude Code no repo adventure-labs
 - [ ] Registrar resultados no Plane (não no WhatsApp)
